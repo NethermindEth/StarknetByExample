@@ -4,3 +4,17 @@ language = "en"
 multilingual = false
 src = "src"
 title = "Cairo By Example"
+
+[build]
+extra-watch-dirs = ["po"]
+
+[preprocessor.gettext]
+after = ["links"]
+
+[output.html]
+git-repository-url = "https://github.com/NethermindEth/CairoByExample/"
+edit-url-template = "https://github.com/NethermindEth/CairoByExample/edit/main/{path}"
+playground.runnable = false
+
+[output.cairo]
+output-dir = "cairo-programs"

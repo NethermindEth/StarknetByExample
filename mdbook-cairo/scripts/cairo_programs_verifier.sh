@@ -23,7 +23,7 @@ fi
 has_error=false
 
 for prog in *.cairo; do
-  cairo-run --available-gas=20000000 "$prog" > output/"$prog".out 2> output/"$prog".err
+  starknet-compile "$prog" > output/"$prog".out 2> output/"$prog".err
 
   compile_code="$?"
 
