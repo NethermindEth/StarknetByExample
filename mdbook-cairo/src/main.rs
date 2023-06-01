@@ -1,5 +1,3 @@
-#![feature(path_file_prefix)]
-
 use lazy_static::lazy_static;
 use mdbook::book::{Book, BookItem, Chapter};
 use mdbook::renderer::RenderContext;
@@ -82,7 +80,7 @@ fn process_chapters(book: &Book, output_dir: &Path) {
 /// Extract the prefix of the chapter from filename string.
 fn chapter_filename(chapter: &Chapter) -> Option<String> {
     if let Some(p) = &chapter.path {
-        let file_name = p.file_prefix().unwrap().to_string_lossy().to_string();
+        let file_name = p.file_stem()?.to_string_lossy().to_string();
         return Some(file_name);
     }
 
