@@ -14,8 +14,7 @@ mod StorageExample {
     }
 
     #[view]
-    // You can read from storage variables by calling a view function.
-    // You don't have to send a transaction for this.
+    // You can read from storage variables without sending transactions. 
     fn get() -> u32 {
         _value::read()
     }
