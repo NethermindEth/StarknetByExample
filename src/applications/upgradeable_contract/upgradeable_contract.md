@@ -23,5 +23,9 @@ To illustrate this concept, let's consider an example with two contracts: `Upgra
 Start by deploying `UpgradeableContract_V0` as the initial version. Next, send a transaction that invokes the `upgrade` function, with the class hash of `UpgradeableContract_V1` as parameter to upgrade the class hash of the deployed contract to the `UpgradeableContract_V1` one. Then, call the `version` method on the contract to see that the contract was upgraded to the V1 version.
 
 ```rust
-{{#include upgradeable_contract.cairo}}
+{{#include upgradeable_contract_v0.cairo}}
+```
+
+```rust
+{{#include upgradeable_contract_v1.cairo}}
 ```
