@@ -6,7 +6,8 @@ src = "src"
 title = "Cairo By Example"
 
 [build]
-extra-watch-dirs = ["po"]
+# Eventual translations
+# extra-watch-dirs = ["po"]
 
 [preprocessor.gettext]
 after = ["links"]
