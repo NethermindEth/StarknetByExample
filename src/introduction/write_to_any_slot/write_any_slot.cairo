@@ -5,12 +5,9 @@ mod WriteToAnySlot {
     use option::OptionTrait;
     use traits::{Into, TryInto};
     use poseidon::poseidon_hash_span;
-    use starknet::StorageAddress;
     use starknet::storage_access::Felt252TryIntoStorageAddress;
 
-    struct Storage {
-        test_slot: u32
-    }
+    struct Storage {}
 
     const SLOT_NAME: felt252 = 'test_slot';
 

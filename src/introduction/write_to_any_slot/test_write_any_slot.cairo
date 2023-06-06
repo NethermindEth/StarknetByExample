@@ -4,22 +4,16 @@ trait IWriteToAnySlot {
     fn read_slot() -> u32;
 }
 
-
 #[contract]
 mod WriteToAnySlot {
-    use keccak::keccak_uint256s_le;
-    use keccak::keccak_uint256s_be;
     use starknet::syscalls::{storage_read_syscall, storage_write_syscall};
     use array::ArrayTrait;
     use option::OptionTrait;
     use traits::{Into, TryInto};
     use poseidon::poseidon_hash_span;
-    use starknet::StorageAddress;
     use starknet::storage_access::Felt252TryIntoStorageAddress;
 
-    struct Storage {
-        test_slot: u32
-    }
+    struct Storage {}
 
     const SLOT_NAME: felt252 = 'test_slot';
 
@@ -47,6 +41,7 @@ mod WriteToAnySlot {
         result
     }
 }
+
 #[cfg(test)]
 mod tests {
     use super::WriteToAnySlot::{get_address_from_name};
