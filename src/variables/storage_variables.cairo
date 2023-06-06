@@ -1,5 +1,5 @@
 #[contract]
-mod StorageExample {
+mod StorageVariablesExample {
     // All storage variables are contained in a struct called Storage
     struct Storage {
         // Storage variable holding a number
