@@ -1,6 +1,6 @@
 # Variables
 
-There are 3 types of variables in Cairo:
+There are 3 types of variables in Cairo contracts:
 
 - Local
   - declared inside a function
