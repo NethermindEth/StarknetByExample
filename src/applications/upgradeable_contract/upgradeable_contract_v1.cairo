@@ -15,7 +15,7 @@ mod UpgradeableContract_V1 {
         Upgraded(impl_hash);
     }
 
-    #[external]
+    #[view]
     fn version() -> u8 {
         1
     }
