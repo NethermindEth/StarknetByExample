@@ -1,7 +1,6 @@
 mod VaultErrors {
-    const OVERFLOW: felt252 = 'overflow';
-    const UNDERFLOW: felt252 = 'underflow';
     const INSUFFICIENT_BALANCE: felt252 = 'insufficient_balance';
+    // you can define more errors here
 }
 
 #[contract]
@@ -17,21 +16,21 @@ mod VaultErrorsExample {
         let old_balance = balance::read();
         let new_balance = old_balance + amount;
 
-        assert(new_balance >= old_balance, VaultErrors::OVERFLOW);
-
         balance::write(new_balance);
     }
 
     #[external]
     fn withdraw(amount: u256) {
-        let old_balance = balance::read();
-        let new_balance = old_balance - amount;
+        let current_balance = balance::read();
 
-        assert(old_balance >= amount, VaultErrors::INSUFFICIENT_BALANCE);
+        assert(current_balance >= amount, VaultErrors::INSUFFICIENT_BALANCE);
 
-        if (new_balance > old_balance) {
-            panic_with_felt252(VaultErrors::OVERFLOW);
+        // Or using panic:
+        if (current_balance >= amount) {
+            panic_with_felt252(VaultErrors::INSUFFICIENT_BALANCE);
         }
+
+        let new_balance = current_balance - amount;
 
         balance::write(new_balance);
     }

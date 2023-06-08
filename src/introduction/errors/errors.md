@@ -1,6 +1,7 @@
 # Errors
 
-In smart contracts, errors play an important role during the execution of transactions. When an error is thrown, it stops the execution of the contract and all changes made during the transaction are reverted.
+Errors can be used to handle validation and other conditions that may occur during the execution of a smart contract.
+If an error is thrown during the execution of a smart contract call, the execution is stopped and any changes made during the transaction are reverted.
 
 To throw an error, use the `assert` or `panic` functions:
 
@@ -15,15 +16,15 @@ To throw an error, use the `assert` or `panic` functions:
 Here's a simple example that demonstrates the use of these functions:
 
 ```rust
-{{#include simpleErrors.cairo}}
+{{#include simple_errors.cairo}}
 ```
 
 ## Custom errors
 
-You can make errors handling easier by defining your own error in a specific module.
+You can make error handling easier by defining your error codes in a specific module.
 
 ```rust
-{{#include customErrors.cairo}}
+{{#include custom_errors.cairo}}
 ```
 
 ## Vault example
@@ -31,5 +32,5 @@ You can make errors handling easier by defining your own error in a specific mod
 Here's another example that demonstrates the use of errors in a more complex contract:
 
 ```rust
-{{#include vaultErrors.cairo}}
+{{#include vault_errors.cairo}}
 ```
