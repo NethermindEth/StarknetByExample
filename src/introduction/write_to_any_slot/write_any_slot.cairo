@@ -6,6 +6,7 @@ mod WriteToAnySlot {
     use traits::{Into, TryInto};
     use poseidon::poseidon_hash_span;
     use starknet::storage_access::Felt252TryIntoStorageAddress;
+    use starknet::StorageAddress;
 
     struct Storage {}
 

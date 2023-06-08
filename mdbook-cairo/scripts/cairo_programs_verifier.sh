@@ -23,7 +23,7 @@ fi
 has_error=false
 
 for prog in *.cairo; do
-  starknet-compile "$prog" > output/"$prog".out 2> output/"$prog".err
+  starknet-compile "$prog" --allowed-libfuncs-list-name experimental_v0.1.0 > output/"$prog".out 2> output/"$prog".err
 
   compile_code="$?"
 
