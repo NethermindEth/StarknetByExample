@@ -6,15 +6,12 @@ runs:
   using: composite
   steps:
     - name: Install scarb
+      shell: bash
       run: |
         curl --proto '=https' --tlsv1.2 -sSf https://docs.swmansion.com/scarb/install.sh | bash -s -- -v 0.4.0
 
-    - name: Copy Cairo program verifier script
-      shell: bash
-      run: |
-        mkdir -p book/listings && cp scripts/cairo_programs_verifier.sh book/listings && cp listings book/listings
-
     - name: Run build script
+      shell: bash
       run: |
         chmod +x scripts/cairo_programs_verifier.sh
         ./scripts/cairo_programs_verifier.sh
