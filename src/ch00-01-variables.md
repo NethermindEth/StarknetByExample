@@ -21,7 +21,7 @@ Local variables are stored in memory and are not stored on the blockchain. This 
 Here's a simple example of a contract with only local variables:
 
 ```rust
-{{#include local_variables.cairo}}
+{{#include ../listings/ch00-introduction/variables/src/local_variables.cairo}}
 ```
 
 ## Storage Variables
@@ -35,7 +35,7 @@ On the other hand, you can read state variables, for free, without any transacti
 Here's a simple example of a contract with one storage variable:
 
 ```rust
-{{#include storage_variables.cairo}}
+{{#include ../listings/ch00-introduction/variables/src/storage_variables.cairo}}
 ```
 
 ## Global Variables
@@ -47,5 +47,5 @@ In Starknet, you can access global variables by using specific functions contain
 For example, the `get_caller_address` function returns the address of the caller of the current transaction, and the `get_contract_address` function returns the address of the current contract.
 
 ```rust
-{{#include global_variables.cairo}}
+{{#include ../listings/ch00-introduction/variables/src/global_variables.cairo}}
 ```

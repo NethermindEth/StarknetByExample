@@ -11,5 +11,5 @@ This is useful when writing to storage variables that are not known at compile t
 In the following example, we use the Poseidon hash function to compute the address of a storage variable. Poseidon is a ZK-friendly hash function that is cheaper and faster than Pedersen, making it an excellent choice for onchain computations. Once the address is computed, we use the storage syscalls to interact with it.
 
 ```rust
-{{#include write_any_slot.cairo}}
+{{#include ../listings/ch00-introduction/write_to_any_slot/src/write_any_slot.cairo}}
 ```

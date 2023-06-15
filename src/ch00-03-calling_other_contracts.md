@@ -10,9 +10,9 @@ The other way is to use the `starknet::call_contract_syscall` syscall yourself. 
 In order to call other contracts using dispatchers, you will need to define the called contract's interface as a trait annotated with the `#[abi]` attribute, and then import the `IContractDispatcher` and `IContractDispatcherTrait` items in your contract.
 
 ```rust
-{{#include callee.cairo}}
+{{#include ../listings/ch00-introduction/calling_other_contracts/src/callee.cairo}}
 ```
 
 ```rust
-{{#include caller.cairo}}
+{{#include ../listings/ch00-introduction/calling_other_contracts/src/caller.cairo}}
 ```

@@ -16,7 +16,7 @@ To throw an error, use the `assert` or `panic` functions:
 Here's a simple example that demonstrates the use of these functions:
 
 ```rust
-{{#include simple_errors.cairo}}
+{{#include ../listings/ch00-introduction/errors/src/simple_errors.cairo}}
 ```
 
 ## Custom errors
@@ -24,7 +24,7 @@ Here's a simple example that demonstrates the use of these functions:
 You can make error handling easier by defining your error codes in a specific module.
 
 ```rust
-{{#include custom_errors.cairo}}
+{{#include ../listings/ch00-introduction/errors/src/custom_errors.cairo}}
 ```
 
 ## Vault example
@@ -32,5 +32,5 @@ You can make error handling easier by defining your error codes in a specific mo
 Here's another example that demonstrates the use of errors in a more complex contract:
 
 ```rust
-{{#include vault_errors.cairo}}
+{{#include ../listings/ch00-introduction/errors/src/vault_errors.cairo}}
 ```
