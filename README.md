@@ -17,10 +17,6 @@ CairoByExample is a collection of examples of how to use the [Cairo](https://git
      `sudo apt install gettext`.
 
 3. Clone this repository.
-4. Install mdbook-cairo [for Cairo code blocks](#work-locally-cairo-programs-verification)
-   ```
-   cargo install --path mdbook-cairo
-   ```
 
 ### Work locally
 
