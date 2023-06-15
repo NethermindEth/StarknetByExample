@@ -1,0 +1,26 @@
+name: Verify Cairo programs compilation
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  compile_and_verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Rust cache
+        uses: ./.github/workflows/setup-rust-cache
+
+      - name: Install scarb
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://docs.swmansion.com/scarb/install.sh | bash -s -- -v 0.4.0
+
+      - name: Run build script
+        run: |
+          chmod +x scripts/cairo_programs_verifier.sh
+          ./scripts/cairo_programs_verifier.sh

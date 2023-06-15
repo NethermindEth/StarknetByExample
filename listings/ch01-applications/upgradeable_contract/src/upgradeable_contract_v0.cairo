@@ -2,6 +2,8 @@
 mod UpgradeableContract_V0 {
     use starknet::class_hash::ClassHash;
     use zeroable::Zeroable;
+    use result::ResultTrait;
+    use starknet::SyscallResult;
 
     struct Storage {}
 

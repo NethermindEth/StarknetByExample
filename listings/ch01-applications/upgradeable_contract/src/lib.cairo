@@ -1,2 +1,2 @@
-mod upgradeable_contract_v0.cairo
-mod upgradeable_contract_v1.cairo
+mod upgradeable_contract_v0;
+mod upgradeable_contract_v1;
