@@ -1,12 +1,12 @@
-# Summary
+Summary
 
-- [Introduction to Cairo](./introduction_to_cairo.md)
+- [Introduction to Cairo](./ch00-00-introduction.md)
 
-  - [Variables](./introduction/variables/variables.md)
-  - [Calling other contracts](./introduction/calling_other_contracts/calling_other_contracts.md)
-  - [Errors](./introduction/errors/errors.md)
-  - [Write to Any Slot](./introduction/write_to_any_slot/write_to_any_slot.md)
-  - [Storing Arrays](./introduction/storing_arrays/storing_arrays.md)
+  - [Variables](./ch00-01-variables.md)
+  - [Errors](./ch00-02-errors.md)
+  - [Calling other contracts](./ch00-03-calling_other_contracts.md)
+  - [Write to Any Slot](./ch00-04-write_to_any_slot.md)
+  - [Storing Arrays](./ch00-05-storing_arrays.md)
 
-- [Applications](./applications/applications.md)
-  - [Upgradeable Contract](./applications/upgradeable_contract/upgradeable_contract.md)
+- [Applications](./ch01-00-applications.md)
+  - [Upgradeable Contract](./ch01-01-upgradeable_contract.md)

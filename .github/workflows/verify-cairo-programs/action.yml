@@ -5,20 +5,16 @@ description: Verify if all Cairo programs extracted from markdown can be compile
 runs:
   using: composite
   steps:
+    - name: Install scarb
+      run: |
+        curl --proto '=https' --tlsv1.2 -sSf https://docs.swmansion.com/scarb/install.sh | bash -s -- -v 0.4.0
+
     - name: Copy Cairo program verifier script
       shell: bash
       run: |
-        cp mdbook-cairo/scripts/cairo_programs_verifier.sh book/cairo/cairo-programs/
+        mkdir -p book/listings && cp scripts/cairo_programs_verifier.sh book/listings && cp listings book/listings
 
-    - name: Verify Cairo programs
-      uses: addnab/docker-run-action@v3
-      with:
-        image: starknet/cairo:1.1.0
-        options: -v ${{ github.workspace }}/book/cairo/cairo-programs:/cairo
-        run: |
-          sh /cairo/cairo_programs_verifier.sh false > /cairo/summary.md
-
-    - name: Generate job summary
-      shell: bash
-      run: cat book/cairo/cairo-programs/summary.md >> $GITHUB_STEP_SUMMARY
-      if: always()
+    - name: Run build script
+      run: |
+        chmod +x scripts/cairo_programs_verifier.sh
+        ./scripts/cairo_programs_verifier.sh
