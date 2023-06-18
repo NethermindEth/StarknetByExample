@@ -24,3 +24,4 @@ Summary
 
   - [Upgradeable Contract](./ch02-01-upgradeable_contract.md)
   - [Defi Vault](./ch02-02-simple_vault.md)
+  - [Merkle Tree](./ch02-03-merkle_tree.md)
