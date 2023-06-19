@@ -19,3 +19,4 @@ playground.runnable = false
 
 [output.cairo]
 output-dir = "cairo-programs"
+optional = true
