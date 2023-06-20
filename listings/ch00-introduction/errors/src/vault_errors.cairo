@@ -1,6 +1,6 @@
 mod VaultErrors {
     const INSUFFICIENT_BALANCE: felt252 = 'insufficient_balance';
-    // you can define more errors here
+// you can define more errors here
 }
 
 #[contract]
