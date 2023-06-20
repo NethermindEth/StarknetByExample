@@ -7,7 +7,8 @@ Summary
   - [Calling other contracts](./ch00-03-calling_other_contracts.md)
   - [Write to Any Slot](./ch00-04-write_to_any_slot.md)
   - [Storing Arrays](./ch00-05-storing_arrays.md)
-  - [Constructors](./ch00-06-constructor.md)
+  - [Mappings](./ch00-06-mappings.md)
+  - [Constructors](./ch00-07-constructor.md)
 
 - [Applications](./ch01-00-applications.md)
   - [Upgradeable Contract](./ch01-01-upgradeable_contract.md)
