@@ -1,17 +1,17 @@
 #[abi]
 trait IMapContract {
     #[external]
-    fn set(key:starknet::ContractAddress, value:felt252);
+    fn set(key: starknet::ContractAddress, value: felt252);
     #[view]
-    fn get(key:starknet::ContractAddress) -> felt252;
+    fn get(key: starknet::ContractAddress) -> felt252;
 }
 
 #[cfg(test)]
 mod tests {
-    use maps::maps::MapContract;
-    use super::{IMapContractDispatcher,IMapContractDispatcherTrait};
+    use maps::mappings::MapContract;
+    use super::{IMapContractDispatcher, IMapContractDispatcherTrait};
     use debug::PrintTrait;
-    use starknet::{deploy_syscall,ContractAddress};
+    use starknet::{deploy_syscall, ContractAddress};
     use option::OptionTrait;
     use array::ArrayTrait;
     use traits::{Into, TryInto};
@@ -29,11 +29,11 @@ mod tests {
             .unwrap();
         let mut contract = IMapContractDispatcher { contract_address: address0 };
 
-        // Write to slot.
+        // Write to map.
         let value: felt252 = 1;
         let contract_address: ContractAddress = address0;
 
-        contract.set(key:contract_address, value:value);
+        contract.set(key: contract_address, value: value);
 
         // Read from map.
         let read_value = contract.get(contract_address);
