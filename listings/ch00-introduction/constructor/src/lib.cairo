@@ -1,3 +1,4 @@
+#[contract]
 mod constructor {
     use starknet::ContractAddress;
 
