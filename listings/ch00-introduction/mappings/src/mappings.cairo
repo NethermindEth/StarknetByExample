@@ -9,11 +9,11 @@ mod MapContract {
 
     #[external]
     fn set(key: ContractAddress, value: felt252) {
-        _map::write(key, value)
+        _map::write(key, value);
     }
 
     #[view]
     fn get(key: ContractAddress) -> felt252 {
-        return _map::read(key);
+        _map::read(key)
     }
 }
