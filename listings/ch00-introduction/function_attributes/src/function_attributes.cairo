@@ -17,7 +17,7 @@ mod FunctionAttributes {
     #[view]
     fn get() -> u32 {
         // We can call an internal function from any functions within the contract
-        read_value()
+        _read_value()
     }
 
     // The `_read_value` function doesn't have any attributes, so it's an internal function
