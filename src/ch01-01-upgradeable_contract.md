@@ -5,7 +5,7 @@ instances. This division follows a similar concept used in object-oriented
 programming languages, where we distinguish between the definition and implementation
 of objects.
 
-A contract class is the definition of a contract: it specify how the contract
+A contract class is the definition of a contract: it specifies how the contract
 behaves. It contains essential information like the Cairo byte code, hint
 information, entry point names, and everything that defines its semantics
 unambiguously.
