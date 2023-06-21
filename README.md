@@ -33,9 +33,9 @@ All the Markdown files **MUST** be edited in english. To work locally in english
 
 The current book has script that verifies the compilation of all Cairo programs in the book.
 Instead of directly writing Cairo programs in the markdown files, we use code blocks that import the Cairo programs from the `listing` directory.
-These programs are bundled into scarb packages, which makes it easier to test and build entier packages.
+These programs are bundled into scarb packages, which makes it easier to test and build entire packages.
 
-To run the script locally, ensure that you are at the root of the repository (same directoy of this `README.md` file),
+To run the script locally, ensure that you are at the root of the repository (same directory as this `README.md` file),
 and run:
 
 `bash scripts/cairo_programs_verifier.sh`
