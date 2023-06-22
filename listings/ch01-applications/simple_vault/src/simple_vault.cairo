@@ -1,5 +1,7 @@
 use starknet::{ContractAddress};
 
+// In order to make contract calls within our Vault,
+// we need to have the ABI of the remote contract defined to import the Dispatcher
 #[abi]
 trait IERC20 {
     #[view]
@@ -40,28 +42,28 @@ mod SimpleVault {
     };
 
     struct Storage {
-        token: ContractAddress,
-        total_supply: u256,
-        balance_of: LegacyMap<ContractAddress, u256>
+        _token: IERC20Dispatcher,
+        _total_supply: u256,
+        _balance_of: LegacyMap<ContractAddress, u256>
     }
 
     #[constructor]
-    fn constructor(_token: ContractAddress) {
-        token::write(_token);
+    fn constructor(token: ContractAddress) {
+        _token::write(IERC20Dispatcher { contract_address: token });
     }
 
-    fn _mint(_to: ContractAddress, _shares: u256) {
-        total_supply::write(total_supply::read() + _shares);
-        balance_of::write(_to, balance_of::read(_to) + _shares);
+    fn _mint(to: ContractAddress, shares: u256) {
+        _total_supply::write(_total_supply::read() + shares);
+        _balance_of::write(to, _balance_of::read(to) + shares);
     }
 
-    fn _burn(_from: ContractAddress, _shares: u256) {
-        total_supply::write(total_supply::read() - _shares);
-        balance_of::write(_from, balance_of::read(_from) - _shares);
+    fn _burn(from: ContractAddress, shares: u256) {
+        _total_supply::write(_total_supply::read() - shares);
+        _balance_of::write(from, _balance_of::read(from) - shares);
     }
 
     #[external]
-    fn deposit(_amount: u256) {
+    fn deposit(amount: u256) {
         // a = amount
         // B = balance of token before deposit
         // T = total supply
@@ -74,19 +76,19 @@ mod SimpleVault {
         let this = get_contract_address();
 
         let mut shares = 0;
-        if total_supply::read() == 0 {
-            shares = _amount;
+        if _total_supply::read() == 0 {
+            shares = amount;
         } else {
-            let balance = IERC20Dispatcher { contract_address: token::read() }.balance_of(this);
-            shares = (_amount * total_supply::read()) / balance;
+            let balance = _token::read().balance_of(this);
+            shares = (amount * _total_supply::read()) / balance;
         }
 
         _mint(caller, shares);
-        IERC20Dispatcher { contract_address: token::read() }.transfer_from(caller, this, _amount);
+        _token::read().transfer_from(caller, this, amount);
     }
 
     #[external]
-    fn withdraw(_shares: u256) {
+    fn withdraw(shares: u256) {
         // a = amount
         // B = balance of token before withdraw
         // T = total supply
@@ -98,10 +100,10 @@ mod SimpleVault {
         let caller = get_caller_address();
         let this = get_contract_address();
 
-        let balance = IERC20Dispatcher { contract_address: token::read() }.balance_of(this);
-        let amount = (_shares * balance) / total_supply::read();
-        _burn(caller, _shares);
-        IERC20Dispatcher { contract_address: token::read() }.transfer(caller, amount);
+        let balance = _token::read().balance_of(this);
+        let amount = (shares * balance) / _total_supply::read();
+        _burn(caller, shares);
+        _token::read().transfer(caller, amount);
     }
 }
 
