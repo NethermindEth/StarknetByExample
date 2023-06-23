@@ -10,6 +10,7 @@ Summary
   - [Mappings](./ch00-06-mappings.md)
   - [Constructors](./ch00-07-constructor.md)
   - [Function Attributes](./ch00-08-function_attributes.md)
+  - [If statements](./ch00-09-if_statements.md)
 
 - [Applications](./ch01-00-applications.md)
   - [Upgradeable Contract](./ch01-01-upgradeable_contract.md)
