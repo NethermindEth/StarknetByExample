@@ -3,28 +3,27 @@ mod SimpleAccessControl {
     use starknet::{get_caller_address,ContractAddress};
 
     struct Storage {
-        owner: ContractAddress, 
+        _owner: ContractAddress, 
     }
 
     #[event]
-    fn welcomeEvent(name: felt252) {}
+    fn WelcomeEvent(name: felt252) {}
 
     #[constructor]
-    fn constructor(_address: ContractAddress) {
-        owner::write(_address);
+    fn constructor(address: ContractAddress) {
+        _owner::write(address);
     }
 
-    #[internal]
     fn only_owner() -> bool {
-        return get_caller_address() == owner::read();
+        return get_caller_address() == _owner::read();
     }
 
     #[external]
     fn log_access() {
         if(only_owner()) {
-            welcomeEvent('Welcome Admin!');
+            WelcomeEvent('Welcome Admin!');
         } else {
-            welcomeEvent('Welcome User!');
+            WelcomeEvent('Welcome User!');
         }
     }
 }
