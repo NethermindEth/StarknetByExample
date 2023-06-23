@@ -13,3 +13,4 @@ Summary
 
 - [Applications](./ch01-00-applications.md)
   - [Upgradeable Contract](./ch01-01-upgradeable_contract.md)
+  - [Defi Vault](./ch01-02-simple_vault.md)
