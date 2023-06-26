@@ -1,5 +1,6 @@
 Summary
 
+- [Starknet by Example](./starknet-by-example.md)
 - [Introduction to Cairo](./ch00-00-introduction.md)
 
   - [Variables](./ch00-01-variables.md)

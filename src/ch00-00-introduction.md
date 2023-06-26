@@ -1,3 +1,3 @@
-# Introduction to Cairo
+# Introduction to Cairo for Starknet smart contracts
 
-This section will introduce you to the basics of smart contracts in Cairo.
+The following chapters will introduce you to Starknet smart contracts and how to write them in Cairo.

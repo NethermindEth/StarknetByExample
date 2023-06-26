@@ -1,8 +1,8 @@
-# CairoByExample
+# Starknet by Example
 
 ## Description
 
-CairoByExample is a collection of examples of how to use the [Cairo](https://github.com/starkware-libs/cairo) programming language to create smart contracts on Starknet.
+Starknet by Example is a collection of examples of how to use the [Cairo](https://github.com/starkware-libs/cairo) programming language to create smart contracts on Starknet.
 
 ## Contribute
 
