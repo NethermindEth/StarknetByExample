@@ -14,7 +14,7 @@ mod SimpleCounter {
 
     #[external]
     fn increment() {
-        let mut counter = _counter::read();
+        let mut counter: u256 = _counter::read();
         // Increment counter
         counter += 1;
         // Write counter
