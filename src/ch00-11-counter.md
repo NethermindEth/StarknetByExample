@@ -1,6 +1,7 @@
 # Simple Counter
 
-This is the Cairo adaptation of the [Solidity by example First Application](https://solidity-by-example.org/first-app/).
+This is a smiple counter contract.
+
 Here's how it works:
 
 - The contract has a state variable called 'counter' that is initialized to 0.

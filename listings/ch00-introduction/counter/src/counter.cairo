@@ -8,6 +8,11 @@ mod SimpleCounter {
     #[constructor]
     fn constructor() {}
 
+    #[view]
+    fn get_current_count() -> u256 {
+        return _counter::read();
+    }
+
     #[external]
     fn increment() {
         // Store counter value + 1
