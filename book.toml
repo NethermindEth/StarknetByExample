@@ -3,7 +3,7 @@ authors = ["msaug"]
 language = "en"
 multilingual = false
 src = "src"
-title = "Cairo By Example"
+title = "Starknet by Example"
 
 [build]
 # Eventual translations
@@ -13,6 +13,6 @@ title = "Cairo By Example"
 after = ["links"]
 
 [output.html]
-git-repository-url = "https://github.com/NethermindEth/CairoByExample/"
-edit-url-template = "https://github.com/NethermindEth/CairoByExample/edit/main/{path}"
+git-repository-url = "https://github.com/NethermindEth/StarknetByExample/"
+edit-url-template = "https://github.com/NethermindEth/StarknetByExample/edit/main/{path}"
 playground.runnable = false
