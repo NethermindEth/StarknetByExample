@@ -13,6 +13,7 @@ Summary
   - [Function Attributes](./ch00-08-function_attributes.md)
   - [If statements](./ch00-09-if_statements.md)
   - [Events](./ch00-10-events.md)
+  - [Counter](./ch00-11-counter.md)
 
 - [Applications](./ch01-00-applications.md)
   - [Upgradeable Contract](./ch01-01-upgradeable_contract.md)
