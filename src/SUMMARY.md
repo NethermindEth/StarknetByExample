@@ -13,6 +13,7 @@ Summary
   - [Custom types in entrypoints](./ch00-13-custom-types-in-entrypoints.md)
   - [Errors](./ch00-02-errors.md)
   - [Calling other contracts](./ch00-03-calling_other_contracts.md)
+  - [Struct as mapping key](./ch00-14-struct-mapping-key.md)
 
 - [Advanced concepts](./ch01-00-advanced-concepts.md)
 
