@@ -1,6 +1,5 @@
 #[contract]
 mod MapContract {
-    use starknet::get_caller_address;
     use starknet::ContractAddress;
 
     struct Storage {
