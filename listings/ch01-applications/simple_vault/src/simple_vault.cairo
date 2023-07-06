@@ -1,7 +1,7 @@
 use starknet::{ContractAddress};
 
 // In order to make contract calls within our Vault,
-// we need to have the interface of the remote contract defined to import the Dispatcher
+// we need to have the interface of the remote ERC20 contract defined to import the Dispatcher.
 #[starknet::interface]
 trait IERC20<TContractState> {
     fn name(self: @TContractState) -> felt252;

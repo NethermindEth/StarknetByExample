@@ -1,6 +1,6 @@
 #[starknet::contract]
 mod GlobalExample {
-    // import the library function and types from the starknet core library 
+    // import the required functions from the starknet core library 
     use starknet::get_caller_address;
 
     #[storage]

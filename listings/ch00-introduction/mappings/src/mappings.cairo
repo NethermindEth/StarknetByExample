@@ -4,7 +4,8 @@ mod MapContract {
 
     #[storage]
     struct Storage {
-        map: LegacyMap::<ContractAddress, felt252>, 
+        // The `LegacyMap` type is only available inside the `Storage` struct.
+        map: LegacyMap::<ContractAddress, felt252>,
     }
 
     #[generate_trait]

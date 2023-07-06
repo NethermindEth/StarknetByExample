@@ -13,11 +13,13 @@ impl StorageAccessFelt252Array of StorageAccess<Array<felt252>> {
     fn read(address_domain: u32, base: StorageBaseAddress) -> SyscallResult<Array<felt252>> {
         StorageAccessFelt252Array::read_at_offset_internal(address_domain, base, 0)
     }
+
     fn write(
         address_domain: u32, base: StorageBaseAddress, value: Array<felt252>
     ) -> SyscallResult<()> {
         StorageAccessFelt252Array::write_at_offset_internal(address_domain, base, 0, value)
     }
+
     fn read_at_offset_internal(
         address_domain: u32, base: StorageBaseAddress, mut offset: u8
     ) -> SyscallResult<Array<felt252>> {

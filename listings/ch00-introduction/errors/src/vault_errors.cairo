@@ -14,7 +14,7 @@ mod VaultErrorsExample {
 
     #[generate_trait]
     #[external(v0)]
-    impl VaultErrorsExampleImpl of VaultErrorsExampleTrait {
+    impl VaultErrorsExample of IVaultErrorsExample {
         fn deposit(ref self: ContractState, amount: u256) {
             let mut balance = self.balance.read();
             balance = balance + amount;

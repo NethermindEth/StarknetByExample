@@ -7,15 +7,16 @@ trait ISimpleCounter<TContractState> {
 
 
 #[starknet::contract]
-mod simple_counter {
+mod SimpleCounter {
     #[storage]
     struct Storage {
         // Counter variable
         counter: u256,
     }
 
+    #[generate_trait]
     #[external(v0)]
-    impl SimpleCounterImpl of super::ISimpleCounter<ContractState> {
+    impl SimpleCounter of ISimpleCounter {
         fn get_current_count(self: @ContractState) -> u256 {
             return self.counter.read();
         }

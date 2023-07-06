@@ -8,10 +8,14 @@ mod EventCounter {
 
     #[event]
     #[derive(Drop, starknet::Event)]
+    // The event enum must be annotated with the `#[event]` attribute.
+    // It must also derive the `Drop` and `starknet::Event` traits.
     enum Event {
         CounterIncreased: CounterIncreased
     }
 
+    // By deriving the `starknet::Event` trait, we indicate to the compiler that
+    // this struct will be used when emitting events.
     #[derive(Drop, starknet::Event)]
     struct CounterIncreased {
         amount: u128
@@ -19,7 +23,7 @@ mod EventCounter {
 
     #[generate_trait]
     #[external(v0)]
-    impl EventCounterImpl of EventCounterTrait {
+    impl EventCounter of IEventCounter {
         fn increment(ref self: ContractState) {
             let mut counter = self.counter.read();
             counter += 1;

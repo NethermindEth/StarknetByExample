@@ -5,7 +5,7 @@ mod ErrorsExample {
 
     #[generate_trait]
     #[external(v0)]
-    impl ErrorsExampleImpl of ErrorsExampleTrait {
+    impl ErrorsExample of IErrorsExample {
         fn test_assert(self: @ContractState, i: u256) {
             // Assert used to validate a condition
             // and abort execution if the condition is not met

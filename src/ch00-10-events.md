@@ -1,6 +1,7 @@
 # Events
 
-An event is defined as function with the #[event] attribute. The parameters of the function correspond to data that will be emitted. An event is to be logged for easy and fast access to querying the data at a later time.
+Events are a way to emit data from a contract. All events must be defined in the `Event` enum, which must be annotated with the `#[event]` attribute.
+An event is defined as struct that derives the `#[starknet::Event]` trait. The fields of that struct correspond to the data that will be emitted. An event can be indexed for easy and fast access when querying the data at a later time.
 
 Here's a simple example of a contract using events that emit an event each time a counter is incremented by the "increment" function:
 
