@@ -1,13 +1,14 @@
-#[contract]
-mod constructor {
+#[starknet::contract]
+mod example_constructor {
     use starknet::ContractAddress;
 
+    #[storage]
     struct Storage {
-        _names: LegacyMap::<ContractAddress, felt252>, 
+        names: LegacyMap::<ContractAddress, felt252>, 
     }
 
     #[constructor]
-    fn constructor(name: felt252, address: ContractAddress) {
-        _names::write(address, name);
+    fn constructor(ref self: ContractState, name: felt252, address: ContractAddress) {
+        self.names.write(address, name);
     }
 }

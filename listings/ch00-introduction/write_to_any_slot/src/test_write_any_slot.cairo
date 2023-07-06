@@ -1,9 +1,9 @@
 use write_to_any_slot::write_any_slot::WriteToAnySlot;
 
-#[abi]
-trait IWriteToAnySlot {
-    fn write_slot(value: u32);
-    fn read_slot() -> u32;
+#[starknet::interface]
+trait IWriteToAnySlot<TContractState> {
+    fn write_slot(ref self: TContractState, value: u32);
+    fn read_slot(self: @TContractState) -> u32;
 }
 
 #[cfg(test)]

@@ -7,98 +7,109 @@ use starknet::{
     StorageBaseAddress, StorageAccess, SyscallResult, storage_read_syscall, storage_write_syscall,
     storage_address_from_base_and_offset
 };
-
+use debug::PrintTrait;
 // ANCHOR: StorageAccessImpl
 impl StorageAccessFelt252Array of StorageAccess<Array<felt252>> {
     fn read(address_domain: u32, base: StorageBaseAddress) -> SyscallResult<Array<felt252>> {
+        StorageAccessFelt252Array::read_at_offset_internal(address_domain, base, 0)
+    }
+    fn write(
+        address_domain: u32, base: StorageBaseAddress, value: Array<felt252>
+    ) -> SyscallResult<()> {
+        StorageAccessFelt252Array::write_at_offset_internal(address_domain, base, 0, value)
+    }
+    fn read_at_offset_internal(
+        address_domain: u32, base: StorageBaseAddress, mut offset: u8
+    ) -> SyscallResult<Array<felt252>> {
         let mut arr: Array<felt252> = ArrayTrait::new();
 
-        // Read the stored array's length.
-        let len: u8 = StorageAccess::<u8>::read(address_domain, base)
-            .expect('Failed to read array length');
-
-        // This implementation limits the stored array's length to 255.
-        assert(len <= 255, 'Storage Span too large');
+        // Read the stored array's length. If the length is superior to 255, the read will fail.
+        let len: u8 = StorageAccess::<u8>::read_at_offset_internal(address_domain, base, offset)
+            .expect('Storage Span too large');
+        offset += 1;
 
         // Sequentially read all stored elements and append them to the array.
-        let mut i: u8 = 1;
+        let exit = len + offset;
         loop {
-            if i > len {
-                break ();
+            if offset >= exit {
+                break;
             }
 
-            match storage_read_syscall(
-                :address_domain, address: storage_address_from_base_and_offset(base, i)
-            ) {
-                Result::Ok(value) => {
-                    arr.append(value);
-                },
-                Result::Err(_) => {
-                    panic_with_felt252('Storage - Span read error')
-                }
-            }
-            i += 1;
+            let value = StorageAccess::<felt252>::read_at_offset_internal(
+                address_domain, base, offset
+            )
+                .unwrap();
+            arr.append(value);
+            offset += StorageAccess::<felt252>::size_internal(value);
         };
 
         // Return the array.
         Result::Ok(arr)
     }
 
-    fn write(
-        address_domain: u32, base: StorageBaseAddress, mut value: Array<felt252>
+    fn write_at_offset_internal(
+        address_domain: u32, base: StorageBaseAddress, mut offset: u8, mut value: Array<felt252>
     ) -> SyscallResult<()> {
-        // Store the length of the array in the first storage slot.
+        // // Store the length of the array in the first storage slot.
         let len: u8 = value.len().try_into().expect('Storage - Span too large');
-        StorageAccess::<felt252>::write(address_domain, base, len.into());
+        StorageAccess::<u8>::write_at_offset_internal(address_domain, base, offset, len);
+        offset += 1;
 
         // Store the array elements sequentially
-        let mut i = 1;
         loop {
             match value.pop_front() {
                 Option::Some(element) => {
-                    storage_write_syscall(
-                        :address_domain,
-                        address: storage_address_from_base_and_offset(base, i),
-                        value: element
-                    );
+                    StorageAccess::<felt252>::write_at_offset_internal(
+                        address_domain, base, offset, element
+                    )?;
+                    offset += StorageAccess::<felt252>::size_internal(element);
                 },
                 Option::None(_) => {
-                    break ();
+                    break Result::Ok(());
                 }
-            }
-            i += 1;
-        };
-        Result::Ok(())
+            };
+        }
+    }
+
+    fn size_internal(value: Array<felt252>) -> u8 {
+        if value.len() == 0 {
+            return 1;
+        }
+        1_u8 + StorageAccess::<felt252>::size_internal(*value[0]) * value.len().try_into().unwrap()
     }
 }
 // ANCHOR_END: StorageAccessImpl
 
-#[abi]
-trait IStoreArrayContract {
-    fn store_array(array: Array<felt252>);
-    fn read_array() -> Array<felt252>;
-}
-
 // ANCHOR: StoreArrayContract
-#[contract]
+#[starknet::contract]
 mod StoreArrayContract {
-    use array::ArrayTrait;
     use super::StorageAccessFelt252Array;
+
+    #[storage]
     struct Storage {
-        _array: Array<felt252>
+        arr: Array<felt252>
     }
 
-    #[external]
-    fn store_array(array: Array<felt252>) {
-        _array::write(array);
-    }
 
-    #[view]
-    fn read_array() -> Array<felt252> {
-        _array::read()
+    #[generate_trait]
+    #[external(v0)]
+    impl StoreArrayImpl of IStoreArrayContract {
+        fn store_array(ref self: ContractState, arr: Array<felt252>) {
+            self.arr.write(arr);
+        }
+
+        fn read_array(self: @ContractState) -> Array<felt252> {
+            self.arr.read()
+        }
     }
 }
 // ANCHOR_END: StoreArrayContract
+
+#[starknet::interface]
+trait IStoreArrayContract<TContractState> {
+    fn store_array(ref self: TContractState, array: Array<felt252>);
+    fn read_array(self: @TContractState) -> Array<felt252>;
+}
 
 #[cfg(test)]
 mod tests {

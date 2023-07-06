@@ -13,5 +13,5 @@ Let's explore the three main types of functions you can use:
 Let's take a look at a simple example contract to see these attributes in action:
 
 ```rust
-{{#include ../listings/ch00-introduction/function_attributes/src/function_attributes.cairo}}
+{{#include ../listings/ch00-introduction/visibility/src/visibility.cairo}}
 ```

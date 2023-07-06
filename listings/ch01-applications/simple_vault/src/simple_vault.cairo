@@ -1,109 +1,95 @@
 use starknet::{ContractAddress};
 
 // In order to make contract calls within our Vault,
-// we need to have the ABI of the remote contract defined to import the Dispatcher
-#[abi]
-trait IERC20 {
-    #[view]
-    fn name() -> felt252;
-
-    #[view]
-    fn symbol() -> felt252;
-
-    #[view]
-    fn decimals() -> u8;
-
-    #[view]
-    fn total_supply() -> u256;
-
-    #[view]
-    fn balance_of(account: ContractAddress) -> u256;
-
-    #[view]
-    fn allowance(owner: ContractAddress, spender: ContractAddress) -> u256;
-
-    #[external]
-    fn transfer(recipient: ContractAddress, amount: u256) -> bool;
-
-    #[external]
-    fn transfer_from(sender: ContractAddress, recipient: ContractAddress, amount: u256) -> bool;
-
-    #[external]
-    fn approve(spender: ContractAddress, amount: u256) -> bool;
+// we need to have the interface of the remote contract defined to import the Dispatcher
+#[starknet::interface]
+trait IERC20<TContractState> {
+    fn name(self: @TContractState) -> felt252;
+    fn symbol(self: @TContractState) -> felt252;
+    fn decimals(self: @TContractState) -> u8;
+    fn total_supply(self: @TContractState) -> u256;
+    fn balance_of(self: @TContractState, account: ContractAddress) -> u256;
+    fn allowance(self: @TContractState, owner: ContractAddress, spender: ContractAddress) -> u256;
+    fn transfer(ref self: TContractState, recipient: ContractAddress, amount: u256) -> bool;
+    fn transfer_from(
+        ref self: TContractState, sender: ContractAddress, recipient: ContractAddress, amount: u256
+    ) -> bool;
+    fn approve(ref self: TContractState, spender: ContractAddress, amount: u256) -> bool;
 }
 
-#[contract]
+#[starknet::contract]
 mod SimpleVault {
     use super::{IERC20Dispatcher, IERC20DispatcherTrait};
-    use starknet::{
-        ContractAddress,
-        get_caller_address,
-        get_contract_address
-    };
-
+    use starknet::{ContractAddress, get_caller_address, get_contract_address};
+    #[storage]
     struct Storage {
-        _token: IERC20Dispatcher,
-        _total_supply: u256,
-        _balance_of: LegacyMap<ContractAddress, u256>
+        token: IERC20Dispatcher,
+        total_supply: u256,
+        balance_of: LegacyMap<ContractAddress, u256>
     }
 
     #[constructor]
-    fn constructor(token: ContractAddress) {
-        _token::write(IERC20Dispatcher { contract_address: token });
+    fn constructor(ref self: ContractState, token: ContractAddress) {
+        self.token.write(IERC20Dispatcher { contract_address: token });
     }
 
-    fn _mint(to: ContractAddress, shares: u256) {
-        _total_supply::write(_total_supply::read() + shares);
-        _balance_of::write(to, _balance_of::read(to) + shares);
-    }
-
-    fn _burn(from: ContractAddress, shares: u256) {
-        _total_supply::write(_total_supply::read() - shares);
-        _balance_of::write(from, _balance_of::read(from) - shares);
-    }
-
-    #[external]
-    fn deposit(amount: u256) {
-        // a = amount
-        // B = balance of token before deposit
-        // T = total supply
-        // s = shares to mint
-        //
-        // (T + s) / T = (a + B) / B 
-        //
-        // s = aT / B
-        let caller = get_caller_address();
-        let this = get_contract_address();
-
-        let mut shares = 0;
-        if _total_supply::read() == 0 {
-            shares = amount;
-        } else {
-            let balance = _token::read().balance_of(this);
-            shares = (amount * _total_supply::read()) / balance;
+    #[generate_trait]
+    impl PrivateFunctions of PrivateFunctionsTrait {
+        fn _mint(ref self: ContractState, to: ContractAddress, shares: u256) {
+            self.total_supply.write(self.total_supply.read() + shares);
+            self.balance_of.write(to, self.balance_of.read(to) + shares);
         }
 
-        _mint(caller, shares);
-        _token::read().transfer_from(caller, this, amount);
+        fn _burn(ref self: ContractState, from: ContractAddress, shares: u256) {
+            self.total_supply.write(self.total_supply.read() - shares);
+            self.balance_of.write(from, self.balance_of.read(from) - shares);
+        }
     }
 
-    #[external]
-    fn withdraw(shares: u256) {
-        // a = amount
-        // B = balance of token before withdraw
-        // T = total supply
-        // s = shares to burn
-        //
-        // (T - s) / T = (B - a) / B 
-        //
-        // a = sB / T
-        let caller = get_caller_address();
-        let this = get_contract_address();
+    #[external(v0)]
+    #[generate_trait]
+    impl SimpleVault of ISimpleVault {
+        fn deposit(ref self: ContractState, amount: u256) {
+            // a = amount
+            // B = balance of token before deposit
+            // T = total supply
+            // s = shares to mint
+            //
+            // (T + s) / T = (a + B) / B 
+            //
+            // s = aT / B
+            let caller = get_caller_address();
+            let this = get_contract_address();
 
-        let balance = _token::read().balance_of(this);
-        let amount = (shares * balance) / _total_supply::read();
-        _burn(caller, shares);
-        _token::read().transfer(caller, amount);
+            let mut shares = 0;
+            if self.total_supply.read() == 0 {
+                shares = amount;
+            } else {
+                let balance = self.token.read().balance_of(this);
+                shares = (amount * self.total_supply.read()) / balance;
+            }
+
+            PrivateFunctions::_mint(ref self, caller, shares);
+            self.token.read().transfer_from(caller, this, amount);
+        }
+
+        fn withdraw(ref self: ContractState, shares: u256) {
+            // a = amount
+            // B = balance of token before withdraw
+            // T = total supply
+            // s = shares to burn
+            //
+            // (T - s) / T = (B - a) / B 
+            //
+            // a = sB / T
+            let caller = get_caller_address();
+            let this = get_contract_address();
+
+            let balance = self.token.read().balance_of(this);
+            let amount = (shares * balance) / self.total_supply.read();
+            PrivateFunctions::_burn(ref self, caller, shares);
+            self.token.read().transfer(caller, amount);
+        }
     }
 }
 

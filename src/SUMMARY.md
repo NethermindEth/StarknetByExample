@@ -10,7 +10,7 @@ Summary
   - [Storing Arrays](./ch00-05-storing_arrays.md)
   - [Mappings](./ch00-06-mappings.md)
   - [Constructors](./ch00-07-constructor.md)
-  - [Function Attributes](./ch00-08-function_attributes.md)
+  - [Function Attributes](./ch00-08-visibility.md)
   - [If statements](./ch00-09-if_statements.md)
   - [Events](./ch00-10-events.md)
   - [Counter](./ch00-11-counter.md)
