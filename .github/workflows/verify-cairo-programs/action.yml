@@ -8,7 +8,7 @@ runs:
     - name: Install scarb
       shell: bash
       run: |
-        curl --proto '=https' --tlsv1.2 -sSf https://docs.swmansion.com/scarb/install.sh | bash -s -- -v 0.4.0
+        curl --proto '=https' --tlsv1.2 -sSf https://docs.swmansion.com/scarb/install.sh | bash -s -- -v 0.5.1
 
     - name: Run build script
       shell: bash

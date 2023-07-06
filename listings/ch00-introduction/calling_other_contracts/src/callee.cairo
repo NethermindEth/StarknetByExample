@@ -1,12 +1,21 @@
-#[contract]
+#[starknet::interface]
+trait ICallee<TContractState> {
+    fn set_value(ref self: TContractState, value: u128) -> u128;
+}
+
+
+#[starknet::contract]
 mod Callee {
+    #[storage]
     struct Storage {
-        _x: u128, 
+        value: u128, 
     }
 
-    #[external]
-    fn set_x(x: u128) -> u128 {
-        _x::write(x);
-        x
+    #[external(v0)]
+    impl ICalleeImpl of super::ICallee<ContractState> {
+        fn set_value(ref self: ContractState, value: u128) -> u128 {
+            self.value.write(value);
+            value
+        }
     }
 }
