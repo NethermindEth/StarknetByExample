@@ -1,5 +1,5 @@
 #[starknet::contract]
-mod VisiblityContract {
+mod ExampleContract {
     #[storage]
     struct Storage {
         value: u32
@@ -10,7 +10,7 @@ mod VisiblityContract {
     // Omitting this attribute would make all the functions in this implementation internal.
     #[external(v0)]
     #[generate_trait]
-    impl VisiblityContract of IVisibilityContract {
+    impl ExampleContract of IExampleContract {
         // The `set` function can be called externally because it is written inside an implementation marked as `#[external]`.
         // It can modify the contract's state as it is passed as a reference.
         fn set(ref self: ContractState, value: u32) {

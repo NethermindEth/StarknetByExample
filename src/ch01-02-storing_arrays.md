@@ -5,11 +5,11 @@ On Starknet, complex values (e.g., tuples or structs), are stored in a continuou
 The following example demonstrates how to write a simple implementation of the `StorageAccess` trait for the `Array<felt252>` type, allowing us to store arrays of up to 255 `felt252` elements.
 
 ```rust
-{{#include ../listings/ch00-introduction/storing_arrays/src/storing_arrays.cairo:StorageAccessImpl}}
+{{#include ../listings/ch01-advanced-concepts/storing_arrays/src/storing_arrays.cairo:StorageAccessImpl}}
 ```
 
 You can then import this implementation in your contract and use it to store arrays in storage:
 
 ```rust
-{{#include ../listings/ch00-introduction/storing_arrays/src/storing_arrays.cairo:StoreArrayContract}}
+{{#include ../listings/ch01-advanced-concepts/storing_arrays/src/storing_arrays.cairo:StoreArrayContract}}
 ```

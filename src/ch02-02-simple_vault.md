@@ -8,9 +8,5 @@ Here's how it works:
 - When a user withdraws, the contract burns their shares, calculates the yield, and withdraw both the yield and the initial amount of token deposited.
 
 ```rust
-{{#include ../listings/ch01-applications/simple_vault/src/simple_vault.cairo}}
+{{#include ../listings/ch02-applications/simple_vault/src/simple_vault.cairo}}
 ```
-
-> **Note**
-> As of version v1.1.0, we need to enable `experimental_v0.1.0` libfuncs to use `u256_divmod_safe` as it hasn't been audited yet.
-> It'll be included in v2.0.0.
