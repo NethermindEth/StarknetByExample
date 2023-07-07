@@ -1,23 +1,35 @@
-#[contract]
-mod SimpleCounter {
+#[starknet::contract]
+mod EventCounter {
+    #[storage]
     struct Storage {
         // Counter value
-        _counter: u256,
+        counter: u128,
     }
 
     #[event]
-    // Increment event  -  emitted when the counter is incremented.
-    fn Increment(counterVal: u256) {}
+    #[derive(Drop, starknet::Event)]
+    // The event enum must be annotated with the `#[event]` attribute.
+    // It must also derive the `Drop` and `starknet::Event` traits.
+    enum Event {
+        CounterIncreased: CounterIncreased
+    }
 
-    #[constructor]
-    fn constructor() {}
+    // By deriving the `starknet::Event` trait, we indicate to the compiler that
+    // this struct will be used when emitting events.
+    #[derive(Drop, starknet::Event)]
+    struct CounterIncreased {
+        amount: u128
+    }
 
-    #[external]
-    fn increment() {
-        let mut counter: u256 = _counter::read();
-        counter += 1;
-        _counter::write(counter);
-        // Emit event
-        Increment(counter);
+    #[generate_trait]
+    #[external(v0)]
+    impl EventCounter of IEventCounter {
+        fn increment(ref self: ContractState) {
+            let mut counter = self.counter.read();
+            counter += 1;
+            self.counter.write(counter);
+            // Emit event
+            self.emit(Event::CounterIncreased(CounterIncreased { amount: 1 }))
+        }
     }
 }

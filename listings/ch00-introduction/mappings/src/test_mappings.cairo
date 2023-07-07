@@ -1,15 +1,15 @@
-#[abi]
-trait IMapContract {
-    #[external]
-    fn set(key: starknet::ContractAddress, value: felt252);
-    #[view]
-    fn get(key: starknet::ContractAddress) -> felt252;
+use starknet::ContractAddress;
+#[starknet::interface]
+trait IMapContract<TContractState> {
+    fn set(ref self: TContractState, key: ContractAddress, value: felt252);
+
+    fn get(self: @TContractState, key: ContractAddress) -> felt252;
 }
 
 #[cfg(test)]
 mod tests {
     use maps::mappings::MapContract;
-    use super::{IMapContractDispatcher, IMapContractDispatcherTrait};
+    use super::{IMapContract, IMapContractDispatcher, IMapContractDispatcherTrait};
     use debug::PrintTrait;
     use starknet::{deploy_syscall, ContractAddress};
     use option::OptionTrait;

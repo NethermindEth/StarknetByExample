@@ -1,29 +1,35 @@
-#[contract]
+#[starknet::interface]
+trait ISimpleCounter<TContractState> {
+    fn get_current_count(self: @TContractState) -> u256;
+    fn increment(ref self: TContractState);
+    fn decrement(ref self: TContractState);
+}
+
+
+#[starknet::contract]
 mod SimpleCounter {
+    #[storage]
     struct Storage {
         // Counter variable
-        _counter: u256,
+        counter: u256,
     }
 
-    #[constructor]
-    fn constructor() {}
+    #[generate_trait]
+    #[external(v0)]
+    impl SimpleCounter of ISimpleCounter {
+        fn get_current_count(self: @ContractState) -> u256 {
+            return self.counter.read();
+        }
 
-    #[view]
-    fn get_current_count() -> u256 {
-        return _counter::read();
-    }
-
-    #[external]
-    fn increment() {
-        // Store counter value + 1
-        let counter: u256 = _counter::read() + 1;
-        _counter::write(counter);
-    }
-
-    #[external]
-    fn decrement() {
-        // Store counter value - 1
-        let counter: u256 = _counter::read() - 1;
-        _counter::write(counter);
+        fn increment(ref self: ContractState) {
+            // Store counter value + 1
+            let mut counter: u256 = self.counter.read() + 1;
+            self.counter.write(counter);
+        }
+        fn decrement(ref self: ContractState) {
+            // Store counter value - 1
+            let mut counter: u256 = self.counter.read() - 1;
+            self.counter.write(counter);
+        }
     }
 }

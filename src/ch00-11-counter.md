@@ -1,6 +1,6 @@
 # Simple Counter
 
-This is a smiple counter contract.
+This is a simple counter contract.
 
 Here's how it works:
 

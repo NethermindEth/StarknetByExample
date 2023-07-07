@@ -1,16 +1,26 @@
-#[abi]
-trait ICallee {
-    fn set_x(x: u128) -> u128;
+use starknet::ContractAddress;
+
+// We need to have the interface of the callee contract defined
+// so that we can import the Dispatcher.
+#[starknet::interface]
+trait ICallee<TContractState> {
+    fn set_value(ref self: TContractState, value: u128) -> u128;
 }
 
-
-#[contract]
+#[starknet::contract]
 mod Caller {
+    // We import the Dispatcher of the called contract
     use super::{ICalleeDispatcher, ICalleeDispatcherTrait};
     use starknet::ContractAddress;
 
-    #[external]
-    fn set_x_from_address(addr: ContractAddress, x: u128) {
-        let x = ICalleeDispatcher { contract_address: addr }.set_x(x);
+    #[storage]
+    struct Storage {}
+
+    #[generate_trait]
+    #[external(v0)]
+    impl ICallerImpl of ICaller {
+        fn set_value_from_address(ref self: ContractState, addr: ContractAddress, value: u128) {
+            ICalleeDispatcher { contract_address: addr }.set_value(value);
+        }
     }
 }

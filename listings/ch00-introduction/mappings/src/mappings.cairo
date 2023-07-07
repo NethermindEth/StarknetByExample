@@ -1,18 +1,22 @@
-#[contract]
+#[starknet::contract]
 mod MapContract {
     use starknet::ContractAddress;
 
+    #[storage]
     struct Storage {
-        _map: LegacyMap::<ContractAddress, felt252>, 
+        // The `LegacyMap` type is only available inside the `Storage` struct.
+        map: LegacyMap::<ContractAddress, felt252>,
     }
 
-    #[external]
-    fn set(key: ContractAddress, value: felt252) {
-        _map::write(key, value);
-    }
+    #[generate_trait]
+    #[external(v0)]
+    impl MapContractImpl of IMapContract {
+        fn set(ref self: ContractState, key: ContractAddress, value: felt252) {
+            self.map.write(key, value);
+        }
 
-    #[view]
-    fn get(key: ContractAddress) -> felt252 {
-        _map::read(key)
+        fn get(self: @ContractState, key: ContractAddress) -> felt252 {
+            self.map.read(key)
+        }
     }
 }

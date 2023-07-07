@@ -3,19 +3,26 @@ mod Errors {
     const NOT_NULL: felt252 = 'must not be null';
 }
 
-#[contract]
+
+#[starknet::contract]
 mod CustomErrorsExample {
     use super::Errors;
 
-    #[view]
-    fn test_assert(i: u256) {
-        assert(i > 0, Errors::NOT_POSITIVE);
-    }
+    #[storage]
+    struct Storage {}
 
-    #[view]
-    fn test_panic(i: u256) {
-        if (i == 0) {
-            panic_with_felt252(Errors::NOT_NULL);
+    #[generate_trait]
+    #[external(v0)]
+    impl CustomErrorsExample of ICustomErrorsExample{
+        fn test_assert(self: @ContractState, i: u256) {
+            assert(i > 0, Errors::NOT_POSITIVE);
+        }
+
+        #[view]
+        fn test_panic(self: @ContractState, i: u256) {
+            if (i == 0) {
+                panic_with_felt252(Errors::NOT_NULL);
+            }
         }
     }
 }

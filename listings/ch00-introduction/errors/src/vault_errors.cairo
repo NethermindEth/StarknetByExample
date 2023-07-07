@@ -3,35 +3,37 @@ mod VaultErrors {
 // you can define more errors here
 }
 
-#[contract]
+#[starknet::contract]
 mod VaultErrorsExample {
     use super::VaultErrors;
 
+    #[storage]
     struct Storage {
         balance: u256, 
     }
 
-    #[external]
-    fn deposit(amount: u256) {
-        let old_balance = balance::read();
-        let new_balance = old_balance + amount;
-
-        balance::write(new_balance);
-    }
-
-    #[external]
-    fn withdraw(amount: u256) {
-        let current_balance = balance::read();
-
-        assert(current_balance >= amount, VaultErrors::INSUFFICIENT_BALANCE);
-
-        // Or using panic:
-        if (current_balance >= amount) {
-            panic_with_felt252(VaultErrors::INSUFFICIENT_BALANCE);
+    #[generate_trait]
+    #[external(v0)]
+    impl VaultErrorsExample of IVaultErrorsExample {
+        fn deposit(ref self: ContractState, amount: u256) {
+            let mut balance = self.balance.read();
+            balance = balance + amount;
+            self.balance.write(balance);
         }
 
-        let new_balance = current_balance - amount;
+        fn withdraw(ref self: ContractState, amount: u256) {
+            let mut balance = self.balance.read();
 
-        balance::write(new_balance);
+            assert(balance >= amount, VaultErrors::INSUFFICIENT_BALANCE);
+
+            // Or using panic:
+            if (balance >= amount) {
+                panic_with_felt252(VaultErrors::INSUFFICIENT_BALANCE);
+            }
+
+            let balance = balance - amount;
+
+            self.balance.write(balance);
+        }
     }
 }
