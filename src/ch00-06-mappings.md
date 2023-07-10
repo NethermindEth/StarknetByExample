@@ -13,3 +13,4 @@ Some additional notes:
 ```rust
 {{#include ../listings/ch00-introduction/mappings/src/mappings.cairo}}
 ```
+Visit contract on [Voyager](https://goerli.voyager.online/contract/0x06214AB4c23Cc545bf2221D465eB83aFb7412779AD498BD48a724B3F645E3505).
