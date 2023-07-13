@@ -9,6 +9,8 @@ Summary
   - [Variables](./ch00-01-variables.md)
   - [Mappings](./ch00-06-mappings.md)
   - [Counter contract example](./ch00-11-counter.md)
+  - [Storing Custom Types](./ch00-12-storing-custom-types.md)
+  - [Custom types in entrypoints](./ch00-13-custom-types-in-entrypoints.md)
   - [Errors](./ch00-02-errors.md)
   - [Calling other contracts](./ch00-03-calling_other_contracts.md)
 
