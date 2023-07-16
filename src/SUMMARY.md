@@ -13,12 +13,12 @@ Summary
   - [Custom types in entrypoints](./ch00-13-custom-types-in-entrypoints.md)
   - [Errors](./ch00-02-errors.md)
   - [Calling other contracts](./ch00-03-calling_other_contracts.md)
-  - [Struct as mapping key](./ch00-14-struct-mapping-key.md)
 
 - [Advanced concepts](./ch01-00-advanced-concepts.md)
 
   - [Writing to any storage slot](./ch01-01-write_to_any_slot.md)
   - [Storing Arrays](./ch01-02-storing_arrays.md)
+  - [Struct as mapping key](./ch01-03-struct-mapping-key.md)
 
 - [Applications](./ch02-00-applications.md)
 
