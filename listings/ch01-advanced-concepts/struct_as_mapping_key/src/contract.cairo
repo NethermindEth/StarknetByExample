@@ -1,7 +1,5 @@
 #[starknet::contract]
 mod PetRegistry {
-    use starknet::get_caller_address;
-    use starknet::ContractAddress;
     use poseidon::poseidon_hash_span;
     use serde::Serde;
     use array::ArrayTrait;
