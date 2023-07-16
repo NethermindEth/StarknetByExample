@@ -18,6 +18,7 @@ Summary
 
   - [Writing to any storage slot](./ch01-01-write_to_any_slot.md)
   - [Storing Arrays](./ch01-02-storing_arrays.md)
+  - [Struct as mapping key](./ch01-03-struct-mapping-key.md)
 
 - [Applications](./ch02-00-applications.md)
 
