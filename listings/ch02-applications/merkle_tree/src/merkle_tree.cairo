@@ -1,59 +1,38 @@
-#[contract]
+#[starknet::contract]
 mod MerkleTree {
     use hash::LegacyHash;
     use starknet::ContractAddress;
-    use array::ArrayTrait;
+    use array::{SpanTrait};
     use traits::Into;
-    
-    struct Storage {
-        root: felt252 // root hash should be pedersen hash. keccak256 is not fitting into felt252
-    }
 
-    #[constructor]
-    fn constructor(_root: felt252) {
-        root::write(_root);
-    }
+    #[storage]
+    struct Storage {}
 
-    // Checks is merkle proof verified or not.
-    #[view]
-    fn verify(account: ContractAddress, mut proof: Array::<felt252>) -> bool {
-        let account_as_felt: felt252 = account.into();
-        let leaf = LegacyHash::hash(account_as_felt, account_as_felt);
-        _verify(root::read(), leaf, ref proof)
-    }
-
-    fn _verify(root:felt252, leaf: felt252, ref proof: Array::<felt252>) -> bool {
-        let proof_len = proof.len();
-        let calc_root = _verify_body(leaf, ref proof, proof_len, 0_u32);
-        if (calc_root == root) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    fn _verify_body(
-        leaf: felt252, ref proof: Array::<felt252>, proof_len: u32, index: u32
-    ) -> felt252 {
-        if (proof_len == 0_u32) {
-            return leaf;
-        }
-        let n = _sort_hashes(leaf, *proof.at(index));
-        return _verify_body(n, ref proof, proof_len - 1_u32, index + 1_u32);
-    }
-
-    // sorts hashes
-    fn _sort_hashes(a: felt252, b: felt252) -> felt252 {
-        // to sort hashes, convert them to u256.
-        // We can also write partialeq impl for felt252 to do this conversion.
-        let a_u256: u256 = a.into();
-        let b_u256: u256 = b.into();
-
-        if (a_u256 < b_u256) {
-            // returns pedersen hash of sorted hashes
-            return LegacyHash::hash(a, b);
-        } else {
-            return LegacyHash::hash(b, a);
+    #[generate_trait]
+    #[external(v0)]
+    impl MerkleTree of IMerkleTree {
+        // Verifies the given Merkle proof.
+        fn verify(
+            self: @ContractState, mut proof: Span<felt252>, mut node: felt252, root: felt252
+        ) -> bool {
+            loop {
+                match proof.pop_front() {
+                    Option::Some(proof_element) => {
+                        // Compute the hash of the current node and the current element of the proof.
+                        // We need to check if the current node is smaller than the current element of the proof.
+                        // If it is, we need to swap the order of the hash.
+                        if Into::<felt252, u256>::into(node) < (*proof_element).into() {
+                            node = LegacyHash::hash(node, *proof_element);
+                        } else {
+                            node = LegacyHash::hash(*proof_element, node);
+                        }
+                    },
+                    Option::None(()) => {
+                        break node;
+                    },
+                };
+            };
+            node == root
         }
     }
 }
