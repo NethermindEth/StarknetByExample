@@ -1,6 +1,6 @@
 # Contract interfaces and Traits generation
 
-Contract interfaces define the structure and behavior of a contract, serving as the contract's public ABI. They list all the function signatures that a contract exposes. For a detailed explanation of interfaces, you can refer to thee [Cairo Book](https://book.cairo-lang.org/ch99-01-02-a-simple-contract.html).
+Contract interfaces define the structure and behavior of a contract, serving as the contract's public ABI. They list all the function signatures that a contract exposes. For a detailed explanation of interfaces, you can refer to the [Cairo Book](https://book.cairo-lang.org/ch99-01-02-a-simple-contract.html).
 
 In cairo, to specify the interface you need to define a trait annotated with `#[starknet::interface]` and then implement that trait in the contract.
 
