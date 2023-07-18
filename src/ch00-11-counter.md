@@ -13,3 +13,4 @@ Here's how it works:
 ```rust
 {{#include ../listings/ch00-introduction/counter/src/counter.cairo}}
 ```
+Visit contract on [Voyager](https://goerli.voyager.online/contract/0x01664a69Fe701a1df7Bb0ae4A353792d0cf4E27146ee860075cbf6108b1D5718).
