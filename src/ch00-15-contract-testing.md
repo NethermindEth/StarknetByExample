@@ -18,6 +18,8 @@ Each test is defined as a function with the `#[test]` attribute. You can also ch
 
 As we are in the context of a smart contract, it's essential to set up the gas limit. You do this by using the `#[available_gas(X)]` attribute to specify the gas limit for a test. This is also a great way to ensure that your contract's features stay under a certain gas limit!
 
+> Note: The term "gas" here refers to Sierra gas, not L1 gas
+
 Now, let's move on to the testing process:
 - Use the `deploy` function logic to declare and deploy your contract.
 - Use `assert` to verify that the contract behaves as expected in the given context.
