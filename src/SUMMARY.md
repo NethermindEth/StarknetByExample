@@ -14,6 +14,7 @@ Summary
   - [Errors](./ch00-02-errors.md)
   - [Calling other contracts](./ch00-03-calling_other_contracts.md)
   - [Contract interfaces and Traits generation](./ch00-14-interfaces-traits.md)
+  - [Contract testing](./ch00-15-contract-testing.md)
 
 - [Advanced concepts](./ch01-00-advanced-concepts.md)
 
