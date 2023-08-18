@@ -8,17 +8,15 @@ Starknet by Example is a collection of examples of how to use the [Cairo](https:
 
 ### Setup
 
-1. Rust related packages:
+1. Clone this repository.
+2. Rust related packages:
    - Install toolchain providing `cargo` using [rustup](https://rustup.rs/).
-   - Install [mdBook](https://rust-lang.github.io/mdBook/guide/installation.html)
-2. Host machine packages:
+   - Install [mdBook](https://rust-lang.github.io/mdBook/guide/installation.html).
+3. Install `scarb` using [asdf](https://asdf-vm.com/) with `asdf install`. Alternatively, you can install `scarb` manually by following the instructions [here](https://docs.swmansion.com/scarb/).
 
-   - Install [gettext](https://www.gnu.org/software/gettext/) for translations, usually available with regular package manager:
-     `sudo apt install gettext`.
+### Local development
 
-3. Clone this repository.
-
-### Work locally
+#### MdBook
 
 All the Markdown files **MUST** be edited in english. To work locally in english:
 
@@ -29,7 +27,7 @@ All the Markdown files **MUST** be edited in english. To work locally in english
 
 - Open a PR with your changes.
 
-### Work locally (Cairo programs verification)
+#### Cairo programs
 
 The current book has script that verifies the compilation of all Cairo programs in the book.
 Instead of directly writing Cairo programs in the markdown files, we use code blocks that import the Cairo programs from the `listing` directory.
@@ -39,3 +37,12 @@ To run the script locally, ensure that you are at the root of the repository (sa
 and run:
 
 `bash scripts/cairo_programs_verifier.sh`
+
+This will check that all the Cairo programs in the book compile successfully using `scarb build`, that every tests passes using `scarb test`, and that the `scarb fmt -c` command does not identify any formatting issues.
+
+You can also use `bash scripts/cairo_programs_format.sh` to format all the Cairo programs in the book using `scarb fmt` automatically.
+
+If you want to add a new smart contract to the book, you can follow these steps:
+1. Create a new directory in the `listing` directory.
+2. Initialize a scarb project in the new directory with `scarb init`.
+3. Add `[[target.starknet-contract]]` and the starknet dependency to the `Scarb.toml` file.
