@@ -75,7 +75,7 @@ mod implicit_internal_contract_tests {
         let initial_value: u32 = 0;
         assert(contract.get_value() == initial_value, 'wrong value');
 
-        let add_value: u32 = 10; 
+        let add_value: u32 = 10;
         contract.add(add_value);
 
         assert(contract.get_value() == initial_value + add_value, 'wrong value after add');
