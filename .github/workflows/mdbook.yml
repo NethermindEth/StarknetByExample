@@ -39,18 +39,9 @@ jobs:
       - name: Install mdbook
         uses: ./.github/workflows/install-mdbook
 
-      - name: Build in English
+      - name: Build book
         run: |
           mdbook build -d book
-
-      - name: Build all translations
-        run: |
-          for po_lang in $(cat ./LANGUAGES); do
-              echo "::group::Building $po_lang translation"
-              MDBOOK_BOOK__LANGUAGE=$po_lang \
-              mdbook build -d book/$po_lang
-              echo "::endgroup::"
-          done
 
       - name: Verify Cairo programs
         uses: ./.github/workflows/verify-cairo-programs
