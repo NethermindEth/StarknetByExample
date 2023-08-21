@@ -19,3 +19,5 @@ mod ImplicitInterfaceContract {
     }
 }
 // ANCHOR_END: code
+
+

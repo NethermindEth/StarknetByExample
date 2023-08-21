@@ -5,9 +5,9 @@ mod StoringCustomType {
         person: Person
     }
 
-    // Deriving the storage_access::StorageAccess trait
+    // Deriving the starknet::Store trait
     // allows us to store the `Person` struct in the contract's storage.
-    #[derive(Drop, storage_access::StorageAccess)]
+    #[derive(Drop, starknet::Store)]
     struct Person {
         age: u8,
         name: felt252

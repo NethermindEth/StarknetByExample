@@ -6,9 +6,9 @@ runs:
   using: composite
   steps:
     - name: Install scarb
-      shell: bash
-      run: |
-        curl --proto '=https' --tlsv1.2 -sSf https://docs.swmansion.com/scarb/install.sh | bash -s -- -v 0.5.1
+      uses: software-mansion/setup-scarb@v1
+      with:
+        scarb-version: "0.6.2"
 
     - name: Run build script
       shell: bash

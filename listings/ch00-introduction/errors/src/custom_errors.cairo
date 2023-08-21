@@ -13,7 +13,7 @@ mod CustomErrorsExample {
 
     #[generate_trait]
     #[external(v0)]
-    impl CustomErrorsExample of ICustomErrorsExample{
+    impl CustomErrorsExample of ICustomErrorsExample {
         fn test_assert(self: @ContractState, i: u256) {
             assert(i > 0, Errors::NOT_POSITIVE);
         }

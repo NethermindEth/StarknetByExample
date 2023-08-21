@@ -4,29 +4,30 @@ use option::OptionTrait;
 use array::ArrayTrait;
 use array::SpanTrait;
 use starknet::{
-    StorageBaseAddress, StorageAccess, SyscallResult, storage_read_syscall, storage_write_syscall,
+    StorageBaseAddress, Store, SyscallResult, storage_read_syscall, storage_write_syscall,
     storage_address_from_base_and_offset
 };
 use debug::PrintTrait;
+
 // ANCHOR: StorageAccessImpl
-impl StorageAccessFelt252Array of StorageAccess<Array<felt252>> {
+impl StoreFelt252Array of Store<Array<felt252>> {
     fn read(address_domain: u32, base: StorageBaseAddress) -> SyscallResult<Array<felt252>> {
-        StorageAccessFelt252Array::read_at_offset_internal(address_domain, base, 0)
+        StoreFelt252Array::read_at_offset(address_domain, base, 0)
     }
 
     fn write(
         address_domain: u32, base: StorageBaseAddress, value: Array<felt252>
     ) -> SyscallResult<()> {
-        StorageAccessFelt252Array::write_at_offset_internal(address_domain, base, 0, value)
+        StoreFelt252Array::write_at_offset(address_domain, base, 0, value)
     }
 
-    fn read_at_offset_internal(
+    fn read_at_offset(
         address_domain: u32, base: StorageBaseAddress, mut offset: u8
     ) -> SyscallResult<Array<felt252>> {
         let mut arr: Array<felt252> = ArrayTrait::new();
 
         // Read the stored array's length. If the length is superior to 255, the read will fail.
-        let len: u8 = StorageAccess::<u8>::read_at_offset_internal(address_domain, base, offset)
+        let len: u8 = Store::<u8>::read_at_offset(address_domain, base, offset)
             .expect('Storage Span too large');
         offset += 1;
 
@@ -37,34 +38,29 @@ impl StorageAccessFelt252Array of StorageAccess<Array<felt252>> {
                 break;
             }
 
-            let value = StorageAccess::<felt252>::read_at_offset_internal(
-                address_domain, base, offset
-            )
-                .unwrap();
+            let value = Store::<felt252>::read_at_offset(address_domain, base, offset).unwrap();
             arr.append(value);
-            offset += StorageAccess::<felt252>::size_internal(value);
+            offset += Store::<felt252>::size();
         };
 
         // Return the array.
         Result::Ok(arr)
     }
 
-    fn write_at_offset_internal(
+    fn write_at_offset(
         address_domain: u32, base: StorageBaseAddress, mut offset: u8, mut value: Array<felt252>
     ) -> SyscallResult<()> {
         // // Store the length of the array in the first storage slot.
         let len: u8 = value.len().try_into().expect('Storage - Span too large');
-        StorageAccess::<u8>::write_at_offset_internal(address_domain, base, offset, len);
+        Store::<u8>::write_at_offset(address_domain, base, offset, len);
         offset += 1;
 
         // Store the array elements sequentially
         loop {
             match value.pop_front() {
                 Option::Some(element) => {
-                    StorageAccess::<felt252>::write_at_offset_internal(
-                        address_domain, base, offset, element
-                    )?;
-                    offset += StorageAccess::<felt252>::size_internal(element);
+                    Store::<felt252>::write_at_offset(address_domain, base, offset, element)?;
+                    offset += Store::<felt252>::size();
                 },
                 Option::None(_) => {
                     break Result::Ok(());
@@ -73,11 +69,8 @@ impl StorageAccessFelt252Array of StorageAccess<Array<felt252>> {
         }
     }
 
-    fn size_internal(value: Array<felt252>) -> u8 {
-        if value.len() == 0 {
-            return 1;
-        }
-        1_u8 + StorageAccess::<felt252>::size_internal(*value[0]) * value.len().try_into().unwrap()
+    fn size() -> u8 {
+        255 * Store::<felt252>::size()
     }
 }
 // ANCHOR_END: StorageAccessImpl
@@ -85,13 +78,12 @@ impl StorageAccessFelt252Array of StorageAccess<Array<felt252>> {
 // ANCHOR: StoreArrayContract
 #[starknet::contract]
 mod StoreArrayContract {
-    use super::StorageAccessFelt252Array;
+    use super::StoreFelt252Array;
 
     #[storage]
     struct Storage {
         arr: Array<felt252>
     }
-
 
     #[generate_trait]
     #[external(v0)]

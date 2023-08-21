@@ -101,7 +101,7 @@ mod simple_contract_tests {
     fn test_set_as_owner() {
         // Fake the caller address to address 1
         let owner = contract_address_const::<1>();
-        set_caller_address(owner);
+        set_contract_address(owner);
 
         let contract = deploy(10);
         assert(contract.get_owner() == owner, 'wrong owner');
@@ -131,4 +131,5 @@ mod simple_contract_tests {
     }
 }
 // ANCHOR_END: test
+
 

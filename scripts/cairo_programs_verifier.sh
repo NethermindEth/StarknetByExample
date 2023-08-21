@@ -13,7 +13,7 @@ process_directory() {
   do
     if [ -d "$dir" ]; then
       echo "Processing $dir"
-      (cd "$dir" && scarb build 0>/dev/null 1> error.log)
+      (cd "$dir" && scarb build 0>/dev/null 1> error.log && scarb fmt -c 0>/dev/null 1>> error.log && scarb test 0>/dev/null 1>> error.log)
       if [ $? -ne 0 ]; then
         has_errors=true
         echo "Error while processing $dir"
@@ -34,7 +34,7 @@ done
 
 # check if any errors were encountered
 if $has_errors ; then
-  echo "\n${RED}Some scarb builds have errors, please check the list above.${NC}\n"
+  echo "\n${RED}Some projects have errors, please check the list above.${NC}\n"
   exit 1
 else
   echo -e "\n${GREEN}All scarb builds were completed successfully${NC}.\n"
