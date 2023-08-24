@@ -31,5 +31,5 @@ Visit contract on [Voyager](https://goerli.voyager.online/contract/0x005300003ad
 ```rust
 {{#include ../listings/ch02-applications/upgradeable_contract/src/upgradeable_contract_v1.cairo}}
 ```
-Visit contract on [Voyager](https://goerli.voyager.online/contract/0x017c86152badd1d665b9836571bd6b0a484f028748aa13d9b2d5d9c9192fafc6) or play with it in [Remix](https://remix.ethereum.org/?#activate=Starknet-cairo1-compiler&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch02-applications/upgradeable_contract/src/upgradeable_contract_v0.cairo).
+Visit contract on [Voyager](https://goerli.voyager.online/contract/0x017c86152badd1d665b9836571bd6b0a484f028748aa13d9b2d5d9c9192fafc6) or play with it in [Remix](https://remix.ethereum.org/?#activate=Starknet-cairo1-compiler&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch02-applications/upgradeable_contract/src/upgradeable_contract_v1.cairo).
 
