@@ -6,3 +6,5 @@ Thankfully, we can just derive the `Serde` trait for our custom type.
 ```rust
 {{#include ../listings/ch00-introduction/custom_type_serde/src/lib.cairo}}
 ```
+
+Play with this contract in [Remix](https://remix.ethereum.org/?#activate=Starknet-cairo1-compiler&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-introduction/custom_type_serde/src/lib.cairo).
