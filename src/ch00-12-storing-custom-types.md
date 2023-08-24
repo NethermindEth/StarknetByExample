@@ -5,3 +5,5 @@ While native types can be stored in a contract's storage without any additional 
 ```rust
 {{#include ../listings/ch00-introduction/storing_custom_types/src/lib.cairo}}
 ```
+
+Play with this contract in [Remix](https://remix.ethereum.org/?#activate=Starknet-cairo1-compiler&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-introduction/storing_custom_types/src/lib.cairo).
