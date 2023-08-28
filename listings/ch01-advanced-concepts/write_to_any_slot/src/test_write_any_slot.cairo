@@ -11,13 +11,8 @@ mod tests {
     use super::WriteToAnySlot::{get_address_from_name};
     use super::WriteToAnySlot;
     use super::{IWriteToAnySlotDispatcher, IWriteToAnySlotDispatcherTrait};
-    use debug::PrintTrait;
     use starknet::deploy_syscall;
-    use option::OptionTrait;
-    use array::ArrayTrait;
-    use traits::{Into, TryInto};
     use starknet::class_hash::Felt252TryIntoClassHash;
-    use result::ResultTrait;
 
     #[test]
     #[available_gas(2000000000)]

@@ -1,9 +1,7 @@
 #[starknet::contract]
 mod UpgradeableContract_V1 {
     use starknet::class_hash::ClassHash;
-    use zeroable::Zeroable;
-    use result::ResultTrait;
-    use starknet::SyscallResult;
+    use starknet::SyscallResultTrait;
 
     #[storage]
     struct Storage {}

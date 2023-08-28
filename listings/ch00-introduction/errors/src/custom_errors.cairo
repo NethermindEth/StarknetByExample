@@ -3,7 +3,6 @@ mod Errors {
     const NOT_NULL: felt252 = 'must not be null';
 }
 
-
 #[starknet::contract]
 mod CustomErrorsExample {
     use super::Errors;

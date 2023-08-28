@@ -9,7 +9,7 @@ mod VaultErrorsExample {
 
     #[storage]
     struct Storage {
-        balance: u256, 
+        balance: u256,
     }
 
     #[generate_trait]

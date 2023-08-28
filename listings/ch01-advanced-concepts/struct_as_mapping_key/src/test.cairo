@@ -2,14 +2,8 @@
 mod tests {
     use src::contract::PetRegistry;
     use PetRegistry::Pet;
-    use debug::PrintTrait;
     use starknet::deploy_syscall;
-    use option::OptionTrait;
-    use array::ArrayTrait;
-    use traits::{Into, TryInto};
     use starknet::class_hash::Felt252TryIntoClassHash;
-    use result::ResultTrait;
-    use array::SpanTrait;
 
     #[starknet::interface]
     trait IPetRegistry<TContractState> {

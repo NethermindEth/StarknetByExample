@@ -1,13 +1,7 @@
-use traits::{Into, TryInto};
-use result::ResultTrait;
-use option::OptionTrait;
-use array::ArrayTrait;
-use array::SpanTrait;
 use starknet::{
     StorageBaseAddress, Store, SyscallResult, storage_read_syscall, storage_write_syscall,
     storage_address_from_base_and_offset
 };
-use debug::PrintTrait;
 
 // ANCHOR: StorageAccessImpl
 impl StoreFelt252Array of Store<Array<felt252>> {
@@ -59,7 +53,7 @@ impl StoreFelt252Array of Store<Array<felt252>> {
         loop {
             match value.pop_front() {
                 Option::Some(element) => {
-                    Store::<felt252>::write_at_offset(address_domain, base, offset, element)?;
+                    Store::<felt252>::write_at_offset(address_domain, base, offset, element);
                     offset += Store::<felt252>::size();
                 },
                 Option::None(_) => {
@@ -109,14 +103,8 @@ trait IStoreArrayContract<TContractState> {
 mod tests {
     use super::StoreArrayContract;
     use super::{IStoreArrayContractDispatcher, IStoreArrayContractDispatcherTrait};
-    use debug::PrintTrait;
     use starknet::deploy_syscall;
-    use option::OptionTrait;
-    use array::ArrayTrait;
-    use traits::{Into, TryInto};
     use starknet::class_hash::Felt252TryIntoClassHash;
-    use result::ResultTrait;
-    use array::SpanTrait;
 
     #[test]
     #[available_gas(20000000)]

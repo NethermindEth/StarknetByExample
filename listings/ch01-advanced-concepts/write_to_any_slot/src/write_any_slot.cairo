@@ -1,9 +1,7 @@
 #[starknet::contract]
 mod WriteToAnySlot {
     use starknet::syscalls::{storage_read_syscall, storage_write_syscall};
-    use array::ArrayTrait;
-    use option::OptionTrait;
-    use traits::{Into, TryInto};
+    use starknet::SyscallResultTrait;
     use poseidon::poseidon_hash_span;
     use starknet::storage_access::Felt252TryIntoStorageAddress;
     use starknet::StorageAddress;

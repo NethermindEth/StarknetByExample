@@ -57,17 +57,8 @@ mod simple_contract_tests {
         contract_address_const
     };
 
-    // Use debug print trait to be able to print result if needed.
-    use debug::PrintTrait;
-
     // Use starknet test utils to fake the transaction context.
     use starknet::testing::{set_caller_address, set_contract_address};
-
-    use serde::Serde;
-    use option::OptionTrait;
-    use array::ArrayTrait;
-    use traits::{Into, TryInto};
-    use result::ResultTrait;
 
     // Deploy the contract and return its dispatcher.
     fn deploy(initial_value: u32) -> ISimpleContractDispatcher {

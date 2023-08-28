@@ -1,12 +1,10 @@
 #[starknet::contract]
 mod PetRegistry {
     use poseidon::poseidon_hash_span;
-    use serde::Serde;
-    use array::ArrayTrait;
 
     #[storage]
     struct Storage {
-        registration_time: LegacyMap::<felt252, u64>, 
+        registration_time: LegacyMap::<felt252, u64>,
     }
 
     #[derive(Copy, Drop, Serde)]

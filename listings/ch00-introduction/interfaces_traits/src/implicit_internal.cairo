@@ -51,13 +51,8 @@ mod implicit_internal_contract_tests {
         IImplicitInternalContract, ImplicitInternalContract, IImplicitInternalContractDispatcher,
         IImplicitInternalContractDispatcherTrait
     };
-    use debug::PrintTrait;
     use starknet::{deploy_syscall, ContractAddress};
-    use option::OptionTrait;
-    use array::ArrayTrait;
-    use traits::{Into, TryInto};
     use starknet::class_hash::Felt252TryIntoClassHash;
-    use result::ResultTrait;
 
     #[test]
     #[available_gas(2000000000)]
