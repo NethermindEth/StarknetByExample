@@ -16,7 +16,7 @@ jobs:
       - name: Install scarb
         uses: software-mansion/setup-scarb@v1
         with:
-          scarb-version: "0.6.2"
+          scarb-version: "0.7.0"
 
       - name: Run build script
         run: |

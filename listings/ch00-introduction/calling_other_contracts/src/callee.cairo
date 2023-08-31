@@ -2,7 +2,7 @@
 mod Callee {
     #[storage]
     struct Storage {
-        value: u128, 
+        value: u128,
     }
 
     #[external(v0)]

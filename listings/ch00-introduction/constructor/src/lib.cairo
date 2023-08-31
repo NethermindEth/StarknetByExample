@@ -4,7 +4,7 @@ mod ExampleConstructor {
 
     #[storage]
     struct Storage {
-        names: LegacyMap::<ContractAddress, felt252>, 
+        names: LegacyMap::<ContractAddress, felt252>,
     }
 
     // The constructor is decorated with a `#[constructor]` attribute.
