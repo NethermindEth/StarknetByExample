@@ -1,4 +1,4 @@
-**Issue(s):** <!-- #issue-number -->
+**Issue(s):** <!-- Close #issue-number -->
 
 ### Description
 
