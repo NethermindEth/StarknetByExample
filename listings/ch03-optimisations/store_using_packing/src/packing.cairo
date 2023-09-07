@@ -68,10 +68,6 @@ mod tests {
     use starknet::class_hash::Felt252TryIntoClassHash;
 
     use debug::PrintTrait;
-    use option::OptionTrait;
-    use traits::{Into, TryInto};
-    use result::ResultTrait;
-    use array::{ArrayTrait, SpanTrait};
 
     #[test]
     #[available_gas(20000000)]
