@@ -11,4 +11,4 @@ In the following example, we use the Poseidon hash function to compute the addre
 ```rust
 {{#include ../listings/ch01-advanced-concepts/write_to_any_slot/src/write_any_slot.cairo}}
 ```
-Visit contract on [Voyager](https://goerli.voyager.online/contract/0x033943CB781A4E63C9dcE0A1A09eAa3b617AA43CC61637C08c043a67f3fe0087) or play with it in [Remix](https://remix.ethereum.org/?#activate=Starknet-cairo1-compiler&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch01-advanced-concepts/write_to_any_slot/src/write_any_slot.cairo).
+Visit contract on [Voyager](https://goerli.voyager.online/contract/0x033943CB781A4E63C9dcE0A1A09eAa3b617AA43CC61637C08c043a67f3fe0087) or play with it in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch01-advanced-concepts/write_to_any_slot/src/write_any_slot.cairo).

@@ -11,4 +11,4 @@ Here's how it works:
 {{#include ../listings/ch02-applications/simple_vault/src/simple_vault.cairo}}
 ```
 
-Play with this contract in [Remix](https://remix.ethereum.org/?#activate=Starknet-cairo1-compiler&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch02-applications/simple_vault/src/simple_vault.cairo).
+Play with this contract in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch02-applications/simple_vault/src/simple_vault.cairo).
