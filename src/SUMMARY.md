@@ -26,3 +26,7 @@ Summary
 
   - [Upgradeable Contract](./ch02-01-upgradeable_contract.md)
   - [Defi Vault](./ch02-02-simple_vault.md)
+
+- [Optimisations](./ch03-00-optimisations.md)
+
+  - [Storage Optimisations](./ch03-01-store_using_packing.md)
