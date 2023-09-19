@@ -15,5 +15,5 @@ You can then import this implementation in your contract and use it to store arr
 ```rust
 {{#include ../listings/ch01-advanced-concepts/storing_arrays/src/storing_arrays.cairo:StoreArrayContract}}
 ```
-Visit contract on [Voyager](https://goerli.voyager.online/contract/0x008F8069a3Fcd7691Db46Dc3b6F9D2C0436f9200E861330957Fd780A3595da86) or play with it in [Remix](https://remix.ethereum.org/?#activate=Starknet-cairo1-compiler&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch01-advanced-concepts/storing_arrays/src/storing_arrays.cairo).
+Visit contract on [Voyager](https://goerli.voyager.online/contract/0x008F8069a3Fcd7691Db46Dc3b6F9D2C0436f9200E861330957Fd780A3595da86) or play with it in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch01-advanced-concepts/storing_arrays/src/storing_arrays.cairo).
 

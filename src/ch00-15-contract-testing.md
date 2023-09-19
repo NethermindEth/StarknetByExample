@@ -12,7 +12,7 @@ Now, take a look at the tests for this contract:
 {{#include ../listings/ch00-introduction/testing/src/lib.cairo:test}}
 ```
 
-Play with this contract in [Remix](https://remix.ethereum.org/?#activate=Starknet-cairo1-compiler&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-introduction/testing/src/lib.cairo).
+Play with this contract in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-introduction/testing/src/lib.cairo).
 
 To define our test, we use scarb, which allows us to create a separate module guarded with `#[cfg(test)]`. This ensures that the test module is only compiled when running tests using `scarb test`.
 
