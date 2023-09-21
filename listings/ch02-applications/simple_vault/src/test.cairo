@@ -1,46 +1,37 @@
 #[cfg(test)]
 mod tests {
     use super::*;
-    use starknet::{
-        ContractAddress,
-        array::ArrayTrait,
-        traits::{Into, TryInto},
-    };
-
-    // Simulated dispatcher for the ERC20 contract.
-    struct MockERC20Dispatcher;
-
-    impl IERC20DispatcherTrait for MockERC20Dispatcher {
-        // Simulated implementation of ERC20 methods for testing.
-        // Replace these with actual logic in a real environment.
-        fn balance_of(&self, _account: ContractAddress) -> u256 {
-            // this is a simulated balance for testing
-            1000 
-        }
-
-        fn transfer(&self, _recipient: ContractAddress, _amount: u256) -> bool {
-            true 
-        }
-
-        fn transfer_from(&self, _sender: ContractAddress, _recipient: ContractAddress, _amount: u256) -> bool {
-            true
-        }
-    }
-
+    use starknet::{ContractAddress, deploy_syscall};
+    
     #[test]
-    fn test_deposit_withdraw() {
-        // Set up.
-        let mut token_dispatcher = MockERC20Dispatcher {};
-        let mut contract = SimpleVaultDispatcher { token: &mut token_dispatcher, total_supply: 0, balance_of: LegacyMap::new() };
+    fn test_deposit_and_withdraw() {
+        // Deploy the SimpleVault contract.
+        let mut calldata: Array<felt252> = ArrayTrait::new();
+        let (vault_contract_address, _) = deploy_syscall(
+            SimpleVaultContract::TEST_CLASS_HASH.try_into().unwrap(),
+            0,
+            calldata.span(),
+            false,
+        )
+        .unwrap();
+
+        // Set up the contract dispatcher with the deployed contract.
+        let mut token_dispatcher = MockERC20Dispatcher {}; // Replace with your ERC20 implementation.
+        let mut contract = SimpleVaultDispatcher {
+            token: &mut token_dispatcher,
+            total_supply: 0,
+            balance_of: LegacyMap::new(),
+            contract_address: vault_contract_address,
+        };
 
         // Deposit some amount.
         contract.deposit(100);
 
-        // Assert balances and total supply.
-        assert_eq!(contract.balance_of(), 100, "Balance mismatch");
-        assert_eq!(contract.total_supply(), 100, "Total supply mismatch");
+        // Assert balances and total supply after deposit.
+        assert_eq!(contract.balance_of(), 100, "Balance mismatch after deposit");
+        assert_eq!(contract.total_supply(), 100, "Total supply mismatch after deposit");
 
-        // Withdraw shares.
+        // Withdraw some shares.
         contract.withdraw(50);
 
         // Assert balances and total supply after withdrawal.
