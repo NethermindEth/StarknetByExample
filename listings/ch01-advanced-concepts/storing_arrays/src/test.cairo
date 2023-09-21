@@ -7,34 +7,31 @@ mod tests {
         traits::{Into, TryInto},
     };
 
-    // simulated dispatcher for the contract
-    struct MockContractDispatcher {
-        contract_address: u32,
-    }
-
-    impl MockContractDispatcher {
-        fn store_array(&self, array: Array<felt252>) {
-            // Simulate storing the array
-        }
-
-        fn read_array(&self) -> Array<felt252> {
-            
-        }
-    }
-
     #[test]
     fn test_array_storage() {
-        // Set up.
-        let mut contract = MockContractDispatcher { contract_address: 0 };
+        // Deploy the StoreArrayContract to get a contract address.
+        let mut calldata: Array<felt252> = ArrayTrait::new();
+        let (contract_address, _) = deploy_syscall(
+            StoreArrayContract::TEST_CLASS_HASH.try_into().unwrap(),
+            0,
+            calldata.span(),
+            false,
+        )
+        .unwrap();
 
-        // store an array
+        // Create a dispatcher for the contract.
+        let mut contract_dispatcher = IStoreArrayContractDispatcher {
+            contract_address: contract_address,
+        };
+
+        // Store an array.
         let mut array: Array<felt252> = ArrayTrait::new();
         array.append(1);
         array.append(2);
-        contract.store_array(array);
+        contract_dispatcher.store_array(array);
 
-        // reading the array
-        let read_array = contract.read_array();
+        // Read the array.
+        let read_array = contract_dispatcher.read_array();
         assert_eq!(read_array.len(), 2, "Array length mismatch");
         assert_eq!(*read_array[0], 1, "Array element mismatch");
         assert_eq!(*read_array[1], 2, "Array element mismatch");
@@ -43,17 +40,29 @@ mod tests {
     #[test]
     #[should_panic(expected = "('Storage - Span too large', 'ENTRYPOINT_FAILED')")]
     fn test_array_storage_too_large() {
-        // Set up.
-        let mut contract = MockContractDispatcher { contract_address: 0 };
+        // Deploy the StoreArrayContract to get a contract address.
+        let mut calldata: Array<felt252> = ArrayTrait::new();
+        let (contract_address, _) = deploy_syscall(
+            StoreArrayContract::TEST_CLASS_HASH.try_into().unwrap(),
+            0,
+            calldata.span(),
+            false,
+        )
+        .unwrap();
 
-        // store an array too large
+        // Create a dispatcher for the contract.
+        let mut contract_dispatcher = IStoreArrayContractDispatcher {
+            contract_address: contract_address,
+        };
+
+        // Store an array that's too large.
         let mut array: Array<felt252> = ArrayTrait::new();
         for i in 0..256 {
             array.append(i);
         }
-        contract.store_array(array);
+        contract_dispatcher.store_array(array);
 
         // Read the array (simulated logic).
-        let _read_array = contract.read_array();
+        let _read_array = contract_dispatcher.read_array();
     }
 }
