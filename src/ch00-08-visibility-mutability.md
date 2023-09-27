@@ -12,7 +12,7 @@ These functions are also typically divided into two different implementations bl
 ## State Mutability
 
 Regardless of whether a function is internal or external, it can either modify the contract's state or not. When we declare functions that interact with storage variables inside a smart contract,
-we need to explicitly state that we are accessing the `ContractState` by adding it as the first parameter of the function. This is can be done in two different ways:
+we need to explicitly state that we are accessing the `ContractState` by adding it as the first parameter of the function. This can be done in two different ways:
 
 - If we want our function to be able to mutate the state of the contract, we pass it by reference like this: `ref self: ContractState`.
 - If we want our function to be read-only and not mutate the state of the contract, we pass it by snapshot like this: `self: @ContractState`.
