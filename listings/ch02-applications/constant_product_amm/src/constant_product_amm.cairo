@@ -1,28 +1,18 @@
+// ANCHOR: ConstantProductAmmContract
 use starknet::ContractAddress;
 
-// In order to make contract calls within our Vault,
-// we need to have the interface of the remote ERC20 contract defined to import the Dispatcher.
 #[starknet::interface]
-trait IERC20<TContractState> {
-    fn name(self: @TContractState) -> felt252;
-    fn symbol(self: @TContractState) -> felt252;
-    fn decimals(self: @TContractState) -> u8;
-    fn total_supply(self: @TContractState) -> u256;
-    fn balance_of(self: @TContractState, account: ContractAddress) -> u256;
-    fn allowance(self: @TContractState, owner: ContractAddress, spender: ContractAddress) -> u256;
-    fn transfer(ref self: TContractState, recipient: ContractAddress, amount: u256) -> bool;
-    fn transfer_from(
-        ref self: TContractState, sender: ContractAddress, recipient: ContractAddress, amount: u256
-    ) -> bool;
-    fn approve(ref self: TContractState, spender: ContractAddress, amount: u256) -> bool;
+trait IConstantProductAmm<TContractState> {
+    fn swap(ref self: TContractState, token_in: ContractAddress, amount_in: u256) -> u256;
+    fn add_liquidity(ref self: TContractState, amount0: u256, amount1: u256) -> u256;
+    fn remove_liquidity(ref self: TContractState, shares: u256) -> (u256, u256);
 }
 
 #[starknet::contract]
-mod ConstantAmm {
-    use super::{IERC20Dispatcher, IERC20DispatcherTrait};
+mod ConstantProductAmm {
+    use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
     use starknet::{ContractAddress, get_caller_address, get_contract_address};
     use integer::u256_sqrt;
-
 
     #[storage]
     struct Storage {
@@ -78,8 +68,7 @@ mod ConstantAmm {
     }
 
     #[external(v0)]
-    #[generate_trait]
-    impl ConstantAmm of IConstantAmm {
+    impl ConstantProductAmm of super::IConstantProductAmm<ContractState> {
         fn swap(ref self: ContractState, token_in: ContractAddress, amount_in: u256) -> u256 {
             assert(amount_in > 0, 'amount in = 0');
             let is_token0: bool = self.select_token(token_in);
@@ -143,6 +132,7 @@ mod ConstantAmm {
             //
             // x / y = dx / dy
             // dy = y / x * dx
+
             let (reserve0, reserve1): (u256, u256) = (self.reserve0.read(), self.reserve1.read());
             if (reserve0 > 0 || reserve1 > 0) {
                 assert(reserve0 * amount1 == reserve1 * amount0, 'x / y != dx / dy');
@@ -192,6 +182,7 @@ mod ConstantAmm {
             //
             // Finally
             // (L1 - L0) / L0 = dx / x = dy / y
+
             let total_supply = self.total_supply.read();
             let shares = if (total_supply == 0) {
                 u256_sqrt(amount0 * amount1).into()
@@ -265,5 +256,115 @@ mod ConstantAmm {
         }
     }
 }
-// TODO: Add tests
+// ANCHOR_END: StoreArrayContract
 
+#[cfg(test)]
+mod tests {
+    use core::traits::TryInto;
+    use openzeppelin::token::erc20::{
+        ERC20, interface::IERC20Dispatcher, interface::IERC20DispatcherTrait
+    };
+    use openzeppelin::utils::serde::SerializedAppend;
+    use openzeppelin::tests::utils;
+
+    use super::{
+        ConstantProductAmm, IConstantProductAmmDispatcher, IConstantProductAmmDispatcherTrait
+    };
+    use starknet::{
+        deploy_syscall, ContractAddress, get_caller_address, get_contract_address,
+        contract_address_const
+    };
+    use starknet::testing::set_contract_address;
+    use starknet::class_hash::Felt252TryIntoClassHash;
+
+    use debug::PrintTrait;
+
+    const BANK: felt252 = 0x123;
+    const INITIAL_SUPPLY: u256 = 10_000;
+
+    #[derive(Drop, Copy)]
+    struct Deployment {
+        contract: IConstantProductAmmDispatcher,
+        contract_address: ContractAddress,
+        token0: IERC20Dispatcher,
+        token1: IERC20Dispatcher
+    }
+
+    fn deploy_erc20(
+        name: felt252, symbol: felt252, recipient: ContractAddress, initial_supply: u256
+    ) -> (ContractAddress, IERC20Dispatcher) {
+        let mut calldata = array![];
+        calldata.append_serde(name);
+        calldata.append_serde(symbol);
+        calldata.append_serde(initial_supply);
+        calldata.append_serde(recipient);
+
+        let address = utils::deploy(ERC20::TEST_CLASS_HASH, calldata);
+        (address, IERC20Dispatcher { contract_address: address })
+    }
+
+    fn setup() -> Deployment {
+        let recipient: ContractAddress = BANK.try_into().unwrap();
+        let (token0_address, token0) = deploy_erc20('Token0', 'T0', recipient, INITIAL_SUPPLY);
+        let (token1_address, token1) = deploy_erc20('Token1', 'T1', recipient, INITIAL_SUPPLY);
+
+        let mut calldata = array![];
+        calldata.append_serde(token0_address);
+        calldata.append_serde(token1_address);
+
+        let contract_address = utils::deploy(ConstantProductAmm::TEST_CLASS_HASH, calldata);
+        Deployment {
+            contract: IConstantProductAmmDispatcher { contract_address },
+            contract_address,
+            token0,
+            token1
+        }
+    }
+
+    fn add_liquidity(deploy: Deployment, amount: u256) -> u256 {
+        assert(amount <= INITIAL_SUPPLY, 'amount > INITIAL_SUPPLY');
+
+        let provider: ContractAddress = BANK.try_into().unwrap();
+        set_contract_address(provider);
+
+        deploy.token0.approve(deploy.contract_address, amount);
+        deploy.token1.approve(deploy.contract_address, amount);
+
+        deploy.contract.add_liquidity(amount, amount)
+    }
+
+    #[test]
+    #[available_gas(20000000)]
+    fn should_deploy() {
+        let deploy = setup();
+        let bank: ContractAddress = BANK.try_into().unwrap();
+
+        assert(deploy.token0.balance_of(bank) == INITIAL_SUPPLY, 'Wrong balance token0');
+        assert(deploy.token1.balance_of(bank) == INITIAL_SUPPLY, 'Wrong balance token1');
+    }
+
+    #[test]
+    #[available_gas(20000000)]
+    fn should_add_liquidity() {
+        let deploy = setup();
+        let shares = add_liquidity(deploy, INITIAL_SUPPLY / 2);
+
+        let provider: ContractAddress = BANK.try_into().unwrap();
+        assert(deploy.token0.balance_of(provider) == INITIAL_SUPPLY / 2, 'Wrong balance token0');
+        assert(deploy.token1.balance_of(provider) == INITIAL_SUPPLY / 2, 'Wrong balance token1');
+        assert(shares > 0, 'Wrong shares');
+    }
+
+    #[test]
+    #[available_gas(20000000)]
+    fn should_remove_liquidity() {
+        let deploy = setup();
+        let shares = add_liquidity(deploy, INITIAL_SUPPLY / 2);
+        let provider: ContractAddress = BANK.try_into().unwrap();
+
+        deploy.contract.remove_liquidity(shares);
+
+        assert(deploy.token0.balance_of(provider) == INITIAL_SUPPLY, 'Wrong balance token0');
+        assert(deploy.token1.balance_of(provider) == INITIAL_SUPPLY, 'Wrong balance token1');
+    }
+}
