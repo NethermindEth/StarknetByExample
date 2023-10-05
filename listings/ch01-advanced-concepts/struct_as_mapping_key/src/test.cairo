@@ -25,7 +25,6 @@ mod tests {
         let pet = Pet { name: 'Cute Labrador', age: 5, owner: 'Louis' };
 
         // Store a pet.
-
         contract.register_pet(pet, 1234);
 
         // Read the array.
