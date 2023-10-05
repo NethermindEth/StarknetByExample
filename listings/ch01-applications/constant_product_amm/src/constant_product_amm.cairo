@@ -312,11 +312,7 @@ mod tests {
         calldata.append_serde(token1_address);
 
         let contract_address = utils::deploy(ConstantProductAmm::TEST_CLASS_HASH, calldata);
-        Deployment {
-            contract: IConstantProductAmmDispatcher { contract_address },
-            token0,
-            token1
-        }
+        Deployment { contract: IConstantProductAmmDispatcher { contract_address }, token0, token1 }
     }
 
     fn add_liquidity(deploy: Deployment, amount: u256) -> u256 {
