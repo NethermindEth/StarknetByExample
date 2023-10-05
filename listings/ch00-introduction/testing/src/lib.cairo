@@ -110,7 +110,7 @@ mod simple_contract_tests {
     #[available_gas(2000000000)]
     fn test_set_not_owner() {
         let owner = contract_address_const::<1>();
-        set_caller_address(owner);
+        set_contract_address(owner);
 
         let contract = deploy(10);
 
