@@ -1,4 +1,4 @@
-use write_to_any_slot::write_any_slot::WriteToAnySlot;
+use write_to_any_slot::contract::WriteToAnySlot;
 
 #[starknet::interface]
 trait IWriteToAnySlot<TContractState> {
@@ -6,7 +6,6 @@ trait IWriteToAnySlot<TContractState> {
     fn read_slot(self: @TContractState) -> u32;
 }
 
-#[cfg(test)]
 mod tests {
     use super::WriteToAnySlot::{get_address_from_name};
     use super::WriteToAnySlot;

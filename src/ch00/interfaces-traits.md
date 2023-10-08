@@ -16,7 +16,7 @@ In summary, there's two ways to handle interfaces:
 ## Explicit interface
 
 ```rust
-{{#include ../listings/ch00-introduction/interfaces_traits/src/explicit.cairo:code}}
+{{#include ../../listings/ch00-introduction/interfaces_traits/src/explicit.cairo}}
 ```
 
 Play with this contract in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-introduction/interfaces_traits/src/explicit.cairo).
@@ -24,7 +24,7 @@ Play with this contract in [Remix](https://remix.ethereum.org/?#activate=Starkne
 ## Implicit interface
 
 ```rust
-{{#include ../listings/ch00-introduction/interfaces_traits/src/implicit.cairo:code}}
+{{#include ../../listings/ch00-introduction/interfaces_traits/src/implicit.cairo}}
 ```
 
 Play with this contract in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-introduction/interfaces_traits/src/implicit.cairo).
@@ -37,7 +37,7 @@ You can also use `#[generate_trait]` for your internal functions.
 Since this trait is generated in the context of the contract, you can define pure functions as well (functions without the `self` parameter).
 
 ```rust
-{{#include ../listings/ch00-introduction/interfaces_traits/src/implicit_internal.cairo:code}}
+{{#include ../../listings/ch00-introduction/interfaces_traits/src/implicit_internal.cairo}}
 ```
 
 Play with this contract in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-introduction/interfaces_traits/src/implicit_internal.cairo).

@@ -1,1 +1,4 @@
-mod storing_arrays;
+mod contract;
+
+#[cfg(test)]
+mod tests;

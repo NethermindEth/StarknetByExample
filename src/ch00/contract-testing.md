@@ -4,12 +4,12 @@ Testing plays a crucial role in software development, especially for smart contr
 
 Let's start with a simple smart contract as an example:
 ```rust
-{{#include ../listings/ch00-introduction/testing/src/lib.cairo:contract}}
+{{#include ../../listings/ch00-introduction/testing/src/contract.cairo}}
 ```
 
 Now, take a look at the tests for this contract:
 ```rust
-{{#include ../listings/ch00-introduction/testing/src/lib.cairo:test}}
+{{#include ../../listings/ch00-introduction/testing/src/tests.cairo}}
 ```
 
 Play with this contract in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-introduction/testing/src/lib.cairo).
@@ -46,7 +46,7 @@ You may also need the `info` module from the corelib, which allows you to access
 You can found the full list of functions in the [Starknet Corelib repo](https://github.com/starkware-libs/cairo/tree/main/corelib/src/starknet).
 You can also find a detailled explaination of testing in cairo in the [Cairo book - Chapter 8](https://book.cairo-lang.org/ch08-01-how-to-write-tests.html).
 
-## Starket Foundry
+## Starknet Foundry
 
 <!-- TODO update this when Starknet Foundry is more mature. -->
 

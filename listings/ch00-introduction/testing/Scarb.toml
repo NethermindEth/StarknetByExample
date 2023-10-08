@@ -1,5 +1,5 @@
 [package]
-name = "tests"
+name = "sbe_testing"
 version = "0.1.0"
 
 [dependencies]

@@ -6,7 +6,6 @@ trait IMapContract<TContractState> {
     fn get(self: @TContractState, key: ContractAddress) -> felt252;
 }
 
-#[cfg(test)]
 mod tests {
     use maps::mappings::MapContract;
     use super::{IMapContract, IMapContractDispatcher, IMapContractDispatcherTrait};

@@ -21,7 +21,7 @@ Local variables are stored in memory and are not stored on the blockchain. This 
 Here's a simple example of a contract with only local variables:
 
 ```rust
-{{#include ../listings/ch00-introduction/variables/src/local_variables.cairo}}
+{{#include ../../listings/ch00-introduction/variables/src/local_variables.cairo}}
 ```
 Visit contract on [Voyager](https://goerli.voyager.online/contract/0x015B3a10F9689BeD741Ca3C210017BC097122CeF76f3cAA191A20ff8b9b56b96) or play with it in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-introduction/variables/src/local_variables.cairo).
 
@@ -36,7 +36,7 @@ On the other hand, you can read state variables, for free, without any transacti
 Here's a simple example of a contract with one storage variable:
 
 ```rust
-{{#include ../listings/ch00-introduction/variables/src/storage_variables.cairo}}
+{{#include ../../listings/ch00-introduction/variables/src/storage_variables.cairo}}
 ```
 Visit contract on [Voyager](https://goerli.voyager.online/contract/0x06eA827B32875483709b785A7F9e846a52776Cd8D42C3fE696218c2624b0DCCa) or play with it in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-introduction/variables/src/storage_variables.cairo).
 
@@ -49,6 +49,6 @@ In Starknet, you can access global variables by using specific functions contain
 For example, the `get_caller_address` function returns the address of the caller of the current transaction, and the `get_contract_address` function returns the address of the current contract.
 
 ```rust
-{{#include ../listings/ch00-introduction/variables/src/global_variables.cairo}}
+{{#include ../../listings/ch00-introduction/variables/src/global_variables.cairo}}
 ```
 Visit contract on [Voyager](https://goerli.voyager.online/contract/0x05bD2F3943bd4e030f85678b55b2EC2C1be939e32388530FB20ED967B3Be433F) or play with it in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-introduction/variables/src/global_variables.cairo).
