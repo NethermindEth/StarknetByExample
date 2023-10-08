@@ -3,4 +3,4 @@ mod implicit;
 mod implicit_internal;
 
 #[cfg(test)]
-mod tests; 
+mod tests;

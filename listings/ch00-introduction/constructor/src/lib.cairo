@@ -1,4 +1,4 @@
 mod constructor;
 
 #[cfg(test)]
-mod tests; 
+mod tests;

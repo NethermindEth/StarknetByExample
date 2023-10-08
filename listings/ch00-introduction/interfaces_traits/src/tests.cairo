@@ -1,5 +1,4 @@
-mod tests {
-    // TODO
+mod tests { // TODO
 }
 
 mod explicit_interface_contract_tests {

@@ -1,4 +1,3 @@
-
 #[starknet::contract]
 mod StoringCustomType {
     #[storage]

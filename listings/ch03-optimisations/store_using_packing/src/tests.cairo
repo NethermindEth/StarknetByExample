@@ -1,5 +1,7 @@
 mod tests {
-    use store_using_packing::contract::{TimeContract, TimeContract::Time, ITimeDispatcher, ITimeDispatcherTrait};
+    use store_using_packing::contract::{
+        TimeContract, TimeContract::Time, ITimeDispatcher, ITimeDispatcherTrait
+    };
 
     use starknet::deploy_syscall;
     use starknet::class_hash::Felt252TryIntoClassHash;

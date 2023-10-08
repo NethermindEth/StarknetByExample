@@ -1,5 +1,7 @@
 mod tests {
-    use storing_arrays::contract::{StoreArrayContract, IStoreArrayContractDispatcher, IStoreArrayContractDispatcherTrait};
+    use storing_arrays::contract::{
+        StoreArrayContract, IStoreArrayContractDispatcher, IStoreArrayContractDispatcherTrait
+    };
     use starknet::deploy_syscall;
     use starknet::class_hash::Felt252TryIntoClassHash;
 
