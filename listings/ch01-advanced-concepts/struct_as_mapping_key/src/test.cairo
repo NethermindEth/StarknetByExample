@@ -1,4 +1,3 @@
-#[cfg(test)]
 mod tests {
     use src::contract::PetRegistry;
     use PetRegistry::Pet;

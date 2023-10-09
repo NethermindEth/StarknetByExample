@@ -1,4 +1,3 @@
-// ANCHOR: code
 #[starknet::contract]
 mod ImplicitInterfaceContract {
     #[storage]
@@ -18,6 +17,3 @@ mod ImplicitInterfaceContract {
         }
     }
 }
-// ANCHOR_END: code
-
-

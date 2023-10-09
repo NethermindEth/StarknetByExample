@@ -1,4 +1,3 @@
-// ANCHOR: code
 #[starknet::interface]
 trait IImplicitInternalContract<TContractState> {
     fn add(ref self: TContractState, nb: u32);
@@ -41,38 +40,5 @@ mod ImplicitInternalContract {
         fn get_const(self: @ContractState) -> u32 {
             self.get_const()
         }
-    }
-}
-// ANCHOR_END: code
-
-#[cfg(test)]
-mod implicit_internal_contract_tests {
-    use super::{
-        IImplicitInternalContract, ImplicitInternalContract, IImplicitInternalContractDispatcher,
-        IImplicitInternalContractDispatcherTrait
-    };
-    use starknet::{deploy_syscall, ContractAddress};
-    use starknet::class_hash::Felt252TryIntoClassHash;
-
-    #[test]
-    #[available_gas(2000000000)]
-    fn test_interface() {
-        // Set up.
-        let (contract_address, _) = deploy_syscall(
-            ImplicitInternalContract::TEST_CLASS_HASH.try_into().unwrap(),
-            0,
-            ArrayTrait::new().span(),
-            false
-        )
-            .unwrap();
-        let mut contract = IImplicitInternalContractDispatcher { contract_address };
-
-        let initial_value: u32 = 0;
-        assert(contract.get_value() == initial_value, 'wrong value');
-
-        let add_value: u32 = 10;
-        contract.add(add_value);
-
-        assert(contract.get_value() == initial_value + add_value, 'wrong value after add');
     }
 }

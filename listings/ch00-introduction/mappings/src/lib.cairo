@@ -1,2 +1,4 @@
 mod mappings;
-mod test_mappings;
+
+#[cfg(test)]
+mod tests;
