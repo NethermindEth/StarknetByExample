@@ -56,9 +56,7 @@ impl StoreFelt252Array of Store<Array<felt252>> {
                     Store::<felt252>::write_at_offset(address_domain, base, offset, element);
                     offset += Store::<felt252>::size();
                 },
-                Option::None(_) => {
-                    break Result::Ok(());
-                }
+                Option::None(_) => { break Result::Ok(()); }
             };
         }
     }
