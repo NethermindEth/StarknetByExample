@@ -17,7 +17,6 @@ mod CustomErrorsExample {
             assert(i > 0, Errors::NOT_POSITIVE);
         }
 
-        #[view]
         fn test_panic(self: @ContractState, i: u256) {
             if (i == 0) {
                 panic_with_felt252(Errors::NOT_NULL);
