@@ -1,4 +1,3 @@
-#[cfg(test)]
 mod tests {
     use core::traits::TryInto;
     use openzeppelin::token::erc20::{
@@ -16,8 +15,6 @@ mod tests {
     };
     use starknet::testing::set_contract_address;
     use starknet::class_hash::Felt252TryIntoClassHash;
-
-    use debug::PrintTrait;
 
     const BANK: felt252 = 0x123;
     const INITIAL_SUPPLY: u256 = 10_000;
@@ -50,6 +47,9 @@ mod tests {
         let mut calldata = array![];
         calldata.append_serde(token0_address);
         calldata.append_serde(token1_address);
+
+        // 0.3% fee
+        calldata.append_serde(3)
 
         let contract_address = utils::deploy(ConstantProductAmm::TEST_CLASS_HASH, calldata);
         Deployment { contract: IConstantProductAmmDispatcher { contract_address }, token0, token1 }

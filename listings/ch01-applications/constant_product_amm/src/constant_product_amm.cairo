@@ -21,11 +21,14 @@ mod ConstantProductAmm {
         reserve0: u256,
         reserve1: u256,
         total_supply: u256,
-        balance_of: LegacyMap::<ContractAddress, u256>
+        balance_of: LegacyMap::<ContractAddress, u256>,
+        fee: u256,
     }
 
     #[constructor]
-    fn constructor(ref self: ContractState, token0: ContractAddress, token1: ContractAddress) {
+    fn constructor(ref self: ContractState, token0: ContractAddress, token1: ContractAddress, fee: u256) {
+        assert(fee <= 1000, 'fee > 1000')
+        self.fee.write(fee);
         self.token0.write(IERC20Dispatcher { contract_address: token0 });
         self.token1.write(IERC20Dispatcher { contract_address: token1 });
     }
@@ -98,9 +101,8 @@ mod ConstantProductAmm {
             // y - xy / (x + dx) = dy
             // (yx + ydx - xy) / (x + dx) = dy
             // ydx / (x + dx) = dy
-            // 0.3% fee
 
-            let amount_in_with_fee = (amount_in * 997) / 1000;
+            let amount_in_with_fee = (amount_in * (1000 - fee)) / 1000;
             let amount_out = (reserve_out * amount_in_with_fee) / (reserve_in + amount_in_with_fee);
 
             token_out.transfer(caller, amount_out);
