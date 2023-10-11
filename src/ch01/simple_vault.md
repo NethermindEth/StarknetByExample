@@ -8,7 +8,7 @@ Here's how it works:
 - When a user withdraws, the contract burns their shares, calculates the yield, and withdraw both the yield and the initial amount of token deposited.
 
 ```rust
-{{#include ../../listings/ch02-applications/simple_vault/src/simple_vault.cairo}}
+{{#include ../../listings/ch01-applications/simple_vault/src/simple_vault.cairo}}
 ```
 
-Play with this contract in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch02-applications/simple_vault/src/simple_vault.cairo).
+Play with this contract in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch01-applications/simple_vault/src/simple_vault.cairo).

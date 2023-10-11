@@ -11,6 +11,6 @@ Some additional notes:
 - In mappings, the address of the value at key `k_1,...,k_n` is `h(...h(h(sn_keccak(variable_name),k_1),k_2),...,k_n)` where `ℎ` is the Pedersen hash and the final value is taken `mod2251−256`. You can learn more about the contract storage layout in the [Starknet Documentation](https://docs.starknet.io/documentation/architecture_and_concepts/Contracts/contract-storage/#storage_variables)
 
 ```rust
-{{#include ../../listings/ch00-introduction/mappings/src/mappings.cairo}}
+{{#include ../../../listings/ch00-getting-started/mappings/src/mappings.cairo}}
 ```
-Visit contract on [Voyager](https://goerli.voyager.online/contract/0x06214AB4c23Cc545bf2221D465eB83aFb7412779AD498BD48a724B3F645E3505) or play with it in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-introduction/mappings/src/mappings.cairo).
+Visit contract on [Voyager](https://goerli.voyager.online/contract/0x06214AB4c23Cc545bf2221D465eB83aFb7412779AD498BD48a724B3F645E3505) or play with it in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-getting-started/mappings/src/mappings.cairo).

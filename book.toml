@@ -1,13 +1,12 @@
 [book]
-authors = ["msaug"]
+authors = ["msaug", "julio4"]
 language = "en"
 multilingual = false
 src = "src"
 title = "Starknet by Example"
 
 [build]
-# Eventual translations
-# extra-watch-dirs = ["po"]
+extra-watch-dirs = ["listings"]
 
 [preprocessor.gettext]
 after = ["links"]
@@ -16,3 +15,5 @@ after = ["links"]
 git-repository-url = "https://github.com/NethermindEth/StarknetByExample/"
 edit-url-template = "https://github.com/NethermindEth/StarknetByExample/edit/main/{path}"
 playground.runnable = false
+fold.enable = true
+fold.level = 2

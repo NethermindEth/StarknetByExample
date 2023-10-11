@@ -6,7 +6,7 @@ Consider the following example in which we would like to use an object of
 type `Pet` as a key in a `LegacyMap`. The `Pet` struct has three fields: `name`, `age` and `owner`. We consider that the combination of these three fields uniquely identifies a pet.
 
 ```rust
-{{#include ../../listings/ch01-advanced-concepts/struct_as_mapping_key/src/contract.cairo}}
+{{#include ../../listings/ch02-advanced-concepts/struct_as_mapping_key/src/contract.cairo}}
 ```
 
-Play with this contract in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch01-advanced-concepts/struct_as_mapping_key/src/contract.cairo).
+Play with this contract in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch02-advanced-concepts/struct_as_mapping_key/src/contract.cairo).
