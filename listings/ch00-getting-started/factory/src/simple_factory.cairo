@@ -34,7 +34,7 @@ mod CounterFactory {
         self.counter_class_hash.write(class_hash);
     }
 
-    #[external(v0)]
+    #[abi(embed_v0)]
     impl Factory of super::ICounterFactory<ContractState> {
         fn create_counter_at(ref self: ContractState, init_value: u128) -> ContractAddress {
             // Contructor arguments

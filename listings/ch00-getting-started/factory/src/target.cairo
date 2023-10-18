@@ -19,7 +19,7 @@ mod SimpleCounter {
         self.counter.write(init_value);
     }
 
-    #[external(v0)]
+    #[abi(embed_v0)]
     impl SimpleCounter of super::ISimpleCounter<ContractState> {
         fn get_current_count(self: @ContractState) -> u128 {
             self.counter.read()
