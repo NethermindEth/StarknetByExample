@@ -23,7 +23,7 @@ mod SimpleContract {
         self.owner.write(get_caller_address());
     }
 
-    #[external(v0)]
+    #[abi(embed_v0)]
     impl SimpleContract of super::ISimpleContract<ContractState> {
         fn get_value(self: @ContractState) -> u32 {
             self.value.read()

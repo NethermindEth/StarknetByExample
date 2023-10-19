@@ -3,9 +3,10 @@ mod LocalVariablesExample {
     #[storage]
     struct Storage {}
 
+    #[abi(per_item)]
     #[generate_trait]
-    #[external(v0)]
     impl LocalVariablesExample of ILocalVariablesExample {
+        #[external(v0)]
         fn do_something(self: @ContractState, value: u32) -> u32 {
             // This variable is local to the current block. It can't be accessed once it goes out of scope.
             let increment = 10;

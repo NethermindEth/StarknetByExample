@@ -16,6 +16,7 @@ mod ImplicitInternalContract {
 
     #[generate_trait]
     impl InternalFunctions of InternalFunctionsTrait {
+        #[external(v0)]
         fn set_value(ref self: ContractState, value: u32) {
             self.value.write(value);
         }
@@ -29,7 +30,7 @@ mod ImplicitInternalContract {
         self.set_value(0);
     }
 
-    #[external(v0)]
+    #[abi(embed_v0)]
     impl ImplicitInternalContract of IImplicitInternalContract<ContractState> {
         fn add(ref self: ContractState, nb: u32) {
             self.set_value(self.value.read() + nb);

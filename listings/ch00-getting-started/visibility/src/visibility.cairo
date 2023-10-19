@@ -1,3 +1,9 @@
+#[starknet::interface]
+trait IExampleContract<TContractState> {
+    fn set(ref self: TContractState, value: u32);
+    fn get(self: @TContractState) -> u32;
+}
+
 #[starknet::contract]
 mod ExampleContract {
     #[storage]
@@ -6,11 +12,10 @@ mod ExampleContract {
     }
 
 
-    // The `external(v0)` attribute indicates that all the functions in this implementation can be called externally.
+    // The `abi(embed_v0)` attribute indicates that all the functions in this implementation can be called externally.
     // Omitting this attribute would make all the functions in this implementation internal.
-    #[external(v0)]
-    #[generate_trait]
-    impl ExampleContract of IExampleContract {
+    #[abi(embed_v0)]
+    impl ExampleContract of super::IExampleContract<ContractState> {
         // The `set` function can be called externally because it is written inside an implementation marked as `#[external]`.
         // It can modify the contract's state as it is passed as a reference.
         fn set(ref self: ContractState, value: u32) {
@@ -29,7 +34,7 @@ mod ExampleContract {
     // We name the trait `PrivateFunctionsTrait` to indicate that it is an internal trait allowing us to call internal functions.
     #[generate_trait]
     impl PrivateFunctions of PrivateFunctionsTrait {
-        // The `_read_value` function is outside the implementation that is marked as `#[external(v0)]`, so it's an _internal_ function
+        // The `_read_value` function is outside the implementation that is marked as `#[abi(embed_v0)]`, so it's an _internal_ function
         // and can only be called from within the contract.
         // It can modify the contract's state as it is passed as a reference.
         fn _read_value(self: @ContractState) -> u32 {

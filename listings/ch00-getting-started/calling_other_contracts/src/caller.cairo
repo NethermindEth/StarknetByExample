@@ -16,8 +16,8 @@ mod Caller {
     #[storage]
     struct Storage {}
 
+    #[abi(per_item)]
     #[generate_trait]
-    #[external(v0)]
     impl ICallerImpl of ICaller {
         fn set_value_from_address(ref self: ContractState, addr: ContractAddress, value: u128) {
             ICalleeDispatcher { contract_address: addr }.set_value(value);

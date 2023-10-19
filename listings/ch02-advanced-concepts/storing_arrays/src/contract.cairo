@@ -68,6 +68,12 @@ impl StoreFelt252Array of Store<Array<felt252>> {
 // ANCHOR_END: StorageAccessImpl
 
 // ANCHOR: StoreArrayContract
+#[starknet::interface]
+trait IStoreArrayContract<TContractState> {
+    fn store_array(ref self: TContractState, arr: Array<felt252>);
+    fn read_array(self: @TContractState) -> Array<felt252>;
+}
+
 #[starknet::contract]
 mod StoreArrayContract {
     use super::StoreFelt252Array;
@@ -77,9 +83,8 @@ mod StoreArrayContract {
         arr: Array<felt252>
     }
 
-    #[generate_trait]
-    #[external(v0)]
-    impl StoreArrayImpl of IStoreArrayContract {
+    #[abi(embed_v0)]
+    impl StoreArrayImpl of super::IStoreArrayContract<ContractState> {
         fn store_array(ref self: ContractState, arr: Array<felt252>) {
             self.arr.write(arr);
         }
@@ -91,8 +96,4 @@ mod StoreArrayContract {
 }
 // ANCHOR_END: StoreArrayContract
 
-#[starknet::interface]
-trait IStoreArrayContract<TContractState> {
-    fn store_array(ref self: TContractState, array: Array<felt252>);
-    fn read_array(self: @TContractState) -> Array<felt252>;
-}
+

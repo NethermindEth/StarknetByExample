@@ -31,9 +31,10 @@ mod EventCounter {
         new_value: u128,
     }
 
+    #[abi(per_item)]
     #[generate_trait]
-    #[external(v0)]
     impl EventCounter of IEventCounter {
+        #[external(v0)]
         fn increment(ref self: ContractState) {
             let mut counter = self.counter.read();
             counter += 1;
