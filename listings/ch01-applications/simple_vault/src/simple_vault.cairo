@@ -17,6 +17,12 @@ trait IERC20<TContractState> {
     fn approve(ref self: TContractState, spender: ContractAddress, amount: u256) -> bool;
 }
 
+#[starknet::interface]
+trait ISimpleVault<TContractState> {
+    fn deposit(ref self: TContractState, amount: u256);
+    fn withdraw(ref self: TContractState, shares: u256);
+}
+
 #[starknet::contract]
 mod SimpleVault {
     use super::{IERC20Dispatcher, IERC20DispatcherTrait};
@@ -46,9 +52,8 @@ mod SimpleVault {
         }
     }
 
-    #[external(v0)]
-    #[generate_trait]
-    impl SimpleVault of ISimpleVault {
+    #[abi(embed_v0)]
+    impl SimpleVault of super::ISimpleVault<ContractState> {
         fn deposit(ref self: ContractState, amount: u256) {
             // a = amount
             // B = balance of token before deposit

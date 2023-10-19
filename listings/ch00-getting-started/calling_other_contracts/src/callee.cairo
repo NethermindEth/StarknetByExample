@@ -5,7 +5,7 @@ mod Callee {
         value: u128,
     }
 
-    #[external(v0)]
+    #[abi(per_item)]
     #[generate_trait]
     impl ICalleeImpl of ICallee {
         fn set_value(ref self: ContractState, value: u128) -> u128 {

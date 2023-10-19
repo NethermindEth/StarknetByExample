@@ -6,9 +6,10 @@ mod GlobalExample {
     #[storage]
     struct Storage {}
 
+    #[abi(per_item)]
     #[generate_trait]
-    #[external(v0)]
     impl GlobalExampleImpl of IGlobalExample {
+        #[external(v0)]
         fn foo(ref self: ContractState) {
             // Call the get_caller_address function to get the sender address
             let caller = get_caller_address();

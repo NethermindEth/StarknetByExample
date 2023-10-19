@@ -1,3 +1,9 @@
+#[starknet::interface]
+trait IWriteToAnySlots<TContractState> {
+    fn write_slot(ref self: TContractState, value: u32);
+    fn read_slot(self: @TContractState) -> u32;
+}
+
 #[starknet::contract]
 mod WriteToAnySlot {
     use starknet::syscalls::{storage_read_syscall, storage_write_syscall};
@@ -11,9 +17,8 @@ mod WriteToAnySlot {
 
     const SLOT_NAME: felt252 = 'test_slot';
 
-    #[generate_trait]
-    #[external(v0)]
-    impl WriteToAnySlot of IWriteToAnySlot {
+    #[abi(embed_v0)]
+    impl WriteToAnySlot of super::IWriteToAnySlots<ContractState> {
         fn write_slot(ref self: ContractState, value: u32) {
             storage_write_syscall(0, get_address_from_name(SLOT_NAME), value.into());
         }

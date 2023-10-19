@@ -12,15 +12,17 @@ mod VaultErrorsExample {
         balance: u256,
     }
 
+    #[abi(per_item)]
     #[generate_trait]
-    #[external(v0)]
     impl VaultErrorsExample of IVaultErrorsExample {
+        #[external(v0)]
         fn deposit(ref self: ContractState, amount: u256) {
             let mut balance = self.balance.read();
             balance = balance + amount;
             self.balance.write(balance);
         }
 
+        #[external(v0)]
         fn withdraw(ref self: ContractState, amount: u256) {
             let mut balance = self.balance.read();
 

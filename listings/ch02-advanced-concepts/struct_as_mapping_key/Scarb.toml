@@ -1,5 +1,5 @@
 [package]
-name = "src"
+name = "struct_as_mapping_key"
 version = "0.1.0"
 
 [dependencies]

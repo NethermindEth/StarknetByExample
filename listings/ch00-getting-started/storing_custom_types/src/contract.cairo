@@ -13,12 +13,15 @@ mod StoringCustomType {
         name: felt252
     }
 
-    #[external(v0)]
+    #[abi(per_item)]
     #[generate_trait]
     impl StoringCustomType of IStoringCustomType {
+        #[external(v0)]
         fn set_person(ref self: ContractState) {
             self.person.write(Person { age: 10, name: 'Joe' });
         }
+
+        #[external(v0)]
         fn get_person(self: @ContractState) {
             self.person.read();
         }

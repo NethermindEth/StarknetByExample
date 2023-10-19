@@ -7,7 +7,7 @@ There are two types of functions in Starknet contracts:
 - Functions that are accessible externally and can be called by anyone.
 - Functions that are only accessible internally and can only be called by other functions in the contract.
 
-These functions are also typically divided into two different implementations blocks. The first `impl` block for externally accessible functions is explicitly annotated with an `#[external(v0)]` attribute. This indicates that all the functions inside this block can be called either as a transaction or as a view function. The second `impl` block for internally accessible functions is not annotated with any attribute, which means that all the functions inside this block are private by default.
+These functions are also typically divided into two different implementations blocks. The first `impl` block for externally accessible functions is explicitly annotated with an `#[abi(embed_v0)]` attribute. This indicates that all the functions inside this block can be called either as a transaction or as a view function. The second `impl` block for internally accessible functions is not annotated with any attribute, which means that all the functions inside this block are private by default.
 
 ## State Mutability
 

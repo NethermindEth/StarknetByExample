@@ -1,5 +1,5 @@
 mod tests {
-    use src::contract::PetRegistry;
+    use struct_as_mapping_key::contract::PetRegistry;
     use PetRegistry::Pet;
     use starknet::deploy_syscall;
     use starknet::class_hash::Felt252TryIntoClassHash;

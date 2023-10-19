@@ -10,13 +10,15 @@ mod CustomErrorsExample {
     #[storage]
     struct Storage {}
 
+    #[abi(per_item)]
     #[generate_trait]
-    #[external(v0)]
     impl CustomErrorsExample of ICustomErrorsExample {
+        #[external(v0)]
         fn test_assert(self: @ContractState, i: u256) {
             assert(i > 0, Errors::NOT_POSITIVE);
         }
 
+        #[external(v0)]
         fn test_panic(self: @ContractState, i: u256) {
             if (i == 0) {
                 panic_with_felt252(Errors::NOT_NULL);

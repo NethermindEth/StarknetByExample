@@ -1,3 +1,11 @@
+use starknet::class_hash::ClassHash;
+
+#[starknet::interface]
+trait IUpgradeableContract<TContractState> {
+    fn upgrade(ref self: TContractState, impl_hash: ClassHash);
+    fn version(self: @TContractState) -> u8;
+}
+
 #[starknet::contract]
 mod UpgradeableContract_V0 {
     use starknet::class_hash::ClassHash;
@@ -18,9 +26,8 @@ mod UpgradeableContract_V0 {
         implementation: ClassHash
     }
 
-    #[generate_trait]
-    #[external(v0)]
-    impl UpgradeableContract of IUpgradeableContract {
+    #[abi(embed_v0)]
+    impl UpgradeableContract of super::IUpgradeableContract<ContractState> {
         fn upgrade(ref self: ContractState, impl_hash: ClassHash) {
             assert(!impl_hash.is_zero(), 'Class hash cannot be zero');
             starknet::replace_class_syscall(impl_hash).unwrap_syscall();
