@@ -14,7 +14,7 @@ Do not write directly Cairo program inside the markdown files. Instead, use code
 
 ## Adding a new Cairo program
 
-You can add or modify examples in the `listings` directory. Each listing is a scarb project. You can use `scarb init` to create a new scarb project. Here's the minimal `Scarb.toml` configuration:
+You can add or modify examples in the `listings` directory. Each listing is a scarb project. You can use `scarb init` to create a new scarb project (You can remove the generated git repository, `rm -rf .git`). Here's the minimal `Scarb.toml` configuration:
   
 ```toml
 [package]
