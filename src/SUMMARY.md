@@ -25,6 +25,7 @@ Summary
 # Applications examples
   - [Upgradeable Contract](./ch01/upgradeable_contract.md)
   - [Defi Vault](./ch01/simple_vault.md)
+  - [ERC20 Token](./ch01/erc20.md)
 
 <!-- ch02 -->
 # Advanced concepts
