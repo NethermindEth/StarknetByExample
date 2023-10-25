@@ -27,7 +27,7 @@ mod ConstantProductAmm {
 
     #[constructor]
     fn constructor(ref self: ContractState, token0: ContractAddress, token1: ContractAddress, fee: u256) {
-        assert(fee <= 1000, 'fee > 1000')
+        assert(fee <= 1000, 'fee > 1000');
         self.fee.write(fee);
         self.token0.write(IERC20Dispatcher { contract_address: token0 });
         self.token1.write(IERC20Dispatcher { contract_address: token1 });
@@ -102,7 +102,7 @@ mod ConstantProductAmm {
             // (yx + ydx - xy) / (x + dx) = dy
             // ydx / (x + dx) = dy
 
-            let amount_in_with_fee = (amount_in * (1000 - fee)) / 1000;
+            let amount_in_with_fee = (amount_in * (1000 - self.fee.read())) / 1000;
             let amount_out = (reserve_out * amount_in_with_fee) / (reserve_in + amount_in_with_fee);
 
             token_out.transfer(caller, amount_out);
