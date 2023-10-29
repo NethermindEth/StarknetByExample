@@ -11,7 +11,7 @@ use array::ArrayTrait;
     #[generate_trait]
     impl external of externlalTrait {
 
-        fn merryGoRound(ref self: ContractState, maxLimit: u32) -> Array<u32> {
+        fn gatherEvens(ref self: ContractState, maxLimit: u32) -> Array<u32> {
             let mut i: u32 = 0;
             let mut Arr = ArrayTrait::new();
             loop {
