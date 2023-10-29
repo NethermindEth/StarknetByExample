@@ -19,7 +19,10 @@ use array::ArrayTrait;
 
             let ArrLength: usize = Arr.len();
             let first_value = Arr.pop_front().unwrap();
+            assert(first_value == numOne, 'Both values should match');
+
             let second_value = *Arr.at(0);
+            assert(second_value == numTwo, 'Both values should match too');
             Arr.is_empty()
         }
     }

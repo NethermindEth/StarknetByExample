@@ -1,0 +1,12 @@
+# Type casting
+
+Cairo supports the conversion from one scalar types to another by using the into and try_into methods. into is used for conversion from a smaller data type to a larger data type, while try_into is used when converting from a larger to a smaller type that might not fit.  For example:
+
+## Minimal example
+
+Here's a minimal example of a Felt type:
+
+
+```rust
+{{#include ../../../listings/ch00-getting-started/cairo_cheatsheet/src/type_casting_example.cairo}}
+```

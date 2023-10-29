@@ -1,10 +1,10 @@
 # Arrays
 
-Cairo supports Felt as an data type for holding short strings, these short strings have a maximum length of 31 characters. For example:
+Arrays are collection of elements of the same type, they have very limited modification option. For example:
 
 ## Minimal example
 
-Here's a minimal example of a Felt type:
+Here's a minimal example of a contract that creates, modifies and returns an array:
 
 
 ```rust
