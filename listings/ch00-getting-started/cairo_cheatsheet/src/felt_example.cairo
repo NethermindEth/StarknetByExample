@@ -16,8 +16,8 @@ use starknet::get_caller_address;
     impl external of externlalTrait {
         fn storeName (ref self: ContractState, name: felt252) -> felt252 {
             self.userName.write(get_caller_address(), name);
-            
-            let welcomeMsg: felt252 = 'You are welcome';
+
+            let welcomeMsg: felt252 = 'welcome to starknetByExamples';
             welcomeMsg
         }
 
