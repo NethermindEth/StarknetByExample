@@ -1,8 +1,7 @@
 #[starknet::contract]
 mod matchExample {
-
-use array::ArrayTrait;
-use serde::Serde;
+    use array::ArrayTrait;
+    use serde::Serde;
 
     #[storage]
     struct Storage {}
@@ -27,7 +26,6 @@ use serde::Serde;
     #[external(v0)]
     #[generate_trait]
     impl external of externlalTrait {
-
         fn value_in_cents(self: @ContractState, coin: Coin) -> felt252 {
             match coin {
                 Coin::Penny => 1,
@@ -38,22 +36,28 @@ use serde::Serde;
         }
 
         fn specified_colour(self: @ContractState, colour: Colour) -> felt252 {
+            let mut response: felt252 = '';
+
             match colour {
-                Colour::Red => 'You passed in Red',
-                Colour::Blue => 'You passed in Blue',
-                Colour::Green => 'You passed in Green',
-                Colour::Orange => 'You passed in Orange',
-                Colour::Black =>  'You passed in Black',
+                Colour::Red => { response = 'You passed in Red'; },
+                Colour::Blue => { response = 'You passed in Blue'; },
+                Colour::Green => { response = 'You passed in Green'; },
+                Colour::Orange => { response = 'You passed in Orange'; },
+                Colour::Black => { response = 'You passed in Black'; },
             };
+
+            response
         }
 
-        fn quiz (self: @ContractState, num: felt252) -> felt252 {
+        fn quiz(self: @ContractState, num: felt252) -> felt252 {
+            let mut response: felt252 = '';
+
             match num {
-                0 => 'You failed',
-                _ => 'You Passed',
-            }
-        } 
+                0 => { response = 'You failed' },
+                _ => { response = 'You Passed' },
+            };
 
-
+            response
+        }
     }
 }

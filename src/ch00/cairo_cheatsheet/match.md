@@ -1,10 +1,8 @@
 # Match
 
-Cairo supports Match as an extremely powerful control flow construct thats used to compare a value against different patterns and execute code based on the matching pattern, note that match is only available on the enum and felt252 data type also using the felt252 data type, match is only available on the (0) and (_) type. For example:
+The "match" expression in Cairo allows us to control the flow of our code by comparing a felt data type or an enum against various patterns and then running specific code based on the pattern that matches.
 
-## Minimal example
 
-Here's a minimal example of a Match expression:
 
 
 ```rust

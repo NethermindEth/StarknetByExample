@@ -2,7 +2,7 @@
 mod EventCounter {
     use starknet::{get_caller_address, ContractAddress};
     #[storage]
-    struct Storage { }
+    struct Storage {}
 
     #[event]
     #[derive(Drop, starknet::Event)]
@@ -19,7 +19,7 @@ mod EventCounter {
 
     #[generate_trait]
     #[external(v0)]
-    impl EventCounter of IEventCounter {   
+    impl EventCounter of IEventCounter {
         fn increment(ref self: ContractState, amount: u128) {
             self.emit(Event::CounterIncreased(CounterIncreased { amount }));
         }

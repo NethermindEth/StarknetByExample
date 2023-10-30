@@ -19,7 +19,12 @@ mod typecasting_Example {
             let new_u8: u8 = randNumber.try_into().unwrap();
             let new_u16: u16 = randNumber.try_into().unwrap();
 
+            // since new_u32 is the of the same type (u32) as randNumber, we can directly assign them,
+            // or use the .into() method.
             let new_u32: u32 = randNumber;
+
+            // When typecasting from a smaller size to an equal or larger size we use the .into() method.
+            // Note: u64 and u128 are larger than u32, so a u32 type will always fit into them.
             let new_u64: u64 = randNumber.into();
             let new_u128: u128 = randNumber.into();
 
@@ -29,7 +34,6 @@ mod typecasting_Example {
 
             //note a usize is smaller than a felt so we use the try_into
             let new_usize: usize = my_felt252.try_into().unwrap();
-
         }
     }
 }

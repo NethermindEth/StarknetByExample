@@ -1,7 +1,6 @@
 #[starknet::contract]
 mod loopExample {
-
-use array::ArrayTrait;
+    use array::ArrayTrait;
 
     #[storage]
     struct Storage {}
@@ -10,7 +9,6 @@ use array::ArrayTrait;
     #[external(v0)]
     #[generate_trait]
     impl external of externlalTrait {
-
         fn gatherEvens(ref self: ContractState, maxLimit: u32) -> Array<u32> {
             let mut i: u32 = 0;
             let mut Arr = ArrayTrait::new();
@@ -21,11 +19,10 @@ use array::ArrayTrait;
                 if (i % 2 == 0) {
                     Arr.append(i);
                 }
-                i += 1; 
+                i += 1;
             };
 
             return Arr;
-
         }
     }
 }

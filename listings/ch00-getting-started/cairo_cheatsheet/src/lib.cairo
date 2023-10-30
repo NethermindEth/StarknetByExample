@@ -1,5 +1,5 @@
 mod array_example;
-mod dict_example;
+mod mapping_example;
 mod felt_example;
 mod loop_example;
 mod match_example;

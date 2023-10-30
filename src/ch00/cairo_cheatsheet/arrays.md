@@ -1,10 +1,7 @@
 # Arrays
 
-Arrays are collection of elements of the same type, they have very limited modification option. For example:
+Arrays are collections of elements of the same type, they have a very limited modification option in the sense that we can only append (push) into them from the bottom and then pop out of the array from the top. For example:
 
-## Minimal example
-
-Here's a minimal example of a contract that creates, modifies and returns an array:
 
 
 ```rust

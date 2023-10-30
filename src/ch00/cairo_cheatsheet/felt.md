@@ -1,10 +1,7 @@
 # Felt252
 
-Cairo supports Felt as an data type for holding short strings, these short strings have a maximum length of 31 characters. For example:
+Felt252 is a fundamental data type in Cairo from which all other data types are derived. Felt252 are used to store short-string representations with a maximim length of 31 characters. This is because 252 bits can only comfortably contain 31 ASCII characters (each character has a 7 - 8 bits size). For example:
 
-## Minimal example
-
-Here's a minimal example of a Felt type:
 
 
 ```rust
