@@ -5,6 +5,14 @@ Summary
 <!-- ch00 -->
 # Getting Started
   <!-- - [Local environnement setup](./ch00/env_setup.md) -->
+  - [Cairo cheatsheet](./ch00/cairo_cheatsheet/)
+    - [Felt](./ch00/cairo_cheatsheet/felt.md)
+    - [Mapping](./ch00/cairo_cheatsheet/mapping.md)
+    - [Arrays](./ch00/cairo_cheatsheet/arrays.md)
+    - [Loop](./ch00/cairo_cheatsheet/loop.md)
+    - [Match](./ch00/cairo_cheatsheet/match.md)
+    - [Struct](./ch00/cairo_cheatsheet/struct.md)
+    - [Type casting](./ch00/cairo_cheatsheet/type_casting.md)
   - [Basics of a Starknet contract](./ch00/basics/introduction.md)
     - [Variables](./ch00/basics/variables.md)
     - [Constructor](./ch00/basics/constructor.md)

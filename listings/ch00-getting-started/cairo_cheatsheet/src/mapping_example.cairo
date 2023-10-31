@@ -2,13 +2,11 @@
 mod mappingContract {
     use starknet::ContractAddress;
 
-
     #[storage]
     struct Storage {
         studentsName: LegacyMap::<ContractAddress, felt252>,
         studentsResultRecord: LegacyMap::<(ContractAddress, felt252), u16>,
     }
-
 
     #[external(v0)]
     #[generate_trait]

@@ -1,8 +1,5 @@
 #[starknet::contract]
 mod matchExample {
-    use array::ArrayTrait;
-    use serde::Serde;
-
     #[storage]
     struct Storage {}
 

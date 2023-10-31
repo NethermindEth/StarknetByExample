@@ -1,8 +1,5 @@
 #[starknet::contract]
 mod arrayExample {
-    use option::OptionTrait;
-    use array::ArrayTrait;
-
     #[storage]
     struct Storage {}
 

@@ -1,12 +1,7 @@
 #[starknet::contract]
 mod typecasting_Example {
-    use core::traits::Into;
-    use traits::TryInto;
-    use option::OptionTrait;
-
     #[storage]
     struct Storage {}
-
 
     #[external(v0)]
     #[generate_trait]

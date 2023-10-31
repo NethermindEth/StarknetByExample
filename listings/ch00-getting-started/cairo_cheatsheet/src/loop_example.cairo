@@ -1,10 +1,7 @@
 #[starknet::contract]
 mod loopExample {
-    use array::ArrayTrait;
-
     #[storage]
     struct Storage {}
-
 
     #[external(v0)]
     #[generate_trait]
