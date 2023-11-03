@@ -10,8 +10,11 @@ trait IConstantProductAmm<TContractState> {
 
 #[starknet::contract]
 mod ConstantProductAmm {
+    use core::traits::Into;
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
-    use starknet::{ContractAddress, get_caller_address, get_contract_address};
+    use starknet::{
+        ContractAddress, get_caller_address, get_contract_address, contract_address_const
+    };
     use integer::u256_sqrt;
 
     #[storage]
@@ -22,15 +25,19 @@ mod ConstantProductAmm {
         reserve1: u256,
         total_supply: u256,
         balance_of: LegacyMap::<ContractAddress, u256>,
-        fee: u256,
+        // Fee 0 - 1000 (0% - 100%, 1 decimal places)
+        // E.g. 3 = 0.3%
+        fee: u16,
     }
 
     #[constructor]
-    fn constructor(ref self: ContractState, token0: ContractAddress, token1: ContractAddress, fee: u256) {
-        assert(fee <= 1000, 'fee > 1000');
-        self.fee.write(fee);
+    fn constructor(
+        ref self: ContractState, token0: ContractAddress, token1: ContractAddress, fee: u16
+    ) {
+        // assert(fee <= 1000, 'fee > 1000');
         self.token0.write(IERC20Dispatcher { contract_address: token0 });
         self.token1.write(IERC20Dispatcher { contract_address: token1 });
+        self.fee.write(fee);
     }
 
     #[generate_trait]
@@ -102,7 +109,7 @@ mod ConstantProductAmm {
             // (yx + ydx - xy) / (x + dx) = dy
             // ydx / (x + dx) = dy
 
-            let amount_in_with_fee = (amount_in * (1000 - self.fee.read())) / 1000;
+            let amount_in_with_fee = (amount_in * (1000 - self.fee.read().into()) / 1000);
             let amount_out = (reserve_out * amount_in_with_fee) / (reserve_in + amount_in_with_fee);
 
             token_out.transfer(caller, amount_out);
@@ -259,3 +266,5 @@ mod ConstantProductAmm {
     }
 }
 // ANCHOR_END: ConstantProductAmmContract
+
+

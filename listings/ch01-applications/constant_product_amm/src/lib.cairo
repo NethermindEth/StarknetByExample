@@ -1,4 +1,4 @@
-mod constant_product_amm;
+mod contracts;
 
 #[cfg(test)]
 mod tests;

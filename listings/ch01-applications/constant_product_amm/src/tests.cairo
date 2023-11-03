@@ -1,4 +1,5 @@
 mod tests {
+    use core::option::OptionTrait;
     use core::traits::TryInto;
     use openzeppelin::token::erc20::{
         ERC20, interface::IERC20Dispatcher, interface::IERC20DispatcherTrait
@@ -6,7 +7,7 @@ mod tests {
     use openzeppelin::utils::serde::SerializedAppend;
     use openzeppelin::tests::utils;
 
-    use super::{
+    use constant_product_amm::contracts::{
         ConstantProductAmm, IConstantProductAmmDispatcher, IConstantProductAmmDispatcherTrait
     };
     use starknet::{
@@ -15,6 +16,8 @@ mod tests {
     };
     use starknet::testing::set_contract_address;
     use starknet::class_hash::Felt252TryIntoClassHash;
+
+    use debug::PrintTrait;
 
     const BANK: felt252 = 0x123;
     const INITIAL_SUPPLY: u256 = 10_000;
@@ -44,14 +47,20 @@ mod tests {
         let (token0_address, token0) = deploy_erc20('Token0', 'T0', recipient, INITIAL_SUPPLY);
         let (token1_address, token1) = deploy_erc20('Token1', 'T1', recipient, INITIAL_SUPPLY);
 
-        let mut calldata = array![];
-        calldata.append_serde(token0_address);
-        calldata.append_serde(token1_address);
-
         // 0.3% fee
-        calldata.append_serde(3)
+        let fee: u16 = 3;
 
-        let contract_address = utils::deploy(ConstantProductAmm::TEST_CLASS_HASH, calldata);
+        let mut calldata: Array::<felt252> = array![];
+        calldata.append(token0_address.into());
+        calldata.append(token1_address.into());
+        calldata.append(fee.into());
+
+        let (contract_address, _) = starknet::deploy_syscall(
+            ConstantProductAmm::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
+        )
+            .unwrap();
+        // Or with OpenZeppelin helper:
+        // let contract_address = utils::deploy(ConstantProductAmm::TEST_CLASS_HASH, calldata);
         Deployment { contract: IConstantProductAmmDispatcher { contract_address }, token0, token1 }
     }
 
