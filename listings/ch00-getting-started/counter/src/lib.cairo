@@ -1,4 +1,4 @@
-mod counter;
+mod contracts;
 
 #[cfg(test)]
 mod tests;
