@@ -1,3 +1,9 @@
+#[starknet::interface]
+trait ISerdeCustomType<TContractState> {
+    fn person_input(ref self: TContractState, person: SerdeCustomType::Person);
+    fn person_output(ref self: TContractState) -> SerdeCustomType::Person;
+}
+
 #[starknet::contract]
 mod SerdeCustomType {
     #[storage]
