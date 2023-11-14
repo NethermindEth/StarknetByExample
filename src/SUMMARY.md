@@ -26,6 +26,7 @@ Summary
     - [Arrays](./ch00/cairo_cheatsheet/arrays.md)
     - [Loop](./ch00/cairo_cheatsheet/loop.md)
     - [Match](./ch00/cairo_cheatsheet/match.md)
+    - [Tuples](./ch00/cairo_cheatsheet/tuples.md)
     - [Struct](./ch00/cairo_cheatsheet/struct.md)
     - [Type casting](./ch00/cairo_cheatsheet/type_casting.md)
 
