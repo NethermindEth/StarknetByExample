@@ -3,7 +3,10 @@
 mod tests {
     use visibility::{visibility::{IExampleContract, ExampleContract}};
 
-    use starknet::{ContractAddress, get_contract_address, contract_address_const, call_contract_syscall, testing::{set_contract_address}};
+    use starknet::{
+        ContractAddress, get_contract_address, contract_address_const, call_contract_syscall,
+        testing::{set_contract_address}
+    };
 
     fn setup() -> ExampleContract::ContractState {
         let mut state = ExampleContract::contract_state_for_testing();
