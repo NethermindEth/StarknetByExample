@@ -2,41 +2,32 @@
 // However, because Serde trait is not implemented for the custom type, we can't use custom types as parameters or return values.
 
 mod tests {
-    use storing_custom_types::contract::IStoringCustomTypeDispatcherTrait;
-    use storing_custom_types::contract::{
-        StoringCustomType, IStoringCustomTypeDispatcher, StoringCustomType::Person
+    use storing_custom_types::{
+        contract::{
+            IStoringCustomType, StoringCustomType,
+            StoringCustomType::{Person, person::InternalContractMemberStateTrait}
+        }
     };
-    use core::result::ResultTrait;
-    use starknet::{deploy_syscall, ContractAddress};
-    use starknet::class_hash::Felt252TryIntoClassHash;
 
-    fn deploy() -> IStoringCustomTypeDispatcher {
-        let calldata: Array<felt252> = array![];
-        let (address0, _) = deploy_syscall(
-            StoringCustomType::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
-        )
-            .unwrap();
-        IStoringCustomTypeDispatcher { contract_address: address0 }
-    }
+    use starknet::{ContractAddress, contract_address_const, testing::{set_contract_address}};
 
-    #[test]
-    #[available_gas(2000000000)]
-    fn should_deploy() {
-        let init_value = 10;
-        let contract = deploy();
+    fn setup() -> StoringCustomType::ContractState {
+        let mut state = StoringCustomType::contract_state_for_testing();
+        let contract_address = contract_address_const::<0x1>();
+        set_contract_address(contract_address);
+        state
     }
 
     #[test]
     #[available_gas(2000000000)]
     fn can_call_set_person() {
-        let contract = deploy();
-        let received_person = contract.set_person();
-    }
+        let mut state = setup();
+        let person = Person { age: 10, name: 'Joe' };
 
-    #[test]
-    #[available_gas(2000000000)]
-    fn can_call_get_person() {
-        let contract = deploy();
-        contract.get_person();
+        state.set_person(person);
+        let read_person = state.person.read();
+
+        assert(person.age == read_person.age, 'wrong age');
+        assert(person.name == read_person.name, 'wrong name');
     }
 }
