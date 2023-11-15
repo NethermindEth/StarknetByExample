@@ -1,7 +1,7 @@
 #[starknet::interface]
 trait ISerdeCustomType<TContractState> {
     fn person_input(ref self: TContractState, person: SerdeCustomType::Person);
-    fn person_output(ref self: TContractState) -> SerdeCustomType::Person;
+    fn person_output(self: @TContractState) -> SerdeCustomType::Person;
 }
 
 #[starknet::contract]
@@ -18,8 +18,7 @@ mod SerdeCustomType {
     }
 
     #[abi(per_item)]
-    #[generate_trait]
-    impl SerdeCustomType of ISerdeCustomType {
+    impl SerdeCustomType of super::ISerdeCustomType<ContractState> {
         #[external(v0)]
         fn person_input(ref self: ContractState, person: Person) {}
 
