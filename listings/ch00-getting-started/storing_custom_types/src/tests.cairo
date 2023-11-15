@@ -1,5 +1,4 @@
 // The purpose of these tests is to demonstrate the capability to store custom types in the contract's state.
-// However, because Serde trait is not implemented for the custom type, we can't use custom types as parameters or return values.
 
 mod tests {
     use storing_custom_types::{

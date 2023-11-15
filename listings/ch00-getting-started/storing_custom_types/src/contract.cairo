@@ -1,7 +1,6 @@
 #[starknet::interface]
 trait IStoringCustomType<TContractState> {
     fn set_person(ref self: TContractState, person: Person);
-    fn get_person(self: @TContractState) -> Person;
 }
 
 // Deriving the starknet::Store trait
@@ -25,10 +24,6 @@ mod StoringCustomType {
     impl StoringCustomType of super::IStoringCustomType<ContractState> {
         fn set_person(ref self: ContractState, person: Person) {
             self.person.write(person);
-        }
-
-        fn get_person(self: @ContractState) -> Person {
-            self.person.read()
         }
     }
 }
