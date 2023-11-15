@@ -19,14 +19,12 @@ mod StoringCustomType {
         name: felt252
     }
 
-    #[abi(per_item)]
-    #[external(v0)]
+    #[abi(embed_v0)]
     impl StoringCustomType of super::IStoringCustomType<ContractState> {
         fn set_person(ref self: ContractState) {
             self.person.write(Person { age: 10, name: 'Joe' });
         }
 
-        #[external(v0)]
         fn get_person(self: @ContractState) {
             self.person.read();
         }
