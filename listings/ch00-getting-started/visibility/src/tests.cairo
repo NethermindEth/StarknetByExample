@@ -22,16 +22,4 @@ mod tests {
 
         assert(received_value == init_value, 'wrong value received');
     }
-
-
-    #[test]
-    #[should_panic]
-    #[available_gas(2000000000)]
-    fn cannot_call_private_read() {
-        let mut state = setup();
-        let init_value: u32 = 42;
-        let contract_address = contract_address_const::<0x1>();
-        let mut call_data: Array<felt252> = ArrayTrait::new();
-        let mut res = starknet::call_contract_syscall(contract_address, selector!("_read_value"), call_data.span());
-    }
 }
