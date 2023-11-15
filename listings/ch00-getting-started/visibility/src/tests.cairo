@@ -1,5 +1,3 @@
-// The purpose of these tests is to demonstrate the capability to store custom types in the contract's state.
-
 mod tests {
     use visibility::{visibility::{IExampleContract, ExampleContract}};
 
