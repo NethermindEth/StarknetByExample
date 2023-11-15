@@ -1,7 +1,7 @@
 #[starknet::interface]
 trait IStoringCustomType<TContractState> {
     fn set_person(ref self: TContractState);
-    fn get_person(ref self: TContractState);
+    fn get_person(self: @TContractState);
 }
 
 #[starknet::contract]
@@ -21,12 +21,14 @@ mod StoringCustomType {
 
     #[abi(per_item)]
     #[external(v0)]
-    fn set_person(ref self: ContractState) {
-        self.person.write(Person { age: 10, name: 'Joe' });
-    }
+    impl StoringCustomType of super::IStoringCustomType<ContractState> {
+        fn set_person(ref self: ContractState) {
+            self.person.write(Person { age: 10, name: 'Joe' });
+        }
 
-    #[external(v0)]
-    fn get_person(self: @ContractState) {
-        self.person.read();
+        #[external(v0)]
+        fn get_person(self: @ContractState) {
+            self.person.read();
+        }
     }
 }
