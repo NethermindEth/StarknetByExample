@@ -17,12 +17,10 @@ mod SerdeCustomType {
         name: felt252
     }
 
-    #[abi(per_item)]
+    #[abi(embed_v0)]
     impl SerdeCustomType of super::ISerdeCustomType<ContractState> {
-        #[external(v0)]
         fn person_input(ref self: ContractState, person: Person) {}
 
-        #[external(v0)]
         fn person_output(self: @ContractState) -> Person {
             Person { age: 10, name: 'Joe' }
         }
