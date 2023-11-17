@@ -9,7 +9,7 @@ has_errors=false
 
 # function to list modified cairo files
 list_modified_cairo_files() {
-    echo $(git diff --name-only main...HEAD)
+  echo "git diff $(git diff --name-only main...HEAD -- programs | grep -E 'programs/ch.*/*.cairo$')"
     git diff --name-only main...HEAD -- listings | grep -E 'listings/ch.*/*.cairo$'
 }
 
@@ -17,7 +17,7 @@ list_modified_cairo_files() {
 process_file() {
     dir=$(dirname "$1")
     file=$(basename "$1")
-    echo "Processing $dir/$file"
+    echo "Processing  the file: $dir/$file"
     (cd "$dir" && scarb build "$file" 0>/dev/null 1> error.log && scarb fmt -c "$file" 0>/dev/null 1>> error.log && scarb test "$file" 0>/dev/null 1>> error.log)
     if [ $? -ne 0 ]; then
         has_errors=true
@@ -29,8 +29,7 @@ process_file() {
 
 # process each modified file
 modified_files=$(list_modified_cairo_files)
-echo "modified files:"
-echo "$modified_files"
+echo "modified files: are $modified_files"
 for file in $modified_files; do
     process_file "$file" &
 done
