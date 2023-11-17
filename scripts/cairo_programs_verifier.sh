@@ -9,7 +9,6 @@ has_errors=false
 
 # function to list modified cairo files
 list_modified_cairo_files() {
-  echo "git diff $(git diff --name-only main...HEAD -- programs | grep -E 'programs/ch.*/*.cairo$')"
     git diff --name-only main...HEAD -- listings | grep -E 'listings/ch.*/*.cairo$'
 }
 
@@ -31,7 +30,7 @@ process_file() {
 modified_files=$(list_modified_cairo_files)
 echo "modified files: are $modified_files"
 for file in $modified_files; do
-    process_file "$file" &
+    process_file "$file"
 done
 
 wait  # Wait for all background processes to finish
