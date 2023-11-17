@@ -9,11 +9,9 @@ has_errors=false
 
 # function to list modified cairo files
 list_modified_cairo_files() {
+    echo $(git diff --name-only main...HEAD)
     git diff --name-only main...HEAD -- listings | grep -E 'listings/ch.*/*.cairo$'
 }
-
-echo "printing modified files"
-echo -e "\n${GREEN}Modified files:${NC}"
 
 # function to process individual file
 process_file() {
@@ -31,6 +29,8 @@ process_file() {
 
 # process each modified file
 modified_files=$(list_modified_cairo_files)
+echo "modified files:"
+echo "$modified_files"
 for file in $modified_files; do
     process_file "$file" &
 done
