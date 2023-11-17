@@ -9,7 +9,7 @@ has_errors=false
 
 # function to list modified cairo files
 list_modified_cairo_files() {
-    git diff --name-only master...HEAD -- listings | grep -E 'listings/ch.*/*.cairo$'
+    git diff --name-only main...HEAD -- listings | grep -E 'listings/ch.*/*.cairo$'
 }
 
 echo "printing modified files"
