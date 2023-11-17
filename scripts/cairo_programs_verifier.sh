@@ -19,6 +19,7 @@ process_file() {
     echo "Processing  the file: $dir/$file"
     echo $dir
     echo $file
+    echo "$pwd"
     cd "$dir" && scarb build "$file" 0>/dev/null 1> error.log
     echo "scarb build $file ok"
 
@@ -26,7 +27,7 @@ process_file() {
     echo "scarb fmt $file ok"
     scarb test "$file" 0>/dev/null 1>> error.log
     echo "scarb test $file ok"
-    
+
     if [ $? -ne 0 ]; then
         has_errors=true
         echo "Error while processing $dir/$file"
