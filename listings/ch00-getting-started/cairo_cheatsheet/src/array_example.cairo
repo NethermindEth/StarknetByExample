@@ -2,7 +2,7 @@
 mod arrayExample {
     #[storage]
     struct Storage {}
-    // Trigger
+    // Trigger ci
 
 
     #[external(v0)]
