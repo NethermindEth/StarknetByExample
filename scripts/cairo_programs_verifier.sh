@@ -19,7 +19,9 @@ process_file() {
     echo "Processing  the file: $dir/$file"
     echo $dir
     echo $file
-    echo "$pwd"
+    echo "$pwd: pwd"
+    cd $dir
+    echo "$pwd: pwd"
     cd "$dir" && scarb build "$file" 0>/dev/null 1> error.log
     echo "scarb build $file ok"
 
