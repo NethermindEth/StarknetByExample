@@ -9,7 +9,7 @@ has_errors=false
 
 # function to list modified cairo files
 list_modified_cairo_files() {
-    merge_base=$(git merge-base master HEAD)
+    merge_base=$(git merge-base main HEAD)
     git diff --name-only "$merge_base" HEAD -- listings | grep -E 'listings/ch.*/*.cairo$'
 }
 
