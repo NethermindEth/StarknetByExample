@@ -23,4 +23,5 @@ jobs:
       - name: Run build script
         run: |
           chmod +x scripts/cairo_programs_verifier.sh
+          echo "Running cairo programs verifier"
           ./scripts/cairo_programs_verifier.sh
