@@ -4,6 +4,9 @@ GREEN='\033[1;32m'
 RED='\033[1;31m'
 NC='\033[0m'
 
+# Root directory of the repository
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+
 # flag to check if any errors were encountered
 has_errors=false
 
@@ -14,33 +17,46 @@ list_modified_cairo_files() {
 
 # function to process individual file
 process_file() {
-    dir=$(dirname "$1")
-    file=$(basename "$1")
-    echo "Processing  the file: $dir/$file"
-    echo $dir
-    echo $file
-    echo "$pwd: pwd"
-    cd $dir
-    echo "$pwd: pwd"
-    cd "$dir" && scarb build "$file" 0>/dev/null 1> error.log
-    echo "scarb build $file ok"
+    local relative_path="$1"
+    local dir_path="${REPO_ROOT}/$(dirname "${relative_path}")"
+    local file_name=$(basename "$relative_path")
 
-    scarb fmt -c "$file" 0>/dev/null 1>> error.log
-    echo "scarb fmt $file ok"
-    scarb test "$file" 0>/dev/null 1>> error.log
-    echo "scarb test $file ok"
+    echo "Processing the file: $dir_path/$file_name"
 
-    if [ $? -ne 0 ]; then
+    # Change to directory
+    if cd "$dir_path"; then
+        echo "Changed to directory: $dir_path"
+    else
+        echo "Failed to change to directory: $dir_path"
         has_errors=true
-        echo "Error while processing $dir/$file"
-        cat "$dir/error.log"
+        return
     fi
-    rm "$dir/error.log"
+
+    # Run scarb commands
+    if ! scarb build "$file_name" > error.log 2>&1; then
+        echo "Error in scarb build for $file_name"
+        cat error.log
+        has_errors=true
+    fi
+
+    if ! scarb fmt -c "$file_name" >> error.log 2>&1; then
+        echo "Error in scarb format check for $file_name"
+        cat error.log
+        has_errors=true
+    fi
+
+    if ! scarb test "$file_name" >> error.log 2>&1; then
+        echo "Error in scarb test for $file_name"
+        cat error.log
+        has_errors=true
+    fi
+
+    rm error.log
 }
 
 # process each modified file
 modified_files=$(list_modified_cairo_files)
-echo "modified files: are $modified_files"
+echo "Modified files: $modified_files"
 for file in $modified_files; do
     process_file "$file"
 done
@@ -48,7 +64,7 @@ done
 wait  # Wait for all background processes to finish
 
 # check if any errors were encountered
-if $has_errors ; then
+if $has_errors; then
   echo -e "\n${RED}Some projects have errors, please check the list above.${NC}\n"
   exit 1
 else
