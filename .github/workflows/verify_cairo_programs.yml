@@ -1,9 +1,9 @@
 name: Verify Cairo programs compilation
 
 on:
-  pull_request:
-    branches:
-      - main
+  pull_request: {}
+  push: {}
+
 
 jobs:
   compile_and_verify:
