@@ -17,6 +17,8 @@ process_file() {
     dir=$(dirname "$1")
     file=$(basename "$1")
     echo "Processing  the file: $dir/$file"
+    echo $dir
+    echo $file
     (cd "$dir" && scarb build "$file" 0>/dev/null 1> error.log && scarb fmt -c "$file" 0>/dev/null 1>> error.log && scarb test "$file" 0>/dev/null 1>> error.log)
     if [ $? -ne 0 ]; then
         has_errors=true
