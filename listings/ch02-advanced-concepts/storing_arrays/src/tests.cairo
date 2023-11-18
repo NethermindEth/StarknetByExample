@@ -50,7 +50,7 @@ mod tests {
             }
             array.append(i);
             i += 1;
-            // Trigger ci
+            // Trigger
         };
         contract.store_array(array);
 
