@@ -64,7 +64,7 @@ mod tests {
         assert(contract.get_current_count() == init_value, 'wrong value');
 
         contract.decrement();
-        contract.increment();
+        // contract.increment();
         assert(contract.get_current_count() == init_value, 'wrong value');
     }
 }

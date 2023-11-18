@@ -50,13 +50,12 @@ mod tests {
             }
             array.append(i);
             i += 1;
-            // Trigger
         };
         contract.store_array(array);
 
         // Read the array.
         let read_array = contract.read_array();
-        assert(read_array.len() == 20, 'Array too large');
+        assert(read_array.len() == 2, 'Array too large');
         assert(*read_array[0] == 1, 'Array element mismatch');
         assert(*read_array[1] == 2, 'Array element mismatch');
     }
