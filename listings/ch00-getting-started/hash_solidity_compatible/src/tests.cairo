@@ -1,5 +1,5 @@
 mod tests {
-    use solidity_hash::{solidity_hash::{SolidityHashExample, ISolidityHashExample}};
+    use hash_solidity_compatible::{hash_solidity_compatible::{SolidityHashExample, ISolidityHashExample}};
     use debug::PrintTrait;
 
     use starknet::{

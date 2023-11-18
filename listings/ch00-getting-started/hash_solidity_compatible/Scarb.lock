@@ -2,5 +2,5 @@
 version = 1
 
 [[package]]
-name = "solidity_hash"
+name = "hash_solidity_compatible"
 version = "0.1.0"

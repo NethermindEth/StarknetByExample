@@ -28,7 +28,7 @@ mod SolidityHashExample {
             let reversed_low = integer::u128_byte_reverse(low);
             let reversed_high = integer::u128_byte_reverse(high);
 
-            // Merge the reversed segments back into a u256 value
+            // Reverse merge the reversed segments back into a u256 value
             let compatible_hash = u256 {low: reversed_high, high: reversed_low};
 
             self.hash_value.write(compatible_hash);
