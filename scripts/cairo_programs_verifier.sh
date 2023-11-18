@@ -36,7 +36,7 @@ process_file() {
   if ! scarb build "$file_name" >error.log 2>&1; then
     echo "Current directory: $(pwd)"
     echo "Building file: $dir_path/$file_name"
-    scarb build "$file_name" >error.log 2>&1
+    scarb build >error.log 2>&1
 
     cat error.log
     has_errors=true
