@@ -49,7 +49,7 @@ mod matchExample {
         fn quiz(self: @ContractState, num: felt252) -> felt252 {
             let mut response: felt252 = '';
 
-            match num { // trigger ci
+            match num {
                 0 => { response = 'You failed' },
                 _ => { response = 'You Passed' },
             };
