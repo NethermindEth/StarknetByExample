@@ -10,64 +10,64 @@ REPO_ROOT="$(git rev-parse --show-toplevel)"
 # flag to check if any errors were encountered
 has_errors=false
 
-pids=()
-
-
 # function to list modified cairo files
 list_modified_cairo_files() {
-    git diff --name-only main...HEAD -- listings | grep -E 'listings/ch.*/*.cairo$'
+  git diff --name-only main...HEAD -- listings | grep -E 'listings/ch.*/*.cairo$'
 }
 
 # function to process individual file
 process_file() {
-    local relative_path="$1"
-    local dir_path="${REPO_ROOT}/$(dirname "${relative_path}")"
-    local file_name=$(basename "$relative_path")
+  local relative_path="$1"
+  local dir_path="${REPO_ROOT}/$(dirname "${relative_path}")"
+  local file_name=$(basename "$relative_path")
 
-    echo "Processing the file: $dir_path/$file_name"
+  echo "Processing the file: $dir_path/$file_name"
 
-    # Change to directory
-    if cd "$dir_path"; then
-        echo "Changed to directory: $dir_path"
-    else
-        echo "Failed to change to directory: $dir_path"
-        has_errors=true
-        return
-    fi
+  # Change to directory
+  if cd "$dir_path"; then
+    echo "Changed to directory: $dir_path"
+  else
+    echo "Failed to change to directory: $dir_path"
+    has_errors=true
+    return
+  fi
 
-    # Run scarb commands
-    if ! scarb build "$file_name" > error.log 2>&1; then
-        echo "Error in scarb build for $file_name"
-        cat error.log
-        has_errors=true
-    fi
+  # Run scarb commands
+  if ! scarb build "$file_name" >error.log 2>&1; then
+    echo "Current directory: $(pwd)"
+    echo "Building file: $dir_path/$file_name"
+    scarb build "$file_name" >error.log 2>&1
 
-    if ! scarb fmt -c "$file_name" >> error.log 2>&1; then
-        echo "Error in scarb format check for $file_name"
-        cat error.log
-        has_errors=true
-    fi
+    cat error.log
+    has_errors=true
+  fi
 
-    if ! scarb test "$file_name" >> error.log 2>&1; then
-        echo "Error in scarb test for $file_name"
-        cat error.log
-        has_errors=true
-    fi
+  if ! scarb fmt -c "$file_name" >>error.log 2>&1; then
+    echo "Error in scarb format check for $file_name"
+    cat error.log
+    has_errors=true
+  fi
 
-    rm error.log
+  if ! scarb test "$file_name" >>error.log 2>&1; then
+    echo "Error in scarb test for $file_name"
+    cat error.log
+    has_errors=true
+  fi
+
+  rm error.log
 }
 
 # process each modified file
 modified_files=$(list_modified_cairo_files)
 echo "Modified files: $modified_files"
 for file in $modified_files; do
-    process_file "$file" &
-    pids+=($!)
+  process_file "$file" &
+  pids+=($!)
 done
 
 # Wait for all background processes to finish
 for pid in ${pids[@]}; do
-    wait $pid
+  wait $pid
 done
 
 # check if any errors were encountered
