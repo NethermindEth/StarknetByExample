@@ -42,13 +42,13 @@ process_file() {
     has_errors=true
   fi
 
-  if ! scarb fmt -c "$file_name" >>error.log 2>&1; then
+  if ! scarb fmt >>error.log 2>&1; then
     echo "Error in scarb format check for $file_name"
     cat error.log
     has_errors=true
   fi
 
-  if ! scarb test "$file_name" >>error.log 2>&1; then
+  if ! scarb test >>error.log 2>&1; then
     echo "Error in scarb test for $file_name"
     cat error.log
     has_errors=true
