@@ -1,6 +1,6 @@
 mod tests {
     use hash_solidity_compatible::{
-        hash_solidity_compatible::{SolidityHashExample, ISolidityHashExample}
+        contract::{SolidityHashExample, ISolidityHashExample}
     };
     use debug::PrintTrait;
 

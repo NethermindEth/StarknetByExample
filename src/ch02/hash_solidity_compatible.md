@@ -1,1 +1,0 @@
-# Hash Solidity Compatible

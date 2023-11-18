@@ -1,4 +1,4 @@
-mod hash_solidity_compatible;
+mod contract;
 
 #[cfg(test)]
 mod tests;
