@@ -9,7 +9,7 @@ mod mappingContract {
     }
 
     #[external(v0)]
-    #[generate_trait
+    #[generate_trait]
     impl external of externalTrait {
         fn registerUser(
             ref self: ContractState, studentAdd: ContractAddress, studentName: felt252
