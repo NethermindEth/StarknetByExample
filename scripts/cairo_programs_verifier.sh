@@ -21,12 +21,7 @@ process_file() {
   local dir_path="${REPO_ROOT}/$(dirname "${relative_path}")"
   local file_name=$(basename "$relative_path")
 
-  echo "Processing the file: $dir_path/$file_name"
-
-  # Change to directory
-  if cd "$dir_path"; then
-    echo "Changed to directory: $dir_path"
-  else
+  if ! cd "$dir_path"; then
     echo "Failed to change to directory: $dir_path"
     has_errors=true
     return
@@ -34,8 +29,6 @@ process_file() {
 
   # Run scarb commands
   if ! scarb build "$file_name" >error.log 2>&1; then
-    echo "Current directory: $(pwd)"
-    echo "Building file: $dir_path/$file_name"
     scarb build >error.log 2>&1
 
     cat error.log
@@ -59,7 +52,6 @@ process_file() {
 
 # process each modified file
 modified_files=$(list_modified_cairo_files)
-echo "Modified files: $modified_files"
 for file in $modified_files; do
   process_file "$file" &
   pids+=($!)
