@@ -25,18 +25,18 @@ process_file() {
         return
     fi
 
-    if ! scarb build "$file_name" >error.log 2>&1; then
+    if ! scarb build >error.log 2>&1; then
         cat error.log
         echo "1" >> "$error_file"
     fi
 
-    if ! scarb fmt -c "$file_name" >>error.log 2>&1; then
+    if ! scarb fmt >>error.log 2>&1; then
         echo "Error in scarb format check for $file_name"
         cat error.log
         echo "1" >> "$error_file"
     fi
 
-    if ! scarb test "$file_name" >>error.log 2>&1; then
+    if ! scarb test >>error.log 2>&1; then
         echo "Error in scarb test for $file_name"
         cat error.log
         echo "1" >> "$error_file"
