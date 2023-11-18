@@ -10,7 +10,7 @@ error_file=$(mktemp)
 
 # function to list modified cairo files
 list_modified_cairo_files() {
-    git diff --name-only main...HEAD -- listings | grep -E 'listings/ch.*/*.cairo$'
+    git diff --name-only upstream/main...HEAD -- listings | grep -E 'listings/ch.*/*'
 }
 
 # function to process individual file
