@@ -7,6 +7,7 @@ NC='\033[0m'
 # root directory of the repository
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 error_file=$(mktemp)
+listings_count=0
 
 # function to list modified cairo files
 list_modified_cairo_files() {
@@ -15,6 +16,7 @@ list_modified_cairo_files() {
 
 # function to process individual file
 process_file() {
+    listings_count=$((listings_count + 1))
     local relative_path="$1"
     local dir_path="${REPO_ROOT}/$(dirname "${relative_path}")"
     local file_name=$(basename "$relative_path")
@@ -64,7 +66,11 @@ if grep -q "1" "$error_file"; then
     rm "$error_file"
     exit 1
 else
-    echo -e "\n${GREEN}All scarb builds were completed successfully${NC}.\n"
+    if [ $listings_count -eq 0 ]; then
+        echo -e "\n${GREEN}No new changes detected${NC}\n"
+    else
+        echo -e "\n${GREEN}All $listings_count builds were completed successfully${NC}\n"
+    fi
     rm "$error_file"
     exit 0
 fi
