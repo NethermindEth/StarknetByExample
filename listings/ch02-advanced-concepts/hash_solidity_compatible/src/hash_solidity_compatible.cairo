@@ -12,7 +12,7 @@ mod SolidityHashExample {
 
     #[storage]
     struct Storage {
-        hash_value: u256,
+        solidity_hash_value: u256,
     }
 
     #[abi(embed_v0)]
@@ -31,11 +31,11 @@ mod SolidityHashExample {
             // Reverse merge the reversed segments back into a u256 value
             let compatible_hash = u256 {low: reversed_high, high: reversed_low};
 
-            self.hash_value.write(compatible_hash);
+            self.solidity_hash_value.write(compatible_hash);
         }
 
         fn get_hashed_value(self: @ContractState) -> u256 {
-            self.hash_value.read()
+            self.solidity_hash_value.read()
         }
     }
 }
