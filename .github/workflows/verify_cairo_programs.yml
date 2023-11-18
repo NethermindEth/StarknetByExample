@@ -1,9 +1,9 @@
 name: Verify Cairo programs compilation
 
 on:
-  pull_request: {}
-  push: {}
-
+  pull_request:
+    branches:
+      - main
 
 jobs:
   compile_and_verify:
@@ -13,8 +13,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0 # Fetches all history for all branches and tags
-      - run: git fetch origin main:main # Explicitly fetch main branch
+          fetch-depth: 0  # Fetches all history for all branches and tags
+      - run: git fetch origin main:main  # Explicitly fetch main branch
 
       - name: Install scarb
         uses: software-mansion/setup-scarb@v1
