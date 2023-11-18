@@ -4,7 +4,7 @@ GREEN='\033[1;32m'
 RED='\033[1;31m'
 NC='\033[0m'
 
-# Root directory of the repository
+# root directory of the repository
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 error_file=$(mktemp)
 
@@ -53,12 +53,12 @@ for file in $modified_files; do
     pids+=($!)
 done
 
-# Wait for all background processes to finish
+# wait for all background processes to finish
 for pid in ${pids[@]}; do
     wait $pid
 done
 
-# Check if any errors were encountered
+# check if any errors were encountered
 if grep -q "1" "$error_file"; then
     echo -e "\n${RED}Some projects have errors, please check the list above.${NC}\n"
     rm "$error_file"
