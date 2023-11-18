@@ -7,6 +7,7 @@ mod arrayExample {
     #[external(v0)]
     #[generate_trait]
     impl external of externalTrait {
+        // Trigger ci
         fn createArray(self: @ContractState, numOne: u32, numTwo: u32, numThree: u32) -> bool {
             let mut Arr = ArrayTrait::<u32>::new();
             Arr.append(numOne);

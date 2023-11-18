@@ -10,6 +10,9 @@ REPO_ROOT="$(git rev-parse --show-toplevel)"
 # flag to check if any errors were encountered
 has_errors=false
 
+pids=()
+
+
 # function to list modified cairo files
 list_modified_cairo_files() {
     git diff --name-only main...HEAD -- listings | grep -E 'listings/ch.*/*.cairo$'
@@ -58,10 +61,14 @@ process_file() {
 modified_files=$(list_modified_cairo_files)
 echo "Modified files: $modified_files"
 for file in $modified_files; do
-    process_file "$file"
+    process_file "$file" &
+    pids+=($!)
 done
 
-wait  # Wait for all background processes to finish
+# Wait for all background processes to finish
+for pid in ${pids[@]}; do
+    wait $pid
+done
 
 # check if any errors were encountered
 if $has_errors; then
