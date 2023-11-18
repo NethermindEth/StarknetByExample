@@ -10,6 +10,9 @@ REPO_ROOT="$(git rev-parse --show-toplevel)"
 # flag to check if any errors were encountered
 has_errors=false
 
+# Array to hold PIDs of background processes
+pids=()
+
 # function to list modified cairo files
 list_modified_cairo_files() {
   git diff --name-only main...HEAD -- listings | grep -E 'listings/ch.*/*.cairo$'
