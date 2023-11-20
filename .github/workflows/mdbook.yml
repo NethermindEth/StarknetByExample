@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Rust cache
         uses: ./.github/workflows/setup-rust-cache
@@ -40,11 +40,7 @@ jobs:
         uses: ./.github/workflows/install-mdbook
 
       - name: Build book
-        run: |
-          mdbook build -d book
-
-      - name: Verify Cairo programs
-        uses: ./.github/workflows/verify-cairo-programs
+        run: mdbook build -d book
 
       - name: Setup Pages
         uses: actions/configure-pages@v3

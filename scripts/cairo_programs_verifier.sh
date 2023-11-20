@@ -4,73 +4,85 @@ GREEN='\033[1;32m'
 RED='\033[1;31m'
 NC='\033[0m'
 
+git_setup() {
+  upstream="git@github.com:NethermindEth/StarknetByExample.git"
+  if git remote | grep -q "^upstream$"; then
+    upstream_url=$(git remote get-url upstream)
+    if [ "$upstream_url" != "$upstream" ]; then
+      git remote set-url upstream "$upstream"
+      echo "'upstream' remote URL updated to NethermindEth."
+    fi
+  else
+      git remote add upstream "$desired_url"
+      echo "'upstream' remote added to NethermindEth."
+  fi 
+  git fetch upstream
+}
+
 # root directory of the repository
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 error_file=$(mktemp)
-listings_count=0
 
-# function to list modified cairo files
-list_modified_cairo_files() {
-    git diff --name-only upstream/main...HEAD -- listings | grep -E 'listings/ch.*/*'
+# function to list modified listings
+list_modified_listings() {
+  git diff --name-only upstream/main -- listings | \
+    grep -E 'listings/ch.*/*' | \
+    cut -d '/' -f 2-3 | sort -u
 }
 
-# function to process individual file
-process_file() {
-    listings_count=$((listings_count + 1))
-    local relative_path="$1"
-    local dir_path="${REPO_ROOT}/$(dirname "${relative_path}")"
-    local file_name=$(basename "$relative_path")
+# function to process listing
+process_listing() {
+  echo "Processing listing '$listing'"
+  local listing="$1"
+  local dir_path="${REPO_ROOT}/listings/${listing}"
 
-    if ! cd "$dir_path"; then
-        echo "Failed to change to directory: $dir_path"
-        echo "1" >> "$error_file"
-        return
-    fi
+  if ! cd "$dir_path"; then
+    echo -e "${RED}Failed to change to directory: $dir_path ${NC}"
+    echo "1" >> "$error_file"
+    return
+  fi
 
-    if ! scarb build >error.log 2>&1; then
-        cat error.log
-        echo "1" >> "$error_file"
-    fi
-
-    if ! scarb fmt >>error.log 2>&1; then
-        echo "Error in scarb format check for $file_name"
-        cat error.log
-        echo "1" >> "$error_file"
+  if ! scarb build >error.log 2>&1; then
+    echo -e "${RED}scarb build:${NC}"
+    cat error.log
+    echo "1" >> "$error_file"
+  else
+    if ! scarb fmt -c >>error.log 2>&1; then
+      echo -e "${RED}scarb fmt:${NC}"
+      cat error.log
+      echo "1" >> "$error_file"
     fi
 
     if ! scarb test >>error.log 2>&1; then
-        echo "Error in scarb test for $file_name"
-        cat error.log
-        echo "1" >> "$error_file"
+      echo -e "${RED}scarb test:${NC}"
+      cat error.log
+      echo "1" >> "$error_file"
     fi
+  fi
 
+  if [ -f "error.log" ]; then
     rm error.log
+  fi
 }
 
 # process each modified file
 pids=()
-modified_files=$(list_modified_cairo_files)
-for file in $modified_files; do
-    process_file "$file" &
-    pids+=($!)
-done
-
-# wait for all background processes to finish
-for pid in ${pids[@]}; do
-    wait $pid
+modified_listings=$(list_modified_listings)
+for listing in $modified_listings; do
+  process_listing "$listing"
 done
 
 # check if any errors were encountered
 if grep -q "1" "$error_file"; then
-    echo -e "\n${RED}Some projects have errors, please check the list above.${NC}\n"
-    rm "$error_file"
-    exit 1
+  echo -e "\n${RED}Some listings have errors, please check the list above.${NC}"
+  rm "$error_file"
+  exit 1
 else
-    if [ $listings_count -eq 0 ]; then
-        echo -e "\n${GREEN}No new changes detected${NC}\n"
-    else
-        echo -e "\n${GREEN}All $listings_count builds were completed successfully${NC}\n"
-    fi
-    rm "$error_file"
-    exit 0
+  if [ -z "$modified_listings" ]; then
+    echo -e "\n${GREEN}No new changes detected${NC}"
+  else
+    echo -e "\n${GREEN}All $listings_count builds were completed successfully${NC}"
+  fi
+  rm "$error_file"
+  exit 0
 fi
