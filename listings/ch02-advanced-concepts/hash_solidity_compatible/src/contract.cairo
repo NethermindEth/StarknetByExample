@@ -1,7 +1,6 @@
 #[starknet::interface]
 trait ISolidityHashExample<TContractState> {
-    fn hash_data(ref self: TContractState, input_data: Span<u256>);
-    fn get_hashed_value(self: @TContractState) -> u256;
+    fn hash_data(ref self: TContractState, input_data: Span<u256>) -> u256;
 }
 
 
@@ -11,13 +10,11 @@ mod SolidityHashExample {
     use array::Span;
 
     #[storage]
-    struct Storage {
-        solidity_hash_value: u256,
-    }
+    struct Storage {}
 
     #[abi(embed_v0)]
     impl SolidityHashExample of super::ISolidityHashExample<ContractState> {
-        fn hash_data(ref self: ContractState, input_data: Span<u256>) {
+        fn hash_data(ref self: ContractState, input_data: Span<u256>) -> u256 {
             let hashed = keccak_u256s_be_inputs(input_data);
 
             // Split the hashed value into two 128-bit segments
@@ -31,11 +28,7 @@ mod SolidityHashExample {
             // Reverse merge the reversed segments back into a u256 value
             let compatible_hash = u256 { low: reversed_high, high: reversed_low };
 
-            self.solidity_hash_value.write(compatible_hash);
-        }
-
-        fn get_hashed_value(self: @ContractState) -> u256 {
-            self.solidity_hash_value.read()
+            compatible_hash
         }
     }
 }

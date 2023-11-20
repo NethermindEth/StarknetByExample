@@ -8,4 +8,4 @@ For example:
 {{#include ../../listings/ch02-advanced-concepts/hash_solidity_compatible/src/contract.cairo}}
 ```
 
-Visit contract on [Voyager](#) or play with it in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch02-advanced-concepts/hash_solidity_compatible/src/contract.cairo).
+Play with the contract in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch02-advanced-concepts/hash_solidity_compatible/src/contract.cairo).
