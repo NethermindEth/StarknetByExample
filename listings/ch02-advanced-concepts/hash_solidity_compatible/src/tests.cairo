@@ -21,7 +21,8 @@ mod tests {
         let mut array: Array<u256> = ArrayTrait::new();
         array.append(1);
 
-        let hash_expected: u256 = 0xb10e2d527612073b26eecdfd717e6a320cf44b4afac2b0732d9fcbe2b7fa0cf6;
+        let hash_expected: u256 =
+            0xb10e2d527612073b26eecdfd717e6a320cf44b4afac2b0732d9fcbe2b7fa0cf6;
         let hash_received: u256 = state.hash_data(array.span());
 
         assert(hash_received == hash_expected, 'hash_received != hash_expected');
