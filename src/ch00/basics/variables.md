@@ -6,7 +6,7 @@ There are 3 types of variables in Cairo contracts:
   - declared inside a function
   - not stored on the blockchain
 - Storage
-  - declared in the `Storage` struct of a contract
+  - declared in the [Storage](./storage.md) of a contract
   - can be accessed from one execution to another
 - Global
   - provides information about the blockchain
