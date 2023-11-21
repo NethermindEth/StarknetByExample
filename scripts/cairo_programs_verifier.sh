@@ -4,39 +4,85 @@ GREEN='\033[1;32m'
 RED='\033[1;31m'
 NC='\033[0m'
 
-# flag to check if any errors were encountered
-has_errors=false
-
-# function to process directory
-process_directory() {
-  for dir in "$1"/*
-  do
-    if [ -d "$dir" ]; then
-      echo "Processing $dir"
-      (cd "$dir" && scarb build 0>/dev/null 1> error.log && scarb fmt -c 0>/dev/null 1>> error.log && scarb test 0>/dev/null 1>> error.log)
-      if [ $? -ne 0 ]; then
-        has_errors=true
-        echo "Error while processing $dir"
-        cat "$dir/error.log"
-      fi
-      rm "$dir/error.log"
+git_setup() {
+  upstream="git@github.com:NethermindEth/StarknetByExample.git"
+  if git remote | grep -q "^upstream$"; then
+    upstream_url=$(git remote get-url upstream)
+    if [ "$upstream_url" != "$upstream" ]; then
+      git remote set-url upstream "$upstream"
+      echo "'upstream' remote URL updated to NethermindEth."
     fi
-  done
+  else
+      git remote add upstream "$desired_url"
+      echo "'upstream' remote added to NethermindEth."
+  fi 
+  git fetch upstream
 }
 
-# only start processing directories that match the pattern ch*-* 
-for dir in listings/ch*-*
-do
-  if [ -d "$dir" ]; then
-    process_directory "$dir"
+# root directory of the repository
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+error_file=$(mktemp)
+
+# function to list modified listings
+list_modified_listings() {
+  git diff --name-only upstream/main -- listings | \
+    grep -E 'listings/ch.*/*' | \
+    cut -d '/' -f 2-3 | sort -u
+}
+
+# function to process listing
+process_listing() {
+  echo "Processing listing '$listing'"
+  local listing="$1"
+  local dir_path="${REPO_ROOT}/listings/${listing}"
+
+  if ! cd "$dir_path"; then
+    echo -e "${RED}Failed to change to directory: $dir_path ${NC}"
+    echo "1" >> "$error_file"
+    return
   fi
+
+  if ! scarb build >error.log 2>&1; then
+    echo -e "${RED}scarb build:${NC}"
+    cat error.log
+    echo "1" >> "$error_file"
+  else
+    if ! scarb fmt -c >>error.log 2>&1; then
+      echo -e "${RED}scarb fmt:${NC}"
+      cat error.log
+      echo "1" >> "$error_file"
+    fi
+
+    if ! scarb test >>error.log 2>&1; then
+      echo -e "${RED}scarb test:${NC}"
+      cat error.log
+      echo "1" >> "$error_file"
+    fi
+  fi
+
+  if [ -f "error.log" ]; then
+    rm error.log
+  fi
+}
+
+# process each modified file
+pids=()
+modified_listings=$(list_modified_listings)
+for listing in $modified_listings; do
+  process_listing "$listing"
 done
 
 # check if any errors were encountered
-if $has_errors ; then
-  echo "\n${RED}Some projects have errors, please check the list above.${NC}\n"
+if grep -q "1" "$error_file"; then
+  echo -e "\n${RED}Some listings have errors, please check the list above.${NC}"
+  rm "$error_file"
   exit 1
 else
-  echo -e "\n${GREEN}All scarb builds were completed successfully${NC}.\n"
+  if [ -z "$modified_listings" ]; then
+    echo -e "\n${GREEN}No new changes detected${NC}"
+  else
+    echo -e "\n${GREEN}All $listings_count builds were completed successfully${NC}"
+  fi
+  rm "$error_file"
   exit 0
 fi
