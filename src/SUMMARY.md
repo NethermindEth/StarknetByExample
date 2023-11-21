@@ -43,5 +43,6 @@ Summary
   - [Writing to any storage slot](./ch02/write_to_any_slot.md)
   - [Storing Arrays](./ch02/storing_arrays.md)
   - [Struct as mapping key](./ch02/struct-mapping-key.md)
+  - [Hash Solidity Compatible](./ch02/hash-solidity-compatible.md)
   - [Optimisations](./ch02/optimisations/optimisations.md)
     - [Storage Optimisations](./ch02/optimisations/store_using_packing.md)
