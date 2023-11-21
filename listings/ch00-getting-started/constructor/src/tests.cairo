@@ -25,7 +25,7 @@ mod tests {
 
         let mut state = ExampleConstructor::unsafe_new_contract_state();
         set_contract_address(address_0);
-        
+
         let name: felt252 = names::InternalContractMemberStateTrait::read(@state.names, address);
 
         assert(name == 'bob', 'name should be bob');
