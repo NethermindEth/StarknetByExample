@@ -11,7 +11,7 @@ Starknet by Example is a collection of examples of how to use the [Cairo](https:
 1. Clone this repository.
 2. Rust related packages:
    - Install toolchain providing `cargo` using [rustup](https://rustup.rs/).
-   - Install [mdBook](https://rust-lang.github.io/mdBook/guide/installation.html).
+   - Install [mdBook](https://rust-lang.github.io/mdBook/guide/installation.html) and the required extension with `cargo install mdbook mdbook-last-changed`.
 3. Install `scarb` using [asdf](https://asdf-vm.com/) with `asdf install`. Alternatively, you can install `scarb` manually by following the instructions [here](https://docs.swmansion.com/scarb/).
 
 ### Local development

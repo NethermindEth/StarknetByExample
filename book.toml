@@ -11,9 +11,14 @@ extra-watch-dirs = ["listings"]
 [preprocessor.gettext]
 after = ["links"]
 
+[preprocessor.last-changed]
+command = "mdbook-last-changed"
+renderer = ["html"]
+
 [output.html]
 git-repository-url = "https://github.com/NethermindEth/StarknetByExample/"
 edit-url-template = "https://github.com/NethermindEth/StarknetByExample/edit/main/{path}"
 playground.runnable = false
 fold.enable = true
 fold.level = 2
+additional-css = ["theme/css/last-changed.css"]

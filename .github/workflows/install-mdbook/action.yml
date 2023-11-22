@@ -10,6 +10,6 @@ runs:
       run: cargo install mdbook --locked --version 0.4.28
       shell: bash
 
-    - name: Install mdbook-i18n-helpers
-      run: cargo install mdbook-i18n-helpers --locked --version 0.1.0
+    - name: Install mdbook-last-changed
+      run: cargo install mdbook-last-changed --locked --version 0.1.4
       shell: bash
