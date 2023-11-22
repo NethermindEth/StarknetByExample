@@ -16,7 +16,7 @@ command = "mdbook-last-changed"
 renderer = ["html"]
 
 [output.html]
-git-repository-url = "https://github.com/NethermindEth/StarknetByExample/"
+git-repository-url = "https://github.com/NethermindEth/StarknetByExample"
 edit-url-template = "https://github.com/NethermindEth/StarknetByExample/edit/main/{path}"
 playground.runnable = false
 fold.enable = true
