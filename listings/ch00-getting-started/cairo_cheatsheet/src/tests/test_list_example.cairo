@@ -32,11 +32,11 @@ fn test_is_empty_list() {
     let mut state = STATE();
 
     let pre_addition = state.is_empty_list();
-    assert(pre_addition==true, 'should be true');
+    assert(pre_addition == true, 'should be true');
 
     state.add_in_amount(200);
     let post_addition = state.is_empty_list();
-    assert(post_addition==false, 'should be false');
+    assert(post_addition == false, 'should be false');
 }
 
 #[test]
@@ -45,11 +45,11 @@ fn test_list_length() {
     let mut state = STATE();
 
     let pre_addition = state.list_length();
-    assert(pre_addition==0, 'should be zero');
+    assert(pre_addition == 0, 'should be zero');
 
     state.add_in_amount(200);
     let post_addition = state.list_length();
-    assert(post_addition==1, 'should be 1');
+    assert(post_addition == 1, 'should be 1');
 }
 
 #[test]
@@ -77,11 +77,11 @@ fn test_pop_front_list() {
 
     state.add_in_amount(200);
     let pre_pop_front = state.list_length();
-    assert(pre_pop_front==1, 'should be 1');
+    assert(pre_pop_front == 1, 'should be 1');
 
     state.pop_front_list();
     let post_pop_front = state.list_length();
-    assert(post_pop_front==0, 'should be zero');
+    assert(post_pop_front == 0, 'should be zero');
 }
 
 #[test]
@@ -97,5 +97,5 @@ fn test_array_conversion() {
     state.add_in_amount(400);
     let output: Array<u128> = state.array_conversion();
 
-    assert(output==ideal_array, 'should be equal');
+    assert(output == ideal_array, 'should be equal');
 }
