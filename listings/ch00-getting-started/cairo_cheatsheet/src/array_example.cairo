@@ -1,29 +1,32 @@
+#[starknet::interface]
+trait IArrayExample<TContractState> {
+    fn createarray(self: @TContractState, num_one: u32, num_two: u32, num_three: u32) -> bool;
+}
+
 #[starknet::contract]
-mod arrayExample {
+mod ArrayExample {
     #[storage]
     struct Storage {}
 
 
-    #[external(v0)]
-    #[generate_trait]
-    impl external of externalTrait {
-        fn createArray(self: @ContractState, numOne: u32, numTwo: u32, numThree: u32) -> bool {
-            let mut Arr = ArrayTrait::<u32>::new();
-            Arr.append(numOne);
-            Arr.append(numTwo);
-            Arr.append(numThree);
+    #[abi(embed_v0)]
+    impl External of super::IArrayExample<ContractState> {
+        fn createarray(self: @ContractState, num_one: u32, num_two: u32, num_three: u32) -> bool {
+            let mut arr = ArrayTrait::<u32>::new();
+            arr.append(num_one);
+            arr.append(num_two);
+            arr.append(num_three);
 
-            let ArrLength: usize = Arr.len();
-            assert(ArrLength == 3, 'Array Length should be 3');
+            assert(arr.len() == 3, 'array length should be 3');
 
-            let first_value = Arr.pop_front().unwrap();
-            assert(first_value == numOne, 'Both values should match');
+            let first_value = arr.pop_front().unwrap();
+            assert(first_value == num_one, 'first value should match');
 
-            let second_value = *Arr.at(0);
-            assert(second_value == numTwo, 'Both values should match too');
+            let second_value = *arr.at(0);
+            assert(second_value == num_two, 'second value should match');
 
             //Returns true if an array is empty, then false if it isn't.
-            Arr.is_empty()
+            arr.is_empty()
         }
     }
 }

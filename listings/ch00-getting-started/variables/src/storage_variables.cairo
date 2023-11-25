@@ -1,3 +1,8 @@
+#[starknet::interface]
+trait IStorageVariableExample<TContractState> {
+    fn set(ref self: TContractState, value: u32);
+    fn get(self: @TContractState) -> u32;
+}
 #[starknet::contract]
 mod StorageVariablesExample {
     // All storage variables are contained in a struct called Storage
@@ -8,18 +13,15 @@ mod StorageVariablesExample {
         value: u32
     }
 
-    #[abi(per_item)]
-    #[generate_trait]
-    impl StorageVariablesExample of IStorageVariableExample {
+    #[abi(embed_v0)]
+    impl StorageVariablesExample of super::IStorageVariableExample<ContractState> {
         // Write to storage variables by sending a transaction that calls an external function
-        #[external(v0)]
         fn set(ref self: ContractState, value: u32) {
             self.value.write(value);
         }
 
         // Read from storage variables without sending transactions
-        #[external(v0)]
-        fn get(ref self: ContractState) -> u32 {
+        fn get(self: @ContractState) -> u32 {
             self.value.read()
         }
     }

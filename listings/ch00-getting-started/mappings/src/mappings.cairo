@@ -1,3 +1,11 @@
+use starknet::ContractAddress;
+
+#[starknet::interface]
+trait IMapContract<TContractState> {
+    fn set(ref self: TContractState, key: ContractAddress, value: felt252);
+    fn get(self: @TContractState, key: ContractAddress) -> felt252;
+}
+
 #[starknet::contract]
 mod MapContract {
     use starknet::ContractAddress;
@@ -8,15 +16,12 @@ mod MapContract {
         map: LegacyMap::<ContractAddress, felt252>,
     }
 
-    #[abi(per_item)]
-    #[generate_trait]
-    impl MapContractImpl of IMapContract {
-        #[external(v0)]
+    #[abi(embed_v0)]
+    impl MapContractImpl of super::IMapContract<ContractState> {
         fn set(ref self: ContractState, key: ContractAddress, value: felt252) {
             self.map.write(key, value);
         }
 
-        #[external(v0)]
         fn get(self: @ContractState, key: ContractAddress) -> felt252 {
             self.map.read(key)
         }

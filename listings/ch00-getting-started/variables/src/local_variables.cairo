@@ -1,12 +1,15 @@
+#[starknet::interface]
+trait ILocalVariablesExample<TContractState> {
+    fn do_something(self: @TContractState, value: u32) -> u32;
+}
+
 #[starknet::contract]
 mod LocalVariablesExample {
     #[storage]
     struct Storage {}
 
-    #[abi(per_item)]
-    #[generate_trait]
-    impl LocalVariablesExample of ILocalVariablesExample {
-        #[external(v0)]
+    #[abi(embed_v0)]
+    impl LocalVariablesExample of super::ILocalVariablesExample<ContractState> {
         fn do_something(self: @ContractState, value: u32) -> u32 {
             // This variable is local to the current block. It can't be accessed once it goes out of scope.
             let increment = 10;

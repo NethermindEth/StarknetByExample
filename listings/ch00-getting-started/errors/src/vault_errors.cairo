@@ -3,6 +3,12 @@ mod VaultErrors {
 // you can define more errors here
 }
 
+#[starknet::interface]
+trait IVaultErrorsExample<TContractState> {
+    fn deposit(ref self: TContractState, amount: u256);
+    fn withdraw(ref self: TContractState, amount: u256);
+}
+
 #[starknet::contract]
 mod VaultErrorsExample {
     use super::VaultErrors;
@@ -12,17 +18,14 @@ mod VaultErrorsExample {
         balance: u256,
     }
 
-    #[abi(per_item)]
-    #[generate_trait]
-    impl VaultErrorsExample of IVaultErrorsExample {
-        #[external(v0)]
+    #[abi(embed_v0)]
+    impl VaultErrorsExample of super::IVaultErrorsExample<ContractState> {
         fn deposit(ref self: ContractState, amount: u256) {
             let mut balance = self.balance.read();
             balance = balance + amount;
             self.balance.write(balance);
         }
 
-        #[external(v0)]
         fn withdraw(ref self: ContractState, amount: u256) {
             let mut balance = self.balance.read();
 

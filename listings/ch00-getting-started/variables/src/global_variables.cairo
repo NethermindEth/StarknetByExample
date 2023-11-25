@@ -1,15 +1,17 @@
+#[starknet::interface]
+trait IGlobalExample<TContractState> {
+    fn foo(ref self: TContractState);
+}
 #[starknet::contract]
 mod GlobalExample {
-    // import the required functions from the starknet core library 
+    // import the required functions from the starknet core library
     use starknet::get_caller_address;
 
     #[storage]
     struct Storage {}
 
-    #[abi(per_item)]
-    #[generate_trait]
-    impl GlobalExampleImpl of IGlobalExample {
-        #[external(v0)]
+    #[abi(embed_v0)]
+    impl GlobalExampleImpl of super::IGlobalExample<ContractState> {
         fn foo(ref self: ContractState) {
             // Call the get_caller_address function to get the sender address
             let caller = get_caller_address();

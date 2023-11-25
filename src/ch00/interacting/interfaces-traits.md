@@ -21,16 +21,6 @@ In summary, there's two ways to handle interfaces:
 
 Play with this contract in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-getting-started/interfaces_traits/src/explicit.cairo).
 
-## Implicit interface
-
-```rust
-{{#include ../../../listings/ch00-getting-started/interfaces_traits/src/implicit.cairo}}
-```
-
-Play with this contract in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-getting-started/interfaces_traits/src/implicit.cairo).
-
-> Note: You can import an implicitly generated contract interface with `use contract::{GeneratedContractInterface}`. However, the `Dispatcher` will not be generated automatically.
-
 ## Internal functions
 
 You can also use `#[generate_trait]` for your internal functions.
