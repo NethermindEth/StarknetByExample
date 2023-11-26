@@ -7,6 +7,11 @@ trait ICallee<TContractState> {
     fn set_value(ref self: TContractState, value: u128) -> u128;
 }
 
+#[starknet::interface]
+trait ICaller<TContractState> {
+    fn set_value_from_address(ref self: TContractState, addr: ContractAddress, value: u128);
+}
+
 #[starknet::contract]
 mod Caller {
     // We import the Dispatcher of the called contract
@@ -16,9 +21,8 @@ mod Caller {
     #[storage]
     struct Storage {}
 
-    #[abi(per_item)]
-    #[generate_trait]
-    impl ICallerImpl of ICaller {
+    #[abi(embed_v0)]
+    impl ICallerImpl of super::ICaller<ContractState> {
         fn set_value_from_address(ref self: ContractState, addr: ContractAddress, value: u128) {
             ICalleeDispatcher { contract_address: addr }.set_value(value);
         }

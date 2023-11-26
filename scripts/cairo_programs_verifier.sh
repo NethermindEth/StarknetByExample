@@ -15,7 +15,7 @@ git_setup() {
   else
       git remote add upstream "$desired_url"
       echo "'upstream' remote added to NethermindEth."
-  fi 
+  fi
   git fetch upstream
 }
 

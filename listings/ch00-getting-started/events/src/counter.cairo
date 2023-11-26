@@ -1,3 +1,7 @@
+#[starknet::interface]
+trait IEventCounter<TContractState> {
+    fn increment(ref self: TContractState);
+}
 #[starknet::contract]
 mod EventCounter {
     use starknet::{get_caller_address, ContractAddress};
@@ -31,10 +35,8 @@ mod EventCounter {
         new_value: u128,
     }
 
-    #[abi(per_item)]
-    #[generate_trait]
-    impl EventCounter of IEventCounter {
-        #[external(v0)]
+    #[abi(embed_v0)]
+    impl EventCounter of super::IEventCounter<ContractState> {
         fn increment(ref self: ContractState) {
             let mut counter = self.counter.read();
             counter += 1;

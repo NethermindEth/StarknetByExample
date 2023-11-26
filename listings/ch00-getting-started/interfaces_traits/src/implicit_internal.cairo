@@ -7,8 +7,6 @@ trait IImplicitInternalContract<TContractState> {
 
 #[starknet::contract]
 mod ImplicitInternalContract {
-    use super::IImplicitInternalContract;
-
     #[storage]
     struct Storage {
         value: u32
@@ -16,7 +14,6 @@ mod ImplicitInternalContract {
 
     #[generate_trait]
     impl InternalFunctions of InternalFunctionsTrait {
-        #[external(v0)]
         fn set_value(ref self: ContractState, value: u32) {
             self.value.write(value);
         }
@@ -31,7 +28,7 @@ mod ImplicitInternalContract {
     }
 
     #[abi(embed_v0)]
-    impl ImplicitInternalContract of IImplicitInternalContract<ContractState> {
+    impl ImplicitInternalContract of super::IImplicitInternalContract<ContractState> {
         fn add(ref self: ContractState, nb: u32) {
             self.set_value(self.value.read() + nb);
         }

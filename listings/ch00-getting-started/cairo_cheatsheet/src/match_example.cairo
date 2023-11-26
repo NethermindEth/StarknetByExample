@@ -1,28 +1,37 @@
+#[starknet::interface]
+trait IMatchExample<TContractState> {
+    fn value_in_cents(self: @TContractState, coin: Coin) -> felt252;
+    fn specified_colour(self: @TContractState, colour: Colour) -> felt252;
+    fn quiz(self: @TContractState, num: felt252) -> felt252;
+}
+
+
+#[derive(Drop, Serde)]
+enum Colour {
+    Red,
+    Blue,
+    Green,
+    Orange,
+    Black
+}
+
+#[derive(Drop, Serde)]
+enum Coin {
+    Penny,
+    Nickel,
+    Dime,
+    Quarter,
+}
+
+
 #[starknet::contract]
-mod matchExample {
+mod MatchExample {
+    use super::{Colour, Coin};
     #[storage]
     struct Storage {}
 
-    #[derive(Drop, Serde)]
-    enum Colour {
-        Red,
-        Blue,
-        Green,
-        Orange,
-        Black
-    }
-
-    #[derive(Drop, Serde)]
-    enum Coin {
-        Penny,
-        Nickel,
-        Dime,
-        Quarter,
-    }
-
-    #[external(v0)]
-    #[generate_trait]
-    impl external of externlalTrait {
+    #[abi(embed_v0)]
+    impl External of super::IMatchExample<ContractState> {
         fn value_in_cents(self: @ContractState, coin: Coin) -> felt252 {
             match coin {
                 Coin::Penny => 1,

@@ -1,30 +1,37 @@
+use starknet::ContractAddress;
+
+#[starknet::interface]
+trait IStructExample<TContractState> {
+    fn store_struct(ref self: TContractState, age: u8);
+    fn read_struct(self: @TContractState) -> (ContractAddress, u8);
+}
+
 #[starknet::contract]
 mod StructExample {
     use starknet::{ContractAddress, get_caller_address};
 
     #[storage]
     struct Storage {
-        userData: data
+        user_data: Data
     }
 
     #[derive(Drop, starknet::Store)]
-    struct data {
-        Add: ContractAddress,
-        Age: u8
+    struct Data {
+        address: ContractAddress,
+        age: u8
     }
 
-    #[external(v0)]
-    #[generate_trait]
-    impl StoreStructImpl of IStoreStructContract {
+    #[abi(embed_v0)]
+    impl StoreStructImpl of super::IStructExample<ContractState> {
         fn store_struct(ref self: ContractState, age: u8) {
-            let newStruct = data { Add: get_caller_address(), Age: age };
-            self.userData.write(newStruct);
+            let new_struct = Data { address: get_caller_address(), age: age };
+            self.user_data.write(new_struct);
         }
 
         fn read_struct(self: @ContractState) -> (ContractAddress, u8) {
-            let lastUser = self.userData.read();
-            let add = lastUser.Add;
-            let age = lastUser.Age;
+            let last_user = self.user_data.read();
+            let add = last_user.address;
+            let age = last_user.age;
             (add, age)
         }
     }

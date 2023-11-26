@@ -87,7 +87,7 @@ mod erc20 {
         self.mint(recipient, initial_supply);
     }
 
-    #[external(v0)]
+    #[abi(embed_v0)]
     impl IERC20Impl of super::IERC20<ContractState> {
         fn get_name(self: @ContractState) -> felt252 {
             self.name.read()

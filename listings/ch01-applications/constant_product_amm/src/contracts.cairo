@@ -77,7 +77,7 @@ mod ConstantProductAmm {
         }
     }
 
-    #[external(v0)]
+    #[abi(embed_v0)]
     impl ConstantProductAmm of super::IConstantProductAmm<ContractState> {
         fn swap(ref self: ContractState, token_in: ContractAddress, amount_in: u256) -> u256 {
             assert(amount_in > 0, 'amount in = 0');
@@ -162,7 +162,7 @@ mod ConstantProductAmm {
             //
             // L1 * T = L0 * (T + s)
             //
-            // (L1 - L0) * T / L0 = s 
+            // (L1 - L0) * T / L0 = s
 
             // Claim
             // (L1 - L0) / L0 = dx / x = dy / y
@@ -183,7 +183,7 @@ mod ConstantProductAmm {
             //
             // --- Equation 3 ---
             // Equation 2 = (sqrt(x^2 + 2xdx + dx^2) - sqrt(x^2)) / (sqrt(x^2)
-            // = (sqrt((x + dx)^2) - sqrt(x^2)) / sqrt(x^2)  
+            // = (sqrt((x + dx)^2) - sqrt(x^2)) / sqrt(x^2)
             // = ((x + dx) - x) / x
             // = dx / x
             // Since dx / dy = x / y,
@@ -233,7 +233,7 @@ mod ConstantProductAmm {
             // v = s / T * L
             // sqrt(dxdy) = s / T * sqrt(xy)
             //
-            // Amount of liquidity to remove must not change price so 
+            // Amount of liquidity to remove must not change price so
             // dx / dy = x / y
             //
             // replace dy = dx * y / x
