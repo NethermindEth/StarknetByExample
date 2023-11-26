@@ -1,5 +1,10 @@
 # List
 
+By default, there is no list type supported in Cairo, but you can use Alexandria. To include a list in your Cairo project, refer to the [Alexandria documentation](https://github.com/keep-starknet-strange/alexandria/tree/main/src/storage) for instructions.
+
+
+## What is a List?
+
 An ordered sequence of values that can be used in Starknet storage:
 
 ```rust
@@ -58,7 +63,7 @@ alexandria_storage = { git = "https://github.com/keep-starknet-strange/alexandri
 
 ```
 
-For example:
+For example, let's use List to create a contract that tracks a list of amounts and tasks:
 
 ```rust
 {{#include ../../../listings/ch00-getting-started/cairo_cheatsheet/src/list_example.cairo}}
