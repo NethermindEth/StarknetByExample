@@ -1,5 +1,5 @@
 #[starknet::contract]
-mod listExample {
+mod ListExample {
     use alexandria_storage::list::{List, ListTrait};
 
     #[storage]
@@ -15,9 +15,9 @@ mod listExample {
     }
 
 
-    #[external(v0)]
+    #[abi(embed_v0)]
     #[generate_trait]
-    impl external of externalTrait {
+    impl External of ExternalTrait {
         fn add_in_amount(ref self: ContractState, number: u128) {
             let mut current_amount_list = self.amount.read();
             current_amount_list.append(number);

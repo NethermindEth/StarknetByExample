@@ -1,11 +1,11 @@
 use core::array::ArrayTrait;
-use cairo_cheatsheet::list_example::listExample::{
-    externalTrait, Task, amountContractMemberStateTrait, tasksContractMemberStateTrait
+use cairo_cheatsheet::list_example::ListExample::{
+    ExternalTrait, Task, amountContractMemberStateTrait, tasksContractMemberStateTrait
 };
-use cairo_cheatsheet::list_example::listExample;
+use cairo_cheatsheet::list_example::ListExample;
 
-fn STATE() -> listExample::ContractState {
-    listExample::contract_state_for_testing()
+fn STATE() -> ListExample::ContractState {
+    ListExample::contract_state_for_testing()
 }
 
 #[test]
