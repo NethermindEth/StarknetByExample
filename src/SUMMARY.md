@@ -25,7 +25,6 @@ Summary
     - [Felt](./ch00/cairo_cheatsheet/felt.md)
     - [LegacyMap](./ch00/cairo_cheatsheet/mapping.md)
     - [Arrays](./ch00/cairo_cheatsheet/arrays.md)
-    - [List](./ch00/cairo_cheatsheet/list.md)
     - [Loop](./ch00/cairo_cheatsheet/loop.md)
     - [Match](./ch00/cairo_cheatsheet/match.md)
     - [Tuples](./ch00/cairo_cheatsheet/tuples.md)
@@ -47,3 +46,4 @@ Summary
   - [Hash Solidity Compatible](./ch02/hash-solidity-compatible.md)
   - [Optimisations](./ch02/optimisations/optimisations.md)
     - [Storage Optimisations](./ch02/optimisations/store_using_packing.md)
+  - [List](./ch02/list.md)
