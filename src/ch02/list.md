@@ -63,5 +63,5 @@ alexandria_storage = { git = "https://github.com/keep-starknet-strange/alexandri
 For example, let's use `List` to create a contract that tracks a list of amounts and tasks:
 
 ```rust
-{{#include ../../../listings/ch02-advanced-concepts/using-lists/src/contract.cairo}}
+{{#include ../../listings/ch02-advanced-concepts/using_lists/src/contract.cairo}}
 ```
