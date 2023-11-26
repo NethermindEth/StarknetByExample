@@ -25,6 +25,7 @@ Summary
     - [Felt](./ch00/cairo_cheatsheet/felt.md)
     - [LegacyMap](./ch00/cairo_cheatsheet/mapping.md)
     - [Arrays](./ch00/cairo_cheatsheet/arrays.md)
+    - [List](./ch00/cairo_cheatsheet/list.md)
     - [Loop](./ch00/cairo_cheatsheet/loop.md)
     - [Match](./ch00/cairo_cheatsheet/match.md)
     - [Tuples](./ch00/cairo_cheatsheet/tuples.md)
