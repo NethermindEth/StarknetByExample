@@ -7,7 +7,7 @@ version = "0.2.0"
 source = "git+https://github.com/keep-starknet-strange/alexandria.git?rev=ae1d514#ae1d5149ff601a7ac5b39edc867d33ebd83d7f4f"
 
 [[package]]
-name = "cairo_cheatsheet"
+name = "using_lists"
 version = "0.1.0"
 dependencies = [
  "alexandria_storage",

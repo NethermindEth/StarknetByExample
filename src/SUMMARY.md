@@ -46,3 +46,4 @@ Summary
   - [Hash Solidity Compatible](./ch02/hash-solidity-compatible.md)
   - [Optimisations](./ch02/optimisations/optimisations.md)
     - [Storage Optimisations](./ch02/optimisations/store_using_packing.md)
+  - [List](./ch02/list.md)
