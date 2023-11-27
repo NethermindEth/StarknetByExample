@@ -1,16 +1,15 @@
 # List
 
-By default, there is no list type supported in Cairo, but you can use Alexandria. To include a list in your Cairo project, refer to the [Alexandria documentation](https://github.com/keep-starknet-strange/alexandria/tree/main/src/storage) for instructions.
+By default, there is no list type supported in Cairo, but you can use Alexandria. You can refer to the [Alexandria documentation](https://github.com/keep-starknet-strange/alexandria/tree/main/src/storage) for more details.
 
-
-## What is a List?
+## What is `List`?
 
 An ordered sequence of values that can be used in Starknet storage:
 
 ```rust
 #[storage]
 stuct Storage {
-    amounts: List<u128>
+  amounts: List<u128>
 }
 ```
 
@@ -18,13 +17,13 @@ stuct Storage {
 
 ```rust
 trait ListTrait<T> {
-    fn len(self: @List<T>) -> u32;
-    fn is_empty(self: @List<T>) -> bool;
-    fn append(ref self: List<T>, value: T) -> u32;
-    fn get(self: @List<T>, index: u32) -> Option<T>;
-    fn set(ref self: List<T>, index: u32, value: T);
-    fn pop_front(ref self: List<T>) -> Option<T>;
-    fn array(self: @List<T>) -> Array<T>;
+  fn len(self: @List<T>) -> u32;
+  fn is_empty(self: @List<T>) -> bool;
+  fn append(ref self: List<T>, value: T) -> u32;
+  fn get(self: @List<T>, index: u32) -> Option<T>;
+  fn set(ref self: List<T>, index: u32, value: T);
+  fn pop_front(ref self: List<T>) -> Option<T>;
+  fn array(self: @List<T>) -> Array<T>;
 }
 ```
 
@@ -52,18 +51,16 @@ let mut amounts = self.amounts.read();
 amounts.append(42);
 ```
 
-### Adding in project
+### Dependencies
 
-Update your project dependencies: 
+Update your project dependencies by in the `Scarb.toml` file:
 ```rust
-
 [dependencies]
 (...)
 alexandria_storage = { git = "https://github.com/keep-starknet-strange/alexandria.git" }
-
 ```
 
-For example, let's use List to create a contract that tracks a list of amounts and tasks:
+For example, let's use `List` to create a contract that tracks a list of amounts and tasks:
 
 ```rust
 {{#include ../../../listings/ch02-advanced-concepts/using-lists/src/contract.cairo}}

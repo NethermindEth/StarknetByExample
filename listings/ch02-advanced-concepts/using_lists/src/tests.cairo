@@ -1,7 +1,9 @@
 use using_lists::contract::IListExample;
 use core::array::ArrayTrait;
 use using_lists::contract::ListExample;
-use using_lists::contract::ListExample::{Task, amountContractMemberStateTrait, tasksContractMemberStateTrait};
+use using_lists::contract::ListExample::{
+    Task, amountContractMemberStateTrait, tasksContractMemberStateTrait
+};
 
 fn STATE() -> ListExample::ContractState {
     ListExample::contract_state_for_testing()
