@@ -5,5 +5,5 @@ Cairo supports the conversion from one scalar types to another by using the into
 For example:
 
 ```rust
-{{#include ../../../listings/ch00-getting-started/cairo_cheatsheet/src/type_casting_example.cairo}}
+{{#include ../../../listings/ch00-getting-started/cairo_cheatsheet/src/type_casting_example.cairo:sheet}}
 ```

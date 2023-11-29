@@ -6,5 +6,5 @@ Felt252 can also be used to store short-string representations with a maximum le
 For example:
 
 ```rust
-{{#include ../../../listings/ch00-getting-started/cairo_cheatsheet/src/felt_example.cairo}}
+{{#include ../../../listings/ch00-getting-started/cairo_cheatsheet/src/felt_example.cairo:sheet}}
 ```
