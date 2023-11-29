@@ -1,6 +1,7 @@
 #[starknet::interface]
 trait ICallee<TContractState> {
     fn set_value(ref self: TContractState, value: u128) -> u128;
+    fn get_value(ref self: TContractState) -> u128;
 }
 
 #[starknet::contract]
@@ -15,6 +16,9 @@ mod Callee {
         fn set_value(ref self: ContractState, value: u128) -> u128 {
             self.value.write(value);
             value
+        }
+        fn get_value(ref self: ContractState) -> u128 {
+            self.value.read()
         }
     }
 }
