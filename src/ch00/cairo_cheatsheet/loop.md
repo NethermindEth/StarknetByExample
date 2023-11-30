@@ -4,5 +4,5 @@ A loop specifies a block of code that will run repetitively until a halting cond
 For example:
 
 ```rust
-{{#include ../../../listings/ch00-getting-started/cairo_cheatsheet/src/loop_example.cairo}}
+{{#include ../../../listings/ch00-getting-started/cairo_cheatsheet/src/loop_example.cairo:sheet}}
 ```

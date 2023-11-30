@@ -4,6 +4,5 @@ version = "0.1.0"
 
 [dependencies]
 starknet = ">=2.3.0"
-alexandria_storage = { git = "https://github.com/keep-starknet-strange/alexandria.git",  rev="ae1d514"}
 
 [[target.starknet-contract]]
