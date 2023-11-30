@@ -17,7 +17,7 @@ The later chapters will cover more advanced topics and show you how to write mor
 
 ## Further reading
 
-If you want to learn more about the Cairo programming language, you can read the [Cairo Book](https://cairo-book.github.io/).
+If you want to learn more about the Cairo programming language, you can read the [Cairo Book](https://book.cairo-lang.org).
 If you want to learn more about Starknet, you can read the [Starknet documentation](https://docs.starknet.io/) and the [Starknet Book](https://book.starknet.io).
 
 Here's a list of other resources that you might find useful:
