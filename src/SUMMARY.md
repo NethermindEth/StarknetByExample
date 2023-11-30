@@ -16,6 +16,7 @@ Summary
     - [Events](./ch00/basics/events.md)
     - [Storing Custom Types](./ch00/basics/storing-custom-types.md)
     - [Custom types in entrypoints](./ch00/basics/custom-types-in-entrypoints.md)
+    - [Documentation](./ch00/basics/documentation.md)
   - [Deploy and interact with contracts](./ch00/interacting/interacting.md)
     - [Contract interfaces and Traits generation](./ch00/interacting/interfaces-traits.md)
     - [Calling other contracts](./ch00/interacting/calling_other_contracts.md)
