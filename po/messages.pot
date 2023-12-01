@@ -1,0 +1,2216 @@
+
+msgid ""
+msgstr ""
+"Project-Id-Version: Starknet by Example\n"
+"POT-Creation-Date: 2023-12-01T20:54:04+09:00\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: src/SUMMARY.md:1
+msgid "Summary"
+msgstr ""
+
+#: src/SUMMARY.md:3
+msgid "Introduction"
+msgstr ""
+
+#: src/SUMMARY.md:6
+msgid "Getting Started"
+msgstr ""
+
+#: src/SUMMARY.md:8
+msgid "Basics of a Starknet contract"
+msgstr ""
+
+#: src/SUMMARY.md:9 src/ch00/basics/storage.md:1 src/ch00/basics/variables.md:8
+msgid "Storage"
+msgstr ""
+
+#: src/SUMMARY.md:10 src/ch00/basics/constructor.md:1
+msgid "Constructor"
+msgstr ""
+
+#: src/SUMMARY.md:11 src/ch00/basics/variables.md:1
+msgid "Variables"
+msgstr ""
+
+#: src/SUMMARY.md:12 src/ch00/basics/visibility-mutability.md:1
+msgid "Visibility and Mutability"
+msgstr ""
+
+#: src/SUMMARY.md:13
+msgid "Counter Example"
+msgstr ""
+
+#: src/SUMMARY.md:14 src/ch00/basics/mappings.md:1
+msgid "Mappings"
+msgstr ""
+
+#: src/SUMMARY.md:15 src/ch00/basics/errors.md:1
+msgid "Errors"
+msgstr ""
+
+#: src/SUMMARY.md:16 src/ch00/basics/events.md:1
+msgid "Events"
+msgstr ""
+
+#: src/SUMMARY.md:17 src/ch00/basics/storing-custom-types.md:1
+msgid "Storing Custom Types"
+msgstr ""
+
+#: src/SUMMARY.md:18 src/ch00/basics/custom-types-in-entrypoints.md:1
+msgid "Custom types in entrypoints"
+msgstr ""
+
+#: src/SUMMARY.md:19 src/ch00/basics/documentation.md:1
+msgid "Documentation"
+msgstr ""
+
+#: src/SUMMARY.md:20 src/ch00/interacting/interacting.md:1
+msgid "Deploy and interact with contracts"
+msgstr ""
+
+#: src/SUMMARY.md:21 src/ch00/interacting/interfaces-traits.md:1
+msgid "Contract interfaces and Traits generation"
+msgstr ""
+
+#: src/SUMMARY.md:22 src/ch00/interacting/calling_other_contracts.md:1
+msgid "Calling other contracts"
+msgstr ""
+
+#: src/SUMMARY.md:23
+msgid "Factory pattern"
+msgstr ""
+
+#: src/SUMMARY.md:24
+msgid "Testing contracts"
+msgstr ""
+
+#: src/SUMMARY.md:25
+msgid "Cairo cheatsheet"
+msgstr ""
+
+#: src/SUMMARY.md:26
+msgid "Felt"
+msgstr ""
+
+#: src/SUMMARY.md:27
+msgid "LegacyMap"
+msgstr ""
+
+#: src/SUMMARY.md:28 src/ch00/cairo_cheatsheet/arrays.md:1
+msgid "Arrays"
+msgstr ""
+
+#: src/SUMMARY.md:29 src/ch00/cairo_cheatsheet/loop.md:1
+msgid "Loop"
+msgstr ""
+
+#: src/SUMMARY.md:30 src/ch00/cairo_cheatsheet/match.md:1
+msgid "Match"
+msgstr ""
+
+#: src/SUMMARY.md:31 src/ch00/cairo_cheatsheet/tuples.md:1
+msgid "Tuples"
+msgstr ""
+
+#: src/SUMMARY.md:32 src/ch00/cairo_cheatsheet/struct.md:1
+msgid "Struct"
+msgstr ""
+
+#: src/SUMMARY.md:33 src/ch00/cairo_cheatsheet/type_casting.md:1
+msgid "Type casting"
+msgstr ""
+
+#: src/SUMMARY.md:36
+msgid "Applications examples"
+msgstr ""
+
+#: src/SUMMARY.md:37 src/ch01/upgradeable_contract.md:1
+msgid "Upgradeable Contract"
+msgstr ""
+
+#: src/SUMMARY.md:38
+msgid "Defi Vault"
+msgstr ""
+
+#: src/SUMMARY.md:39 src/ch01/erc20.md:1
+msgid "ERC20 Token"
+msgstr ""
+
+#: src/SUMMARY.md:40 src/ch01/constant-product-amm.md:1
+msgid "Constant Product AMM"
+msgstr ""
+
+#: src/SUMMARY.md:43
+msgid "Advanced concepts"
+msgstr ""
+
+#: src/SUMMARY.md:44 src/ch02/write_to_any_slot.md:1
+msgid "Writing to any storage slot"
+msgstr ""
+
+#: src/SUMMARY.md:45 src/ch02/storing_arrays.md:1
+msgid "Storing Arrays"
+msgstr ""
+
+#: src/SUMMARY.md:46
+msgid "Struct as mapping key"
+msgstr ""
+
+#: src/SUMMARY.md:47 src/ch02/hash-solidity-compatible.md:1
+msgid "Hash Solidity Compatible"
+msgstr ""
+
+#: src/SUMMARY.md:48 src/ch02/optimisations/optimisations.md:1
+msgid "Optimisations"
+msgstr ""
+
+#: src/SUMMARY.md:49
+msgid "Storage Optimisations"
+msgstr ""
+
+#: src/SUMMARY.md:50 src/ch02/list.md:1
+msgid "List"
+msgstr ""
+
+#: src/starknet-by-example.md:1
+msgid "Starknet by Example"
+msgstr ""
+
+#: src/starknet-by-example.md:3
+msgid ""
+"Starknet By Example is a collection of examples of how to use the Cairo "
+"programming language to create smart contracts on Starknet."
+msgstr ""
+
+#: src/starknet-by-example.md:5
+msgid ""
+"Starknet is a permissionless Validity-Rollup that supports general "
+"computation. It is currently used as an Ethereum layer-2. Starknet use the "
+"STARK cryptographic proof system to ensure high safety and scalability."
+msgstr ""
+
+#: src/starknet-by-example.md:7
+msgid ""
+"Starknet smart contracts are written in the Cairo language. Cairo is a "
+"Turing-complete programming language designed to write provable programs, "
+"abstracting the zk-STARK proof system away from the programmer."
+msgstr ""
+
+#: src/starknet-by-example.md:9
+msgid "The current version of this book use `scarb 2.3.0`"
+msgstr ""
+
+#: src/starknet-by-example.md:11
+msgid "For whom is this for?"
+msgstr ""
+
+#: src/starknet-by-example.md:13
+msgid ""
+"Starknet By Example is for anyone who wants to quickly learn how to write "
+"smart contracts on Starknet using Cairo with some technical background in "
+"programming and blockchain."
+msgstr ""
+
+#: src/starknet-by-example.md:15
+msgid ""
+"The first chapters will give you a basic understanding of the Cairo "
+"programming language and how to write, deploy and use smart contracts on "
+"Starknet. The later chapters will cover more advanced topics and show you "
+"how to write more complex smart contracts."
+msgstr ""
+
+#: src/starknet-by-example.md:18
+msgid "Further reading"
+msgstr ""
+
+#: src/starknet-by-example.md:20
+msgid ""
+"If you want to learn more about the Cairo programming language, you can read "
+"the [Cairo Book](https://book.cairo-lang.org). If you want to learn more "
+"about Starknet, you can read the [Starknet "
+"documentation](https://docs.starknet.io/) and the [Starknet "
+"Book](https://book.starknet.io)."
+msgstr ""
+
+#: src/starknet-by-example.md:23
+msgid "Here's a list of other resources that you might find useful:"
+msgstr ""
+
+#: src/starknet-by-example.md:24
+msgid ""
+"[Starklings](https://github.com/shramee/starklings-cairo1): An interactive "
+"tutorial to get you up and running with Cairo v1 and Starknet "
+msgstr ""
+
+#: src/starknet-by-example.md:25
+msgid ""
+"[Cairopractice](https://cairopractice.com/): A blog with a series of "
+"articles about Cairo and Starknet"
+msgstr ""
+
+#: src/starknet-by-example.md:26
+msgid ""
+"[Cairo by example](https://cairo-by-example.com/): An introduction to Cairo, "
+"with simple examples"
+msgstr ""
+
+#: src/ch00/basics/introduction.md:1
+msgid "Basics of Smart Contracts in Cairo"
+msgstr ""
+
+#: src/ch00/basics/introduction.md:3
+msgid ""
+"The following chapters will introduce you to Starknet smart contracts and "
+"how to write them in Cairo."
+msgstr ""
+
+#: src/ch00/basics/storage.md:3
+msgid "Here's the most minimal contract you can write in Cairo:"
+msgstr ""
+
+#: src/ch00/basics/storage.md:13
+msgid ""
+"Storage is a struct annoted with `#[storage]`. Every contract must have one "
+"and only one storage. It's a key-value store, where each key will be mapped "
+"to a storage address of the contract's storage space."
+msgstr ""
+
+#: src/ch00/basics/storage.md:16
+msgid ""
+"You can define [storage variables](./variables.md#storage-variables) in your "
+"contract, and then use them to store and retrieve data."
+msgstr ""
+
+#: src/ch00/basics/storage.md:29
+msgid ""
+"Actually these two contracts have the same underlying sierra program. From "
+"the compiler's perspective, the storage variables don't exist until they are "
+"used."
+msgstr ""
+
+#: src/ch00/basics/storage.md:32
+msgid "You can also read about [storing custom types](./storing-custom-types.md)"
+msgstr ""
+
+#: src/ch00/basics/constructor.md:3
+msgid ""
+"Constructors are a special type of function that runs only once when "
+"deploying a contract, and can be used to initialize the state of the "
+"contract. Your contract must not have more than one constructor, and that "
+"constructor function must be annotated with the `#[constructor]` attribute. "
+"Also, a good practice consists in naming that function `constructor`."
+msgstr ""
+
+#: src/ch00/basics/constructor.md:5
+msgid ""
+"Here's a simple example that demonstrates how to initialize the state of a "
+"contract on deployment by defining logic inside a constructor."
+msgstr ""
+
+#: src/ch00/basics/constructor.md:17
+msgid ""
+"// The constructor is decorated with a `#[constructor]` attribute.\n"
+"    // It is not inside an `impl` block.\n"
+msgstr ""
+
+#: src/ch00/basics/constructor.md:25
+msgid ""
+"Visit contract on "
+"[Voyager](https://goerli.voyager.online/contract/0x017fd6558e67451dA583d123D77F4e2651E91502D08F8F8432355293b11e1f8F) "
+"or play with it in "
+"[Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-getting-started/constructor/src/constructor.cairo)."
+msgstr ""
+
+#: src/ch00/basics/variables.md:3
+msgid "There are 3 types of variables in Cairo contracts:"
+msgstr ""
+
+#: src/ch00/basics/variables.md:5
+msgid "Local"
+msgstr ""
+
+#: src/ch00/basics/variables.md:6
+msgid "declared inside a function"
+msgstr ""
+
+#: src/ch00/basics/variables.md:7
+msgid "not stored on the blockchain"
+msgstr ""
+
+#: src/ch00/basics/variables.md:9
+msgid "declared in the [Storage](./storage.md) of a contract"
+msgstr ""
+
+#: src/ch00/basics/variables.md:10
+msgid "can be accessed from one execution to another"
+msgstr ""
+
+#: src/ch00/basics/variables.md:11
+msgid "Global"
+msgstr ""
+
+#: src/ch00/basics/variables.md:12
+msgid "provides information about the blockchain"
+msgstr ""
+
+#: src/ch00/basics/variables.md:13
+msgid "accessed anywhere, even within library functions"
+msgstr ""
+
+#: src/ch00/basics/variables.md:15
+msgid "Local Variables"
+msgstr ""
+
+#: src/ch00/basics/variables.md:17
+msgid ""
+"Local variables are used and accessed within the scope of a specific "
+"function or block of code. They are temporary and exist only for the "
+"duration of that particular function or block execution."
+msgstr ""
+
+#: src/ch00/basics/variables.md:19
+msgid ""
+"Local variables are stored in memory and are not stored on the blockchain. "
+"This means they cannot be accessed from one execution to another. Local "
+"variables are useful for storing temporary data that is relevant only within "
+"a specific context. They also make the code more readable by giving names to "
+"intermediate values."
+msgstr ""
+
+#: src/ch00/basics/variables.md:21
+msgid "Here's a simple example of a contract with only local variables:"
+msgstr ""
+
+#: src/ch00/basics/variables.md:37
+msgid ""
+"// This variable is local to the current block. It can't be accessed once it "
+"goes out of scope.\n"
+msgstr ""
+
+#: src/ch00/basics/variables.md:41
+msgid ""
+"// The scope of a code block allows for local variable declaration\n"
+"                // We can access variables defined in higher scopes.\n"
+msgstr ""
+
+#: src/ch00/basics/variables.md:50
+msgid ""
+"Visit contract on "
+"[Voyager](https://goerli.voyager.online/contract/0x015B3a10F9689BeD741Ca3C210017BC097122CeF76f3cAA191A20ff8b9b56b96) "
+"or play with it in "
+"[Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-getting-started/variables/src/local_variables.cairo)."
+msgstr ""
+
+#: src/ch00/basics/variables.md:52
+msgid "Storage Variables"
+msgstr ""
+
+#: src/ch00/basics/variables.md:54
+msgid ""
+"Storage variables are persistent data stored on the blockchain. They can be "
+"accessed from one execution to another, allowing the contract to remember "
+"and update information over time."
+msgstr ""
+
+#: src/ch00/basics/variables.md:56
+msgid ""
+"To write or update a storage variable, you need to interact with the "
+"contract through an external entrypoint by sending a transaction."
+msgstr ""
+
+#: src/ch00/basics/variables.md:58
+msgid ""
+"On the other hand, you can read state variables, for free, without any "
+"transaction, simply by interacting with a node."
+msgstr ""
+
+#: src/ch00/basics/variables.md:60
+msgid "Here's a simple example of a contract with one storage variable:"
+msgstr ""
+
+#: src/ch00/basics/variables.md:70
+msgid ""
+"// All storage variables are contained in a struct called Storage\n"
+"    // annotated with the `#[storage]` attribute\n"
+msgstr ""
+
+#: src/ch00/basics/variables.md:74
+msgid "// Storage variable holding a number\n"
+msgstr ""
+
+#: src/ch00/basics/variables.md:80
+msgid ""
+"// Write to storage variables by sending a transaction that calls an "
+"external function\n"
+msgstr ""
+
+#: src/ch00/basics/variables.md:85
+msgid "// Read from storage variables without sending transactions\n"
+msgstr ""
+
+#: src/ch00/basics/variables.md:92
+msgid ""
+"Visit contract on "
+"[Voyager](https://goerli.voyager.online/contract/0x06eA827B32875483709b785A7F9e846a52776Cd8D42C3fE696218c2624b0DCCa) "
+"or play with it in "
+"[Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-getting-started/variables/src/storage_variables.cairo)."
+msgstr ""
+
+#: src/ch00/basics/variables.md:94
+msgid "Global Variables"
+msgstr ""
+
+#: src/ch00/basics/variables.md:96
+msgid ""
+"Global variables are predefined variables that provide information about the "
+"blockchain and the current execution environment. They can be accessed at "
+"any time and from anywhere!"
+msgstr ""
+
+#: src/ch00/basics/variables.md:98
+msgid ""
+"In Starknet, you can access global variables by using specific functions "
+"contained in the starknet core libraries."
+msgstr ""
+
+#: src/ch00/basics/variables.md:100
+msgid ""
+"For example, the `get_caller_address` function returns the address of the "
+"caller of the current transaction, and the `get_contract_address` function "
+"returns the address of the current contract."
+msgstr ""
+
+#: src/ch00/basics/variables.md:109
+msgid "// import the required functions from the starknet core library\n"
+msgstr ""
+
+#: src/ch00/basics/variables.md:118
+msgid "// Call the get_caller_address function to get the sender address\n"
+msgstr ""
+
+#: src/ch00/basics/variables.md:120
+msgid "// ...\n"
+msgstr ""
+
+#: src/ch00/basics/variables.md:125
+msgid ""
+"Visit contract on "
+"[Voyager](https://goerli.voyager.online/contract/0x05bD2F3943bd4e030f85678b55b2EC2C1be939e32388530FB20ED967B3Be433F) "
+"or play with it in "
+"[Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-getting-started/variables/src/global_variables.cairo)."
+msgstr ""
+
+#: src/ch00/basics/visibility-mutability.md:3
+msgid "Visibility"
+msgstr ""
+
+#: src/ch00/basics/visibility-mutability.md:5
+msgid "There are two types of functions in Starknet contracts:"
+msgstr ""
+
+#: src/ch00/basics/visibility-mutability.md:7
+msgid "Functions that are accessible externally and can be called by anyone."
+msgstr ""
+
+#: src/ch00/basics/visibility-mutability.md:8
+msgid ""
+"Functions that are only accessible internally and can only be called by "
+"other functions in the contract."
+msgstr ""
+
+#: src/ch00/basics/visibility-mutability.md:10
+msgid ""
+"These functions are also typically divided into two different "
+"implementations blocks. The first `impl` block for externally accessible "
+"functions is explicitly annotated with an `#[abi(embed_v0)]` attribute. This "
+"indicates that all the functions inside this block can be called either as a "
+"transaction or as a view function. The second `impl` block for internally "
+"accessible functions is not annotated with any attribute, which means that "
+"all the functions inside this block are private by default."
+msgstr ""
+
+#: src/ch00/basics/visibility-mutability.md:12
+msgid "State Mutability"
+msgstr ""
+
+#: src/ch00/basics/visibility-mutability.md:14
+msgid ""
+"Regardless of whether a function is internal or external, it can either "
+"modify the contract's state or not. When we declare functions that interact "
+"with storage variables inside a smart contract, we need to explicitly state "
+"that we are accessing the `ContractState` by adding it as the first "
+"parameter of the function. This can be done in two different ways:"
+msgstr ""
+
+#: src/ch00/basics/visibility-mutability.md:17
+msgid ""
+"If we want our function to be able to mutate the state of the contract, we "
+"pass it by reference like this: `ref self: ContractState`."
+msgstr ""
+
+#: src/ch00/basics/visibility-mutability.md:18
+msgid ""
+"If we want our function to be read-only and not mutate the state of the "
+"contract, we pass it by snapshot like this: `self: @ContractState`."
+msgstr ""
+
+#: src/ch00/basics/visibility-mutability.md:20
+msgid ""
+"Read-only functions, also called view functions, can be directly called "
+"without making a transaction. You can interact with them directly through a "
+"RPC node to read the contract's state, and they're free to call! External "
+"functions, that modify the contract's state, on the other side can only be "
+"called by making a transaction."
+msgstr ""
+
+#: src/ch00/basics/visibility-mutability.md:23
+msgid ""
+"Internal functions can't be called externally, but the same principle "
+"applies regarding state mutability."
+msgstr ""
+
+#: src/ch00/basics/visibility-mutability.md:25
+msgid "Let's take a look at a simple example contract to see these in action:"
+msgstr ""
+
+#: src/ch00/basics/visibility-mutability.md:42
+msgid ""
+"// The `abi(embed_v0)` attribute indicates that all the functions in this "
+"implementation can be called externally.\n"
+"    // Omitting this attribute would make all the functions in this "
+"implementation internal.\n"
+msgstr ""
+
+#: src/ch00/basics/visibility-mutability.md:46
+msgid ""
+"// The `set` function can be called externally because it is written inside "
+"an implementation marked as `#[external]`.\n"
+"        // It can modify the contract's state as it is passed as a "
+"reference.\n"
+msgstr ""
+
+#: src/ch00/basics/visibility-mutability.md:52
+msgid ""
+"// The `get` function can be called externally because it is written inside "
+"an implementation marked as `#[external]`.\n"
+"        // However, it can't modify the contract's state is passed as a "
+"snapshot: it is only a \"view\" function.\n"
+msgstr ""
+
+#: src/ch00/basics/visibility-mutability.md:55
+msgid ""
+"// We can call an internal function from any functions within the contract\n"
+msgstr ""
+
+#: src/ch00/basics/visibility-mutability.md:60
+msgid ""
+"// The lack of the `external` attribute indicates that all the functions in "
+"this implementation can only be called internally.\n"
+"    // We name the trait `PrivateFunctionsTrait` to indicate that it is an "
+"internal trait allowing us to call internal functions.\n"
+msgstr ""
+
+#: src/ch00/basics/visibility-mutability.md:64
+msgid ""
+"// The `_read_value` function is outside the implementation that is marked "
+"as `#[abi(embed_v0)]`, so it's an _internal_ function\n"
+"        // and can only be called from within the contract.\n"
+"        // It can modify the contract's state as it is passed as a "
+"reference.\n"
+msgstr ""
+
+#: src/ch00/basics/visibility-mutability.md:73
+msgid ""
+"Visit contract on "
+"[Voyager](https://goerli.voyager.online/contract/0x0071dE3093AB58053b0292C225aa0eED40293e7694A0042685FF6D813d39889F) "
+"or play with it in "
+"[Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-getting-started/visibility/src/visibility.cairo)."
+msgstr ""
+
+#: src/ch00/basics/counter.md:1
+msgid "Simple Counter"
+msgstr ""
+
+#: src/ch00/basics/counter.md:3
+msgid "This is a simple counter contract."
+msgstr ""
+
+#: src/ch00/basics/counter.md:5
+msgid "Here's how it works:"
+msgstr ""
+
+#: src/ch00/basics/counter.md:7
+msgid ""
+"The contract has a state variable called 'counter' that is initialized to 0."
+msgstr ""
+
+#: src/ch00/basics/counter.md:9
+msgid "When a user calls 'increment', the contract increments the counter by 1."
+msgstr ""
+
+#: src/ch00/basics/counter.md:11
+msgid "When a user calls 'decrement', the contract decrements the counter by 1."
+msgstr ""
+
+#: src/ch00/basics/counter.md:25
+msgid "// Counter variable\n"
+msgstr ""
+
+#: src/ch00/basics/counter.md:31
+msgid "// Store initial value\n"
+msgstr ""
+
+#: src/ch00/basics/counter.md:42
+msgid "// Store counter value + 1\n"
+msgstr ""
+
+#: src/ch00/basics/counter.md:47
+msgid "// Store counter value - 1\n"
+msgstr ""
+
+#: src/ch00/basics/counter.md:54
+msgid ""
+"Visit contract on "
+"[Voyager](https://goerli.voyager.online/contract/0x01664a69Fe701a1df7Bb0ae4A353792d0cf4E27146ee860075cbf6108b1D5718) "
+"or play with it in "
+"[Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-getting-started/counter/src/contracts.cairo)."
+msgstr ""
+
+#: src/ch00/basics/mappings.md:3
+msgid ""
+"Maps are a key-value data structure used to store data within a smart "
+"contract. In Cairo they are implemented using the `LegacyMap` type. It's "
+"important to note that the `LegacyMap` type can only be used inside the "
+"`Storage` struct of a contract and that it can't be used elsewhere."
+msgstr ""
+
+#: src/ch00/basics/mappings.md:5
+msgid ""
+"Here we demonstrate how to use the `LegacyMap` type within a Cairo contract, "
+"to map between a key of type `ContractAddress` and value of type `felt252`. "
+"The key-value types are specified within angular brackets \\<\\>. We write "
+"to the map by calling the `write()` method, passing in both the key and "
+"value. Similarly, we can read the value associated with a given key by "
+"calling the `read()` method and passing in the relevant key."
+msgstr ""
+
+#: src/ch00/basics/mappings.md:7
+msgid "Some additional notes:"
+msgstr ""
+
+#: src/ch00/basics/mappings.md:9
+msgid ""
+"More complex key-value mappings are possible, for example we could use "
+"`LegacyMap::<(ContractAddress, ContractAddress), felt252>` to create an "
+"allowance on an ERC20 token contract."
+msgstr ""
+
+#: src/ch00/basics/mappings.md:11
+msgid ""
+"In mappings, the address of the value at key `k_1,...,k_n` is "
+"`h(...h(h(sn_keccak(variable_name),k_1),k_2),...,k_n)` where `ℎ` is the "
+"Pedersen hash and the final value is taken `mod2251−256`. You can learn more "
+"about the contract storage layout in the [Starknet "
+"Documentation](https://docs.starknet.io/documentation/architecture_and_concepts/Contracts/contract-storage/#storage_variables)"
+msgstr ""
+
+#: src/ch00/basics/mappings.md:28
+msgid "// The `LegacyMap` type is only available inside the `Storage` struct.\n"
+msgstr ""
+
+#: src/ch00/basics/mappings.md:44
+msgid ""
+"Visit contract on "
+"[Voyager](https://goerli.voyager.online/contract/0x06214AB4c23Cc545bf2221D465eB83aFb7412779AD498BD48a724B3F645E3505) "
+"or play with it in "
+"[Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-getting-started/mappings/src/mappings.cairo)."
+msgstr ""
+
+#: src/ch00/basics/errors.md:3
+msgid ""
+"Errors can be used to handle validation and other conditions that may occur "
+"during the execution of a smart contract. If an error is thrown during the "
+"execution of a smart contract call, the execution is stopped and any changes "
+"made during the transaction are reverted."
+msgstr ""
+
+#: src/ch00/basics/errors.md:6
+msgid "To throw an error, use the `assert` or `panic` functions:"
+msgstr ""
+
+#: src/ch00/basics/errors.md:8
+msgid ""
+"`assert` is used to validate conditions. If the check fails, an error is "
+"thrown along with a specified value, often a message. It's similar to the "
+"`require` statement in Solidity."
+msgstr ""
+
+#: src/ch00/basics/errors.md:12
+msgid ""
+"`panic` immediately halt the execution with the given error value. It should "
+"be used when the condition to check is complex and for internal errors. It's "
+"similar to the `revert` statement in Solidity. (Use `panic_with_felt252` to "
+"be able to directly pass a felt252 as the error value)"
+msgstr ""
+
+#: src/ch00/basics/errors.md:16
+msgid "Here's a simple example that demonstrates the use of these functions:"
+msgstr ""
+
+#: src/ch00/basics/errors.md:32
+msgid ""
+"// Assert used to validate a condition\n"
+"            // and abort execution if the condition is not met\n"
+msgstr ""
+
+#: src/ch00/basics/errors.md:39
+msgid "// Panic used to abort execution directly\n"
+msgstr ""
+
+#: src/ch00/basics/errors.md:46
+msgid ""
+"Visit contract on "
+"[Voyager](https://goerli.voyager.online/contract/0x0022664463FF0b711CC9B549a9E87d65A0882bB1D29338C4108696B8F2216a40) "
+"or play with it in "
+"[Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-getting-started/errors/src/simple_errors.cairo)."
+msgstr ""
+
+#: src/ch00/basics/errors.md:48
+msgid "Custom errors"
+msgstr ""
+
+#: src/ch00/basics/errors.md:50
+msgid ""
+"You can make error handling easier by defining your error codes in a "
+"specific module."
+msgstr ""
+
+#: src/ch00/basics/errors.md:85
+msgid ""
+"Visit contract on "
+"[Voyager](https://goerli.voyager.online/contract/0x0501CD5da5B453a18515B5A20b8029bd7583DFE7a399ad9f79c284F7829e4A57) "
+"or play with it in "
+"[Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-getting-started/errors/src/custom_errors.cairo)."
+msgstr ""
+
+#: src/ch00/basics/errors.md:87
+msgid "Vault example"
+msgstr ""
+
+#: src/ch00/basics/errors.md:89
+msgid ""
+"Here's another example that demonstrates the use of errors in a more complex "
+"contract:"
+msgstr ""
+
+#: src/ch00/basics/errors.md:93
+msgid "// you can define more errors here\n"
+msgstr ""
+
+#: src/ch00/basics/errors.md:125
+msgid "// Or using panic:\n"
+msgstr ""
+
+#: src/ch00/basics/errors.md:137
+msgid ""
+"Visit contract on "
+"[Voyager](https://goerli.voyager.online/contract/0x020C2da26F42A28Ef54ED428eF1810FE433784b055f9bF315C5d992b1579C268) "
+"or play with it in "
+"[Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-getting-started/errors/src/vault_errors.cairo)."
+msgstr ""
+
+#: src/ch00/basics/events.md:3
+msgid ""
+"Events are a way to emit data from a contract. All events must be defined in "
+"the `Event` enum, which must be annotated with the `#[event]` attribute. An "
+"event is defined as struct that derives the `#[starknet::Event]` trait. The "
+"fields of that struct correspond to the data that will be emitted. An event "
+"can be indexed for easy and fast access when querying the data at a later "
+"time. Events data can be indexed by adding a `#[key]` attribute to a field "
+"member."
+msgstr ""
+
+#: src/ch00/basics/events.md:6
+msgid ""
+"Here's a simple example of a contract using events that emit an event each "
+"time a counter is incremented by the \"increment\" function:"
+msgstr ""
+
+#: src/ch00/basics/events.md:18
+msgid "// Counter value\n"
+msgstr ""
+
+#: src/ch00/basics/events.md:24
+msgid ""
+"// The event enum must be annotated with the `#[event]` attribute.\n"
+"    // It must also derive the `Drop` and `starknet::Event` traits.\n"
+msgstr ""
+
+#: src/ch00/basics/events.md:31
+msgid ""
+"// By deriving the `starknet::Event` trait, we indicate to the compiler "
+"that\n"
+"    // this struct will be used when emitting events.\n"
+msgstr ""
+
+#: src/ch00/basics/events.md:40
+msgid "// The `#[key]` attribute indicates that this event will be indexed.\n"
+msgstr ""
+
+#: src/ch00/basics/events.md:52
+msgid "// Emit event\n"
+msgstr ""
+
+#: src/ch00/basics/events.md:66
+msgid ""
+"Visit contract on "
+"[Voyager](https://goerli.voyager.online/contract/0x022e3B59518EA04aBb5da671ea04ecC3a154400f226d2Df38eFE146741b9E2F6) "
+"or play with it in "
+"[Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-getting-started/events/src/counter.cairo)."
+msgstr ""
+
+#: src/ch00/basics/storing-custom-types.md:3
+msgid ""
+"While native types can be stored in a contract's storage without any "
+"additional work, custom types require a bit more work. This is because at "
+"compile time, the compiler does not know how to store custom types in "
+"storage. To solve this, we need to implement the `Store` trait for our "
+"custom type. Hopefully, we can just derive this trait for our custom type - "
+"unless it contains arrays or dictionaries."
+msgstr ""
+
+#: src/ch00/basics/storing-custom-types.md:10
+msgid ""
+"// Deriving the starknet::Store trait\n"
+"// allows us to store the `Person` struct in the contract's storage.\n"
+msgstr ""
+
+#: src/ch00/basics/storing-custom-types.md:37
+msgid ""
+"Play with this contract in "
+"[Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-getting-started/storing_custom_types/src/contract.cairo)."
+msgstr ""
+
+#: src/ch00/basics/custom-types-in-entrypoints.md:3
+msgid ""
+"Using custom types in entrypoints requires our type to implement the `Serde` "
+"trait. This is because when calling an entrypoint, the input is sent as an "
+"array of `felt252` to the entrypoint, and we need to be able to deserialize "
+"it into our custom type. Similarly, when returning a custom type from an "
+"entrypoint, we need to be able to serialize it into an array of `felt252`. "
+"Thankfully, we can just derive the `Serde` trait for our custom type."
+msgstr ""
+
+#: src/ch00/basics/custom-types-in-entrypoints.md:18
+msgid ""
+"// Deriving the `Serde` trait allows us to use\n"
+"    // the Person type as an entrypoint parameter and return value\n"
+msgstr ""
+
+#: src/ch00/basics/custom-types-in-entrypoints.md:37
+msgid ""
+"Play with this contract in "
+"[Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-getting-started/custom_type_serde/src/contract.cairo)."
+msgstr ""
+
+#: src/ch00/basics/documentation.md:3
+msgid ""
+"It's important to take the time to document your code. It will helps "
+"developers and users to understand the contract and its functionalities."
+msgstr ""
+
+#: src/ch00/basics/documentation.md:5
+msgid "In Cairo, you can add comments with `//`."
+msgstr ""
+
+#: src/ch00/basics/documentation.md:7
+msgid "Contract Interface:"
+msgstr ""
+
+#: src/ch00/basics/documentation.md:9
+msgid ""
+"In smart contracts, you will often have a trait that defines the contract's "
+"interface (with `#[starknet::interface]`). This is the perfect place to "
+"include detailed documentation explaining the purpose and functionality of "
+"the contract entry points. You can follow this template:"
+msgstr ""
+
+#: src/ch00/basics/documentation.md:15
+msgid ""
+"/// High-level description of the function\n"
+"    ///\n"
+"    /// # Arguments\n"
+"    /// * `arg_1` - Description of the argument\n"
+"    /// * `arg_n` - ...\n"
+"    ///\n"
+"    /// # Returns\n"
+"    /// High-level description of the return value\n"
+msgstr ""
+
+#: src/ch00/basics/documentation.md:27
+msgid ""
+"Keep in mind that this should not describe the implementation details of the "
+"function, but rather the high-level purpose and functionality of the "
+"contract from the perspective of a user."
+msgstr ""
+
+#: src/ch00/basics/documentation.md:29
+msgid "Implementation Details:"
+msgstr ""
+
+#: src/ch00/basics/documentation.md:31
+msgid ""
+"When writing the logic of the contract, you can add comments to describe the "
+"technical implementation details of the functions."
+msgstr ""
+
+#: src/ch00/basics/documentation.md:33
+msgid ""
+"Avoid over-commenting: Comments should provide additional value and clarity."
+msgstr ""
+
+#: src/ch00/interacting/interacting.md:3
+msgid "In this chapter, we will see how to deploy and interact with contracts."
+msgstr ""
+
+#: src/ch00/interacting/interfaces-traits.md:3
+msgid ""
+"Contract interfaces define the structure and behavior of a contract, serving "
+"as the contract's public ABI. They list all the function signatures that a "
+"contract exposes. For a detailed explanation of interfaces, you can refer to "
+"the [Cairo "
+"Book](https://book.cairo-lang.org/ch99-01-02-a-simple-contract.html)."
+msgstr ""
+
+#: src/ch00/interacting/interfaces-traits.md:5
+msgid ""
+"In cairo, to specify the interface you need to define a trait annotated with "
+"`#[starknet::interface]` and then implement that trait in the contract."
+msgstr ""
+
+#: src/ch00/interacting/interfaces-traits.md:7
+msgid ""
+"When a function needs to access the contract state, it must have a `self` "
+"parameter of type `ContractState`. This implies that the corresponding "
+"function signature in the interface trait must also take a `TContractState` "
+"type as a parameter. It's important to note that every function in the "
+"contract interface must have this `self` parameter of type `TContractState`."
+msgstr ""
+
+#: src/ch00/interacting/interfaces-traits.md:9
+msgid ""
+"You can use the `#[generate_trait]` attribute to implicitly generate the "
+"trait for a specific implementation block. This attribute automatically "
+"generates a trait with the same functions as the ones in the implemented "
+"block, replacing the `self` parameter with a generic `TContractState` "
+"parameter. However, you will need to annotate the block with the "
+"`#[abi(per_item)]` attribute, and each function with the appropriate "
+"attribute depending on whether it's an external function, a constructor or a "
+"l1 handler."
+msgstr ""
+
+#: src/ch00/interacting/interfaces-traits.md:11
+msgid "In summary, there's two ways to handle interfaces:"
+msgstr ""
+
+#: src/ch00/interacting/interfaces-traits.md:13
+msgid "Explicitly, by defining a trait annoted with `#[starknet::interface]`"
+msgstr ""
+
+#: src/ch00/interacting/interfaces-traits.md:14
+msgid ""
+"Implicitly, by using `#[generate_trait]` combined with the "
+"#\\[abi(per_item)\\]\\` attributes, and annotating each function inside the "
+"implementation block with the appropriate attribute."
+msgstr ""
+
+#: src/ch00/interacting/interfaces-traits.md:16
+msgid "Explicit interface"
+msgstr ""
+
+#: src/ch00/interacting/interfaces-traits.md:45
+msgid ""
+"Play with this contract in "
+"[Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-getting-started/interfaces_traits/src/explicit.cairo)."
+msgstr ""
+
+#: src/ch00/interacting/interfaces-traits.md:47
+msgid "Implicit interface"
+msgstr ""
+
+#: src/ch00/interacting/interfaces-traits.md:73
+msgid ""
+"Play with this contract in "
+"[Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-getting-started/interfaces_traits/src/implicit.cairo)."
+msgstr ""
+
+#: src/ch00/interacting/interfaces-traits.md:75
+msgid ""
+"Note: You can import an implicitly generated contract interface with `use "
+"contract::{GeneratedContractInterface}`. However, the `Dispatcher` will not "
+"be generated automatically."
+msgstr ""
+
+#: src/ch00/interacting/interfaces-traits.md:77
+msgid "Internal functions"
+msgstr ""
+
+#: src/ch00/interacting/interfaces-traits.md:79
+msgid ""
+"You can also use `#[generate_trait]` for your internal functions. Since this "
+"trait is generated in the context of the contract, you can define pure "
+"functions as well (functions without the `self` parameter)."
+msgstr ""
+
+#: src/ch00/interacting/interfaces-traits.md:127
+msgid ""
+"Play with this contract in "
+"[Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-getting-started/interfaces_traits/src/implicit_internal.cairo)."
+msgstr ""
+
+#: src/ch00/interacting/calling_other_contracts.md:3
+msgid "There are two different ways to call other contracts in Cairo."
+msgstr ""
+
+#: src/ch00/interacting/calling_other_contracts.md:5
+msgid ""
+"The easiest way to call other contracts is by using the dispatcher of the "
+"contract you want to call. You can read more about Dispatchers in the [Cairo "
+"Book](https://book.cairo-lang.org/ch99-02-02-contract-dispatcher-library-dispatcher-and-system-calls.html#contract-dispatcher)"
+msgstr ""
+
+#: src/ch00/interacting/calling_other_contracts.md:8
+msgid ""
+"The other way is to use the `starknet::call_contract_syscall` syscall "
+"yourself. However, this method is not recommended."
+msgstr ""
+
+#: src/ch00/interacting/calling_other_contracts.md:10
+msgid ""
+"In order to call other contracts using dispatchers, you will need to define "
+"the called contract's interface as a trait annotated with the "
+"`#[starknet::interface]` attribute, and then import the "
+"`IContractDispatcher` and `IContractDispatcherTrait` items in your contract."
+msgstr ""
+
+#: src/ch00/interacting/calling_other_contracts.md:34
+msgid ""
+"Visit contract on "
+"[Voyager](https://goerli.voyager.online/contract/0x015c3Bb6D0DE26b64FEAF9A8f4655CfADb5c128bF4510398972704ee12775DB1) "
+"or play with it in "
+"[Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-getting-started/calling_other_contracts/src/callee.cairo)."
+msgstr ""
+
+#: src/ch00/interacting/calling_other_contracts.md:38
+msgid ""
+"// We need to have the interface of the callee contract defined\n"
+"// so that we can import the Dispatcher.\n"
+msgstr ""
+
+#: src/ch00/interacting/calling_other_contracts.md:53
+msgid "// We import the Dispatcher of the called contract\n"
+msgstr ""
+
+#: src/ch00/interacting/calling_other_contracts.md:68
+msgid ""
+"Visit contract on "
+"[Voyager](https://goerli.voyager.online/contract/0x05fa8aF796343d2f22c53C17149386b67B7AC4aB52D9e308Aa507C185aA44778) "
+"or play with it in "
+"[Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-getting-started/calling_other_contracts/src/caller.cairo)."
+msgstr ""
+
+#: src/ch00/interacting/factory.md:1
+msgid "Factory Pattern"
+msgstr ""
+
+#: src/ch00/interacting/factory.md:3
+msgid ""
+"The factory pattern is a well known pattern in object oriented programming. "
+"It provides an abstraction on how to instantiate a class. "
+msgstr ""
+
+#: src/ch00/interacting/factory.md:5
+msgid ""
+"In the case of smart contracts, we can use this pattern by defining a "
+"factory contract that have the sole responsibility of creating and managing "
+"other contracts."
+msgstr ""
+
+#: src/ch00/interacting/factory.md:7
+msgid "Class hash and contract instance"
+msgstr ""
+
+#: src/ch00/interacting/factory.md:9
+msgid ""
+"In Starknet, there's a separation between contract's classes and instances. "
+"A contract class serves as a blueprint, defined by the underling Cairo "
+"bytecode, contract's entrypoints, ABI and Sierra program hash. The contract "
+"class is identified by a class hash. When you want to add a new class to the "
+"network, you first need to declare it."
+msgstr ""
+
+#: src/ch00/interacting/factory.md:11
+msgid ""
+"When deploying a contract, you need to specify the class hash of the "
+"contract you want to deploy. Each instance of a contract has their own "
+"storage regardless of the class hash."
+msgstr ""
+
+#: src/ch00/interacting/factory.md:13
+msgid ""
+"Using the factory pattern, we can deploy multiple instances of the same "
+"contract class and handle upgrades easily."
+msgstr ""
+
+#: src/ch00/interacting/factory.md:15
+msgid "Minimal example"
+msgstr ""
+
+#: src/ch00/interacting/factory.md:17
+msgid ""
+"Here's a minimal example of a factory contract that deploy the "
+"`SimpleCounter` contract:"
+msgstr ""
+
+#: src/ch00/interacting/factory.md:24
+msgid "/// Create a new counter contract from stored arguments\n"
+msgstr ""
+
+#: src/ch00/interacting/factory.md:27
+msgid "/// Create a new counter contract from the given arguments\n"
+msgstr ""
+
+#: src/ch00/interacting/factory.md:30
+msgid "/// Update the argument\n"
+msgstr ""
+
+#: src/ch00/interacting/factory.md:33
+msgid ""
+"/// Update the class hash of the Counter contract to deploy when creating a "
+"new counter\n"
+msgstr ""
+
+#: src/ch00/interacting/factory.md:44
+msgid "/// Store the constructor arguments of the contract to deploy\n"
+msgstr ""
+
+#: src/ch00/interacting/factory.md:46
+msgid "/// Store the class hash of the contract to deploy\n"
+msgstr ""
+
+#: src/ch00/interacting/factory.md:59
+msgid "// Contructor arguments\n"
+msgstr ""
+
+#: src/ch00/interacting/factory.md:62
+msgid "// Contract deployment\n"
+msgstr ""
+
+#: src/ch00/interacting/factory.md:88
+msgid ""
+"This factory can be used to deploy multiple instances of the `SimpleCounter` "
+"contract by calling the `create_counter` and `create_counter_at` functions."
+msgstr ""
+
+#: src/ch00/interacting/factory.md:90
+msgid ""
+"The `SimpleCounter` class hash is stored inside the factory, and can be "
+"upgraded with the `update_counter_class_hash` function which allows to reuse "
+"the same factory contract when the `SimpleCounter` contract is upgraded."
+msgstr ""
+
+#: src/ch00/interacting/factory.md:92
+msgid ""
+"This minimal example lacks several useful features such as access control, "
+"tracking of deployed contracts, events, ..."
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:1
+msgid "Contract Testing"
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:3
+msgid ""
+"Testing plays a crucial role in software development, especially for smart "
+"contracts. In this section, we'll guide you through the basics of testing a "
+"smart contract on Starknet with `scarb`."
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:5
+msgid "Let's start with a simple smart contract as an example:"
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:50
+msgid "Now, take a look at the tests for this contract:"
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:54
+msgid ""
+"// Import the interface and dispatcher to be able to interact with the "
+"contract.\n"
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:59
+msgid "// Import the deploy syscall to be able to deploy the contract.\n"
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:66
+msgid "// Use starknet test utils to fake the transaction context.\n"
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:69
+msgid "// Deploy the contract and return its dispatcher.\n"
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:71
+msgid "// Set up constructor arguments.\n"
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:75
+msgid "// Declare and deploy\n"
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:81
+msgid ""
+"// Return the dispatcher.\n"
+"        // The dispatcher allows to interact with the contract based on its "
+"interface.\n"
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:99
+msgid "// Fake the caller address to address 1\n"
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:106
+msgid "// Fake the contract address to address 1\n"
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:132
+msgid ""
+"Play with this contract in "
+"[Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-getting-started/testing/src/lib.cairo)."
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:134
+msgid ""
+"To define our test, we use scarb, which allows us to create a separate "
+"module guarded with `#[cfg(test)]`. This ensures that the test module is "
+"only compiled when running tests using `scarb test`."
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:136
+msgid ""
+"Each test is defined as a function with the `#[test]` attribute. You can "
+"also check if a test panics using the `#[should_panic]` attribute."
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:138
+msgid ""
+"As we are in the context of a smart contract, it's essential to set up the "
+"gas limit. You do this by using the `#[available_gas(X)]` attribute to "
+"specify the gas limit for a test. This is also a great way to ensure that "
+"your contract's features stay under a certain gas limit!"
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:140
+msgid "Note: The term \"gas\" here refers to Sierra gas, not L1 gas"
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:142
+msgid "Now, let's move on to the testing process:"
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:143
+msgid "Use the `deploy` function logic to declare and deploy your contract."
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:144
+msgid ""
+"Use `assert` to verify that the contract behaves as expected in the given "
+"context."
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:146
+msgid ""
+"To make testing more convenient, the `testing` module of the corelib "
+"provides some helpful functions:"
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:147
+msgid "`set_caller_address(address: ContractAddress)`"
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:148
+msgid "`set_contract_address(address: ContractAddress)`"
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:149
+msgid "`set_block_number(block_number: u64)`"
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:150
+msgid "`set_block_timestamp(block_timestamp: u64)`"
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:151
+msgid "`set_account_contract_address(address: ContractAddress)`"
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:152
+msgid "`set_max_fee(fee: u128)`"
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:154
+msgid ""
+"You may also need the `info` module from the corelib, which allows you to "
+"access information about the current transaction context:"
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:155
+msgid "`get_caller_address() -> ContractAddress`"
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:156
+msgid "`get_contract_address() -> ContractAddress`"
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:157
+msgid "`get_block_info() -> Box<BlockInfo>`"
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:158
+msgid "`get_tx_info() -> Box<TxInfo>`"
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:159
+msgid "`get_block_timestamp() -> u64`"
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:160
+msgid "`get_block_number() -> u64`"
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:163
+msgid ""
+"You can found the full list of functions in the [Starknet Corelib "
+"repo](https://github.com/starkware-libs/cairo/tree/main/corelib/src/starknet). "
+"You can also find a detailled explaination of testing in cairo in the [Cairo "
+"book - Chapter "
+"8](https://book.cairo-lang.org/ch08-01-how-to-write-tests.html)."
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:166
+msgid "Starknet Foundry"
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:170
+msgid ""
+"Starknet Foundry is a powerful toolkit for developing smart contracts on "
+"Starknet. It offers support for testing Starknet smart contracts on top of "
+"`scarb` with the `Forge` tool."
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:172
+msgid ""
+"Testing with `snforge` is similar to the process we just described but "
+"simplified. Moreover, additional features are on the way, including "
+"cheatcodes or parallel tests execution. We highly recommend exploring "
+"Starknet Foundry and incorporating it into your projects."
+msgstr ""
+
+#: src/ch00/testing/contract-testing.md:174
+msgid ""
+"For more detailed information about testing contracts with Starknet Foundry, "
+"check out the [Starknet Foundry Book - Testing "
+"Contracts](https://foundry-rs.github.io/starknet-foundry/testing/contracts.html)."
+msgstr ""
+
+#: src/ch00/cairo_cheatsheet/cairo_cheatsheet.md:1
+msgid "Cairo Cheatsheet"
+msgstr ""
+
+#: src/ch00/cairo_cheatsheet/cairo_cheatsheet.md:3
+msgid ""
+"This chapter aims to provide a quick reference for the most common Cairo "
+"constructs."
+msgstr ""
+
+#: src/ch00/cairo_cheatsheet/felt.md:1
+msgid "Felt252"
+msgstr ""
+
+#: src/ch00/cairo_cheatsheet/felt.md:3
+msgid ""
+"Felt252 is a fundamental data type in Cairo from which all other data types "
+"are derived. Felt252 can also be used to store short-string representations "
+"with a maximum length of 31 characters."
+msgstr ""
+
+#: src/ch00/cairo_cheatsheet/felt.md:6 src/ch00/cairo_cheatsheet/arrays.md:20
+#: src/ch02/hash-solidity-compatible.md:5
+msgid "For example:"
+msgstr ""
+
+#: src/ch00/cairo_cheatsheet/mapping.md:1
+msgid "Mapping"
+msgstr ""
+
+#: src/ch00/cairo_cheatsheet/mapping.md:3
+msgid "The `LegacyMap` type can be used to represent a collection of key-value."
+msgstr ""
+
+#: src/ch00/cairo_cheatsheet/mapping.md:51
+msgid ""
+"// for a 2D mapping its important to take note of the amount of brackets "
+"being used.\n"
+msgstr ""
+
+#: src/ch00/cairo_cheatsheet/arrays.md:3
+msgid ""
+"Arrays are collections of elements of the same type. The possible operations "
+"on arrays are defined with the `array::ArrayTrait` of the corelib:"
+msgstr ""
+
+#: src/ch00/cairo_cheatsheet/arrays.md:37
+msgid "// Returns true if an array is empty, then false if it isn't.\n"
+msgstr ""
+
+#: src/ch00/cairo_cheatsheet/loop.md:3
+msgid ""
+"A loop specifies a block of code that will run repetitively until a halting "
+"condition is encountered. For example:"
+msgstr ""
+
+#: src/ch00/cairo_cheatsheet/loop.md:9
+msgid "// Same as ~ while (i < 10) arr.append(i++);\n"
+msgstr ""
+
+#: src/ch00/cairo_cheatsheet/match.md:3
+msgid ""
+"The \"match\" expression in Cairo allows us to control the flow of our code "
+"by comparing a felt data type or an enum against various patterns and then "
+"running specific code based on the pattern that matches. For example:"
+msgstr ""
+
+#: src/ch00/cairo_cheatsheet/tuples.md:3
+msgid ""
+"Tuples is a data type to group a fixed number of items of potentially "
+"different types into a single compound structure. Unlike arrays, tuples have "
+"a set length and can contain elements of varying types. Once a tuple is "
+"created, its size cannot change. For example:"
+msgstr ""
+
+#: src/ch00/cairo_cheatsheet/tuples.md:7
+msgid "\"0x000\""
+msgstr ""
+
+#: src/ch00/cairo_cheatsheet/tuples.md:11
+msgid "// Create tuple\n"
+msgstr ""
+
+#: src/ch00/cairo_cheatsheet/tuples.md:14
+msgid "// Access tuple\n"
+msgstr ""
+
+#: src/ch00/cairo_cheatsheet/struct.md:3
+msgid ""
+"A struct is a data type similar to tuple. Like tuples they can be used to "
+"hold data of different types. For example:"
+msgstr ""
+
+#: src/ch00/cairo_cheatsheet/struct.md:7
+msgid ""
+"// With Store, you can store Data's structs in the storage part of "
+"contracts.\n"
+msgstr ""
+
+#: src/ch00/cairo_cheatsheet/type_casting.md:3
+msgid ""
+"Cairo supports the conversion from one scalar types to another by using the "
+"into and try_into methods. `traits::Into` is used for conversion from a "
+"smaller data type to a larger data type, while `traits::TryInto` is used "
+"when converting from a larger to a smaller type that might not fit.  For "
+"example:"
+msgstr ""
+
+#: src/ch00/cairo_cheatsheet/type_casting.md:11
+msgid ""
+"// Since a u32 might not fit in a u8 and a u16, we need to use try_into,\n"
+"    // then unwrap the Option<T> type thats returned.\n"
+msgstr ""
+
+#: src/ch00/cairo_cheatsheet/type_casting.md:16
+msgid ""
+"// since new_u32 is the of the same type (u32) as rand_number, we can "
+"directly assign them,\n"
+"    // or use the .into() method.\n"
+msgstr ""
+
+#: src/ch00/cairo_cheatsheet/type_casting.md:20
+msgid ""
+"// When typecasting from a smaller size to an equal or larger size we use "
+"the .into() method.\n"
+"    // Note: u64 and u128 are larger than u32, so a u32 type will always fit "
+"into them.\n"
+msgstr ""
+
+#: src/ch00/cairo_cheatsheet/type_casting.md:25
+msgid "// Since a felt252 is smaller than a u256, we can use the into() method\n"
+msgstr ""
+
+#: src/ch00/cairo_cheatsheet/type_casting.md:29
+msgid "//note a usize is smaller than a felt so we use the try_into\n"
+msgstr ""
+
+#: src/ch01/upgradeable_contract.md:3
+msgid ""
+"In Starknet, contracts are divided into two parts: contract classes and "
+"contract instances. This division follows a similar concept used in "
+"object-oriented programming languages, where we distinguish between the "
+"definition and implementation of objects."
+msgstr ""
+
+#: src/ch01/upgradeable_contract.md:8
+msgid ""
+"A contract class is the definition of a contract: it specifies how the "
+"contract behaves. It contains essential information like the Cairo byte "
+"code, hint information, entry point names, and everything that defines its "
+"semantics unambiguously."
+msgstr ""
+
+#: src/ch01/upgradeable_contract.md:13
+msgid ""
+"To identify different contract classes, Starknet assigns a unique identifier "
+"to each class: the class hash. A contract instance is a deployed contract "
+"that corresponds to a specific contract class. Think of it as an instance of "
+"an object in languages like Java."
+msgstr ""
+
+#: src/ch01/upgradeable_contract.md:18
+msgid ""
+"Each class is identified by its class hash, which is analogous to a class "
+"name in an object-oriented programming language. A contract instance is a "
+"deployed contract corresponding to a class."
+msgstr ""
+
+#: src/ch01/upgradeable_contract.md:20
+msgid ""
+"You can upgrade a deployed contract to a newer version by calling the "
+"`replace_class_syscall` function. By using this function, you can update the "
+"class hash associated with a deployed contract, effectively upgrading its "
+"implementation. However, this will not modify the contract's storage, so all "
+"the data stored in the contract will remain the same."
+msgstr ""
+
+#: src/ch01/upgradeable_contract.md:22
+msgid ""
+"To illustrate this concept, let's consider an example with two contracts: "
+"`UpgradeableContract_V0`, and `UpgradeableContract_V1`. Start by deploying "
+"`UpgradeableContract_V0` as the initial version. Next, send a transaction "
+"that invokes the `upgrade` function, with the class hash of "
+"`UpgradeableContract_V1` as parameter to upgrade the class hash of the "
+"deployed contract to the `UpgradeableContract_V1` one. Then, call the "
+"`version` method on the contract to see that the contract was upgraded to "
+"the V1 version."
+msgstr ""
+
+#: src/ch01/upgradeable_contract.md:68
+msgid ""
+"Visit contract on "
+"[Voyager](https://goerli.voyager.online/contract/0x005300003ade5d10447d941a42d48b7141074cd8bade2b16520684896a5090ea) "
+"or play with it in "
+"[Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch01-applications/upgradeable_contract/src/upgradeable_contract_v0.cairo)."
+msgstr ""
+
+#: src/ch01/upgradeable_contract.md:114
+msgid ""
+"Visit contract on "
+"[Voyager](https://goerli.voyager.online/contract/0x017c86152badd1d665b9836571bd6b0a484f028748aa13d9b2d5d9c9192fafc6) "
+"or play with it in "
+"[Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch01-applications/upgradeable_contract/src/upgradeable_contract_v1.cairo)."
+msgstr ""
+
+#: src/ch01/simple_vault.md:1
+msgid "Simple Defi Vault"
+msgstr ""
+
+#: src/ch01/simple_vault.md:3
+msgid ""
+"This is the Cairo adaptation of the [Solidity by example "
+"Vault](https://solidity-by-example.org/defi/vault/). Here's how it works:"
+msgstr ""
+
+#: src/ch01/simple_vault.md:6
+msgid ""
+"When a user deposits a token, the contract calculates the amount of shares "
+"to mint."
+msgstr ""
+
+#: src/ch01/simple_vault.md:8
+msgid ""
+"When a user withdraws, the contract burns their shares, calculates the "
+"yield, and withdraw both the yield and the initial amount of token deposited."
+msgstr ""
+
+#: src/ch01/simple_vault.md:12
+msgid ""
+"// In order to make contract calls within our Vault,\n"
+"// we need to have the interface of the remote ERC20 contract defined to "
+"import the Dispatcher.\n"
+msgstr ""
+
+#: src/ch01/simple_vault.md:68
+msgid ""
+"// a = amount\n"
+"            // B = balance of token before deposit\n"
+"            // T = total supply\n"
+"            // s = shares to mint\n"
+"            //\n"
+"            // (T + s) / T = (a + B) / B \n"
+"            //\n"
+"            // s = aT / B\n"
+msgstr ""
+
+#: src/ch01/simple_vault.md:92
+msgid ""
+"// a = amount\n"
+"            // B = balance of token before withdraw\n"
+"            // T = total supply\n"
+"            // s = shares to burn\n"
+"            //\n"
+"            // (T - s) / T = (B - a) / B \n"
+"            //\n"
+"            // a = sB / T\n"
+msgstr ""
+
+#: src/ch01/simple_vault.md:113
+msgid ""
+"Play with this contract in "
+"[Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch01-applications/simple_vault/src/simple_vault.cairo)."
+msgstr ""
+
+#: src/ch01/erc20.md:3
+msgid ""
+"Contracts that follow the [ERC20 "
+"Standard](https://eips.ethereum.org/EIPS/eip-20) are called ERC20 tokens. "
+"They are used to represent fungible assets."
+msgstr ""
+
+#: src/ch01/erc20.md:5
+msgid "To create an ERC20 conctract, it must implement the following interface:"
+msgstr ""
+
+#: src/ch01/erc20.md:33
+msgid ""
+"In Starknet, function names should be written in _snake_case_. This is not "
+"the case in Solidity, where function names are written in _camelCase_. The "
+"Starknet ERC20 interface is therefore slightly different from the Solidity "
+"ERC20 interface."
+msgstr ""
+
+#: src/ch01/erc20.md:36
+msgid "Here's an implementation of the ERC20 interface in Cairo:"
+msgstr ""
+
+#: src/ch01/erc20.md:207
+msgid "// What can go wrong here?\n"
+msgstr ""
+
+#: src/ch01/erc20.md:224
+msgid ""
+"Play with this contract in "
+"[Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch01-applications/erc20/src/token.cairo)."
+msgstr ""
+
+#: src/ch01/erc20.md:226
+msgid ""
+"There's several other implementations, such as the [Open "
+"Zeppelin](https://docs.openzeppelin.com/contracts-cairo/0.7.0/erc20) or the "
+"[Cairo By Example](https://cairo-by-example.com/examples/erc20/) ones."
+msgstr ""
+
+#: src/ch01/constant-product-amm.md:3
+msgid ""
+"This is the Cairo adaptation of the [Solidity by example Constant Product "
+"AMM](https://solidity-by-example.org/defi/constant-product-amm/)."
+msgstr ""
+
+#: src/ch01/constant-product-amm.md:32
+msgid ""
+"// Fee 0 - 1000 (0% - 100%, 1 decimal places)\n"
+"        // E.g. 3 = 0.3%\n"
+msgstr ""
+
+#: src/ch01/constant-product-amm.md:41
+msgid "// assert(fee <= 1000, 'fee > 1000');\n"
+msgstr ""
+
+#: src/ch01/constant-product-amm.md:107
+msgid ""
+"// How much dy for dx?\n"
+"            // xy = k\n"
+"            // (x + dx)(y - dy) = k\n"
+"            // y - dy = k / (x + dx)\n"
+"            // y - k / (x + dx) = dy\n"
+"            // y - xy / (x + dx) = dy\n"
+"            // (yx + ydx - xy) / (x + dx) = dy\n"
+"            // ydx / (x + dx) = dy\n"
+msgstr ""
+
+#: src/ch01/constant-product-amm.md:135
+msgid ""
+"// How much dx, dy to add?\n"
+"            //\n"
+"            // xy = k\n"
+"            // (x + dx)(y + dy) = k'\n"
+"            //\n"
+"            // No price change, before and after adding liquidity\n"
+"            // x / y = (x + dx) / (y + dy)\n"
+"            //\n"
+"            // x(y + dy) = y(x + dx)\n"
+"            // x * dy = y * dx\n"
+"            //\n"
+"            // x / y = dx / dy\n"
+"            // dy = y / x * dx\n"
+msgstr ""
+
+#: src/ch01/constant-product-amm.md:154
+msgid ""
+"// How much shares to mint?\n"
+"            //\n"
+"            // f(x, y) = value of liquidity\n"
+"            // We will define f(x, y) = sqrt(xy)\n"
+"            //\n"
+"            // L0 = f(x, y)\n"
+"            // L1 = f(x + dx, y + dy)\n"
+"            // T = total shares\n"
+"            // s = shares to mint\n"
+"            //\n"
+"            // Total shares should increase proportional to increase in "
+"liquidity\n"
+"            // L1 / L0 = (T + s) / T\n"
+"            //\n"
+"            // L1 * T = L0 * (T + s)\n"
+"            //\n"
+"            // (L1 - L0) * T / L0 = s\n"
+msgstr ""
+
+#: src/ch01/constant-product-amm.md:171
+msgid ""
+"// Claim\n"
+"            // (L1 - L0) / L0 = dx / x = dy / y\n"
+"            //\n"
+"            // Proof\n"
+"            // --- Equation 1 ---\n"
+"            // (L1 - L0) / L0 = (sqrt((x + dx)(y + dy)) - sqrt(xy)) / "
+"sqrt(xy)\n"
+"            //\n"
+"            // dx / dy = x / y so replace dy = dx * y / x\n"
+"            //\n"
+"            // --- Equation 2 ---\n"
+"            // Equation 1 = (sqrt(xy + 2ydx + dx^2 * y / x) - sqrt(xy)) / "
+"sqrt(xy)\n"
+"            //\n"
+"            // Multiply by sqrt(x) / sqrt(x)\n"
+"            // Equation 2 = (sqrt(x^2y + 2xydx + dx^2 * y) - sqrt(x^2y)) / "
+"sqrt(x^2y)\n"
+"            //            = (sqrt(y)(sqrt(x^2 + 2xdx + dx^2) - sqrt(x^2)) / "
+"(sqrt(y)sqrt(x^2))\n"
+"            // sqrt(y) on top and bottom cancels out\n"
+"            //\n"
+"            // --- Equation 3 ---\n"
+"            // Equation 2 = (sqrt(x^2 + 2xdx + dx^2) - sqrt(x^2)) / "
+"(sqrt(x^2)\n"
+"            // = (sqrt((x + dx)^2) - sqrt(x^2)) / sqrt(x^2)\n"
+"            // = ((x + dx) - x) / x\n"
+"            // = dx / x\n"
+"            // Since dx / dy = x / y,\n"
+"            // dx / x = dy / y\n"
+"            //\n"
+"            // Finally\n"
+"            // (L1 - L0) / L0 = dx / x = dy / y\n"
+msgstr ""
+
+#: src/ch01/constant-product-amm.md:221
+msgid ""
+"// Claim\n"
+"            // dx, dy = amount of liquidity to remove\n"
+"            // dx = s / T * x\n"
+"            // dy = s / T * y\n"
+"            //\n"
+"            // Proof\n"
+"            // Let's find dx, dy such that\n"
+"            // v / L = s / T\n"
+"            //\n"
+"            // where\n"
+"            // v = f(dx, dy) = sqrt(dxdy)\n"
+"            // L = total liquidity = sqrt(xy)\n"
+"            // s = shares\n"
+"            // T = total supply\n"
+"            //\n"
+"            // --- Equation 1 ---\n"
+"            // v = s / T * L\n"
+"            // sqrt(dxdy) = s / T * sqrt(xy)\n"
+"            //\n"
+"            // Amount of liquidity to remove must not change price so\n"
+"            // dx / dy = x / y\n"
+"            //\n"
+"            // replace dy = dx * y / x\n"
+"            // sqrt(dxdy) = sqrt(dx * dx * y / x) = dx * sqrt(y / x)\n"
+"            //\n"
+"            // Divide both sides of Equation 1 with sqrt(y / x)\n"
+"            // dx = s / T * sqrt(xy) / sqrt(y / x)\n"
+"            // = s / T * sqrt(x^2) = s / T * x\n"
+"            //\n"
+"            // Likewise\n"
+"            // dy = s / T * y\n"
+msgstr ""
+
+#: src/ch01/constant-product-amm.md:253
+msgid ""
+"// bal0 >= reserve0\n"
+"            // bal1 >= reserve1\n"
+msgstr ""
+
+#: src/ch01/constant-product-amm.md:274
+msgid ""
+"Play with this contract in "
+"[Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch01-applications/constant_product_amm/src/constant_product_amm.cairo)."
+msgstr ""
+
+#: src/ch02/write_to_any_slot.md:3
+msgid ""
+"On Starknet, a contract's storage is a map with 2^251 slots, where each slot "
+"is a felt which is initialized to 0. The address of storage variables is "
+"computed at compile time using the formula: `storage variable address := "
+"pedersen(keccak(variable name), keys)`. Interactions with storage variables "
+"are commonly performed using the `self.var.read()` and `self.var.write()` "
+"functions."
+msgstr ""
+
+#: src/ch02/write_to_any_slot.md:6
+msgid ""
+"Nevertheless, we can use the `storage_write_syscall` and "
+"`storage_read_syscall` syscalls, to write to and read from any storage slot. "
+"This is useful when writing to storage variables that are not known at "
+"compile time, or to ensure that even if the contract is upgraded and the "
+"computation method of storage variable addresses changes, they remain "
+"accessible."
+msgstr ""
+
+#: src/ch02/write_to_any_slot.md:9
+msgid ""
+"In the following example, we use the Poseidon hash function to compute the "
+"address of a storage variable. Poseidon is a ZK-friendly hash function that "
+"is cheaper and faster than Pedersen, making it an excellent choice for "
+"onchain computations. Once the address is computed, we use the storage "
+"syscalls to interact with it."
+msgstr ""
+
+#: src/ch02/write_to_any_slot.md:49
+msgid ""
+"// By taking the 250 least significant bits of the hash output, we get a "
+"valid 250bits storage address.\n"
+msgstr ""
+
+#: src/ch02/write_to_any_slot.md:56
+msgid ""
+"Visit contract on "
+"[Voyager](https://goerli.voyager.online/contract/0x033943CB781A4E63C9dcE0A1A09eAa3b617AA43CC61637C08c043a67f3fe0087) "
+"or play with it in "
+"[Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch02-advanced-concepts/write_to_any_slot/src/contract.cairo)."
+msgstr ""
+
+#: src/ch02/storing_arrays.md:3
+msgid ""
+"On Starknet, complex values (e.g., tuples or structs), are stored in a "
+"continuous segment starting from the address of the storage variable. There "
+"is a 256 field elements limitation to the maximal size of a complex storage "
+"value, meaning that to store arrays of more than 255 elements in storage, we "
+"would need to split it into segments of size `n <= 255` and store these "
+"segments in multiple storage addresses. There is currently no native support "
+"for storing arrays in Cairo, so you will need to write your own "
+"implementation of the `Store` trait for the type of array you wish to store."
+msgstr ""
+
+#: src/ch02/storing_arrays.md:5
+msgid ""
+"Note: While storing arrays in storage is possible, it is not always "
+"recommended, as the read and write operations can get very costly. For "
+"example, reading an array of size `n` requires `n` storage reads, and "
+"writing to an array of size `n` requires `n` storage writes. If you only "
+"need to access a single element of the array at a time, it is recommended to "
+"use a `LegacyMap` and store the length in another variable instead."
+msgstr ""
+
+#: src/ch02/storing_arrays.md:7
+msgid ""
+"The following example demonstrates how to write a simple implementation of "
+"the `StorageAccess` trait for the `Array<felt252>` type, allowing us to "
+"store arrays of up to 255 `felt252` elements."
+msgstr ""
+
+#: src/ch02/storing_arrays.md:26
+msgid ""
+"// Read the stored array's length. If the length is superior to 255, the "
+"read will fail.\n"
+msgstr ""
+
+#: src/ch02/storing_arrays.md:31
+msgid "// Sequentially read all stored elements and append them to the array.\n"
+msgstr ""
+
+#: src/ch02/storing_arrays.md:43
+msgid "// Return the array.\n"
+msgstr ""
+
+#: src/ch02/storing_arrays.md:50
+msgid "// // Store the length of the array in the first storage slot.\n"
+msgstr ""
+
+#: src/ch02/storing_arrays.md:55
+msgid "// Store the array elements sequentially\n"
+msgstr ""
+
+#: src/ch02/storing_arrays.md:73
+msgid ""
+"You can then import this implementation in your contract and use it to store "
+"arrays in storage:"
+msgstr ""
+
+#: src/ch02/storing_arrays.md:103
+msgid ""
+"Visit contract on "
+"[Voyager](https://goerli.voyager.online/contract/0x008F8069a3Fcd7691Db46Dc3b6F9D2C0436f9200E861330957Fd780A3595da86) "
+"or play with it in "
+"[Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch02-advanced-concepts/storing_arrays/src/contract.cairo)."
+msgstr ""
+
+#: src/ch02/struct-mapping-key.md:1
+msgid "Structs as mapping keys"
+msgstr ""
+
+#: src/ch02/struct-mapping-key.md:3
+msgid ""
+"In order to use structs as mapping keys, you can use `#[derive(Hash)]` on "
+"the struct definition. This will automatically generate a hash function for "
+"the struct that can be used to represent the struct as a key in a "
+"`LegacyMap`."
+msgstr ""
+
+#: src/ch02/struct-mapping-key.md:5
+msgid ""
+"Consider the following example in which we would like to use an object of "
+"type `Pet` as a key in a `LegacyMap`. The `Pet` struct has three fields: "
+"`name`, `age` and `owner`. We consider that the combination of these three "
+"fields uniquely identifies a pet."
+msgstr ""
+
+#: src/ch02/struct-mapping-key.md:45
+msgid ""
+"Play with this contract in "
+"[Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch02-advanced-concepts/struct_as_mapping_key/src/contract.cairo)."
+msgstr ""
+
+#: src/ch02/hash-solidity-compatible.md:3
+msgid ""
+"This contract demonstrates Keccak hashing in Cairo to match Solidity's "
+"keccak256. While both use Keccak, their endianness differs: Cairo is "
+"little-endian, Solidity big-endian. The contract achieves compatibility by "
+"hashing in big-endian using `keccak_u256s_be_inputs`, and reversing the "
+"bytes of the result with `u128_byte_reverse`."
+msgstr ""
+
+#: src/ch02/hash-solidity-compatible.md:27
+msgid "// Split the hashed value into two 128-bit segments\n"
+msgstr ""
+
+#: src/ch02/hash-solidity-compatible.md:31
+msgid "// Reverse each 128-bit segment\n"
+msgstr ""
+
+#: src/ch02/hash-solidity-compatible.md:35
+msgid "// Reverse merge the reversed segments back into a u256 value\n"
+msgstr ""
+
+#: src/ch02/hash-solidity-compatible.md:44
+msgid ""
+"Play with the contract in "
+"[Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch02-advanced-concepts/hash_solidity_compatible/src/contract.cairo)."
+msgstr ""
+
+#: src/ch02/optimisations/optimisations.md:3
+msgid "A collection of optimisation patterns to save gas and steps."
+msgstr ""
+
+#: src/ch02/optimisations/store_using_packing.md:1
+msgid "Storage optimisation"
+msgstr ""
+
+#: src/ch02/optimisations/store_using_packing.md:3
+msgid ""
+"A smart contract has a limited amount of **storage slots**. Each slot can "
+"store a single `felt252` value. Writing to a storage slot has a cost, so we "
+"want to use as few storage slots as possible."
+msgstr ""
+
+#: src/ch02/optimisations/store_using_packing.md:6
+msgid ""
+"In Cairo, every type is derived from the `felt252` type, which uses 252 bits "
+"to store a value. This design is quite simple, but it does have a drawback: "
+"it is not storage efficient. For example, if we want to store a `u8` value, "
+"we need to use an entire slot, even though we only need 8 bits."
+msgstr ""
+
+#: src/ch02/optimisations/store_using_packing.md:9
+msgid "Packing"
+msgstr ""
+
+#: src/ch02/optimisations/store_using_packing.md:11
+msgid ""
+"When storing multiple values, we can use a technique called **packing**. "
+"Packing is a technique that allows us to store multiple values in a single "
+"felt value. This is done by using the bits of the felt value to store "
+"multiple values."
+msgstr ""
+
+#: src/ch02/optimisations/store_using_packing.md:13
+msgid ""
+"For example, if we want to store two `u8` values, we can use the first 8 "
+"bits of the felt value to store the first `u8` value, and the last 8 bits to "
+"store the second `u8` value. This way, we can store two `u8` values in a "
+"single felt value."
+msgstr ""
+
+#: src/ch02/optimisations/store_using_packing.md:15
+msgid ""
+"Cairo provides a built-in store using packing that you can use with the "
+"`StorePacking` trait."
+msgstr ""
+
+#: src/ch02/optimisations/store_using_packing.md:24
+msgid ""
+"This allows to store the type `T` by first packing it into the type "
+"`PackedT` with the `pack` function, and then storing the `PackedT` value "
+"with it's `Store` implementation. When reading the value, we first retrieve "
+"the `PackedT` value, and then unpack it into the type `T` using the `unpack` "
+"function."
+msgstr ""
+
+#: src/ch02/optimisations/store_using_packing.md:26
+msgid ""
+"Here's an example of storing a `Time` struct with two `u8` values using the "
+"`StorePacking` trait:"
+msgstr ""
+
+#: src/ch02/optimisations/store_using_packing.md:75
+msgid ""
+"// This will call the pack method of the TimePackable trait\n"
+"            // and store the resulting felt252\n"
+msgstr ""
+
+#: src/ch02/optimisations/store_using_packing.md:80
+msgid ""
+"// This will read the felt252 value from storage\n"
+"            // and return the result of the unpack method of the "
+"TimePackable trait\n"
+msgstr ""
+
+#: src/ch02/optimisations/store_using_packing.md:88
+msgid ""
+"Play with this contract in "
+"[Remix](https://remix.ethereum.org/?#activate=Starknet-cairo1-compiler&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch02-advanced-concepts/store_using_packing/src/contract.cairo)."
+msgstr ""
+
+#: src/ch02/list.md:3
+msgid ""
+"By default, there is no list type supported in Cairo, but you can use "
+"Alexandria. You can refer to the [Alexandria "
+"documentation](https://github.com/keep-starknet-strange/alexandria/tree/main/src/storage) "
+"for more details."
+msgstr ""
+
+#: src/ch02/list.md:5
+msgid "What is `List`?"
+msgstr ""
+
+#: src/ch02/list.md:7
+msgid "An ordered sequence of values that can be used in Starknet storage:"
+msgstr ""
+
+#: src/ch02/list.md:16
+msgid "Interface"
+msgstr ""
+
+#: src/ch02/list.md:30
+msgid ""
+"`List` also implements `IndexView` so you can use the familiar bracket "
+"notation to access its members:"
+msgstr ""
+
+#: src/ch02/list.md:36
+msgid ""
+"Note that unlike `get`, using this bracket notation panics when accessing an "
+"out of bounds index."
+msgstr ""
+
+#: src/ch02/list.md:38
+msgid "Support for custom types"
+msgstr ""
+
+#: src/ch02/list.md:40
+msgid ""
+"`List` supports most of the corelib types out of the box. If you want to "
+"store a your own custom type in a `List`, it has to implement the `Store` "
+"trait. You can have the compiler derive it for you using the "
+"`#[derive(starknet::Store)]` attribute."
+msgstr ""
+
+#: src/ch02/list.md:42
+msgid "Caveats"
+msgstr ""
+
+#: src/ch02/list.md:44
+msgid "There are two idiosyncacies you should be aware of when using `List`"
+msgstr ""
+
+#: src/ch02/list.md:46
+msgid ""
+"The `append` operation costs 2 storage writes - one for the value itself and "
+"another one for updating the List's length"
+msgstr ""
+
+#: src/ch02/list.md:47
+msgid ""
+"Due to a compiler limitation, it is not possible to use mutating operations "
+"with a single inline statement. For example, "
+"`self.amounts.read().append(42);` will not work. You have to do it in 2 "
+"steps:"
+msgstr ""
+
+#: src/ch02/list.md:54
+msgid "Dependencies"
+msgstr ""
+
+#: src/ch02/list.md:56
+msgid "Update your project dependencies by in the `Scarb.toml` file:"
+msgstr ""
+
+#: src/ch02/list.md:60
+msgid "\"https://github.com/keep-starknet-strange/alexandria.git\""
+msgstr ""
+
+#: src/ch02/list.md:63
+msgid ""
+"For example, let's use `List` to create a contract that tracks a list of "
+"amounts and tasks:"
+msgstr ""
+
