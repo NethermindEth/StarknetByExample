@@ -30,6 +30,10 @@ list_modified_listings() {
     cut -d '/' -f 2-3 | sort -u
 }
 
+list_all_listings() {
+  ls -d listings/ch*/* | grep -E 'listings/ch.*/*' | cut -d '/' -f 2-3
+}
+
 # function to process listing
 process_listing() {
   echo "Processing listing '$listing'"
@@ -65,9 +69,20 @@ process_listing() {
   fi
 }
 
+# is there the -f flag?
+force=false
+if [ "$1" == "-f" ]; then
+  force=true
+fi
+
 # process each modified file
 pids=()
-modified_listings=$(list_modified_listings)
+
+if [ "$force" = true ]; then
+  modified_listings=$(list_all_listings)
+else
+  modified_listings=$(list_modified_listings)
+fi
 for listing in $modified_listings; do
   process_listing "$listing"
 done
