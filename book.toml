@@ -6,7 +6,7 @@ src = "src"
 title = "Starknet by Example"
 
 [build]
-extra-watch-dirs = ["listings"]
+extra-watch-dirs = ["listings", "po"]
 
 [preprocessor.gettext]
 after = ["links"]
