@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Starknet by Example\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-12-05 14:49+0900\n"
+"PO-Revision-Date: 2023-12-05 18:26+0900\n"
 "Last-Translator: StarknetAstro <cryptonerdcn@gmail.com>\n"
 "Language-Team: Language zh-cn\n"
 "Language: zh_CN\n"
@@ -207,8 +207,8 @@ msgstr ""
 "写可证明的程序，将 zk-STARK 证明系统从程序员手中抽象出来。"
 
 #: src/starknet-by-example.md:9
-msgid "The current version of this book use `scarb 2.3.0`"
-msgstr "本书当前版本使用 `scarb 2.3.0`"
+msgid "The current version of this book use `scarb 2.3.1`"
+msgstr "本书当前版本使用 `scarb 2.3.1`"
 
 #: src/starknet-by-example.md:11
 msgid "## For whom is this for?"
@@ -271,7 +271,7 @@ msgstr ""
 "的博客\n"
 "- [Cairo by example](https://cairo-by-example.com/)：Cairo 简介，附带简单示例"
 
-#: src/starknet-by-example.md:28 src/ch00/basics/documentation.md:35
+#: src/starknet-by-example.md:28
 #: src/ch00/interacting/calling_other_contracts.md:69
 #: src/ch00/cairo_cheatsheet/felt.md:15 src/ch00/cairo_cheatsheet/loop.md:23
 #: src/ch00/cairo_cheatsheet/tuples.md:18
@@ -957,8 +957,8 @@ msgid ""
 "        // The `_read_value` function is outside the implementation that is "
 "marked as `#[abi(embed_v0)]`, so it's an _internal_ function\n"
 "        // and can only be called from within the contract.\n"
-"        // It can modify the contract's state as it is passed as a "
-"reference.\n"
+"        // However, it can't modify the contract's state is passed as a "
+"snapshot: it is only a \"view\" function.\n"
 "        fn _read_value(self: @ContractState) -> u32 {\n"
 "            self.value.read()\n"
 "        }\n"
@@ -1015,8 +1015,8 @@ msgstr ""
 "        // The `_read_value` function is outside the implementation that is "
 "marked as `#[abi(embed_v0)]`, so it's an _internal_ function\n"
 "        // and can only be called from within the contract.\n"
-"        // It can modify the contract's state as it is passed as a "
-"reference.\n"
+"        // However, it can't modify the contract's state is passed as a "
+"snapshot: it is only a \"view\" function.\n"
 "        fn _read_value(self: @ContractState) -> u32 {\n"
 "            self.value.read()\n"
 "        }\n"
@@ -2026,10 +2026,22 @@ msgid "In Cairo, you can add comments with `//`."
 msgstr "在Cairo，您可以使用“//”添加注释。"
 
 #: src/ch00/basics/documentation.md:7
+msgid "### Best Practices:"
+msgstr "### 最佳实践："
+
+#: src/ch00/basics/documentation.md:9
+msgid ""
+"Since Cairo 1, the community has adopted a [Rust-like documentation style]"
+"(https://doc.rust-lang.org/rust-by-example/meta/doc.html)."
+msgstr ""
+"自 Cairo 1 以来，社区采用了 [类似 Rust 的文档风格](https://doc.rust-lang.org/"
+"rust-by-example/meta/doc.html)。"
+
+#: src/ch00/basics/documentation.md:11
 msgid "### Contract Interface:"
 msgstr "### 合约接口："
 
-#: src/ch00/basics/documentation.md:9
+#: src/ch00/basics/documentation.md:13
 msgid ""
 "In smart contracts, you will often have a trait that defines the contract's "
 "interface (with `#[starknet::interface]`).\n"
@@ -2042,7 +2054,7 @@ msgstr ""
 "这是包含详细文档的理想场所，这些文档解释了合约入口点的用途和功能。您可以遵循以"
 "下模板："
 
-#: src/ch00/basics/documentation.md:12
+#: src/ch00/basics/documentation.md:16
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -2050,10 +2062,12 @@ msgid ""
 "    /// High-level description of the function\n"
 "    ///\n"
 "    /// # Arguments\n"
+"    ///\n"
 "    /// * `arg_1` - Description of the argument\n"
 "    /// * `arg_n` - ...\n"
 "    ///\n"
 "    /// # Returns\n"
+"    ///\n"
 "    /// High-level description of the return value\n"
 "    fn do_something(ref self: TContractState, arg_1: T_arg_1) -> T_return;\n"
 "}\n"
@@ -2065,16 +2079,18 @@ msgstr ""
 "    /// High-level description of the function\n"
 "    ///\n"
 "    /// # Arguments\n"
+"    ///\n"
 "    /// * `arg_1` - Description of the argument\n"
 "    /// * `arg_n` - ...\n"
 "    ///\n"
 "    /// # Returns\n"
+"    ///\n"
 "    /// High-level description of the return value\n"
 "    fn do_something(ref self: TContractState, arg_1: T_arg_1) -> T_return;\n"
 "}\n"
 "```"
 
-#: src/ch00/basics/documentation.md:27
+#: src/ch00/basics/documentation.md:33
 msgid ""
 "Keep in mind that this should not describe the implementation details of the "
 "function, but rather the high-level purpose and functionality of the contract "
@@ -2083,20 +2099,24 @@ msgstr ""
 "请记住，这不应该描述函数的实现细节，而应该从用户的角度描述合约的高级目的和功"
 "能。"
 
-#: src/ch00/basics/documentation.md:29
+#: src/ch00/basics/documentation.md:35
 msgid "### Implementation Details:"
 msgstr "### 实装细节："
 
-#: src/ch00/basics/documentation.md:31
+#: src/ch00/basics/documentation.md:37
 msgid ""
 "When writing the logic of the contract, you can add comments to describe the "
 "technical implementation details of the functions."
 msgstr "在编写合约逻辑时，可以添加注释来描述函数的技术实现细节。"
 
-#: src/ch00/basics/documentation.md:33
+#: src/ch00/basics/documentation.md:39
 msgid ""
 "> Avoid over-commenting: Comments should provide additional value and clarity."
 msgstr "> 避免过度注释：注释应提供额外的价值和清晰度。"
+
+#: src/ch00/basics/documentation.md:41
+msgid "<footer id=\"last-change\">Last change: 2023-12-05</footer>"
+msgstr "<footer id=\"last-change\">Last change: 2023-12-05</footer>"
 
 #: src/ch00/interacting/interacting.md:1
 msgid "# Deploy and interact with contracts"
@@ -2458,8 +2478,8 @@ msgid ""
 "html#contract-dispatcher)"
 msgstr ""
 "调用其他合约的最简单方法是使用要调用的合约的调度程序。\n"
-"您可以在 [Cairo Book]（https://book.cairo-lang.org/ch99-02-02-contract-"
-"dispatcher-library-dispatcher-and-system-calls.html#contract-dispatcher） 中阅"
+"您可以在  [Cairo Book](https://book.cairo-lang.org/ch99-02-02-contract-"
+"dispatcher-library-dispatcher-and-system-calls.html#contract-dispatcher)  中阅"
 "读有关 Dispatchers 的更多信息"
 
 #: src/ch00/interacting/calling_other_contracts.md:8
