@@ -36,7 +36,7 @@ mod ExampleContract {
     impl PrivateFunctions of PrivateFunctionsTrait {
         // The `_read_value` function is outside the implementation that is marked as `#[abi(embed_v0)]`, so it's an _internal_ function
         // and can only be called from within the contract.
-        // It can modify the contract's state as it is passed as a reference.
+        // However, it can't modify the contract's state is passed as a snapshot: it is only a "view" function.
         fn _read_value(self: @ContractState) -> u32 {
             self.value.read()
         }
