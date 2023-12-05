@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Starknet by Example\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-12-05 14:47+0900\n"
+"PO-Revision-Date: 2023-12-05 14:49+0900\n"
 "Last-Translator: StarknetAstro <cryptonerdcn@gmail.com>\n"
 "Language-Team: Language zh-cn\n"
 "Language: zh_CN\n"
@@ -383,7 +383,7 @@ msgstr ""
 #: src/ch00/basics/storage.md:32
 msgid ""
 "You can also read about [storing custom types](./storing-custom-types.md)"
-msgstr "您还可以阅读有关 [存储自定义类型] 的内容（./storing-custom-types.md）。"
+msgstr "您还可以阅读有关 [存储自定义类型](./storing-custom-types.md) 的内容。"
 
 #: src/ch00/basics/storage.md:34 src/ch00/basics/variables.md:126
 #: src/ch01/constant-product-amm.md:275
