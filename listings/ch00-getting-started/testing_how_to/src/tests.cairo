@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests {
     // Import the interface and dispatcher to be able to interact with the contract.
-    use sbe_testing::contract::{
+    use testing_how_to::contract::{
         ISimpleContract, SimpleContract, ISimpleContractDispatcher, ISimpleContractDispatcherTrait
     };
 
