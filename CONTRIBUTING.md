@@ -57,7 +57,8 @@ Do not write directly Cairo program inside the markdown files. Instead, use code
 ## Adding a new Cairo program
 
 You can add or modify examples in the `listings` directory. Each listing is a scarb project.
-You can use `scarb init` to create a new scarb project
+You can find a template of a blank scarb project in the `listings/template` directory.
+(You can also use `scarb init` to create a new scarb project, but be sure to remove the generated git repository)
 
 Here's the required `Scarb.toml` configuration:
   
@@ -91,16 +92,13 @@ You also NEED to do the following:
 - Remove the generated git repository, `rm -rf .git` (this is important!)
 - Double check that the `pkg_name` is the same as the name of the directory
 
-You can find a template of a blank scarb project in the `listings/template` directory.
-
 ### Verification script
 
 The current book has script that verifies the compilation of all Cairo programs in the book.
 Instead of directly writing Cairo programs in the markdown files, we use code blocks that import the Cairo programs from the `listing` directory.
 These programs are bundled into scarb packages, which makes it easier to test and build entire packages.
 
-To run the script locally, ensure that you are at the root of the repository (same directory as this `README.md` file),
-and run:
+To run the script locally, ensure that you are at the root of the repository, and run:
 
 `bash scripts/cairo_programs_verifier.sh`
 
@@ -128,6 +126,8 @@ mod contract;
 #[cfg(test)]
 mod tests;
 ```
+
+> About Starknet Foundry: It is currently not possible to use Starknet Foundry but we are working on it.
 
 ### Use of anchor
 
