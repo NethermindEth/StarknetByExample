@@ -1,8 +1,11 @@
 [package]
 name = "custom_type_serde"
-version = "0.1.0"
+version.workspace = true
 
 [dependencies]
-starknet = ">=2.3.0"
+starknet.workspace = true
+
+[scripts]
+test.workspace = true
 
 [[target.starknet-contract]]

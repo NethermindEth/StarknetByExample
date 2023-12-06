@@ -1,8 +1,13 @@
 [package]
 name = "erc20"
-version = "0.1.0"
+version.workspace = true
+
+[lib]
 
 [dependencies]
-starknet = ">=2.3.0"
+starknet.workspace = true
+
+[scripts]
+test.workspace = true
 
 [[target.starknet-contract]]

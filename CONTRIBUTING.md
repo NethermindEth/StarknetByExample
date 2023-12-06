@@ -6,6 +6,48 @@ Join the telegram channel: https://t.me/StarknetByExample
 
 Please note we have a code of conduct, please follow it in all your interactions with the project.
 
+## Table of Contents
+
+- [Contributing](#contributing)
+  - [Table of Contents](#table-of-contents)
+  - [Setup](#setup)
+  - [MdBook](#mdbook)
+  - [Adding a new chapter](#adding-a-new-chapter)
+  - [Adding a new Cairo program](#adding-a-new-cairo-program)
+    - [Verification script](#verification-script)
+    - [Tests](#tests)
+    - [Use of anchor](#use-of-anchor)
+  - [Translations](#translations)
+    - [Initiate a new translation for your language](#initiate-a-new-translation-for-your-language)
+  - [Code of Conduct](#code-of-conduct)
+    - [Our Pledge](#our-pledge)
+    - [Our Standards](#our-standards)
+    - [Our Responsibilities](#our-responsibilities)
+    - [Scope](#scope)
+    - [Enforcement](#enforcement)
+    - [Attribution](#attribution)
+
+## Setup
+
+1. Clone this repository.
+
+2. Rust related packages:
+   - Install toolchain providing `cargo` using [rustup](https://rustup.rs/).
+   - Install [mdBook](https://rust-lang.github.io/mdBook/guide/installation.html) and the required extension with `cargo install mdbook mdbook-last-changed`.
+
+3. Install `scarb` using [asdf](https://asdf-vm.com/) with `asdf install`. Alternatively, you can install `scarb` manually by following the instructions [here](https://docs.swmansion.com/scarb/).
+
+## MdBook
+
+All the Markdown files **MUST** be edited in english. To work locally in english:
+
+- Start a local server with `mdbook serve` and visit [localhost:3000](http://localhost:3000) to view the book.
+  You can use the `--open` flag to open the browser automatically: `mdbook serve --open`.
+
+- Make changes to the book and refresh the browser to see the changes.
+
+- Open a PR with your changes.
+
 ## Adding a new chapter
 
 To add a new chapter, create a new markdown file in the `src` directory. All the Markdown files **MUST** be edited in english. In order to add them to the book, you need to add a link to it in the `src/SUMMARY.md` file.
@@ -14,19 +56,57 @@ Do not write directly Cairo program inside the markdown files. Instead, use code
 
 ## Adding a new Cairo program
 
-You can add or modify examples in the `listings` directory. Each listing is a scarb project. You can use `scarb init` to create a new scarb project (You can remove the generated git repository, `rm -rf .git`). Here's the minimal `Scarb.toml` configuration:
+You can add or modify examples in the `listings` directory. Each listing is a scarb project.
+You can find a template of a blank scarb project in the `listings/template` directory.
+(You can also use `scarb init` to create a new scarb project, but be sure to remove the generated git repository)
+
+Here's the required `Scarb.toml` configuration:
   
 ```toml
 [package]
 name = "pkg_name"
-version = "0.1.0"
+version.workspace = true
+
+# Specify that this can be used as a dependency in another scarb project:
+[lib]
 
 [dependencies]
-starknet = ">=2.2.0"
+starknet.workspace = true
+# Uncomment the following lines if you want to use additional dependencies:
+# Starknet Foundry:
+# snforge_std.workspace = true
+# OpenZeppelin:
+# openzeppelin.workspace = true
+
+# If you want to use another Starknet By Example's listing, you can add it as a dependency like this:
+# erc20 = { path = "../../ch00-getting-started/erc20" }
+
+[scripts]
+test.workspace = true
 
 [[target.starknet-contract]]
+casm = true
 ```
-Be sure to adapt it to your needs.
+
+You also NEED to do the following:
+- Remove the generated git repository, `rm -rf .git` (this is important!)
+- Double check that the `pkg_name` is the same as the name of the directory
+
+### Verification script
+
+The current book has script that verifies the compilation of all Cairo programs in the book.
+Instead of directly writing Cairo programs in the markdown files, we use code blocks that import the Cairo programs from the `listing` directory.
+These programs are bundled into scarb packages, which makes it easier to test and build entire packages.
+
+To run the script locally, ensure that you are at the root of the repository, and run:
+
+`bash scripts/cairo_programs_verifier.sh`
+
+This will check that all the Cairo programs in the book compile successfully using `scarb build`, that every tests passes using `scarb test`, and that the `scarb fmt -c` command does not identify any formatting issues.
+
+You can also use `scarb fmt` to format all the Cairo programs.
+
+### Tests
 
 Every listing needs to have atleast integration tests:
 
@@ -47,6 +127,8 @@ mod contract;
 mod tests;
 ```
 
+> About Starknet Foundry: It is currently not possible to use Starknet Foundry but we are working on it.
+
 ### Use of anchor
 
 You can add delimiting comments to select part of the code in the book.
@@ -65,7 +147,7 @@ Then, in the markdown file, you can use the following syntax to include only the
 ```markdown
   ```rust
   {{#include ../../listings/path/to/listing/src/contract.cairo:anchor_name}}
-  ```
+  \```
 ```
 
 This will result in the following code being included in the book:
@@ -74,13 +156,26 @@ This will result in the following code being included in the book:
 b
 ```
 
-## Pull Request
+## Translations
 
-Please follow and check the pull request template requirements before submitting a pull request.
+To work with translations, those are the steps to update the translated content:
 
-Additionally, please ensure your pull request adheres to the following guidelines:
-1. Ensure any install or build dependencies are not committed to the repository.
-2. Update the documentation (README.md, CONTRIBUTING.md, ...) if needed.
+- Run a local server for the language you want to edit: `./translations.sh zh-cn` for instance. If no language is provided, the script will only extract translations from english.
+
+- Open the translation file you are interested in `po/zh-cn.po` for instance. You can also use editors like [poedit](https://poedit.net/) to help you on this task.
+
+- When you are done, you should only have changes into the `po/xx.po` file. Commit them and open a PR.
+  The PR must stars with `i18n` to let the maintainers know that the PR is only changing translation.
+
+The translation work is inspired from [Comprehensive Rust repository](https://github.com/google/comprehensive-rust/blob/main/TRANSLATIONS.md).
+
+### Initiate a new translation for your language
+
+If you wish to initiate a new translation for your language without running a local server, consider the following tips:
+
+- Execute the command `./translations.sh new xx` (replace `xx` with your language code). This method can generate the `xx.po` file of your language for you.
+- To update your `xx.po` file, execute the command `./translations.sh xx` (replace `xx` with your language code), as mentioned in the previous chapter.
+- If the `xx.po` file already exists (which means you are not initiating a new translation), you should not run this command.
 
 ## Code of Conduct
 

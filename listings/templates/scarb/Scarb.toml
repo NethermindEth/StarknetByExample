@@ -1,5 +1,5 @@
 [package]
-name = "variables"
+name = "scarb"
 version.workspace = true
 
 [dependencies]

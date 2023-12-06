@@ -2,5 +2,121 @@
 version = 1
 
 [[package]]
-name = "sbe"
+name = "alexandria_storage"
+version = "0.2.0"
+source = "git+https://github.com/keep-starknet-strange/alexandria.git?rev=ae1d514#ae1d5149ff601a7ac5b39edc867d33ebd83d7f4f"
+
+[[package]]
+name = "cairo_cheatsheet"
+version = "0.1.0"
+
+[[package]]
+name = "calling_other_contracts"
+version = "0.1.0"
+
+[[package]]
+name = "constant_product_amm"
+version = "0.1.0"
+dependencies = [
+ "openzeppelin",
+]
+
+[[package]]
+name = "constructor"
+version = "0.1.0"
+
+[[package]]
+name = "counter"
+version = "0.1.0"
+
+[[package]]
+name = "custom_type_serde"
+version = "0.1.0"
+
+[[package]]
+name = "erc20"
+version = "0.1.0"
+
+[[package]]
+name = "errors"
+version = "0.1.0"
+
+[[package]]
+name = "events"
+version = "0.1.0"
+
+[[package]]
+name = "factory"
+version = "0.1.0"
+
+[[package]]
+name = "hash_solidity_compatible"
+version = "0.1.0"
+
+[[package]]
+name = "interfaces_traits"
+version = "0.1.0"
+
+[[package]]
+name = "mappings"
+version = "0.1.0"
+
+[[package]]
+name = "openzeppelin"
+version = "0.8.0-beta.0"
+source = "git+https://github.com/OpenZeppelin/cairo-contracts.git?tag=v0.8.0-beta.0#4c95981a7178e43730f152c85a92336dc6a22d62"
+
+[[package]]
+name = "scarb"
+version = "0.1.0"
+
+[[package]]
+name = "simple_vault"
+version = "0.1.0"
+
+[[package]]
+name = "storage"
+version = "0.1.0"
+
+[[package]]
+name = "store_using_packing"
+version = "0.1.0"
+
+[[package]]
+name = "storing_arrays"
+version = "0.1.0"
+
+[[package]]
+name = "storing_custom_types"
+version = "0.1.0"
+
+[[package]]
+name = "struct_as_mapping_key"
+version = "0.1.0"
+
+[[package]]
+name = "testing_how_to"
+version = "0.1.0"
+
+[[package]]
+name = "upgradeable_contract"
+version = "0.1.0"
+
+[[package]]
+name = "using_lists"
+version = "0.1.0"
+dependencies = [
+ "alexandria_storage",
+]
+
+[[package]]
+name = "variables"
+version = "0.1.0"
+
+[[package]]
+name = "visibility"
+version = "0.1.0"
+
+[[package]]
+name = "write_to_any_slot"
 version = "0.1.0"

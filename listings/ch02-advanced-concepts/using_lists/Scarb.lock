@@ -8,7 +8,7 @@ source = "git+https://github.com/keep-starknet-strange/alexandria.git?rev=ae1d51
 
 [[package]]
 name = "using_lists"
-version = "0.1.0"
+version.workspace = true
 dependencies = [
  "alexandria_storage",
 ]
