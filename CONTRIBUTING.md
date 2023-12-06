@@ -147,7 +147,7 @@ Then, in the markdown file, you can use the following syntax to include only the
 ```markdown
   ```rust
   {{#include ../../listings/path/to/listing/src/contract.cairo:anchor_name}}
-  ```
+  \```
 ```
 
 This will result in the following code being included in the book:
