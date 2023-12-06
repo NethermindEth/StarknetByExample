@@ -3,4 +3,4 @@ version = 1
 
 [[package]]
 name = "cairo_cheatsheet"
-version = "0.1.0"
+version.workspace = true

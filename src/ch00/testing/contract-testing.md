@@ -4,15 +4,15 @@ Testing plays a crucial role in software development, especially for smart contr
 
 Let's start with a simple smart contract as an example:
 ```rust
-{{#include ../../../listings/ch00-getting-started/testing/src/contract.cairo}}
+{{#include ../../../listings/ch00-getting-started/testing_how_to/src/contract.cairo}}
 ```
 
 Now, take a look at the tests for this contract:
 ```rust
-{{#include ../../../listings/ch00-getting-started/testing/src/tests.cairo}}
+{{#include ../../../listings/ch00-getting-started/testing_how_to/src/tests.cairo}}
 ```
 
-Play with this contract in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-getting-started/testing/src/lib.cairo).
+Play with this contract in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch00-getting-started/testing_how_to/src/lib.cairo).
 
 To define our test, we use scarb, which allows us to create a separate module guarded with `#[cfg(test)]`. This ensures that the test module is only compiled when running tests using `scarb test`.
 

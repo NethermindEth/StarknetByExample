@@ -25,7 +25,7 @@ error_file=$(mktemp)
 
 # function to list modified listings
 list_modified_listings() {
-  git diff --name-only upstream/main -- listings | \
+  git diff --diff-filter=AM --name-only upstream/main -- listings | \
     grep -E 'listings/ch.*/*' | \
     cut -d '/' -f 2-3 | sort -u
 }
@@ -41,14 +41,16 @@ process_listing() {
   local dir_path="${REPO_ROOT}/listings/${listing}"
 
   if ! cd "$dir_path"; then
-    echo -e "${RED}Failed to change to directory: $dir_path ${NC}"
+    echo -e "${RED}Failed to change to directory: $dir_path"
     echo "1" >> "$error_file"
+    echo -e "${NC}"
     return
   fi
 
   if ! scarb build >error.log 2>&1; then
-    echo -e "${RED}scarb build:${NC}"
+    echo -e "${RED}scarb build:"
     cat error.log
+    echo -e "${NC}"
     echo "1" >> "$error_file"
   else
     if ! scarb fmt -c >>error.log 2>&1; then
@@ -57,9 +59,10 @@ process_listing() {
       echo "1" >> "$error_file"
     fi
 
-    if ! scarb test >>error.log 2>&1; then
-      echo -e "${RED}scarb test:${NC}"
+    if ! $REPO_ROOT/scripts/test_resolver.sh >>error.log 2>&1; then
+      echo -e "${RED}scarb/snforge test:"
       cat error.log
+      echo -e "${NC}"
       echo "1" >> "$error_file"
     fi
   fi
@@ -75,14 +78,12 @@ if [ "$1" == "-f" ]; then
   force=true
 fi
 
-# process each modified file
-pids=()
-
 if [ "$force" = true ]; then
   modified_listings=$(list_all_listings)
 else
   modified_listings=$(list_modified_listings)
 fi
+
 for listing in $modified_listings; do
   process_listing "$listing"
 done

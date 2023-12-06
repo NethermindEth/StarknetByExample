@@ -3,4 +3,4 @@ version = 1
 
 [[package]]
 name = "variables"
-version = "0.1.0"
+version.workspace = true

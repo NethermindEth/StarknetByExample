@@ -3,4 +3,4 @@ version = 1
 
 [[package]]
 name = "factory"
-version = "0.1.0"
+version.workspace = true

@@ -6,7 +6,10 @@ Starknet is a permissionless Validity-Rollup that supports general computation. 
 
 Starknet smart contracts are written in the Cairo language. Cairo is a Turing-complete programming language designed to write provable programs, abstracting the zk-STARK proof system away from the programmer.
 
-The current version of this book use `{{#include ../.tool-versions}}`
+The current version of this book use:
+```
+{{#include ../.tool-versions}}
+```
 
 ## For whom is this for?
 

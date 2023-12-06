@@ -7,7 +7,7 @@ trait IMapContract<TContractState> {
 }
 
 mod tests {
-    use maps::mappings::MapContract;
+    use super::super::mappings::MapContract;
     use super::{IMapContract, IMapContractDispatcher, IMapContractDispatcherTrait};
     use starknet::{deploy_syscall, ContractAddress};
     use starknet::class_hash::Felt252TryIntoClassHash;

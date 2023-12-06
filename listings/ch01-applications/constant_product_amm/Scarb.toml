@@ -1,9 +1,12 @@
 [package]
 name = "constant_product_amm"
-version = "0.1.0"
+version.workspace = true
 
 [dependencies]
-starknet = ">=2.3.0"
-openzeppelin = { git = "https://github.com/OpenZeppelin/cairo-contracts.git", tag = "v0.8.0-beta.0" }
+starknet.workspace = true
+openzeppelin.workspace = true
+
+[scripts]
+test.workspace = true
 
 [[target.starknet-contract]]

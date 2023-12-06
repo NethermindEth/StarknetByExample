@@ -1,8 +1,11 @@
 [package]
-name = "maps"
-version = "0.1.0"
+name = "mappings"
+version.workspace = true
 
 [dependencies]
-starknet = ">=2.3.0"
+starknet.workspace = true
+
+[scripts]
+test.workspace = true
 
 [[target.starknet-contract]]
