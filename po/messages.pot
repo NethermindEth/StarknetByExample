@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Starknet by Example\n"
-"POT-Creation-Date: 2023-12-01T20:54:04+09:00\n"
+"POT-Creation-Date: 2023-12-06T10:11:16Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -205,7 +205,7 @@ msgid ""
 msgstr ""
 
 #: src/starknet-by-example.md:9
-msgid "The current version of this book use `scarb 2.3.0`"
+msgid "The current version of this book use `scarb 2.3.1`"
 msgstr ""
 
 #: src/starknet-by-example.md:11
@@ -623,8 +623,8 @@ msgid ""
 "// The `_read_value` function is outside the implementation that is marked "
 "as `#[abi(embed_v0)]`, so it's an _internal_ function\n"
 "        // and can only be called from within the contract.\n"
-"        // It can modify the contract's state as it is passed as a "
-"reference.\n"
+"        // However, it can't modify the contract's state is passed as a "
+"snapshot: it is only a \"view\" function.\n"
 msgstr ""
 
 #: src/ch00/basics/visibility-mutability.md:73
@@ -932,10 +932,20 @@ msgid "In Cairo, you can add comments with `//`."
 msgstr ""
 
 #: src/ch00/basics/documentation.md:7
-msgid "Contract Interface:"
+msgid "Best Practices:"
 msgstr ""
 
 #: src/ch00/basics/documentation.md:9
+msgid ""
+"Since Cairo 1, the community has adopted a [Rust-like documentation "
+"style](https://doc.rust-lang.org/rust-by-example/meta/doc.html)."
+msgstr ""
+
+#: src/ch00/basics/documentation.md:11
+msgid "Contract Interface:"
+msgstr ""
+
+#: src/ch00/basics/documentation.md:13
 msgid ""
 "In smart contracts, you will often have a trait that defines the contract's "
 "interface (with `#[starknet::interface]`). This is the perfect place to "
@@ -943,36 +953,38 @@ msgid ""
 "the contract entry points. You can follow this template:"
 msgstr ""
 
-#: src/ch00/basics/documentation.md:15
+#: src/ch00/basics/documentation.md:19
 msgid ""
 "/// High-level description of the function\n"
 "    ///\n"
 "    /// # Arguments\n"
+"    ///\n"
 "    /// * `arg_1` - Description of the argument\n"
 "    /// * `arg_n` - ...\n"
 "    ///\n"
 "    /// # Returns\n"
+"    ///\n"
 "    /// High-level description of the return value\n"
 msgstr ""
 
-#: src/ch00/basics/documentation.md:27
+#: src/ch00/basics/documentation.md:33
 msgid ""
 "Keep in mind that this should not describe the implementation details of the "
 "function, but rather the high-level purpose and functionality of the "
 "contract from the perspective of a user."
 msgstr ""
 
-#: src/ch00/basics/documentation.md:29
+#: src/ch00/basics/documentation.md:35
 msgid "Implementation Details:"
 msgstr ""
 
-#: src/ch00/basics/documentation.md:31
+#: src/ch00/basics/documentation.md:37
 msgid ""
 "When writing the logic of the contract, you can add comments to describe the "
 "technical implementation details of the functions."
 msgstr ""
 
-#: src/ch00/basics/documentation.md:33
+#: src/ch00/basics/documentation.md:39
 msgid ""
 "Avoid over-commenting: Comments should provide additional value and clarity."
 msgstr ""
