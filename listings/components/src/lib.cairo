@@ -1,2 +1,0 @@
-mod contracts;
-mod switch;
