@@ -11,6 +11,9 @@ The current version of this book use:
 {{#include ../.tool-versions}}
 ```
 
+> ⚠️ The examples have not been audited and are not intended for production use.
+> The authors are not responsible for any damages caused by the use of the code provided in this book.
+
 ## For whom is this for?
 
 Starknet By Example is for anyone who wants to quickly learn how to write smart contracts on Starknet using Cairo with some technical background in programming and blockchain.
@@ -23,7 +26,4 @@ The later chapters will cover more advanced topics and show you how to write mor
 If you want to learn more about the Cairo programming language, you can read the [Cairo Book](https://book.cairo-lang.org).
 If you want to learn more about Starknet, you can read the [Starknet documentation](https://docs.starknet.io/) and the [Starknet Book](https://book.starknet.io).
 
-Here's a list of other resources that you might find useful:
-- [Starklings](https://github.com/shramee/starklings-cairo1): An interactive tutorial to get you up and running with Cairo v1 and Starknet 
-- [Cairopractice](https://cairopractice.com/): A blog with a series of articles about Cairo and Starknet
-- [Cairo by example](https://cairo-by-example.com/): An introduction to Cairo, with simple examples
+For more resources, check [Awesome Starknet](https://github.com/keep-starknet-strange/awesome-starknet).

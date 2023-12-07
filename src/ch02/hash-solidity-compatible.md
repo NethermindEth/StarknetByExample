@@ -5,7 +5,7 @@ This contract demonstrates Keccak hashing in Cairo to match Solidity's keccak256
 For example:
 
 ```rust
-{{#include ../../listings/ch02-advanced-concepts/hash_solidity_compatible/src/contract.cairo}}
+{{#include ../../listings/advanced-concepts/hash_solidity_compatible/src/contract.cairo}}
 ```
 
-Play with the contract in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch02-advanced-concepts/hash_solidity_compatible/src/contract.cairo).
+Play with the contract in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/advanced-concepts/hash_solidity_compatible/src/contract.cairo).

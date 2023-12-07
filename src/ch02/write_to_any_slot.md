@@ -9,6 +9,6 @@ This is useful when writing to storage variables that are not known at compile t
 In the following example, we use the Poseidon hash function to compute the address of a storage variable. Poseidon is a ZK-friendly hash function that is cheaper and faster than Pedersen, making it an excellent choice for onchain computations. Once the address is computed, we use the storage syscalls to interact with it.
 
 ```rust
-{{#include ../../listings/ch02-advanced-concepts/write_to_any_slot/src/contract.cairo}}
+{{#include ../../listings/advanced-concepts/write_to_any_slot/src/contract.cairo}}
 ```
-Visit contract on [Voyager](https://goerli.voyager.online/contract/0x033943CB781A4E63C9dcE0A1A09eAa3b617AA43CC61637C08c043a67f3fe0087) or play with it in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch02-advanced-concepts/write_to_any_slot/src/contract.cairo).
+Visit contract on [Voyager](https://goerli.voyager.online/contract/0x033943CB781A4E63C9dcE0A1A09eAa3b617AA43CC61637C08c043a67f3fe0087) or play with it in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/advanced-concepts/write_to_any_slot/src/contract.cairo).

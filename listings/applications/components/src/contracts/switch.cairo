@@ -1,0 +1,85 @@
+// ANCHOR: contract
+#[starknet::contract]
+mod SwitchContract {
+    use components::switch::switch_component;
+    // This is needed to be able to use internal functions of the switch component.
+    use components::switch::switch_component::InternalSwitchImpl;
+
+    component!(path: switch_component, storage: switch, event: SwitchEvent);
+
+    #[abi(embed_v0)]
+    impl SwitchImpl = switch_component::Switch<ContractState>;
+    impl SwitchInternalImpl = switch_component::InternalSwitchImpl<ContractState>;
+
+    #[storage]
+    struct Storage {
+        #[substorage(v0)]
+        switch: switch_component::Storage,
+    }
+
+    #[constructor]
+    fn constructor(ref self: ContractState) {
+        self.switch._off();
+    }
+
+    #[event]
+    #[derive(Drop, starknet::Event)]
+    enum Event {
+        SwitchEvent: switch_component::Event
+    }
+}
+// ANCHOR_END: contract
+
+#[cfg(test)]
+mod tests {
+    use components::switch::switch_component::InternalSwitchTrait;
+    use components::switch::ISwitchComponent;
+    use core::starknet::storage::StorageMemberAccessTrait;
+    use super::SwitchContract;
+
+    fn STATE() -> SwitchContract::ContractState {
+        SwitchContract::contract_state_for_testing()
+    }
+
+    #[test]
+    #[available_gas(2000000)]
+    fn test_init() {
+        let state = STATE();
+        assert(state.value() == false, 'The switch should be off');
+    }
+
+    #[test]
+    #[available_gas(2000000)]
+    fn test_switch() {
+        let mut state = STATE();
+
+        state.switch();
+        assert(state.value() == true, 'The switch should be on');
+
+        state.switch();
+        assert(state.value() == false, 'The switch should be off');
+    }
+
+    #[test]
+    #[available_gas(2000000)]
+    fn test_value() {
+        let mut state = STATE();
+        assert(state.value() == state.switch.value.read(), 'Wrong value');
+
+        state.switch.switch();
+        assert(state.value() == state.switch.value.read(), 'Wrong value');
+    }
+
+    #[test]
+    #[available_gas(2000000)]
+    fn test_internal_off() {
+        let mut state = STATE();
+
+        state.switch._off();
+        assert(state.value() == false, 'The switch should be off');
+
+        state.switch();
+        state.switch._off();
+        assert(state.value() == false, 'The switch should be off');
+    }
+}

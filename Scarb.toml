@@ -1,8 +1,8 @@
 [workspace]
 members = [
-  "listings/ch00-getting-started/*",
-  "listings/ch01-applications/*",
-  "listings/ch02-advanced-concepts/*",
+  "listings/getting-started/*",
+  "listings/applications/*",
+  "listings/advanced-concepts/*",
   "listings/templates/*"
 ]
 

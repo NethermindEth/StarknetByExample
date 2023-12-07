@@ -32,8 +32,11 @@ Summary
     - [Struct](./ch00/cairo_cheatsheet/struct.md)
     - [Type casting](./ch00/cairo_cheatsheet/type_casting.md)
 
+# Components
+  - [Components How-To](./components/how_to.md)
+
 <!-- ch01 -->
-# Applications examples
+# Applications
   - [Upgradeable Contract](./ch01/upgradeable_contract.md)
   - [Defi Vault](./ch01/simple_vault.md)
   - [ERC20 Token](./ch01/erc20.md)
