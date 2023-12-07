@@ -4,5 +4,5 @@ The "match" expression in Cairo allows us to control the flow of our code by com
 For example:
 
 ```rust
-{{#include ../../../listings/ch00-getting-started/cairo_cheatsheet/src/match_example.cairo}}
+{{#include ../../../listings/getting-started/cairo_cheatsheet/src/match_example.cairo}}
 ```

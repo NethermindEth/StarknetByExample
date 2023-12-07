@@ -26,12 +26,12 @@ error_file=$(mktemp)
 # function to list modified listings
 list_modified_listings() {
   git diff --diff-filter=AM --name-only upstream/main -- listings | \
-    grep -E 'listings/ch.*/*' | \
+    grep -E 'listings/*/*' | \
     cut -d '/' -f 2-3 | sort -u
 }
 
 list_all_listings() {
-  ls -d listings/ch*/* | grep -E 'listings/ch.*/*' | cut -d '/' -f 2-3
+  ls -d listings/*/* | grep -E 'listings/*/*' | cut -d '/' -f 2-3
 }
 
 # function to process listing

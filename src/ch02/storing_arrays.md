@@ -7,12 +7,12 @@ On Starknet, complex values (e.g., tuples or structs), are stored in a continuou
 The following example demonstrates how to write a simple implementation of the `StorageAccess` trait for the `Array<felt252>` type, allowing us to store arrays of up to 255 `felt252` elements.
 
 ```rust
-{{#include ../../listings/ch02-advanced-concepts/storing_arrays/src/contract.cairo:StorageAccessImpl}}
+{{#include ../../listings/advanced-concepts/storing_arrays/src/contract.cairo:StorageAccessImpl}}
 ```
 
 You can then import this implementation in your contract and use it to store arrays in storage:
 
 ```rust
-{{#include ../../listings/ch02-advanced-concepts/storing_arrays/src/contract.cairo:StoreArrayContract}}
+{{#include ../../listings/advanced-concepts/storing_arrays/src/contract.cairo:StoreArrayContract}}
 ```
-Visit contract on [Voyager](https://goerli.voyager.online/contract/0x008F8069a3Fcd7691Db46Dc3b6F9D2C0436f9200E861330957Fd780A3595da86) or play with it in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch02-advanced-concepts/storing_arrays/src/contract.cairo).
+Visit contract on [Voyager](https://goerli.voyager.online/contract/0x008F8069a3Fcd7691Db46Dc3b6F9D2C0436f9200E861330957Fd780A3595da86) or play with it in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/advanced-concepts/storing_arrays/src/contract.cairo).

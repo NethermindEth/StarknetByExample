@@ -15,7 +15,7 @@ The following example shows a simple `Switch` component that can be used to turn
 It contains a storage variable `value`, a function `switch` and an event `Switch`.
 
 ```rust
-{{#include ../../listings/components/src/switch.cairo}}
+{{#include ../../listings/applications/components/src/switch.cairo}}
 ```
 
 A component in itself is really similar to a contract, it *can* also have:
@@ -32,7 +32,7 @@ Now that we have a component, we can use it in a contract.
 The following contract incorporates the `Switch` component:
 
 ```rust
-{{#include ../../listings/components/src/contracts/switch.cairo:contract}}
+{{#include ../../listings/applications/components/src/contracts/switch.cairo:contract}}
 ```
 
 ## Deep dive into components

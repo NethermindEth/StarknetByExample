@@ -26,7 +26,7 @@ This allows to store the type `T` by first packing it into the type `PackedT` wi
 Here's an example of storing a `Time` struct with two `u8` values using the `StorePacking` trait:
 
 ```rust
-{{#include ../../../listings/ch02-advanced-concepts/store_using_packing/src/contract.cairo}}
+{{#include ../../../listings/advanced-concepts/store_using_packing/src/contract.cairo}}
 ```
 
-Play with this contract in [Remix](https://remix.ethereum.org/?#activate=Starknet-cairo1-compiler&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/ch02-advanced-concepts/store_using_packing/src/contract.cairo).
+Play with this contract in [Remix](https://remix.ethereum.org/?#activate=Starknet-cairo1-compiler&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/advanced-concepts/store_using_packing/src/contract.cairo).

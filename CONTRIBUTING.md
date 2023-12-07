@@ -79,7 +79,7 @@ starknet.workspace = true
 # openzeppelin.workspace = true
 
 # If you want to use another Starknet By Example's listing, you can add it as a dependency like this:
-# erc20 = { path = "../../ch00-getting-started/erc20" }
+# erc20 = { path = "../../getting-started/erc20" }
 
 [scripts]
 test.workspace = true
