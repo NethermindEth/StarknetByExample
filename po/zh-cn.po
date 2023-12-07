@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Starknet by Example\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-12-05 18:26+0900\n"
+"PO-Revision-Date: 2023-12-07 16:56+0900\n"
 "Last-Translator: StarknetAstro <cryptonerdcn@gmail.com>\n"
 "Language-Team: Language zh-cn\n"
 "Language: zh_CN\n"
@@ -207,14 +207,24 @@ msgstr ""
 "写可证明的程序，将 zk-STARK 证明系统从程序员手中抽象出来。"
 
 #: src/starknet-by-example.md:9
-msgid "The current version of this book use `scarb 2.3.1`"
-msgstr "本书当前版本使用 `scarb 2.3.1`"
+msgid "The current version of this book use:"
+msgstr "本书当前版本使用："
 
-#: src/starknet-by-example.md:11
+#: src/starknet-by-example.md:10
+msgid ""
+"```\n"
+"scarb 2.3.1\n"
+"```"
+msgstr ""
+"```\n"
+"scarb 2.3.1\n"
+"```"
+
+#: src/starknet-by-example.md:14
 msgid "## For whom is this for?"
 msgstr "## 谁该读这本书？"
 
-#: src/starknet-by-example.md:13
+#: src/starknet-by-example.md:16
 msgid ""
 "Starknet By Example is for anyone who wants to quickly learn how to write "
 "smart contracts on Starknet using Cairo with some technical background in "
@@ -223,7 +233,7 @@ msgstr ""
 "Starknet By Example适合想要快速学习如何使用 Cairo 在 Starknet 上编写智能合约，"
 "并具有一定编程和区块链技术背景的人。"
 
-#: src/starknet-by-example.md:15
+#: src/starknet-by-example.md:18
 msgid ""
 "The first chapters will give you a basic understanding of the Cairo "
 "programming language and how to write, deploy and use smart contracts on "
@@ -235,11 +245,11 @@ msgstr ""
 "约。\n"
 "后面的章节将涉及更高级的主题，并向你展示如何编写更复杂的智能合约。"
 
-#: src/starknet-by-example.md:18
+#: src/starknet-by-example.md:21
 msgid "## Further reading"
 msgstr "## 进一步阅读"
 
-#: src/starknet-by-example.md:20
+#: src/starknet-by-example.md:23
 msgid ""
 "If you want to learn more about the Cairo programming language, you can read "
 "the [Cairo Book](https://book.cairo-lang.org).\n"
@@ -252,11 +262,11 @@ msgstr ""
 "如果你想进一步了解星网，可以阅读[Starknet documentation](https://docs."
 "starknet.io/) 和[Starknet Book](https://book.starknet.io/zh-cn/index.html)。"
 
-#: src/starknet-by-example.md:23
+#: src/starknet-by-example.md:26
 msgid "Here's a list of other resources that you might find useful:"
 msgstr "以下是您可能会用到的其他资源清单："
 
-#: src/starknet-by-example.md:24
+#: src/starknet-by-example.md:27
 msgid ""
 "- [Starklings](https://github.com/shramee/starklings-cairo1): An interactive "
 "tutorial to get you up and running with Cairo v1 and Starknet \n"
@@ -271,13 +281,9 @@ msgstr ""
 "的博客\n"
 "- [Cairo by example](https://cairo-by-example.com/)：Cairo 简介，附带简单示例"
 
-#: src/starknet-by-example.md:28
-#: src/ch00/interacting/calling_other_contracts.md:69
-#: src/ch00/cairo_cheatsheet/felt.md:15 src/ch00/cairo_cheatsheet/loop.md:23
-#: src/ch00/cairo_cheatsheet/tuples.md:18
-#: src/ch00/cairo_cheatsheet/type_casting.md:33
-msgid "<footer id=\"last-change\">Last change: 2023-11-30</footer>"
-msgstr "<footer id=\"last-change\">Last change: 2023-11-30</footer>"
+#: src/starknet-by-example.md:31 src/ch00/testing/contract-testing.md:176
+msgid "<footer id=\"last-change\">Last change: 2023-12-06</footer>"
+msgstr "<footer id=\"last-change\">Last change: 2023-12-06</footer>"
 
 #: src/ch00/basics/introduction.md:1
 msgid "# Basics of Smart Contracts in Cairo"
@@ -293,10 +299,9 @@ msgstr "以下章节将向你介绍Starknet智能合约以及如何用Cairo编�
 #: src/ch00/basics/mappings.md:46 src/ch00/basics/errors.md:139
 #: src/ch00/basics/events.md:68 src/ch00/basics/storing-custom-types.md:39
 #: src/ch00/basics/custom-types-in-entrypoints.md:39
-#: src/ch00/testing/contract-testing.md:176 src/ch01/upgradeable_contract.md:117
-#: src/ch01/simple_vault.md:114 src/ch02/write_to_any_slot.md:58
-#: src/ch02/storing_arrays.md:105 src/ch02/struct-mapping-key.md:46
-#: src/ch02/optimisations/optimisations.md:5
+#: src/ch01/upgradeable_contract.md:117 src/ch01/simple_vault.md:114
+#: src/ch02/write_to_any_slot.md:58 src/ch02/storing_arrays.md:105
+#: src/ch02/struct-mapping-key.md:46 src/ch02/optimisations/optimisations.md:5
 #: src/ch02/optimisations/store_using_packing.md:90
 msgid "<footer id=\"last-change\">Last change: 2023-10-12</footer>"
 msgstr "<footer id=\"last-change\">Last change: 2023-10-12</footer>"
@@ -749,7 +754,7 @@ msgid ""
 "returns the address of the current contract."
 msgstr ""
 "例如，`get_caller_address`函数返回当前事务的调用者地址，`get_contract_address`"
-"函数返回当前合同的地址。"
+"函数返回当前合约的地址。"
 
 #: src/ch00/basics/variables.md:102
 msgid ""
@@ -1187,7 +1192,7 @@ msgid ""
 "important to note that the `LegacyMap` type can only be used inside the "
 "`Storage` struct of a contract and that it can't be used elsewhere."
 msgstr ""
-"映射是一种键值数据结构，用于在智能合约中存储数据。在开罗，它们使用 "
+"映射是一种键值数据结构，用于在智能合约中存储数据。在Cairo，它们使用 "
 "`LegacyMap` 类型实现。值得注意的是，`LegacyMap`类型只能在合约的 `Storage`结构"
 "中使用，不能用在其他地方。"
 
@@ -2049,8 +2054,8 @@ msgid ""
 "purpose and functionality of the contract entry points. You can follow this "
 "template:"
 msgstr ""
-"在智能合约中，你通常会有一个定义合约接口的trait（带有'#[starknet：："
-"interface]'）。\n"
+"在智能合约中，你通常会有一个定义合约接口的trait（即带有`#[starknet::"
+"interface]`）。\n"
 "这是包含详细文档的理想场所，这些文档解释了合约入口点的用途和功能。您可以遵循以"
 "下模板："
 
@@ -2139,8 +2144,8 @@ msgid ""
 "html)."
 msgstr ""
 "合约接口定义合约的结构和行为，充当合约的公共 ABI。它们列出了合约公开的所有函数"
-"签名。接口的详细说明可以参考 [Cairo之书]（https://book.cairo-lang.org/"
-"ch99-01-02-a-simple-contract.html）。"
+"签名。接口的详细说明可以参考 [Cairo之书](https://book.cairo-lang.org/"
+"ch99-01-02-a-simple-contract.html)。"
 
 #: src/ch00/interacting/interfaces-traits.md:5
 msgid ""
@@ -2653,6 +2658,13 @@ msgstr ""
 "blob/main/listings/ch00-getting-started/calling_other_contracts/src/caller."
 "cairo) 中尝试它。"
 
+#: src/ch00/interacting/calling_other_contracts.md:69
+#: src/ch00/cairo_cheatsheet/felt.md:15 src/ch00/cairo_cheatsheet/loop.md:23
+#: src/ch00/cairo_cheatsheet/tuples.md:18
+#: src/ch00/cairo_cheatsheet/type_casting.md:33
+msgid "<footer id=\"last-change\">Last change: 2023-11-30</footer>"
+msgstr "<footer id=\"last-change\">Last change: 2023-11-30</footer>"
+
 #: src/ch00/interacting/factory.md:1
 msgid "# Factory Pattern"
 msgstr "# 工厂模式"
@@ -3028,7 +3040,7 @@ msgid ""
 "mod tests {\n"
 "    // Import the interface and dispatcher to be able to interact with the "
 "contract.\n"
-"    use sbe_testing::contract::{\n"
+"    use testing_how_to::contract::{\n"
 "        ISimpleContract, SimpleContract, ISimpleContractDispatcher, "
 "ISimpleContractDispatcherTrait\n"
 "    };\n"
@@ -3114,13 +3126,14 @@ msgstr ""
 "```rust\n"
 "#[cfg(test)]\n"
 "mod tests {\n"
-"    // 导入接口和调度器，以便能够与合约进行交互\n"
-"    use sbe_testing::contract::{\n"
+"    // Import the interface and dispatcher to be able to interact with the "
+"contract.\n"
+"    use testing_how_to::contract::{\n"
 "        ISimpleContract, SimpleContract, ISimpleContractDispatcher, "
 "ISimpleContractDispatcherTrait\n"
 "    };\n"
 "\n"
-"    //导入部署 deploy_syscall，以便能够部署合约\n"
+"    // Import the deploy syscall to be able to deploy the contract.\n"
 "    use starknet::class_hash::Felt252TryIntoClassHash;\n"
 "    use starknet::{\n"
 "        deploy_syscall, ContractAddress, get_caller_address, "
@@ -3128,24 +3141,25 @@ msgstr ""
 "        contract_address_const\n"
 "    };\n"
 "\n"
-"    // 使用 starknet 测试工具来模拟上下文交易\n"
+"    // Use starknet test utils to fake the transaction context.\n"
 "    use starknet::testing::{set_caller_address, set_contract_address};\n"
 "\n"
-"    // 部署合约并返回其调度器\n"
+"    // Deploy the contract and return its dispatcher.\n"
 "    fn deploy(initial_value: u32) -> ISimpleContractDispatcher {\n"
 "        // Set up constructor arguments.\n"
 "        let mut calldata = ArrayTrait::new();\n"
 "        initial_value.serialize(ref calldata);\n"
 "\n"
-"        // 声明并部署合约\n"
+"        // Declare and deploy\n"
 "        let (contract_address, _) = deploy_syscall(\n"
 "            SimpleContract::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata."
 "span(), false\n"
 "        )\n"
 "            .unwrap();\n"
 "\n"
-"        // 返回调度器\n"
-"        // 调度器允许根据合约的接口与其进行交互\n"
+"        // Return the dispatcher.\n"
+"        // The dispatcher allows to interact with the contract based on its "
+"interface.\n"
 "        ISimpleContractDispatcher { contract_address }\n"
 "    }\n"
 "\n"
@@ -3155,28 +3169,28 @@ msgstr ""
 "        let initial_value: u32 = 10;\n"
 "        let contract = deploy(initial_value);\n"
 "\n"
-"        assert(contract.get_value() == initial_value, ‘wrong initial "
-"value’);\n"
-"        assert(contract.get_owner() == get_contract_address(), ‘wrong "
-"owner’);\n"
+"        assert(contract.get_value() == initial_value, 'wrong initial "
+"value');\n"
+"        assert(contract.get_owner() == get_contract_address(), 'wrong "
+"owner');\n"
 "    }\n"
 "\n"
 "    #[test]\n"
 "    #[available_gas(2000000000)]\n"
 "    fn test_set_as_owner() {\n"
-"        // 将调用者地址设置为地址1\n"
+"        // Fake the caller address to address 1\n"
 "        let owner = contract_address_const::<1>();\n"
 "        set_contract_address(owner);\n"
 "\n"
 "        let contract = deploy(10);\n"
-"        assert(contract.get_owner() == owner, ‘wrong owner’);\n"
+"        assert(contract.get_owner() == owner, 'wrong owner');\n"
 "\n"
-"        // 将合约地址设置为地址1\n"
+"        // Fake the contract address to address 1\n"
 "        set_contract_address(owner);\n"
 "        let new_value: u32 = 20;\n"
 "        contract.set_value(new_value);\n"
 "\n"
-"        assert(contract.get_value() == new_value, ‘wrong value’);\n"
+"        assert(contract.get_value() == new_value, 'wrong value');\n"
 "    }\n"
 "\n"
 "    #[test]\n"
@@ -3201,11 +3215,11 @@ msgstr ""
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/testing/src/lib.cairo)."
+"blob/main/listings/ch00-getting-started/testing_how_to/src/lib.cairo)."
 msgstr ""
 "在 [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github."
 "com/NethermindEth/StarknetByExample/blob/main/listings/ch00-getting-started/"
-"testing/src/lib.cairo) 中与这个合约进行互动。"
+"testing_how_to/src/lib.cairo) 中与这个合约进行互动。"
 
 #: src/ch00/testing/contract-testing.md:134
 msgid ""
@@ -3610,15 +3624,15 @@ msgstr ""
 "    arr.append(20);\n"
 "    arr.append(30);\n"
 "\n"
-"    assert(arr.len() == 3, ‘array length should be 3’);\n"
+"    assert(arr.len() == 3, 'array length should be 3');\n"
 "\n"
 "    let first_value = arr.pop_front().unwrap();\n"
-"    assert(first_value == 10, ‘first value should match’);\n"
+"    assert(first_value == 10, 'first value should match');\n"
 "\n"
 "    let second_value = *arr.at(0);\n"
-"    assert(second_value == 20, ‘second value should match’);\n"
+"    assert(second_value == 20, 'second value should match');\n"
 "\n"
-"    // 如果数组为空，返回 true；如果不为空，返回 false。\n"
+"    // Returns true if an array is empty, then false if it isn't.\n"
 "    arr.is_empty()\n"
 "}\n"
 "```"
@@ -6357,9 +6371,9 @@ msgid ""
 "felt value. This is done by using the bits of the felt value to store "
 "multiple values."
 msgstr ""
-"当存储多个值时，我们可以使用一种称为**打包(packing)**的技术。打包是一种允许我"
-"们在单个 felt 值中存储多个值的技术。这是通过使用 felt 值的位来存储多个值来实现"
-"的。"
+"当存储多个值时，我们可以使用一种称为 **打包(packing)** 的技术。打包是一种允许"
+"我们在单个 felt 值中存储多个值的技术。这是通过使用 felt 值的位来存储多个值来实"
+"现的。"
 
 #: src/ch02/optimisations/store_using_packing.md:13
 msgid ""
