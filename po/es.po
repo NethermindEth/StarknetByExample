@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Starknet by Example\n"
-"POT-Creation-Date: 2023-12-01T20:54:04+09:00\n"
-"PO-Revision-Date: 2023-12-06 10:31+0000\n"
+"POT-Creation-Date: 2023-12-07T19:53:53Z\n"
+"PO-Revision-Date: 2023-12-07 20:16+0000\n"
 "Last-Translator: Nadai <nadai@proton.me>\n"
 "Language-Team: Spanish <es@tp.org.es>\n"
 "Language: es\n"
@@ -56,7 +56,7 @@ msgstr "Mapas"
 msgid "Errors"
 msgstr "Errores"
 
-#: src/SUMMARY.md:16 src/ch00/basics/events.md:1
+#: src/SUMMARY.md:16 src/ch00/basics/events.md:1 src/components/how_to.md:68
 msgid "Events"
 msgstr "Eventos"
 
@@ -128,55 +128,63 @@ msgstr "Struct"
 msgid "Type casting"
 msgstr "Conversión de Tipos"
 
-#: src/SUMMARY.md:36
-msgid "Applications examples"
-msgstr "Ejemplos de aplicaciones"
+#: src/SUMMARY.md:35
+msgid "Components"
+msgstr "Componentes"
 
-#: src/SUMMARY.md:37 src/ch01/upgradeable_contract.md:1
+#: src/SUMMARY.md:36 src/components/how_to.md:1
+msgid "Components How-To"
+msgstr "Cómo hacer Componentes"
+
+#: src/SUMMARY.md:39
+msgid "Applications"
+msgstr "Aplicaciones"
+
+#: src/SUMMARY.md:40 src/ch01/upgradeable_contract.md:1
 msgid "Upgradeable Contract"
 msgstr "Contratos Actualizables"
 
-#: src/SUMMARY.md:38
+#: src/SUMMARY.md:41
 msgid "Defi Vault"
 msgstr "Defi Vault"
 
-#: src/SUMMARY.md:39 src/ch01/erc20.md:1
+#: src/SUMMARY.md:42 src/ch01/erc20.md:1
 msgid "ERC20 Token"
 msgstr "Token ERC20"
 
-#: src/SUMMARY.md:40 src/ch01/constant-product-amm.md:1
+#: src/SUMMARY.md:43 src/ch01/constant-product-amm.md:1
 msgid "Constant Product AMM"
 msgstr "AMM de Producto Constante"
 
-#: src/SUMMARY.md:43
+#: src/SUMMARY.md:46
 msgid "Advanced concepts"
 msgstr "Conceptos Avanzados"
 
-#: src/SUMMARY.md:44 src/ch02/write_to_any_slot.md:1
+#: src/SUMMARY.md:47 src/ch02/write_to_any_slot.md:1
 msgid "Writing to any storage slot"
 msgstr "Escribir en cualquier ranura de almacenamiento"
 
-#: src/SUMMARY.md:45 src/ch02/storing_arrays.md:1
+#: src/SUMMARY.md:48 src/ch02/storing_arrays.md:1
 msgid "Storing Arrays"
 msgstr "Almacenamiento de Arrays"
 
-#: src/SUMMARY.md:46
+#: src/SUMMARY.md:49
 msgid "Struct as mapping key"
 msgstr "Estructura como mapping key"
 
-#: src/SUMMARY.md:47 src/ch02/hash-solidity-compatible.md:1
+#: src/SUMMARY.md:50 src/ch02/hash-solidity-compatible.md:1
 msgid "Hash Solidity Compatible"
 msgstr "Hash compatible con Solidity"
 
-#: src/SUMMARY.md:48 src/ch02/optimisations/optimisations.md:1
+#: src/SUMMARY.md:51 src/ch02/optimisations/optimisations.md:1
 msgid "Optimisations"
 msgstr "Optimizaciones"
 
-#: src/SUMMARY.md:49
+#: src/SUMMARY.md:52
 msgid "Storage Optimisations"
 msgstr "Optimizaciones de Almacenamiento"
 
-#: src/SUMMARY.md:50 src/ch02/list.md:1
+#: src/SUMMARY.md:53 src/ch02/list.md:1
 msgid "List"
 msgstr "Lista"
 
@@ -189,7 +197,7 @@ msgid ""
 "Starknet By Example is a collection of examples of how to use the Cairo "
 "programming language to create smart contracts on Starknet."
 msgstr ""
-"Starknet By Ejemplo es una colección de ejemplos de cómo utilizar el "
+"Starknet By Example es una colección de ejemplos de cómo utilizar el "
 "lenguaje de programación de Cairo para crear smart contracts en Starknet."
 
 #: src/starknet-by-example.md:5
@@ -215,14 +223,24 @@ msgstr ""
 "programador."
 
 #: src/starknet-by-example.md:9
-msgid "The current version of this book use `scarb 2.3.0`"
-msgstr "La versión actual de este libro usa `scarb 2.3.0`"
+msgid "The current version of this book use:"
+msgstr "La versión actual de este libro usa:"
 
-#: src/starknet-by-example.md:11
+#: src/starknet-by-example.md:14
+msgid ""
+"⚠️ The examples have not been audited and are not intended for production "
+"use. The authors are not responsible for any damages caused by the use of "
+"the code provided in this book."
+msgstr ""
+"⚠️ Los ejemplos no han sido auditados y no están pensados para su uso en "
+"producción. Los autores no se hacen responsables de los daños causados por "
+"el uso del código proporcionado en este libro."
+
+#: src/starknet-by-example.md:17
 msgid "For whom is this for?"
 msgstr "¿Para quién es esto?"
 
-#: src/starknet-by-example.md:13
+#: src/starknet-by-example.md:19
 msgid ""
 "Starknet By Example is for anyone who wants to quickly learn how to write "
 "smart contracts on Starknet using Cairo with some technical background in "
@@ -232,7 +250,7 @@ msgstr ""
 "escribir contratos inteligentes en Starknet usando Cairo con cierta "
 "experiencia técnica en programación y blockchain."
 
-#: src/starknet-by-example.md:15
+#: src/starknet-by-example.md:21
 msgid ""
 "The first chapters will give you a basic understanding of the Cairo "
 "programming language and how to write, deploy and use smart contracts on "
@@ -244,11 +262,11 @@ msgstr ""
 "inteligentes en Starknet. Los capítulos posteriores cubrirán temas más "
 "avanzados y le mostrarán cómo escribir contratos inteligentes más complejos."
 
-#: src/starknet-by-example.md:18
+#: src/starknet-by-example.md:24
 msgid "Further reading"
 msgstr "Otras lecturas"
 
-#: src/starknet-by-example.md:20
+#: src/starknet-by-example.md:26
 msgid ""
 "If you want to learn more about the Cairo programming language, you can read "
 "the [Cairo Book](https://book.cairo-lang.org). If you want to learn more "
@@ -260,33 +278,13 @@ msgstr ""
 "más información sobre Starknet, puede leer la [Documentación de Starknet]"
 "(https://docs.starknet.io/) y el [Starknet Book](https://book.starknet.io)."
 
-#: src/starknet-by-example.md:23
-msgid "Here's a list of other resources that you might find useful:"
-msgstr "Aquí hay una lista de otros recursos que pueden resultarle útiles:"
-
-#: src/starknet-by-example.md:24
+#: src/starknet-by-example.md:29
 msgid ""
-"[Starklings](https://github.com/shramee/starklings-cairo1): An interactive "
-"tutorial to get you up and running with Cairo v1 and Starknet "
+"For more resources, check [Awesome Starknet](https://github.com/keep-"
+"starknet-strange/awesome-starknet)."
 msgstr ""
-"[Starklings](https://github.com/shramee/starklings-cairo1): un tutorial "
-"interactivo para empezar a utilizar Cairo v1 y Starknet "
-
-#: src/starknet-by-example.md:25
-msgid ""
-"[Cairopractice](https://cairopractice.com/): A blog with a series of "
-"articles about Cairo and Starknet"
-msgstr ""
-"[Cairopractice](https://cairopractice.com/): Un blog con una serie de "
-"artículos sobre Cairo y Starknet"
-
-#: src/starknet-by-example.md:26
-msgid ""
-"[Cairo by example](https://cairo-by-example.com/): An introduction to Cairo, "
-"with simple examples"
-msgstr ""
-"[Cairo by example](https://cairo-by-example.com/): Una introducción a Cairo, "
-"con ejemplos sencillos"
+"Para obtener más recursos, consulte [Awesome Starknet](https://github.com/"
+"keep-starknet-strange/awesome-starknet)."
 
 #: src/ch00/basics/introduction.md:1
 msgid "Basics of Smart Contracts in Cairo"
@@ -377,13 +375,13 @@ msgid ""
 "contract/0x017fd6558e67451dA583d123D77F4e2651E91502D08F8F8432355293b11e1f8F) "
 "or play with it in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/constructor/src/constructor.cairo)."
+"blob/main/listings/getting-started/constructor/src/constructor.cairo)."
 msgstr ""
 "Visita el contrato en [Voyager](https://goerli.voyager.online/"
 "contract/0x017fd6558e67451dA583d123D77F4e2651E91502D08F8F8432355293b11e1f8F) "
 "o juega con él en [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/constructor/src/constructor.cairo)."
+"blob/main/listings/getting-started/constructor/src/constructor.cairo)."
 
 #: src/ch00/basics/variables.md:3
 msgid "There are 3 types of variables in Cairo contracts:"
@@ -477,9 +475,9 @@ msgid ""
 "contract/0x015B3a10F9689BeD741Ca3C210017BC097122CeF76f3cAA191A20ff8b9b56b96) "
 "or play with it in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/variables/src/local_variables.cairo)."
+"blob/main/listings/getting-started/variables/src/local_variables.cairo)."
 msgstr ""
-"Visite el contrato en Voyager](https://goerli.voyager.online/"
+"Visite el contrato en [Voyager](https://goerli.voyager.online/"
 "contract/0x015B3a10F9689BeD741Ca3C210017BC097122CeF76f3cAA191A20ff8b9b56b96) "
 "o juegue con él en [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
@@ -553,8 +551,7 @@ msgid ""
 "contract/0x06eA827B32875483709b785A7F9e846a52776Cd8D42C3fE696218c2624b0DCCa) "
 "or play with it in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/variables/src/storage_variables."
-"cairo)."
+"blob/main/listings/getting-started/variables/src/storage_variables.cairo)."
 msgstr ""
 "Visita el contrato en [Voyager](https://goerli.voyager.online/"
 "contract/0x06eA827B32875483709b785A7F9e846a52776Cd8D42C3fE696218c2624b0DCCa) "
@@ -613,15 +610,13 @@ msgid ""
 "contract/0x05bD2F3943bd4e030f85678b55b2EC2C1be939e32388530FB20ED967B3Be433F) "
 "or play with it in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/variables/src/global_variables."
-"cairo)."
+"blob/main/listings/getting-started/variables/src/global_variables.cairo)."
 msgstr ""
-"Visite el contrato en Voyager](https://goerli.voyager.online/"
+"Visite el contrato en [Voyager](https://goerli.voyager.online/"
 "contract/0x05bD2F3943bd4e030f85678b55b2EC2C1be939e32388530FB20ED967B3Be433F) "
 "o juega con él en [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/variables/src/global_variables."
-"cairo)."
+"blob/main/listings/getting-started/variables/src/global_variables.cairo)."
 
 #: src/ch00/basics/visibility-mutability.md:3
 msgid "Visibility"
@@ -786,14 +781,14 @@ msgid ""
 "// The `_read_value` function is outside the implementation that is marked "
 "as `#[abi(embed_v0)]`, so it's an _internal_ function\n"
 "        // and can only be called from within the contract.\n"
-"        // It can modify the contract's state as it is passed as a "
-"reference.\n"
+"        // However, it can't modify the contract's state is passed as a "
+"snapshot: it is only a \"view\" function.\n"
 msgstr ""
 "// The `_read_value` function is outside the implementation that is marked "
 "as `#[abi(embed_v0)]`, so it's an _internal_ function\n"
 "        // and can only be called from within the contract.\n"
-"        // It can modify the contract's state as it is passed as a "
-"reference.\n"
+"        // However, it can't modify the contract's state is passed as a "
+"snapshot: it is only a \"view\" function.\n"
 
 #: src/ch00/basics/visibility-mutability.md:73
 msgid ""
@@ -801,7 +796,7 @@ msgid ""
 "contract/0x0071dE3093AB58053b0292C225aa0eED40293e7694A0042685FF6D813d39889F) "
 "or play with it in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/visibility/src/visibility.cairo)."
+"blob/main/listings/getting-started/visibility/src/visibility.cairo)."
 msgstr ""
 "Visita el contrato en [Voyager](https://goerli.voyager.online/"
 "contract/0x0071dE3093AB58053b0292C225aa0eED40293e7694A0042685FF6D813d39889F) "
@@ -864,7 +859,7 @@ msgid ""
 "contract/0x01664a69Fe701a1df7Bb0ae4A353792d0cf4E27146ee860075cbf6108b1D5718) "
 "or play with it in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/counter/src/contracts.cairo)."
+"blob/main/listings/getting-started/counter/src/contracts.cairo)."
 msgstr ""
 "Visite el contrato en [Voyager](https://goerli.voyager.online/"
 "contract/0x01664a69Fe701a1df7Bb0ae4A353792d0cf4E27146ee860075cbf6108b1D5718) "
@@ -943,9 +938,9 @@ msgid ""
 "contract/0x06214AB4c23Cc545bf2221D465eB83aFb7412779AD498BD48a724B3F645E3505) "
 "or play with it in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/mappings/src/mappings.cairo)."
+"blob/main/listings/getting-started/mappings/src/mappings.cairo)."
 msgstr ""
-"Visita el contrato en Voyager](https://goerli.voyager.online/"
+"Visita el contrato en [Voyager](https://goerli.voyager.online/"
 "contract/0x06214AB4c23Cc545bf2221D465eB83aFb7412779AD498BD48a724B3F645E3505) "
 "o juega con él en [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
@@ -1013,7 +1008,7 @@ msgid ""
 "contract/0x0022664463FF0b711CC9B549a9E87d65A0882bB1D29338C4108696B8F2216a40) "
 "or play with it in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/errors/src/simple_errors.cairo)."
+"blob/main/listings/getting-started/errors/src/simple_errors.cairo)."
 msgstr ""
 "Visita el contrato en [Voyager](https://goerli.voyager.online/"
 "contract/0x0022664463FF0b711CC9B549a9E87d65A0882bB1D29338C4108696B8F2216a40) "
@@ -1039,7 +1034,7 @@ msgid ""
 "contract/0x0501CD5da5B453a18515B5A20b8029bd7583DFE7a399ad9f79c284F7829e4A57) "
 "or play with it in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/errors/src/custom_errors.cairo)."
+"blob/main/listings/getting-started/errors/src/custom_errors.cairo)."
 msgstr ""
 "Visita el contrato en [Voyager](https://goerli.voyager.online/"
 "contract/0x0501CD5da5B453a18515B5A20b8029bd7583DFE7a399ad9f79c284F7829e4A57) "
@@ -1073,7 +1068,7 @@ msgid ""
 "contract/0x020C2da26F42A28Ef54ED428eF1810FE433784b055f9bF315C5d992b1579C268) "
 "or play with it in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/errors/src/vault_errors.cairo)."
+"blob/main/listings/getting-started/errors/src/vault_errors.cairo)."
 msgstr ""
 "Visita el contrato en [Voyager](https://goerli.voyager.online/"
 "contract/0x020C2da26F42A28Ef54ED428eF1810FE433784b055f9bF315C5d992b1579C268) "
@@ -1144,7 +1139,7 @@ msgid ""
 "contract/0x022e3B59518EA04aBb5da671ea04ecC3a154400f226d2Df38eFE146741b9E2F6) "
 "or play with it in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/events/src/counter.cairo)."
+"blob/main/listings/getting-started/events/src/counter.cairo)."
 msgstr ""
 "Visita el contrato en [Voyager](https://goerli.voyager.online/"
 "contract/0x022e3B59518EA04aBb5da671ea04ecC3a154400f226d2Df38eFE146741b9E2F6) "
@@ -1181,13 +1176,11 @@ msgstr ""
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/storing_custom_types/src/contract."
-"cairo)."
+"blob/main/listings/getting-started/storing_custom_types/src/contract.cairo)."
 msgstr ""
 "Juega con este contrato en [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/storing_custom_types/src/contract."
-"cairo)."
+"blob/main/listings/getting-started/storing_custom_types/src/contract.cairo)."
 
 #: src/ch00/basics/custom-types-in-entrypoints.md:3
 msgid ""
@@ -1219,13 +1212,11 @@ msgstr ""
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/custom_type_serde/src/contract."
-"cairo)."
+"blob/main/listings/getting-started/custom_type_serde/src/contract.cairo)."
 msgstr ""
-"Juega con este contrato en [Remix](https://remix.ethereum.org/?"
+"Juega con este contrato en  [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/custom_type_serde/src/contract."
-"cairo)."
+"blob/main/listings/getting-started/custom_type_serde/src/contract.cairo)."
 
 #: src/ch00/basics/documentation.md:3
 msgid ""
@@ -1240,10 +1231,23 @@ msgid "In Cairo, you can add comments with `//`."
 msgstr "En Cairo, puedes agregar comentarios con `//`."
 
 #: src/ch00/basics/documentation.md:7
+msgid "Best Practices:"
+msgstr "Mejores Prácticas:"
+
+#: src/ch00/basics/documentation.md:9
+msgid ""
+"Since Cairo 1, the community has adopted a [Rust-like documentation style]"
+"(https://doc.rust-lang.org/rust-by-example/meta/doc.html)."
+msgstr ""
+"Desde Cairo 1, la comunidad ha adoptado un [estilo de documentación similar "
+"a [Rust-like documentation style](https://doc.rust-lang.org/rust-by-example/"
+"meta/doc.html)."
+
+#: src/ch00/basics/documentation.md:11
 msgid "Contract Interface:"
 msgstr "Interfaz de Contrato:"
 
-#: src/ch00/basics/documentation.md:9
+#: src/ch00/basics/documentation.md:13
 msgid ""
 "In smart contracts, you will often have a trait that defines the contract's "
 "interface (with `#[starknet::interface]`). This is the perfect place to "
@@ -1255,27 +1259,31 @@ msgstr ""
 "incluir documentación detallada que explique el propósito y la funcionalidad "
 "de los puntos de entrada del contrato. Puedes seguir esta plantilla:"
 
-#: src/ch00/basics/documentation.md:15
+#: src/ch00/basics/documentation.md:19
 msgid ""
 "/// High-level description of the function\n"
 "    ///\n"
 "    /// # Arguments\n"
+"    ///\n"
 "    /// * `arg_1` - Description of the argument\n"
 "    /// * `arg_n` - ...\n"
 "    ///\n"
 "    /// # Returns\n"
+"    ///\n"
 "    /// High-level description of the return value\n"
 msgstr ""
 "/// High-level description of the function\n"
 "    ///\n"
 "    /// # Arguments\n"
+"    ///\n"
 "    /// * `arg_1` - Description of the argument\n"
 "    /// * `arg_n` - ...\n"
 "    ///\n"
 "    /// # Returns\n"
+"    ///\n"
 "    /// High-level description of the return value\n"
 
-#: src/ch00/basics/documentation.md:27
+#: src/ch00/basics/documentation.md:33
 msgid ""
 "Keep in mind that this should not describe the implementation details of the "
 "function, but rather the high-level purpose and functionality of the "
@@ -1285,11 +1293,11 @@ msgstr ""
 "la función, sino más bien el propósito de high-level y la funcionalidad del "
 "contrato desde la perspectiva de un usuario."
 
-#: src/ch00/basics/documentation.md:29
+#: src/ch00/basics/documentation.md:35
 msgid "Implementation Details:"
 msgstr "Detalles de Implementación:"
 
-#: src/ch00/basics/documentation.md:31
+#: src/ch00/basics/documentation.md:37
 msgid ""
 "When writing the logic of the contract, you can add comments to describe the "
 "technical implementation details of the functions."
@@ -1297,7 +1305,7 @@ msgstr ""
 "Al escribir la lógica del contrato, puede agregar comentarios para describir "
 "los detalles técnicos de implementación de las funciones."
 
-#: src/ch00/basics/documentation.md:33
+#: src/ch00/basics/documentation.md:39
 msgid ""
 "Avoid over-commenting: Comments should provide additional value and clarity."
 msgstr ""
@@ -1392,13 +1400,11 @@ msgstr "Interfaz explícita"
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/interfaces_traits/src/explicit."
-"cairo)."
+"blob/main/listings/getting-started/interfaces_traits/src/explicit.cairo)."
 msgstr ""
-"Juega con este contrato en [Remix](https://remix.ethereum.org/?"
+"Juega con este contrato en[Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/interfaces_traits/src/explicit."
-"cairo)."
+"blob/main/listings/getting-started/interfaces_traits/src/explicit.cairo)."
 
 #: src/ch00/interacting/interfaces-traits.md:47
 msgid "Implicit interface"
@@ -1408,13 +1414,11 @@ msgstr "Interfaz implícita"
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/interfaces_traits/src/implicit."
-"cairo)."
+"blob/main/listings/getting-started/interfaces_traits/src/implicit.cairo)."
 msgstr ""
 "Juega con este contrato en [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/interfaces_traits/src/implicit."
-"cairo)."
+"blob/main/listings/getting-started/interfaces_traits/src/implicit.cairo)."
 
 #: src/ch00/interacting/interfaces-traits.md:75
 msgid ""
@@ -1426,7 +1430,7 @@ msgstr ""
 "`use contract::{GeneratedContractInterface}`. Sin embargo, el `Dispatcher` "
 "no se generará automáticamente."
 
-#: src/ch00/interacting/interfaces-traits.md:77
+#: src/ch00/interacting/interfaces-traits.md:77 src/components/how_to.md:69
 msgid "Internal functions"
 msgstr "Funciones internas"
 
@@ -1444,13 +1448,13 @@ msgstr ""
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/interfaces_traits/src/"
-"implicit_internal.cairo)."
+"blob/main/listings/getting-started/interfaces_traits/src/implicit_internal."
+"cairo)."
 msgstr ""
 "Juega con este contrato en [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/interfaces_traits/src/"
-"implicit_internal.cairo)."
+"blob/main/listings/getting-started/interfaces_traits/src/implicit_internal."
+"cairo)."
 
 #: src/ch00/interacting/calling_other_contracts.md:3
 msgid "There are two different ways to call other contracts in Cairo."
@@ -1494,15 +1498,13 @@ msgid ""
 "contract/0x015c3Bb6D0DE26b64FEAF9A8f4655CfADb5c128bF4510398972704ee12775DB1) "
 "or play with it in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/calling_other_contracts/src/callee."
-"cairo)."
+"blob/main/listings/getting-started/calling_other_contracts/src/callee.cairo)."
 msgstr ""
 "Visita el contrato en [Voyager](https://goerli.voyager.online/"
 "contract/0x015c3Bb6D0DE26b64FEAF9A8f4655CfADb5c128bF4510398972704ee12775DB1) "
 "o juega con él en [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/calling_other_contracts/src/callee."
-"cairo)."
+"blob/main/listings/getting-started/calling_other_contracts/src/callee.cairo)."
 
 #: src/ch00/interacting/calling_other_contracts.md:38
 msgid ""
@@ -1522,15 +1524,13 @@ msgid ""
 "contract/0x05fa8aF796343d2f22c53C17149386b67B7AC4aB52D9e308Aa507C185aA44778) "
 "or play with it in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/calling_other_contracts/src/caller."
-"cairo)."
+"blob/main/listings/getting-started/calling_other_contracts/src/caller.cairo)."
 msgstr ""
 "Visita el contrato en [Voyager](https://goerli.voyager.online/"
 "contract/0x05fa8aF796343d2f22c53C17149386b67B7AC4aB52D9e308Aa507C185aA44778) "
 "o juega con él en [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/calling_other_contracts/src/caller."
-"cairo)."
+"blob/main/listings/getting-started/calling_other_contracts/src/caller.cairo)."
 
 #: src/ch00/interacting/factory.md:1
 msgid "Factory Pattern"
@@ -1740,11 +1740,11 @@ msgstr "// Fake the contract address to address 1\n"
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/testing/src/lib.cairo)."
+"blob/main/listings/getting-started/testing_how_to/src/lib.cairo)."
 msgstr ""
 "Juega con este contrato en [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/testing/src/lib.cairo)."
+"blob/main/listings/getting-started/testing_how_to/src/lib.cairo)."
 
 #: src/ch00/testing/contract-testing.md:134
 msgid ""
@@ -2095,6 +2095,111 @@ msgstr ""
 msgid "//note a usize is smaller than a felt so we use the try_into\n"
 msgstr "//note a usize is smaller than a felt so we use the try_into\n"
 
+#: src/components/how_to.md:3
+msgid ""
+"Components are like modular addons that can be snapped into contracts to add "
+"reusable logic, storage, and events. They are used to separate the core "
+"logic from common functionalities, simplifying the contract's code and "
+"making it easier to read and maintain. It also reduces the risk of bugs and "
+"vulnerabilities by using well-tested components."
+msgstr ""
+"Los componentes son como complementos modulares que se pueden integrar en "
+"contratos para agregar lógica, almacenamiento y eventos reutilizables. Se "
+"utilizan para separar la lógica central de las funcionalidades comunes, "
+"simplificando el código del contrato y haciéndolo más fácil de leer y "
+"mantener. También reduce el riesgo de errores y vulnerabilidades mediante el "
+"uso de componentes bien probados."
+
+#: src/components/how_to.md:7
+msgid "Key characteristics:"
+msgstr "Caracteristicas claves:"
+
+#: src/components/how_to.md:8
+msgid "Modularity: Easily pluggable into multiple contracts."
+msgstr "Modularidad: Fácilmente conectable a múltiples contratos."
+
+#: src/components/how_to.md:9
+msgid "Reusable Logic: Encapsulates specific functionalities."
+msgstr "Lógica Reutilizable: Encapsula funcionalidades específicas."
+
+#: src/components/how_to.md:10
+msgid "Not Standalone: Cannot be declared or deployed independently."
+msgstr ""
+"No independiente: No se puede declarar ni implementar de forma independiente."
+
+#: src/components/how_to.md:12
+msgid "How to create a component"
+msgstr "Cómo crear un componente"
+
+#: src/components/how_to.md:14
+msgid ""
+"The following example shows a simple `Switch` component that can be used to "
+"turn a boolean on or off. It contains a storage variable `value`, a function "
+"`switch` and an event `Switch`."
+msgstr ""
+"El siguiente ejemplo muestra un componente `Switch` simple que se puede usar "
+"para activar o desactivar un valor booleano. Contiene una variable de "
+"almacenamiento `value`, una función `switch` y un evento `Switch`."
+
+#: src/components/how_to.md:65
+msgid ""
+"A component in itself is really similar to a contract, it _can_ also have:"
+msgstr ""
+"Un componente en sí mismo es muy similar a un contrato que tiene it _can_ "
+"also:"
+
+#: src/components/how_to.md:66
+msgid "An interface defining entrypoints (`ISwitchComponent<TContractState>`)"
+msgstr ""
+"Una interfaz que define entrypoints (`ISwitchComponent<TContractState>`)"
+
+#: src/components/how_to.md:67
+msgid "A Storage struct"
+msgstr "Una struct de Storage"
+
+#: src/components/how_to.md:71
+msgid ""
+"It don't have a constructor, but you can create a `_init` internal function "
+"and call it from the contract's constructor. In the previous example, the "
+"`_off` function is used this way."
+msgstr ""
+"No tiene constructor, pero puedes crear una función interna `_init` y "
+"llamarla desde el constructor del contrato. En el ejemplo anterior, la "
+"función `_off` se usa de esta manera."
+
+#: src/components/how_to.md:73
+msgid "How to use a component"
+msgstr "Cómo utilizar un componente"
+
+#: src/components/how_to.md:75
+msgid ""
+"Now that we have a component, we can use it in a contract. The following "
+"contract incorporates the `Switch` component:"
+msgstr ""
+"Ahora que tenemos un componente, podemos usarlo en un contrato. El siguiente "
+"contrato incorpora el componente `Switch`:"
+
+#: src/components/how_to.md:82
+msgid ""
+"// This is needed to be able to use internal functions of the switch "
+"component.\n"
+msgstr ""
+"// This is needed to be able to use internal functions of the switch "
+"component.\n"
+
+#: src/components/how_to.md:110
+msgid "Deep dive into components"
+msgstr "Profundización en los componentes"
+
+#: src/components/how_to.md:112
+msgid ""
+"You can find more in-depth information about components in the [Cairo book - "
+"Components](https://book.cairo-lang.org/ch99-01-05-00-components.html)."
+msgstr ""
+"Puede encontrar información más detallada sobre los componentes en el [Cairo "
+"book - Components](https://book.cairo-lang.org/ch99-01-05-00-components."
+"html)."
+
 #: src/ch01/upgradeable_contract.md:3
 msgid ""
 "In Starknet, contracts are divided into two parts: contract classes and "
@@ -2183,14 +2288,14 @@ msgid ""
 "contract/0x005300003ade5d10447d941a42d48b7141074cd8bade2b16520684896a5090ea) "
 "or play with it in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch01-applications/upgradeable_contract/src/"
+"blob/main/listings/applications/upgradeable_contract/src/"
 "upgradeable_contract_v0.cairo)."
 msgstr ""
 "Visita el contrato en [Voyager](https://goerli.voyager.online/"
 "contract/0x005300003ade5d10447d941a42d48b7141074cd8bade2b16520684896a5090ea) "
 "o juega con él en [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch01-applications/upgradeable_contract/src/"
+"blob/main/listings/applications/upgradeable_contract/src/"
 "upgradeable_contract_v0.cairo)."
 
 #: src/ch01/upgradeable_contract.md:114
@@ -2199,14 +2304,14 @@ msgid ""
 "contract/0x017c86152badd1d665b9836571bd6b0a484f028748aa13d9b2d5d9c9192fafc6) "
 "or play with it in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch01-applications/upgradeable_contract/src/"
+"blob/main/listings/applications/upgradeable_contract/src/"
 "upgradeable_contract_v1.cairo)."
 msgstr ""
-"Visita el contrato en [Voyager](https://goerli.voyager.online/"
+"Visita el contrato en  [Voyager](https://goerli.voyager.online/"
 "contract/0x017c86152badd1d665b9836571bd6b0a484f028748aa13d9b2d5d9c9192fafc6) "
 "o juega con él en [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch01-applications/upgradeable_contract/src/"
+"blob/main/listings/applications/upgradeable_contract/src/"
 "upgradeable_contract_v1.cairo)."
 
 #: src/ch01/simple_vault.md:1
@@ -2292,11 +2397,11 @@ msgstr ""
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch01-applications/simple_vault/src/simple_vault.cairo)."
+"blob/main/listings/applications/simple_vault/src/simple_vault.cairo)."
 msgstr ""
 "Juega con este contrato en [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch01-applications/simple_vault/src/simple_vault.cairo)."
+"blob/main/listings/applications/simple_vault/src/simple_vault.cairo)."
 
 #: src/ch01/erc20.md:3
 msgid ""
@@ -2336,11 +2441,11 @@ msgstr "// What can go wrong here?\n"
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch01-applications/erc20/src/token.cairo)."
+"blob/main/listings/applications/erc20/src/token.cairo)."
 msgstr ""
 "Juega con este contrato en [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch01-applications/erc20/src/token.cairo)."
+"blob/main/listings/applications/erc20/src/token.cairo)."
 
 #: src/ch01/erc20.md:226
 msgid ""
@@ -2606,12 +2711,12 @@ msgstr ""
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch01-applications/constant_product_amm/src/"
+"blob/main/listings/applications/constant_product_amm/src/"
 "constant_product_amm.cairo)."
 msgstr ""
 "Juega con este contrato en [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch01-applications/constant_product_amm/src/"
+"blob/main/listings/applications/constant_product_amm/src/"
 "constant_product_amm.cairo)."
 
 #: src/ch02/write_to_any_slot.md:3
@@ -2676,15 +2781,13 @@ msgid ""
 "contract/0x033943CB781A4E63C9dcE0A1A09eAa3b617AA43CC61637C08c043a67f3fe0087) "
 "or play with it in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch02-advanced-concepts/write_to_any_slot/src/contract."
-"cairo)."
+"blob/main/listings/advanced-concepts/write_to_any_slot/src/contract.cairo)."
 msgstr ""
 "Visita el contrato en [Voyager](https://goerli.voyager.online/"
 "contract/0x033943CB781A4E63C9dcE0A1A09eAa3b617AA43CC61637C08c043a67f3fe0087) "
 "o juega con él en [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch02-advanced-concepts/write_to_any_slot/src/contract."
-"cairo)."
+"blob/main/listings/advanced-concepts/write_to_any_slot/src/contract.cairo)."
 
 #: src/ch02/storing_arrays.md:3
 msgid ""
@@ -2775,13 +2878,13 @@ msgid ""
 "contract/0x008F8069a3Fcd7691Db46Dc3b6F9D2C0436f9200E861330957Fd780A3595da86) "
 "or play with it in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch02-advanced-concepts/storing_arrays/src/contract.cairo)."
+"blob/main/listings/advanced-concepts/storing_arrays/src/contract.cairo)."
 msgstr ""
 "Visita el contrato en [Voyager](https://goerli.voyager.online/"
 "contract/0x008F8069a3Fcd7691Db46Dc3b6F9D2C0436f9200E861330957Fd780A3595da86) "
 "o juega con él en [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch02-advanced-concepts/storing_arrays/src/contract.cairo)."
+"blob/main/listings/advanced-concepts/storing_arrays/src/contract.cairo)."
 
 #: src/ch02/struct-mapping-key.md:1
 msgid "Structs as mapping keys"
@@ -2815,12 +2918,12 @@ msgstr ""
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch02-advanced-concepts/struct_as_mapping_key/src/contract."
+"blob/main/listings/advanced-concepts/struct_as_mapping_key/src/contract."
 "cairo)."
 msgstr ""
 "Juega con este contrato en [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch02-advanced-concepts/struct_as_mapping_key/src/contract."
+"blob/main/listings/advanced-concepts/struct_as_mapping_key/src/contract."
 "cairo)."
 
 #: src/ch02/hash-solidity-compatible.md:3
@@ -2854,13 +2957,13 @@ msgstr "// Reverse merge the reversed segments back into a u256 value\n"
 msgid ""
 "Play with the contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch02-advanced-concepts/hash_solidity_compatible/src/"
-"contract.cairo)."
+"blob/main/listings/advanced-concepts/hash_solidity_compatible/src/contract."
+"cairo)."
 msgstr ""
 "Juega con el contrato en [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch02-advanced-concepts/hash_solidity_compatible/src/"
-"contract.cairo)."
+"blob/main/listings/advanced-concepts/hash_solidity_compatible/src/contract."
+"cairo)."
 
 #: src/ch02/optimisations/optimisations.md:3
 msgid "A collection of optimisation patterns to save gas and steps."
@@ -2974,13 +3077,13 @@ msgstr ""
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet-cairo1-compiler&url=https://github.com/NethermindEth/"
-"StarknetByExample/blob/main/listings/ch02-advanced-concepts/"
-"store_using_packing/src/contract.cairo)."
+"StarknetByExample/blob/main/listings/advanced-concepts/store_using_packing/"
+"src/contract.cairo)."
 msgstr ""
 "Juega con este contrato en [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet-cairo1-compiler&url=https://github.com/NethermindEth/"
-"StarknetByExample/blob/main/listings/ch02-advanced-concepts/"
-"store_using_packing/src/contract.cairo)."
+"StarknetByExample/blob/main/listings/advanced-concepts/store_using_packing/"
+"src/contract.cairo)."
 
 #: src/ch02/list.md:3
 msgid ""
@@ -3084,3 +3187,27 @@ msgid ""
 msgstr ""
 "Por ejemplo, utilicemos `List` para crear un contrato que realice el "
 "seguimiento de una lista de importes y tareas:"
+
+#~ msgid "Here's a list of other resources that you might find useful:"
+#~ msgstr "Aquí hay una lista de otros recursos que pueden resultarle útiles:"
+
+#~ msgid ""
+#~ "[Starklings](https://github.com/shramee/starklings-cairo1): An "
+#~ "interactive tutorial to get you up and running with Cairo v1 and Starknet "
+#~ msgstr ""
+#~ "[Starklings](https://github.com/shramee/starklings-cairo1): Un tutorial "
+#~ "interactivo para empezar a utilizar Cairo v1 y Starknet "
+
+#~ msgid ""
+#~ "[Cairopractice](https://cairopractice.com/): A blog with a series of "
+#~ "articles about Cairo and Starknet"
+#~ msgstr ""
+#~ "[Cairopractice](https://cairopractice.com/): Un blog con una serie de "
+#~ "artículos sobre Cairo y Starknet"
+
+#~ msgid ""
+#~ "[Cairo by example](https://cairo-by-example.com/): An introduction to "
+#~ "Cairo, with simple examples"
+#~ msgstr ""
+#~ "[Cairo by example](https://cairo-by-example.com/): Una introducción a "
+#~ "Cairo, con ejemplos sencillos"
