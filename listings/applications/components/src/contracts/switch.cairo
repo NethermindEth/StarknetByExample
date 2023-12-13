@@ -1,20 +1,18 @@
 // ANCHOR: contract
 #[starknet::contract]
 mod SwitchContract {
-    use components::switch::switch_component;
-    // This is needed to be able to use internal functions of the switch component.
-    use components::switch::switch_component::InternalSwitchImpl;
+    use components::switchable::switchable_component;
 
-    component!(path: switch_component, storage: switch, event: SwitchEvent);
+    component!(path: switchable_component, storage: switch, event: SwitchableEvent);
 
     #[abi(embed_v0)]
-    impl SwitchImpl = switch_component::Switch<ContractState>;
-    impl SwitchInternalImpl = switch_component::InternalSwitchImpl<ContractState>;
+    impl SwitchableImpl = switchable_component::Switchable<ContractState>;
+    impl SwitchableInternalImpl = switchable_component::InternalImpl<ContractState>;
 
     #[storage]
     struct Storage {
         #[substorage(v0)]
-        switch: switch_component::Storage,
+        switch: switchable_component::Storage,
     }
 
     #[constructor]
@@ -25,15 +23,16 @@ mod SwitchContract {
     #[event]
     #[derive(Drop, starknet::Event)]
     enum Event {
-        SwitchEvent: switch_component::Event
+        SwitchableEvent: switchable_component::Event,
     }
 }
 // ANCHOR_END: contract
 
 #[cfg(test)]
 mod tests {
-    use components::switch::switch_component::InternalSwitchTrait;
-    use components::switch::ISwitchComponent;
+    use components::switchable::switchable_component::InternalTrait;
+    use components::switchable::ISwitchable;
+
     use core::starknet::storage::StorageMemberAccessTrait;
     use super::SwitchContract;
 
@@ -64,10 +63,10 @@ mod tests {
     #[available_gas(2000000)]
     fn test_value() {
         let mut state = STATE();
-        assert(state.value() == state.switch.value.read(), 'Wrong value');
+        assert(state.value() == state.switch.switchable_value.read(), 'Wrong value');
 
         state.switch.switch();
-        assert(state.value() == state.switch.value.read(), 'Wrong value');
+        assert(state.value() == state.switch.switchable_value.read(), 'Wrong value');
     }
 
     #[test]
