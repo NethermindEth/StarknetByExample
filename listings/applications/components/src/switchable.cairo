@@ -1,11 +1,11 @@
 #[starknet::interface]
-trait ISwitchComponent<TContractState> {
+trait ISwitchable<TContractState> {
     fn value(self: @TContractState) -> bool;
     fn switch(ref self: TContractState);
 }
 
 #[starknet::component]
-mod switch_component {
+mod switchable_component {
     #[storage]
     struct Storage {
         value: bool,
@@ -20,10 +20,10 @@ mod switch_component {
         SwitchEvent: SwitchEvent,
     }
 
-    #[embeddable_as(Switch)]
-    impl SwitchImpl<
+    #[embeddable_as(Switchable)]
+    impl SwitchableImpl<
         TContractState, +HasComponent<TContractState>
-    > of super::ISwitchComponent<ComponentState<TContractState>> {
+    > of super::ISwitchable<ComponentState<TContractState>> {
         fn value(self: @ComponentState<TContractState>) -> bool {
             self.value.read()
         }
@@ -35,9 +35,9 @@ mod switch_component {
     }
 
     #[generate_trait]
-    impl InternalSwitchImpl<
+    impl InternalImpl<
         TContractState, +HasComponent<TContractState>
-    > of InternalSwitchTrait<TContractState> {
+    > of InternalTrait<TContractState> {
         fn _off(ref self: ComponentState<TContractState>) {
             self.value.write(false);
         }

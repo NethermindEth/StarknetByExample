@@ -1,2 +1,4 @@
+// Components
+mod switchable;
+
 mod contracts;
-mod switch;
