@@ -63,10 +63,10 @@ mod tests {
     #[available_gas(2000000)]
     fn test_value() {
         let mut state = STATE();
-        assert(state.value() == state.switch.value.read(), 'Wrong value');
+        assert(state.value() == state.switch.switchable_value.read(), 'Wrong value');
 
         state.switch.switch();
-        assert(state.value() == state.switch.value.read(), 'Wrong value');
+        assert(state.value() == state.switch.switchable_value.read(), 'Wrong value');
     }
 
     #[test]

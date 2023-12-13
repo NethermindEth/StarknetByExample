@@ -8,7 +8,7 @@ trait ISwitchable<TContractState> {
 mod switchable_component {
     #[storage]
     struct Storage {
-        value: bool,
+        switchable_value: bool,
     }
 
     #[derive(Drop, starknet::Event)]
@@ -25,11 +25,11 @@ mod switchable_component {
         TContractState, +HasComponent<TContractState>
     > of super::ISwitchable<ComponentState<TContractState>> {
         fn value(self: @ComponentState<TContractState>) -> bool {
-            self.value.read()
+            self.switchable_value.read()
         }
 
         fn switch(ref self: ComponentState<TContractState>) {
-            self.value.write(!self.value.read());
+            self.switchable_value.write(!self.switchable_value.read());
             self.emit(Event::SwitchEvent(SwitchEvent {}));
         }
     }
@@ -39,7 +39,7 @@ mod switchable_component {
         TContractState, +HasComponent<TContractState>
     > of InternalTrait<TContractState> {
         fn _off(ref self: ComponentState<TContractState>) {
-            self.value.write(false);
+            self.switchable_value.write(false);
         }
     }
 }
