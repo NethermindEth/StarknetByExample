@@ -1,4 +1,4 @@
-# Component-Contract Storage Collision
+# Component-Contract Storage Collisions
 
 Components can declare their own storage variables.
 

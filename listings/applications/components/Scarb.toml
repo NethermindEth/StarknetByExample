@@ -2,6 +2,8 @@
 name = "components"
 version.workspace = true
 
+[lib]
+
 [dependencies]
 starknet.workspace = true
 

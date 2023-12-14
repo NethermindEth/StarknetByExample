@@ -17,7 +17,7 @@ It contains a storage variable `switchable_value`, a function `switch` and an ev
 > It is a good practice to prefix the component storage variables with the component name to [avoid collisions](./collisions.md).
 
 ```rust
-{{#include ../../listings/applications/components/src/switchable.cairo}}
+{{#include ../../listings/applications/components/src/switchable.cairo:component}}
 ```
 
 A component in itself is really similar to a contract, it *can* also have:
@@ -40,7 +40,7 @@ Now that we have a component, we can use it in a contract.
 The following contract incorporates the `Switchable` component:
 
 ```rust
-{{#include ../../listings/applications/components/src/contracts/switch.cairo:contract}}
+{{#rustdoc_include ../../listings/applications/components/src/contracts/switch.cairo:contract}}
 ```
 
 ## Deep dive into components
