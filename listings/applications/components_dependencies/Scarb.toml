@@ -1,0 +1,12 @@
+[package]
+name = "components_dependencies"
+version.workspace = true
+
+[dependencies]
+starknet.workspace = true
+components = { path = "../components" }
+
+[scripts]
+test.workspace = true
+
+[[target.starknet-contract]]

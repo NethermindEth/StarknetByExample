@@ -34,6 +34,7 @@ Summary
 
 # Components
   - [Components How-To](./components/how_to.md)
+  - [Components Dependencies](./components/dependencies.md)
   - [Storage Collisions](./components/collisions.md)
 
 <!-- ch01 -->
