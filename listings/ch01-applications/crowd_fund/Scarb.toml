@@ -5,3 +5,12 @@ version = "0.1.0"
 # See more keys and their definitions at https://docs.swmansion.com/scarb/docs/reference/manifest.html
 
 [dependencies]
+starknet = ">=2.3.1"
+snforge_std = { git = "https://github.com/foundry-rs/starknet-foundry.git", tag = "v0.12.0" }
+openzeppelin = { git = "https://github.com/OpenZeppelin/cairo-contracts.git", tag = "v0.8.0-beta.0" }
+
+[[target.starknet-contract]]
+build-external-contracts = ["openzeppelin::token::erc20::erc20::ERC20"]
+allowed-libfuncs-list.name = "experimental"
+sierra = true
+casm = true

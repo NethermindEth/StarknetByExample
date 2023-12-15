@@ -1,23 +1,5 @@
-// interface for IERC20
-// crowd fund how:
-
-// map for amount, also multiple campaign
-// total amount
-// owner per campaign
-// status per campaign
-// expected amount per campaign
-
-// function would be:
-
-// start a campaign
-// claim a campaign
-// donate to campaign
-// refund to donors
-// claim refund
-
-// tests for each one
-
 use starknet::ContractAddress;
+
 #[starknet::interface]
 trait ICrowdFund<TContractState> {
     fn launch(ref self: TContractState);
@@ -98,45 +80,60 @@ mod CrowdFund {
         fn claim(ref self: ContractState, id: u256) {
             let caller = get_caller_address();
             let this = get_contract_address();
-            let mut current_campaign = self.campaigns.read(id);
+
             assert(self.count.read() <= id, 'no id found');
+
+            let mut current_campaign = self.campaigns.read(id);
             assert(current_campaign.creator == caller, 'only owner allowed');
             assert(current_campaign.claimed == false, 'already claimed');
+
             let token: IERC20Dispatcher = self.token.read();
             token.transfer(caller, current_campaign.pledged);
+
             current_campaign.claimed = true;
             self.campaigns.write(id, current_campaign);
+
             self.emit(Claim { id: id, creator: caller, amount: current_campaign.pledged });
         }
         fn pledge(ref self: ContractState, id: u256, amount: u256) {
             let caller = get_caller_address();
             let this = get_contract_address();
-            let mut current_campaign = self.campaigns.read(id);
+
             assert(self.count.read() <= id, 'no id found');
+
+            let mut current_campaign = self.campaigns.read(id);
             assert(current_campaign.claimed == false, 'already claimed');
 
             let token: IERC20Dispatcher = self.token.read();
             token.transfer_from(caller, this, amount);
+
             current_campaign.pledged += amount;
             let current_pledged_amount = self.pledged_amount.read((id, caller));
             self.pledged_amount.write((id, caller), amount + current_pledged_amount);
             self.campaigns.write(id, current_campaign);
+
             self.emit(Pledge { id: id, caller: caller, amount: amount });
         }
         fn unpledge(ref self: ContractState, id: u256, amount: u256) {
             let caller = get_caller_address();
             let this = get_contract_address();
+
+            assert(self.count.read() <= id, 'no id found');
+
             let mut current_campaign = self.campaigns.read(id);
             assert(self.count.read() <= id, 'no id found');
             assert(current_campaign.claimed == false, 'already claimed');
 
             let current_pledged_amount = self.pledged_amount.read((id, caller));
             assert(current_pledged_amount >= amount, 'pledged amount not enough');
+
             let token: IERC20Dispatcher = self.token.read();
             token.transfer(caller, amount);
+
             current_campaign.pledged -= amount;
             self.pledged_amount.write((id, caller), current_pledged_amount - amount);
             self.campaigns.write(id, current_campaign);
+
             self.emit(Unpledge { id: id, caller: caller, amount: amount });
         }
     }

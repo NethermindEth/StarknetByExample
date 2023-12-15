@@ -4,3 +4,17 @@ version = 1
 [[package]]
 name = "crowd_fund"
 version = "0.1.0"
+dependencies = [
+ "openzeppelin",
+ "snforge_std",
+]
+
+[[package]]
+name = "openzeppelin"
+version = "0.8.0-beta.0"
+source = "git+https://github.com/OpenZeppelin/cairo-contracts.git?tag=v0.8.0-beta.0#4c95981a7178e43730f152c85a92336dc6a22d62"
+
+[[package]]
+name = "snforge_std"
+version = "0.1.0"
+source = "git+https://github.com/foundry-rs/starknet-foundry.git?tag=v0.12.0#0c3d2fe4ab31aa4484fa216417408ae65a149efe"
