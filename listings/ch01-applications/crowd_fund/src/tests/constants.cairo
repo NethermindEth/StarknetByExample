@@ -12,6 +12,10 @@ fn OWNER() -> ContractAddress {
     contract_address_const::<'OWNER'>()
 }
 
+fn ZERO_OWNER() -> ContractAddress {
+    contract_address_const::<''>()
+}
+
 fn PLAYER_TWO() -> ContractAddress {
     contract_address_const::<'PLAYER_TWO'>()
 }
