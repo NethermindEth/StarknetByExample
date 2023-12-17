@@ -44,7 +44,7 @@ You may also need the `info` module from the corelib, which allows you to access
 
 
 You can found the full list of functions in the [Starknet Corelib repo](https://github.com/starkware-libs/cairo/tree/main/corelib/src/starknet).
-You can also find a detailled explaination of testing in cairo in the [Cairo book - Chapter 8](https://book.cairo-lang.org/ch08-01-how-to-write-tests.html).
+You can also find a detailled explaination of testing in cairo in the [Cairo book - Chapter 9](https://book.cairo-lang.org/ch09-01-how-to-write-tests.html).
 
 ## Starknet Foundry
 
