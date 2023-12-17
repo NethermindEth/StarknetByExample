@@ -1,5 +1,5 @@
 mod switch_collision_tests {
-    use components::switchable::switchable_component::InternalTrait;
+    use components::switchable::switchable_component::SwitchableInternalTrait;
     use components::switchable::{ISwitchable, ISwitchableDispatcher, ISwitchableDispatcherTrait};
 
     use components::contracts::switch_collision::{
@@ -28,17 +28,17 @@ mod switch_collision_tests {
         let (mut contract, mut contract_iswitch) = deploy();
 
         assert(contract.get() == false, 'value !off');
-        assert(contract_iswitch.value() == false, 'switch !off');
+        assert(contract_iswitch.is_on() == false, 'switch !off');
 
         contract_iswitch.switch();
-        assert(contract_iswitch.value() == true, 'switch !on');
+        assert(contract_iswitch.is_on() == true, 'switch !on');
         assert(contract.get() == true, 'value !on');
 
         // `collision` between component storage 'value' and contract storage 'value'
-        assert(contract.get() == contract_iswitch.value(), 'value != switch');
+        assert(contract.get() == contract_iswitch.is_on(), 'value != switch');
 
         contract.set(false);
-        assert(contract.get() == contract_iswitch.value(), 'value != switch');
+        assert(contract.get() == contract_iswitch.is_on(), 'value != switch');
     }
 // ANCHOR_END: collision
 }

@@ -19,6 +19,13 @@ name = "components"
 version = "0.1.0"
 
 [[package]]
+name = "components_dependencies"
+version = "0.1.0"
+dependencies = [
+ "components",
+]
+
+[[package]]
 name = "constant_product_amm"
 version = "0.1.0"
 dependencies = [

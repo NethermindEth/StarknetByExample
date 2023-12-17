@@ -7,7 +7,7 @@ mod SwitchContract {
 
     #[abi(embed_v0)]
     impl SwitchableImpl = switchable_component::Switchable<ContractState>;
-    impl SwitchableInternalImpl = switchable_component::InternalImpl<ContractState>;
+    impl SwitchableInternalImpl = switchable_component::SwitchableInternalImpl<ContractState>;
 
     #[storage]
     struct Storage {
@@ -30,7 +30,7 @@ mod SwitchContract {
 
 #[cfg(test)]
 mod tests {
-    use components::switchable::switchable_component::InternalTrait;
+    use components::switchable::switchable_component::SwitchableInternalTrait;
     use components::switchable::ISwitchable;
 
     use core::starknet::storage::StorageMemberAccessTrait;
@@ -44,7 +44,7 @@ mod tests {
     #[available_gas(2000000)]
     fn test_init() {
         let state = STATE();
-        assert(state.value() == false, 'The switch should be off');
+        assert(state.is_on() == false, 'The switch should be off');
     }
 
     #[test]
@@ -53,20 +53,20 @@ mod tests {
         let mut state = STATE();
 
         state.switch();
-        assert(state.value() == true, 'The switch should be on');
+        assert(state.is_on() == true, 'The switch should be on');
 
         state.switch();
-        assert(state.value() == false, 'The switch should be off');
+        assert(state.is_on() == false, 'The switch should be off');
     }
 
     #[test]
     #[available_gas(2000000)]
     fn test_value() {
         let mut state = STATE();
-        assert(state.value() == state.switch.switchable_value.read(), 'Wrong value');
+        assert(state.is_on() == state.switch.switchable_value.read(), 'Wrong value');
 
         state.switch.switch();
-        assert(state.value() == state.switch.switchable_value.read(), 'Wrong value');
+        assert(state.is_on() == state.switch.switchable_value.read(), 'Wrong value');
     }
 
     #[test]
@@ -75,10 +75,10 @@ mod tests {
         let mut state = STATE();
 
         state.switch._off();
-        assert(state.value() == false, 'The switch should be off');
+        assert(state.is_on() == false, 'The switch should be off');
 
         state.switch();
         state.switch._off();
-        assert(state.value() == false, 'The switch should be off');
+        assert(state.is_on() == false, 'The switch should be off');
     }
 }

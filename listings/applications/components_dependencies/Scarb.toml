@@ -1,11 +1,10 @@
 [package]
-name = "components"
+name = "components_dependencies"
 version.workspace = true
-
-[lib]
 
 [dependencies]
 starknet.workspace = true
+components = { path = "../components" }
 
 [scripts]
 test.workspace = true

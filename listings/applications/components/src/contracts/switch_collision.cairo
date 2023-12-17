@@ -14,7 +14,7 @@ mod SwitchCollisionContract {
 
     #[abi(embed_v0)]
     impl SwitchableImpl = switchable_component::Switchable<ContractState>;
-    impl SwitchableInternalImpl = switchable_component::InternalImpl<ContractState>;
+    impl SwitchableInternalImpl = switchable_component::SwitchableInternalImpl<ContractState>;
 
     // ANCHOR: storage
     #[storage]

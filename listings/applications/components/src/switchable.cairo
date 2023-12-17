@@ -1,8 +1,11 @@
+// ANCHOR: component
 #[starknet::interface]
+// ANCHOR: interface
 trait ISwitchable<TContractState> {
-    fn value(self: @TContractState) -> bool;
+    fn is_on(self: @TContractState) -> bool;
     fn switch(ref self: TContractState);
 }
+// ANCHOR_END: interface
 
 #[starknet::component]
 mod switchable_component {
@@ -24,7 +27,7 @@ mod switchable_component {
     impl SwitchableImpl<
         TContractState, +HasComponent<TContractState>
     > of super::ISwitchable<ComponentState<TContractState>> {
-        fn value(self: @ComponentState<TContractState>) -> bool {
+        fn is_on(self: @ComponentState<TContractState>) -> bool {
             self.switchable_value.read()
         }
 
@@ -35,11 +38,14 @@ mod switchable_component {
     }
 
     #[generate_trait]
-    impl InternalImpl<
+    impl SwitchableInternalImpl<
         TContractState, +HasComponent<TContractState>
-    > of InternalTrait<TContractState> {
+    > of SwitchableInternalTrait<TContractState> {
         fn _off(ref self: ComponentState<TContractState>) {
             self.switchable_value.write(false);
         }
     }
 }
+// ANCHOR_END: component
+
+
