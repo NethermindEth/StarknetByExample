@@ -34,7 +34,7 @@ To make testing more convenient, the `testing` module of the corelib provides so
 - `set_account_contract_address(address: ContractAddress)`
 - `set_max_fee(fee: u128)`
 
-You may also need the `info` module from the corelib, which allows you to access information about the current transaction context:
+You may also need the `info` module from the corelib, which allows you to access information about the current execution context (see [syscalls](../basics/syscalls.md)):
 - `get_caller_address() -> ContractAddress`
 - `get_contract_address() -> ContractAddress`
 - `get_block_info() -> Box<BlockInfo>`

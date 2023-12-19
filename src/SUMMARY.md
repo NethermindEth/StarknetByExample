@@ -14,6 +14,7 @@ Summary
     - [Mappings](./ch00/basics/mappings.md)
     - [Errors](./ch00/basics/errors.md)
     - [Events](./ch00/basics/events.md)
+    - [Syscalls](./ch00/basics/syscalls.md)
     - [Storing Custom Types](./ch00/basics/storing-custom-types.md)
     - [Custom types in entrypoints](./ch00/basics/custom-types-in-entrypoints.md)
     - [Documentation](./ch00/basics/documentation.md)
