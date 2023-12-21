@@ -2,7 +2,7 @@ use core::option::OptionTrait;
 use core::traits::TryInto;
 use crowd_fund::contracts::{ICrowdFundDispatcherTrait, ICrowdFund};
 use crowd_fund::contracts::CrowdFund::{
-    countContractMemberStateTrait, campaignsContractMemberStateTrait
+    last_campaign_idContractMemberStateTrait, campaignsContractMemberStateTrait
 };
 use openzeppelin::token::erc20::interface::IERC20Dispatcher;
 use openzeppelin::token::erc20::interface::IERC20DispatcherTrait;
@@ -75,7 +75,7 @@ fn test_launch_state() {
     let (dispatcher, contract_address, erc20_dispacther) = deploy_crowd_fund();
     let mut testing_state = CrowdFund::contract_state_for_testing();
     ICrowdFund::launch(ref testing_state);
-    assert(testing_state.count.read() == 1, 'it should be 1');
+    assert(testing_state.last_campaign_id.read() == 1, 'it should be 1');
     let campaign: CrowdFund::Campaign = testing_state.campaigns.read(1);
     assert(campaign.creator == ZERO_OWNER(), 'should be zero account');
     assert(campaign.id == 1, 'it should be 1');
