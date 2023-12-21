@@ -1,3 +1,4 @@
+// ANCHOR: contract
 #[starknet::interface]
 trait IEventCounter<TContractState> {
     fn increment(ref self: TContractState);
@@ -42,6 +43,7 @@ mod EventCounter {
             counter += 1;
             self.counter.write(counter);
             // Emit event
+            // ANCHOR: emit
             self.emit(Event::CounterIncreased(CounterIncreased { amount: 1 }));
             self
                 .emit(
@@ -51,6 +53,10 @@ mod EventCounter {
                         }
                     )
                 );
+        // ANCHOR_END: emit
         }
     }
 }
+// ANCHOR_END: contract
+
+

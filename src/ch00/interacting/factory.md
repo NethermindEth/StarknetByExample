@@ -17,7 +17,7 @@ Using the factory pattern, we can deploy multiple instances of the same contract
 Here's a minimal example of a factory contract that deploy the `SimpleCounter` contract:
 
 ```rust
-{{#include ../../../listings/getting-started/factory/src/simple_factory.cairo}}
+{{#include ../../../listings/getting-started/factory/src/simple_factory.cairo:contract}}
 ```
 
 <!-- This is not ready for "Open in remix" because we need multiple files -->
