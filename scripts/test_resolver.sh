@@ -18,5 +18,6 @@ fi
 if [ -z "$(grep -E 'snforge_std' Scarb.toml)" ]; then
   scarb cairo-test
 else 
-  snforge test
+  echo "WARNING: snforge test is not supported with 'scarb test' currently. Please run snforge test manually."
+  # snforge test
 fi

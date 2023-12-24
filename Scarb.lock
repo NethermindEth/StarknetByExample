@@ -4,7 +4,7 @@ version = 1
 [[package]]
 name = "alexandria_storage"
 version = "0.2.0"
-source = "git+https://github.com/keep-starknet-strange/alexandria.git?rev=ae1d514#ae1d5149ff601a7ac5b39edc867d33ebd83d7f4f"
+source = "git+https://github.com/keep-starknet-strange/alexandria.git?tag=cairo-v2.3.0-rc0#ae1d5149ff601a7ac5b39edc867d33ebd83d7f4f"
 
 [[package]]
 name = "cairo_cheatsheet"
@@ -39,6 +39,14 @@ version = "0.1.0"
 [[package]]
 name = "counter"
 version = "0.1.0"
+
+[[package]]
+name = "crowd_fund"
+version = "0.1.0"
+dependencies = [
+ "openzeppelin",
+ "snforge_std",
+]
 
 [[package]]
 name = "custom_type_serde"
@@ -84,6 +92,11 @@ version = "0.1.0"
 [[package]]
 name = "simple_vault"
 version = "0.1.0"
+
+[[package]]
+name = "snforge_std"
+version = "0.1.0"
+source = "git+https://github.com/foundry-rs/starknet-foundry.git?tag=v0.12.0#0c3d2fe4ab31aa4484fa216417408ae65a149efe"
 
 [[package]]
 name = "storage"
