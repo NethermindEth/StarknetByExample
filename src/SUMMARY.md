@@ -32,6 +32,7 @@ Summary
     - [Tuples](./ch00/cairo_cheatsheet/tuples.md)
     - [Struct](./ch00/cairo_cheatsheet/struct.md)
     - [Type casting](./ch00/cairo_cheatsheet/type_casting.md)
+    - [Hashing](./ch00/cairo_cheatsheet/hashing.md)
 
 # Components
   - [Components How-To](./components/how_to.md)
