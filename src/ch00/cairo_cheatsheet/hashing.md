@@ -2,7 +2,7 @@
 
 The hashing process is a deterministic transformation that allows converting input data of any length into a fixed-size value referred as "hash". There are a plenty of hashing algorithms: in Cairo we have Pedersen and Poseidon hashes. Pedersen hashes were used in the past (but still used in some scenario for backward compatibility) while Poseidon hashes are the standard nowadays since they were designed to be very efficient for Zero Knowledge proof systems. More details [here](https://book.cairo-lang.org/ch11-03-hash.html#hash-functions-in-cairo).
 
-In Cairo it's possibile to hash all the types that can be converted to `felt252` since they implement natively the `Hash` trait. It's also possible to hash more complex types like structs by deriving the Hash trait with the attribute `#[derive(Hash)]` but only if all the struct's fields are themselves hashable.
+In Cairo it's possible to hash all the types that can be converted to `felt252` since they implement natively the `Hash` trait. It's also possible to hash more complex types like structs by deriving the Hash trait with the attribute `#[derive(Hash)]` but only if all the struct's fields are themselves hashable.
 
 Steps for producing a Pedersen or Poseidon hash of a struct are:
 1. Import the needed modules
@@ -14,6 +14,6 @@ Steps for producing a Pedersen or Poseidon hash of a struct are:
 Pratical example is shown below.
 
 ```rust
-{{#include ../../../listings/getting-started/cairo_cheatsheet/src/hashing_example.cairo}}
+{{#include ../../../listings/getting-started/cairo_cheatsheet/src/hashing_example.cairo:hashing_example}}
 ```
 

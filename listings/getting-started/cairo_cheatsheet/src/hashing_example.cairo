@@ -1,5 +1,5 @@
 mod hashing_example {
-
+// ANCHOR: hashing_example
 	//  import statements
 	use core::pedersen::PedersenTrait;
 	use core::poseidon::PoseidonTrait;
@@ -23,6 +23,7 @@ mod hashing_example {
 		let myStruct = myStructHashable{item: 100, item2: 200};
 		PedersenTrait::new(1).update_with(myStruct).finalize()
 	}
+// ANCHOR_END: hashing_example
 }
 
 //tests
