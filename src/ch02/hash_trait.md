@@ -15,4 +15,4 @@ Update allows you to initialize a hash state that will contain the temporary val
 ```rust
 {{#include ../../listings/advanced-concepts/hash_trait/src/hash_trait.cairo}}
 ```
-Checkout the contract on [Voyager] (https://goerli.voyager.online/contract/0x038e5a116cb52b7fb704c383704f6c6ed9f7571a679444fd3c74aaf62983cb7f) to interact with it and see how the final outputs look like. You can also play around with the contract on [Remix] ()
+Checkout the contract on [Voyager] (https://goerli.voyager.online/contract/0x038e5a116cb52b7fb704c383704f6c6ed9f7571a679444fd3c74aaf62983cb7f) to interact with it and see how the final outputs look like. 
