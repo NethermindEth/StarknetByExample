@@ -34,7 +34,6 @@ Summary
     - [Tuples](./ch00/cairo_cheatsheet/tuples.md)
     - [Struct](./ch00/cairo_cheatsheet/struct.md)
     - [Type casting](./ch00/cairo_cheatsheet/type_casting.md)
-    - [Hashing](./ch00/cairo_cheatsheet/hashing.md)
 
 # Components
 
@@ -59,6 +58,7 @@ Summary
 - [Writing to any storage slot](./ch02/write_to_any_slot.md)
 - [Storing Arrays](./ch02/storing_arrays.md)
 - [Struct as mapping key](./ch02/struct-mapping-key.md)
+- [Hashing](./ch02/hashing.md)
 - [Hash Solidity Compatible](./ch02/hash-solidity-compatible.md)
 - [Optimisations](./ch02/optimisations/optimisations.md)
   - [Storage Optimisations](./ch02/optimisations/store_using_packing.md)
