@@ -65,6 +65,10 @@ name = "hash_solidity_compatible"
 version = "0.1.0"
 
 [[package]]
+name = "hash_trait"
+version = "0.1.0"
+
+[[package]]
 name = "interfaces_traits"
 version = "0.1.0"
 

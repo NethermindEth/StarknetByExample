@@ -1,0 +1,11 @@
+[package]
+name = "hash_trait"
+version.workspace = true
+
+[dependencies]
+starknet.workspace = true
+
+[scripts]
+test.workspace = true
+
+[[target.starknet-contract]]
