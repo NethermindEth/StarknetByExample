@@ -3,7 +3,9 @@ Summary
 [Introduction](./starknet-by-example.md)
 
 <!-- ch00 -->
+
 # Getting Started
+
   <!-- - [Local environnement setup](./ch00/env_setup.md) -->
   - [Basics of a Starknet contract](./ch00/basics/introduction.md)
     - [Storage](./ch00/basics/storage.md)
@@ -34,23 +36,30 @@ Summary
     - [Type casting](./ch00/cairo_cheatsheet/type_casting.md)
 
 # Components
-  - [Components How-To](./components/how_to.md)
-  - [Components Dependencies](./components/dependencies.md)
-  - [Storage Collisions](./components/collisions.md)
+
+- [Components How-To](./components/how_to.md)
+- [Components Dependencies](./components/dependencies.md)
+- [Storage Collisions](./components/collisions.md)
+- [Ownable](./components/ownable.md)
 
 <!-- ch01 -->
+
 # Applications
-  - [Upgradeable Contract](./ch01/upgradeable_contract.md)
-  - [Defi Vault](./ch01/simple_vault.md)
-  - [ERC20 Token](./ch01/erc20.md)
-  - [Constant Product AMM](./ch01/constant-product-amm.md)
+
+- [Upgradeable Contract](./ch01/upgradeable_contract.md)
+- [Defi Vault](./ch01/simple_vault.md)
+- [ERC20 Token](./ch01/erc20.md)
+- [Constant Product AMM](./ch01/constant-product-amm.md)
 
 <!-- ch02 -->
+
 # Advanced concepts
-  - [Writing to any storage slot](./ch02/write_to_any_slot.md)
-  - [Storing Arrays](./ch02/storing_arrays.md)
-  - [Struct as mapping key](./ch02/struct-mapping-key.md)
-  - [Hash Solidity Compatible](./ch02/hash-solidity-compatible.md)
-  - [Optimisations](./ch02/optimisations/optimisations.md)
-    - [Storage Optimisations](./ch02/optimisations/store_using_packing.md)
-  - [List](./ch02/list.md)
+
+- [Writing to any storage slot](./ch02/write_to_any_slot.md)
+- [Storing Arrays](./ch02/storing_arrays.md)
+- [Struct as mapping key](./ch02/struct-mapping-key.md)
+- [Hashing](./ch02/hashing.md)
+- [Hash Solidity Compatible](./ch02/hash-solidity-compatible.md)
+- [Optimisations](./ch02/optimisations/optimisations.md)
+  - [Storage Optimisations](./ch02/optimisations/store_using_packing.md)
+- [List](./ch02/list.md)
