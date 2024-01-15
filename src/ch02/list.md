@@ -8,7 +8,7 @@ An ordered sequence of values that can be used in Starknet storage:
 
 ```rust
 #[storage]
-stuct Storage {
+struct Storage {
   amounts: List<u128>
 }
 ```
