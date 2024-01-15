@@ -6,7 +6,7 @@ Summary
 
 # Getting Started
 
-  <!-- - [Local environnement setup](./ch00/env_setup.md) -->
+  <!-- - [Local environment setup](./ch00/env_setup.md) -->
   - [Basics of a Starknet contract](./ch00/basics/introduction.md)
     - [Storage](./ch00/basics/storage.md)
     - [Constructor](./ch00/basics/constructor.md)
