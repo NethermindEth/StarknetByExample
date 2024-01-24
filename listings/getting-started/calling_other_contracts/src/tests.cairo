@@ -2,7 +2,7 @@ mod tests {
     use core::traits::TryInto;
     use core::result::ResultTrait;
     use calling_other_contracts::callee::{
-        Callee, ICalleeDispatcher, ICalleeDispatcherTrait, Callee::value
+        Callee, ICalleeDispatcher, ICalleeDispatcherTrait, Callee::valueContractMemberStateTrait
     };
     use calling_other_contracts::caller::{Caller, ICallerDispatcher, ICallerDispatcherTrait};
     use starknet::{deploy_syscall, ContractAddress, contract_address_const};
@@ -36,7 +36,7 @@ mod tests {
         let mut state = Callee::unsafe_new_contract_state();
         set_contract_address(callee.contract_address);
 
-        let value_read: u128 = value::InternalContractMemberStateTrait::read(@state.value);
+        let value_read: u128 = valueContractMemberStateTrait::read(@state.value);
 
         assert(value_read == init_value, 'Wrong value read');
     }

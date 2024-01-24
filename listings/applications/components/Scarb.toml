@@ -1,6 +1,7 @@
 [package]
 name = "components"
 version.workspace = true
+edition = '2023_10'
 
 [lib]
 

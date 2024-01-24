@@ -4,7 +4,7 @@ mod tests {
     use storing_custom_types::{
         contract::{
             IStoringCustomType, StoringCustomType,
-            StoringCustomType::{Person, person::InternalContractMemberStateTrait}
+            StoringCustomType::{Person, personContractMemberStateTrait},
         }
     };
 

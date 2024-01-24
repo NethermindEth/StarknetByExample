@@ -19,7 +19,7 @@ mod ErrorsExample {
         fn test_panic(self: @ContractState, i: u256) {
             if (i == 0) {
                 // Panic used to abort execution directly
-                panic_with_felt252('i must not be 0');
+                core::panic_with_felt252('i must not be 0');
             }
         }
     }

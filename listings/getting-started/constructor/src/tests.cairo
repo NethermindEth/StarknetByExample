@@ -2,8 +2,7 @@ mod tests {
     use core::traits::Into;
     use core::result::ResultTrait;
     use constructor::constructor::ExampleConstructor;
-    use constructor::constructor::ExampleConstructor::{names};
-    use debug::PrintTrait;
+    use constructor::constructor::ExampleConstructor::namesContractMemberStateTrait;
     use starknet::{deploy_syscall, ContractAddress, contract_address_const};
     use starknet::testing::{set_contract_address};
     use starknet::class_hash::Felt252TryIntoClassHash;
@@ -26,7 +25,7 @@ mod tests {
         let mut state = ExampleConstructor::unsafe_new_contract_state();
         set_contract_address(address_0);
 
-        let name: felt252 = names::InternalContractMemberStateTrait::read(@state.names, address);
+        let name: felt252 = namesContractMemberStateTrait::read(@state.names, address);
 
         assert(name == 'bob', 'name should be bob');
     }

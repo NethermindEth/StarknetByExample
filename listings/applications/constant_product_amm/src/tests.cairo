@@ -1,9 +1,73 @@
+#[starknet::contract]
+mod ERC20Token {
+    use openzeppelin::token::erc20::ERC20Component;
+    use openzeppelin::token::erc20::interface::IERC20Metadata;
+    use starknet::ContractAddress;
+
+    component!(path: ERC20Component, storage: erc20, event: ERC20Event);
+
+    #[abi(embed_v0)]
+    impl ERC20Impl = ERC20Component::ERC20Impl<ContractState>;
+    #[abi(embed_v0)]
+    impl ERC20CamelOnlyImpl = ERC20Component::ERC20CamelOnlyImpl<ContractState>;
+    impl ERC20InternalImpl = ERC20Component::InternalImpl<ContractState>;
+
+    #[storage]
+    struct Storage {
+        #[substorage(v0)]
+        erc20: ERC20Component::Storage,
+        decimals: u8
+    }
+
+    #[event]
+    #[derive(Drop, starknet::Event)]
+    enum Event {
+        #[flat]
+        ERC20Event: ERC20Component::Event
+    }
+
+    #[constructor]
+    fn constructor(
+        ref self: ContractState,
+        decimals: u8,
+        initial_supply: u256,
+        recipient: ContractAddress,
+        name: felt252,
+        symbol: felt252
+    ) {
+        self._set_decimals(decimals);
+        self.erc20.initializer(name, symbol);
+        self.erc20._mint(recipient, initial_supply);
+    }
+
+    #[external(v0)]
+    impl ERC20MetadataImpl of IERC20Metadata<ContractState> {
+        fn name(self: @ContractState) -> felt252 {
+            self.erc20.name()
+        }
+
+        fn symbol(self: @ContractState) -> felt252 {
+            self.erc20.symbol()
+        }
+
+        fn decimals(self: @ContractState) -> u8 {
+            self.decimals.read()
+        }
+    }
+
+    #[generate_trait]
+    impl InternalImpl of InternalTrait {
+        fn _set_decimals(ref self: ContractState, decimals: u8) {
+            self.decimals.write(decimals);
+        }
+    }
+}
+
 mod tests {
     use core::option::OptionTrait;
     use core::traits::TryInto;
-    use openzeppelin::token::erc20::{
-        ERC20, interface::IERC20Dispatcher, interface::IERC20DispatcherTrait
-    };
+    use openzeppelin::token::erc20::{interface::IERC20Dispatcher, interface::IERC20DispatcherTrait};
+    use super::ERC20Token;
     use openzeppelin::utils::serde::SerializedAppend;
     use openzeppelin::tests::utils;
 
@@ -16,8 +80,6 @@ mod tests {
     };
     use starknet::testing::set_contract_address;
     use starknet::class_hash::Felt252TryIntoClassHash;
-
-    use debug::PrintTrait;
 
     const BANK: felt252 = 0x123;
     const INITIAL_SUPPLY: u256 = 10_000;
@@ -33,12 +95,13 @@ mod tests {
         name: felt252, symbol: felt252, recipient: ContractAddress, initial_supply: u256
     ) -> (ContractAddress, IERC20Dispatcher) {
         let mut calldata = array![];
-        calldata.append_serde(name);
-        calldata.append_serde(symbol);
+        calldata.append(18.into());
         calldata.append_serde(initial_supply);
         calldata.append_serde(recipient);
+        calldata.append_serde(name);
+        calldata.append_serde(symbol);
 
-        let address = utils::deploy(ERC20::TEST_CLASS_HASH, calldata);
+        let address = utils::deploy(ERC20Token::TEST_CLASS_HASH, calldata);
         (address, IERC20Dispatcher { contract_address: address })
     }
 

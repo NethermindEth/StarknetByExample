@@ -8,7 +8,7 @@ trait IWriteToAnySlots<TContractState> {
 mod WriteToAnySlot {
     use starknet::syscalls::{storage_read_syscall, storage_write_syscall};
     use starknet::SyscallResultTrait;
-    use poseidon::poseidon_hash_span;
+    use core::poseidon::poseidon_hash_span;
     use starknet::storage_access::Felt252TryIntoStorageAddress;
     use starknet::StorageAddress;
 

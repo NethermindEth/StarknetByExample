@@ -59,7 +59,8 @@ Summary
 - [Storing Arrays](./ch02/storing_arrays.md)
 - [Struct as mapping key](./ch02/struct-mapping-key.md)
 - [Hashing](./ch02/hashing.md)
-- [Hash Solidity Compatible](./ch02/hash-solidity-compatible.md)
+<!-- Hidden until #123 is solved -->
+<!-- - [Hash Solidity Compatible](./ch02/hash-solidity-compatible.md) -->
 - [Optimisations](./ch02/optimisations/optimisations.md)
   - [Storage Optimisations](./ch02/optimisations/store_using_packing.md)
 - [List](./ch02/list.md)

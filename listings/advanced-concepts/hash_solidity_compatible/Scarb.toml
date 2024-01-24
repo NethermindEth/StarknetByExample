@@ -1,6 +1,7 @@
 [package]
 name = "hash_solidity_compatible"
 version.workspace = true
+edition = '2023_10'
 
 [dependencies]
 starknet.workspace = true

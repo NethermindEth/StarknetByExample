@@ -13,7 +13,7 @@ trait IPetRegistry<TContractState> {
 
 #[starknet::contract]
 mod PetRegistry {
-    use hash::{HashStateTrait, Hash};
+    use core::hash::{HashStateTrait, Hash};
     use super::Pet;
 
     #[storage]

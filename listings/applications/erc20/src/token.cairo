@@ -29,7 +29,7 @@ trait IERC20<TContractState> {
 // ANCHOR: erc20
 #[starknet::contract]
 mod erc20 {
-    use zeroable::Zeroable;
+    use core::{zeroable, zeroable::{NonZero, Zeroable}};
     use starknet::get_caller_address;
     use starknet::contract_address_const;
     use starknet::ContractAddress;
