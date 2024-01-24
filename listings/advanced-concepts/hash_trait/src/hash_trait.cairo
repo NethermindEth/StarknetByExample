@@ -69,8 +69,6 @@ mod tests {
     use core::{pedersen::PedersenTrait, poseidon::PoseidonTrait};
     use starknet::{deploy_syscall};
 
-    use debug::PrintTrait;
-
     fn deploy() -> IHashTraitDispatcher {
         let mut calldata = ArrayTrait::new();
         let (address, _) = deploy_syscall(
@@ -107,8 +105,6 @@ mod tests {
         let password = 'password.stark';
 
         let test_hash = contract.save_user_with_poseidon(id, username, password);
-
-        test_hash.print();
 
         assert(
             test_hash == 0x4d165e1d398ae4864854518d3c58c3d7a21ed9c1f8f3618fbb0031d208aab7b,

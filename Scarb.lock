@@ -78,8 +78,8 @@ version = "0.1.0"
 
 [[package]]
 name = "openzeppelin"
-version = "0.8.0-beta.0"
-source = "git+https://github.com/OpenZeppelin/cairo-contracts.git?tag=v0.8.0-beta.0#4c95981a7178e43730f152c85a92336dc6a22d62"
+version = "0.8.1"
+source = "git+https://github.com/OpenZeppelin/cairo-contracts.git?rev=843b6e9#843b6e960c15f8f9ef8b1c4584ec2f60993ceda4"
 
 [[package]]
 name = "scarb"

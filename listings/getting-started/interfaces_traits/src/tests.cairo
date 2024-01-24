@@ -6,7 +6,6 @@ mod explicit_interface_contract_tests {
         IExplicitInterfaceContract, ExplicitInterfaceContract, IExplicitInterfaceContractDispatcher,
         IExplicitInterfaceContractDispatcherTrait
     };
-    use debug::PrintTrait;
     use starknet::{deploy_syscall, ContractAddress};
     use starknet::class_hash::Felt252TryIntoClassHash;
 
@@ -26,7 +25,6 @@ mod explicit_interface_contract_tests {
         contract.set_value(value);
 
         let read_value = contract.get_value();
-        read_value.print();
 
         assert(read_value == value, 'wrong value');
     }

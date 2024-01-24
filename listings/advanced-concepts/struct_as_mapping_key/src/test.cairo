@@ -1,6 +1,5 @@
 mod tests {
-    use struct_as_mapping_key::contract::PetRegistry;
-    use PetRegistry::Pet;
+    use struct_as_mapping_key::contract::{PetRegistry, Pet};
     use starknet::deploy_syscall;
     use starknet::class_hash::Felt252TryIntoClassHash;
 

@@ -7,7 +7,6 @@ mod tests {
         ISerdeCustomTypeDispatcherTrait
     };
     use core::result::ResultTrait;
-    use debug::PrintTrait;
     use starknet::{deploy_syscall, ContractAddress};
     use starknet::class_hash::Felt252TryIntoClassHash;
 

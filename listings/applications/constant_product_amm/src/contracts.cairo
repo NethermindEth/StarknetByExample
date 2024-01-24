@@ -15,7 +15,7 @@ mod ConstantProductAmm {
     use starknet::{
         ContractAddress, get_caller_address, get_contract_address, contract_address_const
     };
-    use integer::u256_sqrt;
+    use core::integer::u256_sqrt;
 
     #[storage]
     struct Storage {

@@ -7,13 +7,13 @@ trait ITime<TContractState> {
 #[starknet::contract]
 mod TimeContract {
     use starknet::storage_access::StorePacking;
-    use integer::{
+    use core::integer::{
         U8IntoFelt252, Felt252TryIntoU16, U16DivRem, u16_as_non_zero, U16IntoFelt252,
         Felt252TryIntoU8
     };
-    use traits::{Into, TryInto, DivRem};
-    use option::OptionTrait;
-    use serde::Serde;
+    use core::traits::{Into, TryInto, DivRem};
+    use core::option::OptionTrait;
+    use core::serde::Serde;
 
     #[storage]
     struct Storage {
