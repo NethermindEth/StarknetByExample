@@ -64,3 +64,4 @@ Summary
 - [Optimisations](./ch02/optimisations/optimisations.md)
   - [Storage Optimisations](./ch02/optimisations/store_using_packing.md)
 - [List](./ch02/list.md)
+- [Plugins](./ch02/plugins.md)
