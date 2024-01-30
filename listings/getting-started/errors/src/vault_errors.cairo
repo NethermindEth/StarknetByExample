@@ -33,7 +33,7 @@ mod VaultErrorsExample {
 
             // Or using panic:
             if (balance >= amount) {
-                panic_with_felt252(VaultErrors::INSUFFICIENT_BALANCE);
+                core::panic_with_felt252(VaultErrors::INSUFFICIENT_BALANCE);
             }
 
             let balance = balance - amount;

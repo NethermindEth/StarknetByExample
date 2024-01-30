@@ -16,6 +16,7 @@ mod Errors {
 #[starknet::component]
 mod ownable_component {
     use starknet::{ContractAddress, get_caller_address};
+    use core::{zeroable, zeroable::{NonZero, Zeroable}};
     use super::Errors;
 
     #[storage]

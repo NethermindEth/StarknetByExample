@@ -10,6 +10,7 @@ trait IUpgradeableContract<TContractState> {
 mod UpgradeableContract_V1 {
     use starknet::class_hash::ClassHash;
     use starknet::SyscallResultTrait;
+    use core::{zeroable, zeroable::{NonZero, Zeroable}};
 
     #[storage]
     struct Storage {}

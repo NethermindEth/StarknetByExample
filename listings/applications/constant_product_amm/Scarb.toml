@@ -1,6 +1,7 @@
 [package]
 name = "constant_product_amm"
 version.workspace = true
+edition = '2023_10'
 
 [dependencies]
 starknet.workspace = true

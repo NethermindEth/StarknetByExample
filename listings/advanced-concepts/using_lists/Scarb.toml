@@ -1,6 +1,7 @@
 [package]
 name = "using_lists"
 version.workspace = true
+edition = '2023_10'
 
 [dependencies]
 starknet.workspace = true

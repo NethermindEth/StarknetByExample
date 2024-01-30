@@ -24,7 +24,7 @@ mod CustomErrorsExample {
 
         fn test_panic(self: @ContractState, i: u256) {
             if (i == 0) {
-                panic_with_felt252(Errors::NOT_NULL);
+                core::panic_with_felt252(Errors::NOT_NULL);
             }
         }
     }

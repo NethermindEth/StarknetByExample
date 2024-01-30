@@ -6,8 +6,6 @@ mod tests {
     use starknet::deploy_syscall;
     use starknet::class_hash::Felt252TryIntoClassHash;
 
-    use debug::PrintTrait;
-
     #[test]
     #[available_gas(20000000)]
     fn test_packing() {
