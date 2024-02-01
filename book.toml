@@ -21,4 +21,6 @@ edit-url-template = "https://github.com/NethermindEth/StarknetByExample/edit/mai
 playground.runnable = false
 fold.enable = true
 fold.level = 2
-additional-css = ["theme/css/last-changed.css"]
+additional-css = ["./theme/css/last-changed.css", "./theme/css/catppuccin.css"]
+default-theme = "latte"
+mathjax-support = true
