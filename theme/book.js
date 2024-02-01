@@ -472,7 +472,7 @@ function playground_text(playground, hidden = true) {
 
     Array.from(sidebarAnchorToggles).forEach(function (el, id) {
       el.parentElement.setAttribute('toggle-id', id);
-      const isActive = el.previousSibling.classList.contains('active');
+      const isActive = el.parentElement.nextSibling.querySelector('.active') !== null || el.previousSibling.classList.contains('active');
       if (!isActive) {
         try {
           const isExpanded = localStorage.getItem(`mdbook-sidebar-toggle-${id}`) === '1';
