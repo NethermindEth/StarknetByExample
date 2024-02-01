@@ -23,4 +23,5 @@ fold.enable = true
 fold.level = 2
 additional-css = ["./theme/css/last-changed.css", "./theme/css/catppuccin.css"]
 default-theme = "latte"
+preferred-dark-theme = "frappe"
 mathjax-support = true

@@ -459,9 +459,7 @@ function playground_text(playground, hidden = true) {
         try { localStorage.setItem('mdbook-sidebar', 'visible'); } catch (e) { }
     }
 
-
     var sidebarAnchorToggles = document.querySelectorAll('#sidebar a.toggle');
-    console.log(sidebarAnchorToggles)
 
     function toggleSection(ev) {
       ev.currentTarget.parentElement.classList.toggle('expanded');
@@ -469,22 +467,22 @@ function playground_text(playground, hidden = true) {
       const isExpanded = ev.currentTarget.parentElement.classList.contains('expanded');
       try {
         localStorage.setItem(`mdbook-sidebar-toggle-${toggleId}`, isExpanded ? 1 : 0);
-      } catch (e) {
-        console.error(e);
-      }
+      } catch (e) {}
     }
 
     Array.from(sidebarAnchorToggles).forEach(function (el, id) {
-      console.log(el, id);
       el.parentElement.setAttribute('toggle-id', id);
-      try {
-        const isExpanded = localStorage.getItem(`mdbook-sidebar-toggle-${id}`) === '1';
-        if (!isExpanded) {
+      const isActive = el.previousSibling.classList.contains('active');
+      if (!isActive) {
+        try {
+          const isExpanded = localStorage.getItem(`mdbook-sidebar-toggle-${id}`) === '1';
+          if (!isExpanded) {
+            el.parentElement.classList.remove('expanded');
+          }
+          localStorage.setItem(`mdbook-sidebar-toggle-${id}`, isExpanded ? 1 : 0);
+        } catch (e) {
           el.parentElement.classList.remove('expanded');
         }
-        localStorage.setItem(`mdbook-sidebar-toggle-${id}`, isExpanded ? 1 : 0);
-      } catch (e) {
-        el.parentElement.classList.remove('expanded');
       }
       el.addEventListener('click', toggleSection);
     });
