@@ -33,7 +33,7 @@ Please note we have a code of conduct, please follow it in all your interactions
 
 2. Rust related packages:
    - Install toolchain providing `cargo` using [rustup](https://rustup.rs/).
-   - Install [mdBook](https://rust-lang.github.io/mdBook/guide/installation.html) and the required extension with `cargo install mdbook mdbook-last-changed`.
+   - Install [mdBook](https://rust-lang.github.io/mdBook/guide/installation.html) and the required extension with `cargo install mdbook  mdbook-i18n-helpers mdbook-last-changed `.
 
 3. Install `scarb` using [asdf](https://asdf-vm.com/) with `asdf install`. Alternatively, you can install `scarb` manually by following the instructions [here](https://docs.swmansion.com/scarb/).
 
@@ -168,6 +168,8 @@ To work with translations, those are the steps to update the translated content:
   The PR must stars with `i18n` to let the maintainers know that the PR is only changing translation.
 
 The translation work is inspired from [Comprehensive Rust repository](https://github.com/google/comprehensive-rust/blob/main/TRANSLATIONS.md).
+
+You can test to build the book with all translations using the `build.sh` script and serve locally the `book` directory.
 
 ### Initiate a new translation for your language
 
