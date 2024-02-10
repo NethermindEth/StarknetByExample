@@ -1,11 +1,11 @@
 #[starknet::interface]
-trait ICountable<TContractState> {
+pub trait ICountable<TContractState> {
     fn get(self: @TContractState) -> u32;
     fn increment(ref self: TContractState);
 }
 
 #[starknet::component]
-mod countable_component {
+pub mod countable_component {
     #[storage]
     struct Storage {
         countable_value: u32,

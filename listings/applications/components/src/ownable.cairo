@@ -1,23 +1,23 @@
 use starknet::ContractAddress;
 
 #[starknet::interface]
-trait IOwnable<TContractState> {
+pub trait IOwnable<TContractState> {
     fn owner(self: @TContractState) -> ContractAddress;
     fn transfer_ownership(ref self: TContractState, new: ContractAddress);
     fn renounce_ownership(ref self: TContractState);
 }
 
 mod Errors {
-    const UNAUTHORIZED: felt252 = 'Not owner';
-    const ZERO_ADDRESS_OWNER: felt252 = 'Owner cannot be zero';
-    const ZERO_ADDRESS_CALLER: felt252 = 'Caller cannot be zero';
+    pub const UNAUTHORIZED: felt252 = 'Not owner';
+    pub const ZERO_ADDRESS_OWNER: felt252 = 'Owner cannot be zero';
+    pub const ZERO_ADDRESS_CALLER: felt252 = 'Caller cannot be zero';
 }
 
 #[starknet::component]
-mod ownable_component {
+pub mod ownable_component {
     use starknet::{ContractAddress, get_caller_address};
-    use core::{zeroable, zeroable::{NonZero, Zeroable}};
     use super::Errors;
+    use core::num::traits::Zero;
 
     #[storage]
     struct Storage {
@@ -37,7 +37,7 @@ mod ownable_component {
 
     #[event]
     #[derive(Drop, starknet::Event)]
-    enum Event {
+    pub enum Event {
         OwnershipTransferredEvent: OwnershipTransferredEvent,
         OwnershipRenouncedEvent: OwnershipRenouncedEvent
     }
@@ -62,7 +62,7 @@ mod ownable_component {
     }
 
     #[generate_trait]
-    impl OwnableInternalImpl<
+    pub impl OwnableInternalImpl<
         TContractState, +HasComponent<TContractState>
     > of OwnableInternalTrait<TContractState> {
         fn _assert_only_owner(self: @ComponentState<TContractState>) {
@@ -88,7 +88,7 @@ mod ownable_component {
 
         fn _renounce_ownership(ref self: ComponentState<TContractState>) {
             let previous = self.ownable_owner.read();
-            self.ownable_owner.write(Zeroable::zero());
+            self.ownable_owner.write(Zero::zero());
             self.emit(Event::OwnershipRenouncedEvent(OwnershipRenouncedEvent { previous }));
         }
     }

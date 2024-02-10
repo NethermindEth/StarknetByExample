@@ -1,21 +1,23 @@
+// Deriving the `Serde` trait allows us to use
+// the Person type as an entrypoint parameter and return value
+#[derive(Drop, Serde)]
+pub struct Person {
+    pub age: u8,
+    pub name: felt252
+}
+
 #[starknet::interface]
-trait ISerdeCustomType<TContractState> {
-    fn person_input(ref self: TContractState, person: SerdeCustomType::Person);
-    fn person_output(self: @TContractState) -> SerdeCustomType::Person;
+pub trait ISerdeCustomType<TContractState> {
+    fn person_input(ref self: TContractState, person: Person);
+    fn person_output(self: @TContractState) -> Person;
 }
 
 #[starknet::contract]
-mod SerdeCustomType {
+pub mod SerdeCustomType {
+    use super::Person;
+
     #[storage]
     struct Storage {}
-
-    // Deriving the `Serde` trait allows us to use
-    // the Person type as an entrypoint parameter and return value
-    #[derive(Drop, Serde)]
-    struct Person {
-        age: u8,
-        name: felt252
-    }
 
     #[abi(embed_v0)]
     impl SerdeCustomType of super::ISerdeCustomType<ContractState> {

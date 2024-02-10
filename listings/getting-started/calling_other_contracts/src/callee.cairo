@@ -1,13 +1,14 @@
 #[starknet::interface]
-trait ICallee<TContractState> {
+pub trait ICallee<TContractState> {
     fn set_value(ref self: TContractState, value: u128) -> u128;
 }
 
 #[starknet::contract]
-mod Callee {
+pub mod Callee {
     #[storage]
     struct Storage {
         value: u128,
+        names: LegacyMap::<ContractAddress, felt252>,
     }
 
     #[abi(embed_v0)]

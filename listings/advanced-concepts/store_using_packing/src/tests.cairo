@@ -1,10 +1,8 @@
 mod tests {
-    use store_using_packing::contract::{
-        TimeContract, TimeContract::Time, ITimeDispatcher, ITimeDispatcherTrait
-    };
+    use core::starknet::SyscallResultTrait;
+    use store_using_packing::contract::{TimeContract, Time, ITimeDispatcher, ITimeDispatcherTrait};
 
-    use starknet::deploy_syscall;
-    use starknet::class_hash::Felt252TryIntoClassHash;
+    use starknet::syscalls::deploy_syscall;
 
     #[test]
     #[available_gas(20000000)]
@@ -14,7 +12,7 @@ mod tests {
         let (address0, _) = deploy_syscall(
             TimeContract::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
         )
-            .unwrap();
+            .unwrap_syscall();
         let mut contract = ITimeDispatcher { contract_address: address0 };
 
         // Store a Time struct.

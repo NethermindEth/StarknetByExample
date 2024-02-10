@@ -2,12 +2,13 @@ mod tests { // TODO
 }
 
 mod explicit_interface_contract_tests {
+    use core::starknet::SyscallResultTrait;
     use interfaces_traits::explicit::{
         IExplicitInterfaceContract, ExplicitInterfaceContract, IExplicitInterfaceContractDispatcher,
         IExplicitInterfaceContractDispatcherTrait
     };
-    use starknet::{deploy_syscall, ContractAddress};
-    use starknet::class_hash::Felt252TryIntoClassHash;
+    use starknet::ContractAddress;
+    use starknet::syscalls::deploy_syscall;
 
     #[test]
     #[available_gas(2000000000)]
@@ -18,7 +19,8 @@ mod explicit_interface_contract_tests {
             ArrayTrait::new().span(),
             false
         )
-            .unwrap();
+            .unwrap_syscall();
+
         let mut contract = IExplicitInterfaceContractDispatcher { contract_address };
 
         let value: u32 = 20;
@@ -35,8 +37,8 @@ mod implicit_internal_contract_tests {
         IImplicitInternalContract, ImplicitInternalContract, IImplicitInternalContractDispatcher,
         IImplicitInternalContractDispatcherTrait
     };
-    use starknet::{deploy_syscall, ContractAddress};
-    use starknet::class_hash::Felt252TryIntoClassHash;
+    use starknet::ContractAddress;
+    use starknet::syscalls::deploy_syscall;
 
     #[test]
     #[available_gas(2000000000)]

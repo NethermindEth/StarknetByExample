@@ -1,14 +1,14 @@
 // ANCHOR: component
 #[starknet::interface]
 // ANCHOR: interface
-trait ISwitchable<TContractState> {
+pub trait ISwitchable<TContractState> {
     fn is_on(self: @TContractState) -> bool;
     fn switch(ref self: TContractState);
 }
 // ANCHOR_END: interface
 
 #[starknet::component]
-mod switchable_component {
+pub mod switchable_component {
     #[storage]
     struct Storage {
         switchable_value: bool,
@@ -19,7 +19,7 @@ mod switchable_component {
 
     #[event]
     #[derive(Drop, starknet::Event)]
-    enum Event {
+    pub enum Event {
         SwitchEvent: SwitchEvent,
     }
 
@@ -38,7 +38,7 @@ mod switchable_component {
     }
 
     #[generate_trait]
-    impl SwitchableInternalImpl<
+    pub impl SwitchableInternalImpl<
         TContractState, +HasComponent<TContractState>
     > of SwitchableInternalTrait<TContractState> {
         fn _off(ref self: ComponentState<TContractState>) {

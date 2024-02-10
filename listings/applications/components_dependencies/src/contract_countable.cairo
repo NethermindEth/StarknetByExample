@@ -43,18 +43,19 @@ mod CountableContract {
 
 #[cfg(test)]
 mod tests {
+    use core::starknet::SyscallResultTrait;
     use super::CountableContract;
     use components::countable::{ICountable, ICountableDispatcher, ICountableDispatcherTrait};
     use components::switchable::{ISwitchable, ISwitchableDispatcher, ISwitchableDispatcherTrait};
 
     use core::starknet::storage::StorageMemberAccessTrait;
-    use starknet::deploy_syscall;
+    use starknet::syscalls::deploy_syscall;
 
     fn deploy() -> (ICountableDispatcher, ISwitchableDispatcher) {
         let (contract_address, _) = deploy_syscall(
             CountableContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
         )
-            .unwrap();
+            .unwrap_syscall();
 
         (ICountableDispatcher { contract_address }, ISwitchableDispatcher { contract_address },)
     }

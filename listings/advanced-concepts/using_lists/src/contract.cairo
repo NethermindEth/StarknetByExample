@@ -1,5 +1,11 @@
+#[derive(Copy, Drop, Serde, starknet::Store)]
+pub struct Task {
+    pub description: felt252,
+    pub status: felt252
+}
+
 #[starknet::interface]
-trait IListExample<TContractState> {
+pub trait IListExample<TContractState> {
     fn add_in_amount(ref self: TContractState, number: u128);
     fn add_in_task(ref self: TContractState, description: felt252, status: felt252);
     fn is_empty_list(self: @TContractState) -> bool;
@@ -11,33 +17,30 @@ trait IListExample<TContractState> {
 }
 
 #[starknet::contract]
-mod ListExample {
+pub mod ListExample {
+    use super::Task;
+
+    use core::option::OptionTrait;
+    use core::result::ResultTrait;
     use alexandria_storage::list::{List, ListTrait};
 
     #[storage]
-    struct Storage {
+    pub struct Storage {
         amount: List<u128>,
         tasks: List<Task>
     }
-
-    #[derive(Copy, Drop, Serde, starknet::Store)]
-    struct Task {
-        description: felt252,
-        status: felt252
-    }
-
 
     #[abi(embed_v0)]
     impl ListExample of super::IListExample<ContractState> {
         fn add_in_amount(ref self: ContractState, number: u128) {
             let mut current_amount_list = self.amount.read();
-            current_amount_list.append(number);
+            current_amount_list.append(number).unwrap();
         }
 
         fn add_in_task(ref self: ContractState, description: felt252, status: felt252) {
             let new_task = Task { description: description, status: status };
             let mut current_tasks_list = self.tasks.read();
-            current_tasks_list.append(new_task);
+            current_tasks_list.append(new_task).unwrap();
         }
 
         fn is_empty_list(self: @ContractState) -> bool {
@@ -56,17 +59,17 @@ mod ListExample {
 
         fn set_from_index(ref self: ContractState, index: u32, number: u128) {
             let mut current_amount_list = self.amount.read();
-            current_amount_list.set(index, number);
+            current_amount_list.set(index, number).unwrap();
         }
 
         fn pop_front_list(ref self: ContractState) {
             let mut current_amount_list = self.amount.read();
-            current_amount_list.pop_front();
+            current_amount_list.pop_front().unwrap().unwrap();
         }
 
         fn array_conversion(self: @ContractState) -> Array<u128> {
             let mut current_amount_list = self.amount.read();
-            current_amount_list.array()
+            current_amount_list.array().unwrap()
         }
     }
 }

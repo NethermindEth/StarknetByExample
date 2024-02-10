@@ -1,5 +1,5 @@
-mod VaultErrors {
-    const INSUFFICIENT_BALANCE: felt252 = 'insufficient_balance';
+pub mod VaultErrors {
+    pub const INSUFFICIENT_BALANCE: felt252 = 'insufficient_balance';
 // you can define more errors here
 }
 

@@ -1,7 +1,7 @@
 mod tests {
+    use core::starknet::SyscallResultTrait;
     use struct_as_mapping_key::contract::{PetRegistry, Pet};
-    use starknet::deploy_syscall;
-    use starknet::class_hash::Felt252TryIntoClassHash;
+    use starknet::syscalls::deploy_syscall;
 
     #[starknet::interface]
     trait IPetRegistry<TContractState> {
@@ -17,7 +17,7 @@ mod tests {
         let (address0, _) = deploy_syscall(
             PetRegistry::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
         )
-            .unwrap();
+            .unwrap_syscall();
         let mut contract = IPetRegistryDispatcher { contract_address: address0 };
 
         let pet = Pet { name: 'Cute Labrador', age: 5, owner: 'Louis' };

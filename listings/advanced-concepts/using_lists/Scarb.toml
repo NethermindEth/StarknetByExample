@@ -1,11 +1,11 @@
 [package]
 name = "using_lists"
 version.workspace = true
-edition = '2023_10'
+edition = '2023_11'
 
 [dependencies]
 starknet.workspace = true
-alexandria_storage = { git = "https://github.com/keep-starknet-strange/alexandria.git",  rev="ae1d514"}
+alexandria_storage = { git = "https://github.com/keep-starknet-strange/alexandria.git",  rev="800f5ad"}
 
 [scripts]
 test.workspace = true

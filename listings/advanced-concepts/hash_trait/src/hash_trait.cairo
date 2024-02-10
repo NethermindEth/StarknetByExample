@@ -63,18 +63,19 @@ mod HashTraits {
 
 #[cfg(test)]
 mod tests {
+    use core::starknet::SyscallResultTrait;
     use super::{HashTraits, IHashTraitDispatcher, IHashTraitDispatcherTrait};
 
     use core::hash::{HashStateTrait, HashStateExTrait};
     use core::{pedersen::PedersenTrait, poseidon::PoseidonTrait};
-    use starknet::{deploy_syscall};
+    use starknet::syscalls::deploy_syscall;
 
     fn deploy() -> IHashTraitDispatcher {
         let mut calldata = ArrayTrait::new();
         let (address, _) = deploy_syscall(
             HashTraits::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
         )
-            .unwrap();
+            .unwrap_syscall();
         IHashTraitDispatcher { contract_address: address }
     }
 

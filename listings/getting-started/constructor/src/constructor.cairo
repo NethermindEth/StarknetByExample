@@ -1,5 +1,5 @@
 #[starknet::contract]
-mod ExampleConstructor {
+pub mod ExampleConstructor {
     use starknet::ContractAddress;
 
     #[storage]

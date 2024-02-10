@@ -1,11 +1,10 @@
 #[starknet::interface]
-trait ISolidityHashExample<TContractState> {
+pub trait ISolidityHashExample<TContractState> {
     fn hash_data(ref self: TContractState, input_data: Span<u256>) -> u256;
 }
 
-
 #[starknet::contract]
-mod SolidityHashExample {
+pub mod SolidityHashExample {
     use keccak::{keccak_u256s_be_inputs};
     use core::array::Span;
     use core::integer;

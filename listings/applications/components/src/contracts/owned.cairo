@@ -6,9 +6,7 @@ trait IOwned<TContractState> {
 
 #[starknet::contract]
 mod OwnedContract {
-    use components::ownable::IOwnable;
-    use components::ownable::ownable_component::OwnableInternalTrait;
-    use components::ownable::ownable_component;
+    use components::ownable::{IOwnable, ownable_component, ownable_component::OwnableInternalTrait};
 
     component!(path: ownable_component, storage: ownable, event: OwnableEvent);
 
@@ -33,7 +31,7 @@ mod OwnedContract {
         OwnableEvent: ownable_component::Event,
     }
 
-    #[external(v0)]
+    #[abi(embed_v0)]
     impl Owned of super::IOwned<ContractState> {
         fn do_something(ref self: ContractState) {
             self.ownable._assert_only_owner();
@@ -45,15 +43,14 @@ mod OwnedContract {
 
 #[cfg(test)]
 mod tests {
+    use core::num::traits::Zero;
     use super::{OwnedContract, IOwnedDispatcher, IOwnedDispatcherTrait};
     use components::ownable::{IOwnable, IOwnableDispatcher, IOwnableDispatcherTrait};
 
-    use core::starknet::storage::StorageMemberAccessTrait;
-    use core::Zeroable;
-
     use starknet::{contract_address_const, ContractAddress};
     use starknet::testing::{set_caller_address, set_contract_address};
-    use starknet::deploy_syscall;
+    use starknet::storage::StorageMemberAccessTrait;
+    use starknet::syscalls::deploy_syscall;
 
     fn deploy() -> (IOwnedDispatcher, IOwnableDispatcher) {
         let (contract_address, _) = deploy_syscall(
@@ -138,7 +135,7 @@ mod tests {
         set_contract_address(contract_address_const::<'initial'>());
         let (_, ownable) = deploy();
 
-        ownable.transfer_ownership(Zeroable::zero());
+        ownable.transfer_ownership(Zero::zero());
     }
 
     #[test]
@@ -148,7 +145,7 @@ mod tests {
         let (_, ownable) = deploy();
 
         ownable.renounce_ownership();
-        assert(ownable.owner() == Zeroable::zero(), 'not_zero_owner');
+        assert(ownable.owner() == Zero::zero(), 'not_zero_owner');
     }
 
     #[test]

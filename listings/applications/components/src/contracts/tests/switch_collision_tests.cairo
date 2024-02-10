@@ -6,8 +6,8 @@ mod switch_collision_tests {
         SwitchCollisionContract, ISwitchCollisionDispatcher, ISwitchCollisionDispatcherTrait
     };
 
-    use core::starknet::storage::StorageMemberAccessTrait;
-    use starknet::deploy_syscall;
+    use starknet::storage::StorageMemberAccessTrait;
+    use starknet::syscalls::deploy_syscall;
 
     fn deploy() -> (ISwitchCollisionDispatcher, ISwitchableDispatcher) {
         let (contract_address, _) = deploy_syscall(

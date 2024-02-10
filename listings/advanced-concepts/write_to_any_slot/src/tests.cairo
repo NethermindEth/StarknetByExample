@@ -7,11 +7,10 @@ trait IWriteToAnySlot<TContractState> {
 }
 
 mod tests {
-    use super::WriteToAnySlot::{get_address_from_name};
+    use super::WriteToAnySlot::get_address_from_name;
     use super::WriteToAnySlot;
     use super::{IWriteToAnySlotDispatcher, IWriteToAnySlotDispatcherTrait};
-    use starknet::deploy_syscall;
-    use starknet::class_hash::Felt252TryIntoClassHash;
+    use starknet::syscalls::deploy_syscall;
 
     #[test]
     #[available_gas(2000000000)]

@@ -1,11 +1,11 @@
 #[starknet::interface]
-trait IExampleContract<TContractState> {
+pub trait IExampleContract<TContractState> {
     fn set(ref self: TContractState, value: u32);
     fn get(self: @TContractState) -> u32;
 }
 
 #[starknet::contract]
-mod ExampleContract {
+pub mod ExampleContract {
     #[storage]
     struct Storage {
         value: u32

@@ -3,8 +3,8 @@ mod tests {
     use counter::contracts::{
         SimpleCounter, ISimpleCounterDispatcher, ISimpleCounterDispatcherTrait
     };
-    use starknet::{deploy_syscall, ContractAddress};
-    use starknet::class_hash::Felt252TryIntoClassHash;
+    use starknet::ContractAddress;
+    use starknet::syscalls::deploy_syscall;
 
     fn deploy(init_value: u128) -> ISimpleCounterDispatcher {
         let calldata: Array<felt252> = array![init_value.into()];
