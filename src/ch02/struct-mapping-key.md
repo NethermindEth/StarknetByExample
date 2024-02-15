@@ -8,5 +8,3 @@ type `Pet` as a key in a `LegacyMap`. The `Pet` struct has three fields: `name`,
 ```rust
 {{#include ../../listings/advanced-concepts/struct_as_mapping_key/src/contract.cairo}}
 ```
-
-Play with this contract in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/advanced-concepts/struct_as_mapping_key/src/contract.cairo).

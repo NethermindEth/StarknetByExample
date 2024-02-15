@@ -27,4 +27,3 @@ Let's take a look at a simple example contract to see these in action:
 ```rust
 {{#include ../../../listings/getting-started/visibility/src/visibility.cairo}}
 ```
-Visit contract on [Voyager](https://goerli.voyager.online/contract/0x0071dE3093AB58053b0292C225aa0eED40293e7694A0042685FF6D813d39889F) or play with it in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/getting-started/visibility/src/visibility.cairo).
