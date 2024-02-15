@@ -1,16 +1,19 @@
+#[derive(Copy, Serde, Drop)]
+pub struct Time {
+    pub hour: u8,
+    pub minute: u8
+}
+
 #[starknet::interface]
-trait ITime<TContractState> {
-    fn set(ref self: TContractState, value: TimeContract::Time);
-    fn get(self: @TContractState) -> TimeContract::Time;
+pub trait ITime<TContractState> {
+    fn set(ref self: TContractState, value: Time);
+    fn get(self: @TContractState) -> Time;
 }
 
 #[starknet::contract]
-mod TimeContract {
+pub mod TimeContract {
+    use super::Time;
     use starknet::storage_access::StorePacking;
-    use core::integer::{
-        U8IntoFelt252, Felt252TryIntoU16, U16DivRem, u16_as_non_zero, U16IntoFelt252,
-        Felt252TryIntoU8
-    };
     use core::traits::{Into, TryInto, DivRem};
     use core::option::OptionTrait;
     use core::serde::Serde;
@@ -18,12 +21,6 @@ mod TimeContract {
     #[storage]
     struct Storage {
         time: Time
-    }
-
-    #[derive(Copy, Serde, Drop)]
-    struct Time {
-        hour: u8,
-        minute: u8
     }
 
     impl TimePackable of StorePacking<Time, felt252> {
@@ -34,7 +31,7 @@ mod TimeContract {
         }
         fn unpack(value: felt252) -> Time {
             let value: u16 = value.try_into().unwrap();
-            let (q, r) = U16DivRem::div_rem(value, u16_as_non_zero(256));
+            let (q, r) = DivRem::div_rem(value, 256_u16.try_into().unwrap());
             let hour: u8 = Into::<u16, felt252>::into(q).try_into().unwrap();
             let minute: u8 = Into::<u16, felt252>::into(r).try_into().unwrap();
             return Time { hour, minute };

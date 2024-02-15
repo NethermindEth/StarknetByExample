@@ -1,15 +1,14 @@
 #[starknet::interface]
-trait IWriteToAnySlots<TContractState> {
+pub trait IWriteToAnySlots<TContractState> {
     fn write_slot(ref self: TContractState, value: u32);
     fn read_slot(self: @TContractState) -> u32;
 }
 
 #[starknet::contract]
-mod WriteToAnySlot {
+pub mod WriteToAnySlot {
     use starknet::syscalls::{storage_read_syscall, storage_write_syscall};
     use starknet::SyscallResultTrait;
     use core::poseidon::poseidon_hash_span;
-    use starknet::storage_access::Felt252TryIntoStorageAddress;
     use starknet::StorageAddress;
 
     #[storage]
@@ -20,7 +19,8 @@ mod WriteToAnySlot {
     #[abi(embed_v0)]
     impl WriteToAnySlot of super::IWriteToAnySlots<ContractState> {
         fn write_slot(ref self: ContractState, value: u32) {
-            storage_write_syscall(0, get_address_from_name(SLOT_NAME), value.into());
+            storage_write_syscall(0, get_address_from_name(SLOT_NAME), value.into())
+                .unwrap_syscall();
         }
 
         fn read_slot(self: @ContractState) -> u32 {
@@ -30,7 +30,7 @@ mod WriteToAnySlot {
                 .unwrap()
         }
     }
-    fn get_address_from_name(variable_name: felt252) -> StorageAddress {
+    pub fn get_address_from_name(variable_name: felt252) -> StorageAddress {
         let mut data: Array<felt252> = ArrayTrait::new();
         data.append(variable_name);
         let hashed_name: felt252 = poseidon_hash_span(data.span());

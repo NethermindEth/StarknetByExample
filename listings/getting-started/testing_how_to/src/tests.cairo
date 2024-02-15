@@ -1,16 +1,16 @@
 #[cfg(test)]
 mod tests {
     // Import the interface and dispatcher to be able to interact with the contract.
+    use core::starknet::SyscallResultTrait;
     use testing_how_to::contract::{
         ISimpleContract, SimpleContract, ISimpleContractDispatcher, ISimpleContractDispatcherTrait
     };
 
     // Import the deploy syscall to be able to deploy the contract.
-    use starknet::class_hash::Felt252TryIntoClassHash;
     use starknet::{
-        deploy_syscall, ContractAddress, get_caller_address, get_contract_address,
-        contract_address_const
+        ContractAddress, get_caller_address, get_contract_address, contract_address_const
     };
+    use starknet::syscalls::deploy_syscall;
 
     // Use starknet test utils to fake the transaction context.
     use starknet::testing::{set_caller_address, set_contract_address};
@@ -25,7 +25,7 @@ mod tests {
         let (contract_address, _) = deploy_syscall(
             SimpleContract::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
         )
-            .unwrap();
+            .unwrap_syscall();
 
         // Return the dispatcher.
         // The dispatcher allows to interact with the contract based on its interface.

@@ -75,11 +75,9 @@ mod tests {
         ConstantProductAmm, IConstantProductAmmDispatcher, IConstantProductAmmDispatcherTrait
     };
     use starknet::{
-        deploy_syscall, ContractAddress, get_caller_address, get_contract_address,
-        contract_address_const
+        ContractAddress, get_caller_address, get_contract_address, contract_address_const
     };
     use starknet::testing::set_contract_address;
-    use starknet::class_hash::Felt252TryIntoClassHash;
 
     const BANK: felt252 = 0x123;
     const INITIAL_SUPPLY: u256 = 10_000;
@@ -118,7 +116,7 @@ mod tests {
         calldata.append(token1_address.into());
         calldata.append(fee.into());
 
-        let (contract_address, _) = starknet::deploy_syscall(
+        let (contract_address, _) = starknet::syscalls::deploy_syscall(
             ConstantProductAmm::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
         )
             .unwrap();
@@ -178,7 +176,7 @@ mod tests {
     #[available_gas(20000000)]
     fn should_swap() {
         let deploy = setup();
-        let shares = add_liquidity(deploy, INITIAL_SUPPLY / 2);
+        let _shares = add_liquidity(deploy, INITIAL_SUPPLY / 2);
 
         let provider: ContractAddress = BANK.try_into().unwrap();
         let user = contract_address_const::<0x1>();

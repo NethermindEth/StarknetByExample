@@ -1,23 +1,23 @@
 #[starknet::interface]
-trait IStoringCustomType<TContractState> {
+pub trait IStoringCustomType<TContractState> {
     fn set_person(ref self: TContractState, person: Person);
 }
 
 // Deriving the starknet::Store trait
 // allows us to store the `Person` struct in the contract's storage.
 #[derive(Drop, Serde, Copy, starknet::Store)]
-struct Person {
-    age: u8,
-    name: felt252
+pub struct Person {
+    pub age: u8,
+    pub name: felt252
 }
 
 #[starknet::contract]
-mod StoringCustomType {
+pub mod StoringCustomType {
     use super::Person;
 
     #[storage]
-    struct Storage {
-        person: Person
+    pub struct Storage {
+        pub person: Person
     }
 
     #[abi(embed_v0)]

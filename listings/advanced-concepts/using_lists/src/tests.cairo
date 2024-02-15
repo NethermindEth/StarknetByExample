@@ -1,8 +1,8 @@
 use using_lists::contract::IListExample;
 use core::array::ArrayTrait;
-use using_lists::contract::ListExample;
+use using_lists::contract::{Task, ListExample};
 use using_lists::contract::ListExample::{
-    Task, amountContractMemberStateTrait, tasksContractMemberStateTrait
+    amountContractMemberStateTrait, tasksContractMemberStateTrait
 };
 
 fn STATE() -> ListExample::ContractState {

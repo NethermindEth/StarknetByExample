@@ -3,12 +3,11 @@
 
 mod tests {
     use custom_type_serde::contract::{
-        SerdeCustomType, SerdeCustomType::Person, ISerdeCustomTypeDispatcher,
-        ISerdeCustomTypeDispatcherTrait
+        SerdeCustomType, Person, ISerdeCustomTypeDispatcher, ISerdeCustomTypeDispatcherTrait
     };
     use core::result::ResultTrait;
-    use starknet::{deploy_syscall, ContractAddress};
-    use starknet::class_hash::Felt252TryIntoClassHash;
+    use starknet::ContractAddress;
+    use starknet::syscalls::deploy_syscall;
 
     fn deploy() -> ISerdeCustomTypeDispatcher {
         let calldata: Array<felt252> = array![];
@@ -22,8 +21,7 @@ mod tests {
     #[test]
     #[available_gas(2000000000)]
     fn should_deploy() {
-        let init_value = 10;
-        let contract = deploy();
+        deploy();
     }
 
     #[test]

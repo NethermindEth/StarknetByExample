@@ -1,5 +1,5 @@
 #[starknet::component]
-mod countable_component {
+pub mod countable_component {
     use components::countable::ICountable;
     use components::switchable::ISwitchable;
 

@@ -1,8 +1,8 @@
 // ANCHOR: contract
-use starknet::{ContractAddress, ClassHash};
+pub use starknet::{ContractAddress, ClassHash};
 
 #[starknet::interface]
-trait ICounterFactory<TContractState> {
+pub trait ICounterFactory<TContractState> {
     /// Create a new counter contract from stored arguments
     fn create_counter(ref self: TContractState) -> ContractAddress;
 
@@ -17,7 +17,7 @@ trait ICounterFactory<TContractState> {
 }
 
 #[starknet::contract]
-mod CounterFactory {
+pub mod CounterFactory {
     use starknet::{ContractAddress, ClassHash};
     use starknet::syscalls::deploy_syscall;
 

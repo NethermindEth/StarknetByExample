@@ -1,11 +1,9 @@
 // The purpose of these tests is to demonstrate the capability to store custom types in the contract's state.
 
 mod tests {
-    use storing_custom_types::{
-        contract::{
-            IStoringCustomType, StoringCustomType,
-            StoringCustomType::{Person, personContractMemberStateTrait},
-        }
+    use storing_custom_types::contract::{
+        IStoringCustomType, StoringCustomType, Person,
+        StoringCustomType::personContractMemberStateTrait
     };
 
     use starknet::{ContractAddress, contract_address_const, testing::{set_contract_address}};

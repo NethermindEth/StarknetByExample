@@ -1,12 +1,12 @@
 #[starknet::interface]
-trait IImplicitInternalContract<TContractState> {
+pub trait IImplicitInternalContract<TContractState> {
     fn add(ref self: TContractState, nb: u32);
     fn get_value(self: @TContractState) -> u32;
     fn get_const(self: @TContractState) -> u32;
 }
 
 #[starknet::contract]
-mod ImplicitInternalContract {
+pub mod ImplicitInternalContract {
     #[storage]
     struct Storage {
         value: u32

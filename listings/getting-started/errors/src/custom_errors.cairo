@@ -1,6 +1,6 @@
-mod Errors {
-    const NOT_POSITIVE: felt252 = 'must be greater than 0';
-    const NOT_NULL: felt252 = 'must not be null';
+pub mod Errors {
+    pub const NOT_POSITIVE: felt252 = 'must be greater than 0';
+    pub const NOT_NULL: felt252 = 'must not be null';
 }
 
 #[starknet::interface]

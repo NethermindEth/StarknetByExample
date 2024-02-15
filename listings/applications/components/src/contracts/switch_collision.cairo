@@ -1,13 +1,13 @@
 // ANCHOR: interface
 #[starknet::interface]
-trait ISwitchCollision<TContractState> {
+pub trait ISwitchCollision<TContractState> {
     fn set(ref self: TContractState, value: bool);
     fn get(ref self: TContractState) -> bool;
 }
 // ANCHOR_END: interface
 
 #[starknet::contract]
-mod SwitchCollisionContract {
+pub mod SwitchCollisionContract {
     use components::switchable::switchable_component;
 
     component!(path: switchable_component, storage: switch, event: SwitchableEvent);
@@ -36,7 +36,7 @@ mod SwitchCollisionContract {
         SwitchableEvent: switchable_component::Event,
     }
 
-    #[external(v0)]
+    #[abi(embed_v0)]
     impl SwitchCollisionContract of super::ISwitchCollision<ContractState> {
         fn set(ref self: ContractState, value: bool) {
             self.switchable_value.write(value);

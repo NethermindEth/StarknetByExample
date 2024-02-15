@@ -14,7 +14,7 @@ mod GlobalExample {
     impl GlobalExampleImpl of super::IGlobalExample<ContractState> {
         fn foo(ref self: ContractState) {
             // Call the get_caller_address function to get the sender address
-            let caller = get_caller_address();
+            let _caller = get_caller_address();
         // ...
         }
     }
