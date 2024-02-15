@@ -7,5 +7,3 @@ For example:
 ```rust
 {{#include ../../listings/advanced-concepts/hash_solidity_compatible/src/contract.cairo}}
 ```
-
-Play with the contract in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/advanced-concepts/hash_solidity_compatible/src/contract.cairo).

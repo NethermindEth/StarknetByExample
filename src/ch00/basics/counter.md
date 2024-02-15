@@ -13,4 +13,3 @@ Here's how it works:
 ```rust
 {{#include ../../../listings/getting-started/counter/src/contracts.cairo}}
 ```
-Visit contract on [Voyager](https://goerli.voyager.online/contract/0x01664a69Fe701a1df7Bb0ae4A353792d0cf4E27146ee860075cbf6108b1D5718) or play with it in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/getting-started/counter/src/contracts.cairo).

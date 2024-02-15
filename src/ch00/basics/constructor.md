@@ -7,4 +7,3 @@ Here's a simple example that demonstrates how to initialize the state of a contr
 ```rust
 {{#include ../../../listings/getting-started/constructor/src/constructor.cairo}}
 ```
-Visit contract on [Voyager](https://goerli.voyager.online/contract/0x017fd6558e67451dA583d123D77F4e2651E91502D08F8F8432355293b11e1f8F) or play with it in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/getting-started/constructor/src/constructor.cairo).

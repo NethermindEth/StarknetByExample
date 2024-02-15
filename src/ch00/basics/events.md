@@ -8,4 +8,3 @@ Here's a simple example of a contract using events that emit an event each time 
 ```rust
 {{#include ../../../listings/getting-started/events/src/counter.cairo:contract}}
 ```
-Visit contract on [Voyager](https://goerli.voyager.online/contract/0x022e3B59518EA04aBb5da671ea04ecC3a154400f226d2Df38eFE146741b9E2F6) or play with it in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/getting-started/events/src/counter.cairo).
