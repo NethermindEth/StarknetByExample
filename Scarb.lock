@@ -7,6 +7,10 @@ version = "0.3.0"
 source = "git+https://github.com/keep-starknet-strange/alexandria.git?rev=800f5ad#800f5ad217847b5ded63c0302a444161766ee9d6"
 
 [[package]]
+name = "bytearray"
+version = "0.1.0"
+
+[[package]]
 name = "cairo_cheatsheet"
 version = "0.1.0"
 

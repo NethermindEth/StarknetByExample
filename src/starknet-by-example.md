@@ -27,7 +27,7 @@ For more resources, check [Awesome Starknet](https://github.com/keep-starknet-st
 
 The current version of this book use:
 ```
-cairo 2.4.0
+cairo 2.5.4
 edition = '2023_11'
 {{#include ../.tool-versions}}
 ```

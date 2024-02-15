@@ -17,6 +17,7 @@ Summary
     - [Errors](./ch00/basics/errors.md)
     - [Events](./ch00/basics/events.md)
     - [Syscalls](./ch00/basics/syscalls.md)
+    - [Strings and ByteArrays](./ch00/basics/bytearrays-strings.md)
     - [Storing Custom Types](./ch00/basics/storing-custom-types.md)
     - [Custom types in entrypoints](./ch00/basics/custom-types-in-entrypoints.md)
     - [Documentation](./ch00/basics/documentation.md)
