@@ -1,5 +1,5 @@
 #[starknet::contract]
-mod ImplicitInterfaceContract {
+pub mod ImplicitInterfaceContract {
     #[storage]
     struct Storage {
         value: u32

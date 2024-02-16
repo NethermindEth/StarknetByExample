@@ -1,10 +1,11 @@
 #[starknet::interface]
-trait IStorageVariableExample<TContractState> {
+pub trait IStorageVariableExample<TContractState> {
     fn set(ref self: TContractState, value: u32);
     fn get(self: @TContractState) -> u32;
 }
+
 #[starknet::contract]
-mod StorageVariablesExample {
+pub mod StorageVariablesExample {
     // All storage variables are contained in a struct called Storage
     // annotated with the `#[storage]` attribute
     #[storage]

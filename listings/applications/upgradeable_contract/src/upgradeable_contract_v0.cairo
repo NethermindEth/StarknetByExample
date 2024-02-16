@@ -2,13 +2,13 @@
 use starknet::class_hash::ClassHash;
 
 #[starknet::interface]
-trait IUpgradeableContract<TContractState> {
+pub trait IUpgradeableContract<TContractState> {
     fn upgrade(ref self: TContractState, impl_hash: ClassHash);
     fn version(self: @TContractState) -> u8;
 }
 
 #[starknet::contract]
-mod UpgradeableContract_V0 {
+pub mod UpgradeableContract_V0 {
     use starknet::class_hash::ClassHash;
     use starknet::SyscallResultTrait;
     use core::num::traits::Zero;

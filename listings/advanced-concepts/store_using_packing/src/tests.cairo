@@ -1,5 +1,5 @@
 mod tests {
-    use core::starknet::SyscallResultTrait;
+    use starknet::SyscallResultTrait;
     use store_using_packing::contract::{TimeContract, Time, ITimeDispatcher, ITimeDispatcherTrait};
 
     use starknet::syscalls::deploy_syscall;
@@ -8,7 +8,7 @@ mod tests {
     #[available_gas(20000000)]
     fn test_packing() {
         // Set up.
-        let mut calldata: Array<felt252> = ArrayTrait::new();
+        let mut calldata: Array<felt252> = array![];
         let (address0, _) = deploy_syscall(
             TimeContract::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
         )

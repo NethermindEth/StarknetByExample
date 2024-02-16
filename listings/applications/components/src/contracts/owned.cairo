@@ -1,11 +1,11 @@
 // ANCHOR: contract
 #[starknet::interface]
-trait IOwned<TContractState> {
+pub trait IOwned<TContractState> {
     fn do_something(ref self: TContractState);
 }
 
 #[starknet::contract]
-mod OwnedContract {
+pub mod OwnedContract {
     use components::ownable::{IOwnable, ownable_component, ownable_component::OwnableInternalTrait};
 
     component!(path: ownable_component, storage: ownable, event: OwnableEvent);
@@ -50,13 +50,14 @@ mod tests {
     use starknet::{contract_address_const, ContractAddress};
     use starknet::testing::{set_caller_address, set_contract_address};
     use starknet::storage::StorageMemberAccessTrait;
+    use starknet::SyscallResultTrait;
     use starknet::syscalls::deploy_syscall;
 
     fn deploy() -> (IOwnedDispatcher, IOwnableDispatcher) {
         let (contract_address, _) = deploy_syscall(
             OwnedContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
         )
-            .unwrap();
+            .unwrap_syscall();
 
         (IOwnedDispatcher { contract_address }, IOwnableDispatcher { contract_address },)
     }

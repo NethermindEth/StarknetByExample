@@ -4,13 +4,13 @@ pub mod VaultErrors {
 }
 
 #[starknet::interface]
-trait IVaultErrorsExample<TContractState> {
+pub trait IVaultErrorsExample<TContractState> {
     fn deposit(ref self: TContractState, amount: u256);
     fn withdraw(ref self: TContractState, amount: u256);
 }
 
 #[starknet::contract]
-mod VaultErrorsExample {
+pub mod VaultErrorsExample {
     use super::VaultErrors;
 
     #[storage]

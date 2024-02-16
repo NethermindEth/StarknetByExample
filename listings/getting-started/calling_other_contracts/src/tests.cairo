@@ -1,23 +1,22 @@
 mod tests {
-    use calling_other_contracts::callee::Callee::__member_module_value::InternalContractMemberStateTrait;
-    use core::starknet::SyscallResultTrait;
-    use core::traits::TryInto;
-    use core::result::ResultTrait;
-    use calling_other_contracts::callee::{Callee, ICalleeDispatcher, ICalleeDispatcherTrait};
+    use calling_other_contracts::callee::{
+        Callee, ICalleeDispatcher, ICalleeDispatcherTrait, Callee::valueContractMemberStateTrait
+    };
     use calling_other_contracts::caller::{Caller, ICallerDispatcher, ICallerDispatcherTrait};
     use starknet::{ContractAddress, contract_address_const};
     use starknet::testing::{set_contract_address};
     use starknet::syscalls::deploy_syscall;
+    use starknet::SyscallResultTrait;
 
 
     fn deploy() -> (ICalleeDispatcher, ICallerDispatcher) {
-        let calldata: Span<felt252> = ArrayTrait::new().span();
+        let calldata: Span<felt252> = array![].span();
         let (address_callee, _) = deploy_syscall(
             Callee::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata, false
         )
             .unwrap_syscall();
         let (address_caller, _) = deploy_syscall(
-            Caller::TEST_CLASS_HASH.try_into().unwrap(), 0, ArrayTrait::new().span(), false
+            Caller::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
         )
             .unwrap_syscall();
         (

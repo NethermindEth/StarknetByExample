@@ -1,23 +1,14 @@
-use starknet::ContractAddress;
-#[starknet::interface]
-trait IMapContract<TContractState> {
-    fn set(ref self: TContractState, key: ContractAddress, value: felt252);
-
-    fn get(self: @TContractState, key: ContractAddress) -> felt252;
-}
-
 mod tests {
-    use core::starknet::SyscallResultTrait;
-    use super::super::mappings::MapContract;
-    use super::{IMapContract, IMapContractDispatcher, IMapContractDispatcherTrait};
+    use mappings::mappings::{MapContract, IMapContractDispatcher, IMapContractDispatcherTrait};
     use starknet::ContractAddress;
+    use starknet::SyscallResultTrait;
     use starknet::syscalls::deploy_syscall;
 
     #[test]
     #[available_gas(2000000000)]
     fn test_set_get() {
         // Set up.
-        let mut calldata: Array<felt252> = ArrayTrait::new();
+        let mut calldata: Array<felt252> = array![];
         let (address0, _) = deploy_syscall(
             MapContract::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
         )

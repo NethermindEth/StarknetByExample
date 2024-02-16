@@ -11,7 +11,6 @@ pub mod ExampleContract {
         value: u32
     }
 
-
     // The `abi(embed_v0)` attribute indicates that all the functions in this implementation can be called externally.
     // Omitting this attribute would make all the functions in this implementation internal.
     #[abi(embed_v0)]

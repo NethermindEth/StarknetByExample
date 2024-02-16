@@ -1,13 +1,12 @@
 mod tests {
-    use core::traits::Into;
-    use core::result::ResultTrait;
     use starknet::testing::set_contract_address;
     use starknet::{ContractAddress, contract_address_const};
+    use starknet::SyscallResultTrait;
     use starknet::syscalls::deploy_syscall;
 
-    use constructor::constructor::ExampleConstructor;
-    // use constructor::constructor::ExampleConstructor::namesContractMemberStateTrait;
-    use constructor::constructor::ExampleConstructor::__member_module_names::InternalContractMemberStateTrait;
+    use constructor::constructor::{
+        ExampleConstructor, ExampleConstructor::namesContractMemberStateTrait
+    };
 
     #[test]
     #[available_gas(2000000000)]
@@ -22,7 +21,7 @@ mod tests {
         let (address_0, _) = deploy_syscall(
             ExampleConstructor::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
         )
-            .unwrap();
+            .unwrap_syscall();
 
         let state = ExampleConstructor::unsafe_new_contract_state();
         set_contract_address(address_0);

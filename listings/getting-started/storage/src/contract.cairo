@@ -1,5 +1,5 @@
 #[starknet::contract]
-mod Contract {
+pub mod Contract {
     #[storage]
     struct Storage {
         a: u128,

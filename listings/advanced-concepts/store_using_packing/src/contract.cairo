@@ -14,9 +14,6 @@ pub trait ITime<TContractState> {
 pub mod TimeContract {
     use super::Time;
     use starknet::storage_access::StorePacking;
-    use core::traits::{Into, TryInto, DivRem};
-    use core::option::OptionTrait;
-    use core::serde::Serde;
 
     #[storage]
     struct Storage {

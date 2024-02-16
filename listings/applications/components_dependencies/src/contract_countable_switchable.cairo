@@ -37,12 +37,12 @@ mod CountableContract {
 
 #[cfg(test)]
 mod tests {
-    use core::starknet::SyscallResultTrait;
     use super::CountableContract;
     use components::countable::{ICountable, ICountableDispatcher, ICountableDispatcherTrait};
     use components::switchable::{ISwitchable, ISwitchableDispatcher, ISwitchableDispatcherTrait};
 
-    use core::starknet::storage::StorageMemberAccessTrait;
+    use starknet::storage::StorageMemberAccessTrait;
+    use starknet::SyscallResultTrait;
     use starknet::syscalls::deploy_syscall;
 
     fn deploy() -> (ICountableDispatcher, ISwitchableDispatcher) {

@@ -1,6 +1,6 @@
 // ANCHOR: contract
 #[starknet::contract]
-mod SwitchContract {
+pub mod SwitchContract {
     use components::switchable::switchable_component;
 
     component!(path: switchable_component, storage: switch, event: SwitchableEvent);
@@ -33,7 +33,7 @@ mod tests {
     use components::switchable::switchable_component::SwitchableInternalTrait;
     use components::switchable::ISwitchable;
 
-    use core::starknet::storage::StorageMemberAccessTrait;
+    use starknet::storage::StorageMemberAccessTrait;
     use super::SwitchContract;
 
     fn STATE() -> SwitchContract::ContractState {

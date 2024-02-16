@@ -1,8 +1,5 @@
 mod tests {
-    use core::starknet::SyscallResultTrait;
-    use core::option::OptionTrait;
-    use core::traits::Into;
-    use core::traits::TryInto;
+    use starknet::SyscallResultTrait;
     use starknet::{ContractAddress, ClassHash, contract_address_const};
     use starknet::syscalls::deploy_syscall;
 

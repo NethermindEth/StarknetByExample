@@ -5,16 +5,16 @@ mod tests {
     use custom_type_serde::contract::{
         SerdeCustomType, Person, ISerdeCustomTypeDispatcher, ISerdeCustomTypeDispatcherTrait
     };
-    use core::result::ResultTrait;
     use starknet::ContractAddress;
     use starknet::syscalls::deploy_syscall;
+    use starknet::SyscallResultTrait;
 
     fn deploy() -> ISerdeCustomTypeDispatcher {
         let calldata: Array<felt252> = array![];
         let (address0, _) = deploy_syscall(
             SerdeCustomType::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
         )
-            .unwrap();
+            .unwrap_syscall();
         ISerdeCustomTypeDispatcher { contract_address: address0 }
     }
 

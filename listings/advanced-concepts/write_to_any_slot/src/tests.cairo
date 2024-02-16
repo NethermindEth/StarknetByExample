@@ -16,7 +16,7 @@ mod tests {
     #[available_gas(2000000000)]
     fn test_read_write() {
         // Set up.
-        let mut calldata: Array<felt252> = ArrayTrait::new();
+        let mut calldata: Array<felt252> = array![];
         let (address0, _) = deploy_syscall(
             WriteToAnySlot::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
         )

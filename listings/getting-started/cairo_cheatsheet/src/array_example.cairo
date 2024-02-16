@@ -1,5 +1,5 @@
 fn array() -> bool {
-    let mut arr = ArrayTrait::<u32>::new();
+    let mut arr = array![];
     arr.append(10);
     arr.append(20);
     arr.append(30);

@@ -1,7 +1,6 @@
 #[cfg(test)]
 mod tests {
     // Import the interface and dispatcher to be able to interact with the contract.
-    use core::starknet::SyscallResultTrait;
     use testing_how_to::contract::{
         ISimpleContract, SimpleContract, ISimpleContractDispatcher, ISimpleContractDispatcherTrait
     };
@@ -10,6 +9,7 @@ mod tests {
     use starknet::{
         ContractAddress, get_caller_address, get_contract_address, contract_address_const
     };
+    use starknet::SyscallResultTrait;
     use starknet::syscalls::deploy_syscall;
 
     // Use starknet test utils to fake the transaction context.
@@ -18,7 +18,7 @@ mod tests {
     // Deploy the contract and return its dispatcher.
     fn deploy(initial_value: u32) -> ISimpleContractDispatcher {
         // Set up constructor arguments.
-        let mut calldata = ArrayTrait::new();
+        let mut calldata = array![];
         initial_value.serialize(ref calldata);
 
         // Declare and deploy

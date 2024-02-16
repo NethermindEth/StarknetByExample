@@ -1,6 +1,6 @@
 fn do_loop() {
     // ANCHOR: sheet
-    let mut arr = ArrayTrait::new();
+    let mut arr = array![];
 
     let mut i: u32 = 0;
     while (i < 10) {

@@ -1,6 +1,6 @@
 // ANCHOR: contract
 #[starknet::contract]
-mod CountableContract {
+pub mod CountableContract {
     use components_dependencies::countable_internal_dep_switch::countable_component;
     use components::switchable::switchable_component;
 
@@ -37,12 +37,12 @@ mod CountableContract {
 
 #[cfg(test)]
 mod tests {
-    use core::starknet::SyscallResultTrait;
     use super::CountableContract;
     use components::countable::{ICountable, ICountableDispatcher, ICountableDispatcherTrait};
     use components::switchable::{ISwitchable, ISwitchableDispatcher, ISwitchableDispatcherTrait};
 
-    use core::starknet::storage::StorageMemberAccessTrait;
+    use starknet::storage::StorageMemberAccessTrait;
+    use starknet::SyscallResultTrait;
     use starknet::syscalls::deploy_syscall;
 
     fn deploy() -> (ICountableDispatcher, ISwitchableDispatcher) {

@@ -1,10 +1,11 @@
 #[starknet::interface]
-trait IErrorsExample<TContractState> {
+pub trait IErrorsExample<TContractState> {
     fn test_assert(self: @TContractState, i: u256);
     fn test_panic(self: @TContractState, i: u256);
 }
+
 #[starknet::contract]
-mod ErrorsExample {
+pub mod ErrorsExample {
     #[storage]
     struct Storage {}
 
