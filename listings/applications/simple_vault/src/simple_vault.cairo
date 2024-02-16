@@ -1,9 +1,9 @@
-use starknet::{ContractAddress};
+use starknet::ContractAddress;
 
 // In order to make contract calls within our Vault,
 // we need to have the interface of the remote ERC20 contract defined to import the Dispatcher.
 #[starknet::interface]
-trait IERC20<TContractState> {
+pub trait IERC20<TContractState> {
     fn name(self: @TContractState) -> felt252;
     fn symbol(self: @TContractState) -> felt252;
     fn decimals(self: @TContractState) -> u8;
@@ -18,15 +18,16 @@ trait IERC20<TContractState> {
 }
 
 #[starknet::interface]
-trait ISimpleVault<TContractState> {
+pub trait ISimpleVault<TContractState> {
     fn deposit(ref self: TContractState, amount: u256);
     fn withdraw(ref self: TContractState, shares: u256);
 }
 
 #[starknet::contract]
-mod SimpleVault {
+pub mod SimpleVault {
     use super::{IERC20Dispatcher, IERC20DispatcherTrait};
     use starknet::{ContractAddress, get_caller_address, get_contract_address};
+
     #[storage]
     struct Storage {
         token: IERC20Dispatcher,

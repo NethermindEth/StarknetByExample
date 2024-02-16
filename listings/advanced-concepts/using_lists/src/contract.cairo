@@ -19,9 +19,6 @@ pub trait IListExample<TContractState> {
 #[starknet::contract]
 pub mod ListExample {
     use super::Task;
-
-    use core::option::OptionTrait;
-    use core::result::ResultTrait;
     use alexandria_storage::list::{List, ListTrait};
 
     #[storage]

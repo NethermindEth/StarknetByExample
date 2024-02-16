@@ -1,5 +1,5 @@
 #[starknet::contract]
-mod ERC20Token {
+pub mod ERC20Token {
     use openzeppelin::token::erc20::ERC20Component;
     use openzeppelin::token::erc20::interface::IERC20Metadata;
     use starknet::ContractAddress;
@@ -64,10 +64,8 @@ mod ERC20Token {
 }
 
 mod tests {
-    use core::option::OptionTrait;
-    use core::traits::TryInto;
-    use openzeppelin::token::erc20::{interface::IERC20Dispatcher, interface::IERC20DispatcherTrait};
     use super::ERC20Token;
+    use openzeppelin::token::erc20::{interface::IERC20Dispatcher, interface::IERC20DispatcherTrait};
     use openzeppelin::utils::serde::SerializedAppend;
     use openzeppelin::tests::utils;
 

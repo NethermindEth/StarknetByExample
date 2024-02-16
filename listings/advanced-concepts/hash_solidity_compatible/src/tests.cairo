@@ -17,7 +17,7 @@ mod tests {
     #[available_gas(2000000000)]
     fn get_same_hash_solidity() {
         let mut state = setup();
-        let mut array: Array<u256> = ArrayTrait::new();
+        let mut array: Array<u256> = array![];
         array.append(1);
 
         let hash_expected: u256 =

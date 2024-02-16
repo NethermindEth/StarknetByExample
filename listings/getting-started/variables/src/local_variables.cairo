@@ -1,10 +1,10 @@
 #[starknet::interface]
-trait ILocalVariablesExample<TContractState> {
+pub trait ILocalVariablesExample<TContractState> {
     fn do_something(self: @TContractState, value: u32) -> u32;
 }
 
 #[starknet::contract]
-mod LocalVariablesExample {
+pub mod LocalVariablesExample {
     #[storage]
     struct Storage {}
 

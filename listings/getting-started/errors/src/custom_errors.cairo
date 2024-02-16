@@ -4,13 +4,13 @@ pub mod Errors {
 }
 
 #[starknet::interface]
-trait ICustomErrorsExample<TContractState> {
+pub trait ICustomErrorsExample<TContractState> {
     fn test_assert(self: @TContractState, i: u256);
     fn test_panic(self: @TContractState, i: u256);
 }
 
 #[starknet::contract]
-mod CustomErrorsExample {
+pub mod CustomErrorsExample {
     use super::Errors;
 
     #[storage]

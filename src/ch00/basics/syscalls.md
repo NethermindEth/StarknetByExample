@@ -154,10 +154,10 @@ Example of the usage of the `emit_event` syscall from the [Events](../basics/eve
 
 <!-- TODO Add a more low-level example ? -->
 <!-- ```
-let keys = ArrayTrait::new();
+let keys = array![];
 keys.append('key');
 keys.append('deposit');
-let values = ArrayTrait::new();
+let values = array![];
 values.append(1);
 values.append(2);
 values.append(3);

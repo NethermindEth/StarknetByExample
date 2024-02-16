@@ -1,17 +1,17 @@
 mod tests {
-    use core::result::ResultTrait;
     use counter::contracts::{
         SimpleCounter, ISimpleCounterDispatcher, ISimpleCounterDispatcherTrait
     };
     use starknet::ContractAddress;
     use starknet::syscalls::deploy_syscall;
+    use starknet::SyscallResultTrait;
 
     fn deploy(init_value: u128) -> ISimpleCounterDispatcher {
         let calldata: Array<felt252> = array![init_value.into()];
         let (address0, _) = deploy_syscall(
             SimpleCounter::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
         )
-            .unwrap();
+            .unwrap_syscall();
         ISimpleCounterDispatcher { contract_address: address0 }
     }
 

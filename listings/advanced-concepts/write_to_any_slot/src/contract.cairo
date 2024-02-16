@@ -31,7 +31,7 @@ pub mod WriteToAnySlot {
         }
     }
     pub fn get_address_from_name(variable_name: felt252) -> StorageAddress {
-        let mut data: Array<felt252> = ArrayTrait::new();
+        let mut data: Array<felt252> = array![];
         data.append(variable_name);
         let hashed_name: felt252 = poseidon_hash_span(data.span());
         let MASK_250: u256 = 0x03ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff;

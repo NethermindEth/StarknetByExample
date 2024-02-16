@@ -18,7 +18,7 @@ pub trait ICounterFactory<TContractState> {
 
 #[starknet::contract]
 pub mod CounterFactory {
-    use starknet::{ContractAddress, ClassHash};
+    use starknet::{ContractAddress, ClassHash, SyscallResultTrait};
     use starknet::syscalls::deploy_syscall;
 
     #[storage]
@@ -46,7 +46,7 @@ pub mod CounterFactory {
             let (deployed_address, _) = deploy_syscall(
                 self.counter_class_hash.read(), 0, constructor_calldata.span(), false
             )
-                .expect('failed to deploy counter');
+                .unwrap_syscall();
 
             deployed_address
         }

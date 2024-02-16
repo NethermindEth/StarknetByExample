@@ -1,9 +1,9 @@
 #[starknet::interface]
-trait IGlobalExample<TContractState> {
+pub trait IGlobalExample<TContractState> {
     fn foo(ref self: TContractState);
 }
 #[starknet::contract]
-mod GlobalExample {
+pub mod GlobalExample {
     // import the required functions from the starknet core library
     use starknet::get_caller_address;
 

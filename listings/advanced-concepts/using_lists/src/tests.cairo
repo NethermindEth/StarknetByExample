@@ -1,5 +1,4 @@
 use using_lists::contract::IListExample;
-use core::array::ArrayTrait;
 use using_lists::contract::{Task, ListExample};
 use using_lists::contract::ListExample::{
     amountContractMemberStateTrait, tasksContractMemberStateTrait
