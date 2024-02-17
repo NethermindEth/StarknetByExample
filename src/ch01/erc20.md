@@ -17,6 +17,4 @@ Here's an implementation of the ERC20 interface in Cairo:
 {{#include ../../listings/applications/erc20/src/token.cairo:erc20}}
 ```
 
-Play with this contract in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/applications/erc20/src/token.cairo).
-
 There's several other implementations, such as the [Open Zeppelin](https://docs.openzeppelin.com/contracts-cairo/0.7.0/erc20) or the [Cairo By Example](https://cairo-by-example.com/examples/erc20/) ones.

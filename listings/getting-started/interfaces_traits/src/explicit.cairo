@@ -1,11 +1,11 @@
 #[starknet::interface]
-trait IExplicitInterfaceContract<TContractState> {
+pub trait IExplicitInterfaceContract<TContractState> {
     fn get_value(self: @TContractState) -> u32;
     fn set_value(ref self: TContractState, value: u32);
 }
 
 #[starknet::contract]
-mod ExplicitInterfaceContract {
+pub mod ExplicitInterfaceContract {
     #[storage]
     struct Storage {
         value: u32

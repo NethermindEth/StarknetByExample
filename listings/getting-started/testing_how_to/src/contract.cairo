@@ -1,14 +1,14 @@
 use starknet::ContractAddress;
 
 #[starknet::interface]
-trait ISimpleContract<TContractState> {
+pub trait ISimpleContract<TContractState> {
     fn get_value(self: @TContractState) -> u32;
     fn get_owner(self: @TContractState) -> ContractAddress;
     fn set_value(ref self: TContractState, value: u32);
 }
 
 #[starknet::contract]
-mod SimpleContract {
+pub mod SimpleContract {
     use starknet::{get_caller_address, ContractAddress};
 
     #[storage]

@@ -1,8 +1,14 @@
 # Loop
 
-A loop specifies a block of code that will run repetitively until a halting condition is encountered.
+A `loop` specifies a block of code that will run repetitively until a halting condition is encountered.
 For example:
 
 ```rust
 {{#include ../../../listings/getting-started/cairo_cheatsheet/src/loop_example.cairo:sheet}}
+```
+
+A `while` loop allows you to specify a condition that must be true for the loop to continue.
+
+```rust
+{{#include ../../../listings/getting-started/cairo_cheatsheet/src/while_example.cairo:sheet}}
 ```

@@ -1,16 +1,16 @@
-mod Errors {
-    const NOT_POSITIVE: felt252 = 'must be greater than 0';
-    const NOT_NULL: felt252 = 'must not be null';
+pub mod Errors {
+    pub const NOT_POSITIVE: felt252 = 'must be greater than 0';
+    pub const NOT_NULL: felt252 = 'must not be null';
 }
 
 #[starknet::interface]
-trait ICustomErrorsExample<TContractState> {
+pub trait ICustomErrorsExample<TContractState> {
     fn test_assert(self: @TContractState, i: u256);
     fn test_panic(self: @TContractState, i: u256);
 }
 
 #[starknet::contract]
-mod CustomErrorsExample {
+pub mod CustomErrorsExample {
     use super::Errors;
 
     #[storage]

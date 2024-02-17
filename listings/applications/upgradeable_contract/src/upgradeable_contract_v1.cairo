@@ -1,20 +1,19 @@
 use starknet::class_hash::ClassHash;
 
 #[starknet::interface]
-trait IUpgradeableContract<TContractState> {
+pub trait IUpgradeableContract<TContractState> {
     fn upgrade(ref self: TContractState, impl_hash: ClassHash);
     fn version(self: @TContractState) -> u8;
 }
 
 #[starknet::contract]
-mod UpgradeableContract_V1 {
+pub mod UpgradeableContract_V1 {
     use starknet::class_hash::ClassHash;
     use starknet::SyscallResultTrait;
-    use core::{zeroable, zeroable::{NonZero, Zeroable}};
+    use core::num::traits::Zero;
 
     #[storage]
     struct Storage {}
-
 
     #[event]
     #[derive(Drop, starknet::Event)]
@@ -31,7 +30,7 @@ mod UpgradeableContract_V1 {
     impl UpgradeableContract of super::IUpgradeableContract<ContractState> {
         fn upgrade(ref self: ContractState, impl_hash: ClassHash) {
             assert(!impl_hash.is_zero(), 'Class hash cannot be zero');
-            starknet::replace_class_syscall(impl_hash).unwrap_syscall();
+            starknet::syscalls::replace_class_syscall(impl_hash).unwrap_syscall();
             self.emit(Event::Upgraded(Upgraded { implementation: impl_hash }))
         }
 

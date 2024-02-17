@@ -7,17 +7,16 @@ trait IWriteToAnySlot<TContractState> {
 }
 
 mod tests {
-    use super::WriteToAnySlot::{get_address_from_name};
+    use super::WriteToAnySlot::get_address_from_name;
     use super::WriteToAnySlot;
     use super::{IWriteToAnySlotDispatcher, IWriteToAnySlotDispatcherTrait};
-    use starknet::deploy_syscall;
-    use starknet::class_hash::Felt252TryIntoClassHash;
+    use starknet::syscalls::deploy_syscall;
 
     #[test]
     #[available_gas(2000000000)]
     fn test_read_write() {
         // Set up.
-        let mut calldata: Array<felt252> = ArrayTrait::new();
+        let mut calldata: Array<felt252> = array![];
         let (address0, _) = deploy_syscall(
             WriteToAnySlot::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
         )

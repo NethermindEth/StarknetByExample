@@ -1,5 +1,5 @@
 #[starknet::interface]
-trait IHashTrait<T> {
+pub trait IHashTrait<T> {
     fn save_user_with_poseidon(
         ref self: T, id: felt252, username: felt252, password: felt252
     ) -> felt252;
@@ -10,7 +10,7 @@ trait IHashTrait<T> {
 
 // ANCHOR: hash
 #[starknet::contract]
-mod HashTraits {
+pub mod HashTraits {
     use core::hash::{HashStateTrait, HashStateExTrait};
     use core::{pedersen::PedersenTrait, poseidon::PoseidonTrait};
 
@@ -63,18 +63,19 @@ mod HashTraits {
 
 #[cfg(test)]
 mod tests {
+    use starknet::SyscallResultTrait;
     use super::{HashTraits, IHashTraitDispatcher, IHashTraitDispatcherTrait};
 
     use core::hash::{HashStateTrait, HashStateExTrait};
     use core::{pedersen::PedersenTrait, poseidon::PoseidonTrait};
-    use starknet::{deploy_syscall};
+    use starknet::syscalls::deploy_syscall;
 
     fn deploy() -> IHashTraitDispatcher {
-        let mut calldata = ArrayTrait::new();
+        let mut calldata = array![];
         let (address, _) = deploy_syscall(
             HashTraits::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
         )
-            .unwrap();
+            .unwrap_syscall();
         IHashTraitDispatcher { contract_address: address }
     }
 

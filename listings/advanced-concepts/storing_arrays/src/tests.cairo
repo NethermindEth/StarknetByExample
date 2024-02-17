@@ -1,23 +1,23 @@
 mod tests {
+    use starknet::SyscallResultTrait;
     use storing_arrays::contract::{
         StoreArrayContract, IStoreArrayContractDispatcher, IStoreArrayContractDispatcherTrait
     };
-    use starknet::deploy_syscall;
-    use starknet::class_hash::Felt252TryIntoClassHash;
+    use starknet::syscalls::deploy_syscall;
 
     #[test]
     #[available_gas(20000000)]
     fn test_array_storage() {
         // Set up.
-        let mut calldata: Array<felt252> = ArrayTrait::new();
+        let mut calldata: Array<felt252> = array![];
         let (address0, _) = deploy_syscall(
             StoreArrayContract::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
         )
-            .unwrap();
+            .unwrap_syscall();
         let mut contract = IStoreArrayContractDispatcher { contract_address: address0 };
 
         // Store an array.
-        let mut array: Array<felt252> = ArrayTrait::new();
+        let mut array: Array<felt252> = array![];
         array.append(1);
         array.append(2);
         contract.store_array(array);
@@ -34,7 +34,7 @@ mod tests {
     #[should_panic(expected: ('Storage - Span too large', 'ENTRYPOINT_FAILED'))]
     fn test_array_storage_too_large() {
         // Set up.
-        let mut calldata: Array<felt252> = ArrayTrait::new();
+        let mut calldata: Array<felt252> = array![];
         let (address0, _) = deploy_syscall(
             StoreArrayContract::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
         )
@@ -42,7 +42,7 @@ mod tests {
         let mut contract = IStoreArrayContractDispatcher { contract_address: address0 };
 
         // Store an array.
-        let mut array: Array<felt252> = ArrayTrait::new();
+        let mut array: Array<felt252> = array![];
         let mut i = 0;
         loop {
             if i == 256 {

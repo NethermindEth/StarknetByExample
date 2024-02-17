@@ -3,6 +3,6 @@ fn felt() {
     let felt: felt252 = 100;
     let felt_as_str = 'Hello Starknet!';
 
-    let felt = felt + felt_as_str;
+    let _felt = felt + felt_as_str;
 // ANCHOR_END: sheet
 }

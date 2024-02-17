@@ -1,7 +1,7 @@
-use starknet::{
-    StorageBaseAddress, Store, SyscallResult, storage_read_syscall, storage_write_syscall,
-    storage_address_from_base_and_offset
-};
+use starknet::SyscallResultTrait;
+use starknet::{Store, SyscallResult};
+use starknet::storage_access::{StorageBaseAddress, storage_address_from_base_and_offset};
+use starknet::syscalls::{storage_read_syscall, storage_write_syscall};
 
 // ANCHOR: StorageAccessImpl
 impl StoreFelt252Array of Store<Array<felt252>> {
@@ -18,7 +18,7 @@ impl StoreFelt252Array of Store<Array<felt252>> {
     fn read_at_offset(
         address_domain: u32, base: StorageBaseAddress, mut offset: u8
     ) -> SyscallResult<Array<felt252>> {
-        let mut arr: Array<felt252> = ArrayTrait::new();
+        let mut arr: Array<felt252> = array![];
 
         // Read the stored array's length. If the length is superior to 255, the read will fail.
         let len: u8 = Store::<u8>::read_at_offset(address_domain, base, offset)
@@ -46,14 +46,15 @@ impl StoreFelt252Array of Store<Array<felt252>> {
     ) -> SyscallResult<()> {
         // // Store the length of the array in the first storage slot.
         let len: u8 = value.len().try_into().expect('Storage - Span too large');
-        Store::<u8>::write_at_offset(address_domain, base, offset, len);
+        Store::<u8>::write_at_offset(address_domain, base, offset, len).unwrap();
         offset += 1;
 
         // Store the array elements sequentially
         loop {
             match value.pop_front() {
                 Option::Some(element) => {
-                    Store::<felt252>::write_at_offset(address_domain, base, offset, element);
+                    Store::<felt252>::write_at_offset(address_domain, base, offset, element)
+                        .unwrap();
                     offset += Store::<felt252>::size();
                 },
                 Option::None(_) => { break Result::Ok(()); }
@@ -69,13 +70,13 @@ impl StoreFelt252Array of Store<Array<felt252>> {
 
 // ANCHOR: StoreArrayContract
 #[starknet::interface]
-trait IStoreArrayContract<TContractState> {
+pub trait IStoreArrayContract<TContractState> {
     fn store_array(ref self: TContractState, arr: Array<felt252>);
     fn read_array(self: @TContractState) -> Array<felt252>;
 }
 
 #[starknet::contract]
-mod StoreArrayContract {
+pub mod StoreArrayContract {
     use super::StoreFelt252Array;
 
     #[storage]

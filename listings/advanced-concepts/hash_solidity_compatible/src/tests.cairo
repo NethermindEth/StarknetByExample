@@ -1,9 +1,10 @@
 mod tests {
     use hash_solidity_compatible::{contract::{SolidityHashExample, ISolidityHashExample}};
     use starknet::{
-        ContractAddress, get_contract_address, contract_address_const, call_contract_syscall,
+        ContractAddress, get_contract_address, contract_address_const,
         testing::{set_contract_address}
     };
+    // use starknet::syscalls::call_contract_syscall;
 
     fn setup() -> SolidityHashExample::ContractState {
         let mut state = SolidityHashExample::contract_state_for_testing();
@@ -16,7 +17,7 @@ mod tests {
     #[available_gas(2000000000)]
     fn get_same_hash_solidity() {
         let mut state = setup();
-        let mut array: Array<u256> = ArrayTrait::new();
+        let mut array: Array<u256> = array![];
         array.append(1);
 
         let hash_expected: u256 =

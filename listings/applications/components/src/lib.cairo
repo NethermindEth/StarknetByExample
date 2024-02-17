@@ -1,6 +1,6 @@
 // Components
-mod switchable;
-mod countable;
-mod ownable;
+pub mod switchable;
+pub mod countable;
+pub mod ownable;
 
 mod contracts;

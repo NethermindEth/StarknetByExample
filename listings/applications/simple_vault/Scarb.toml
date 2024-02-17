@@ -1,7 +1,7 @@
 [package]
 name = "simple_vault"
 version.workspace = true
-edition = '2023_10'
+edition = '2023_11'
 
 [dependencies]
 starknet.workspace = true

@@ -12,8 +12,6 @@ Now, take a look at the tests for this contract:
 {{#include ../../../listings/getting-started/testing_how_to/src/tests.cairo}}
 ```
 
-Play with this contract in [Remix](https://remix.ethereum.org/?#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/getting-started/testing_how_to/src/lib.cairo).
-
 To define our test, we use scarb, which allows us to create a separate module guarded with `#[cfg(test)]`. This ensures that the test module is only compiled when running tests using `scarb test`.
 
 Each test is defined as a function with the `#[test]` attribute. You can also check if a test panics using the `#[should_panic]` attribute.

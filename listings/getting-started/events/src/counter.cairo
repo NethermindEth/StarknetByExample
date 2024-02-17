@@ -1,11 +1,13 @@
 // ANCHOR: contract
 #[starknet::interface]
-trait IEventCounter<TContractState> {
+pub trait IEventCounter<TContractState> {
     fn increment(ref self: TContractState);
 }
+
 #[starknet::contract]
-mod EventCounter {
+pub mod EventCounter {
     use starknet::{get_caller_address, ContractAddress};
+
     #[storage]
     struct Storage {
         // Counter value

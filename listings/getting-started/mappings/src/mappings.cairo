@@ -1,13 +1,13 @@
 use starknet::ContractAddress;
 
 #[starknet::interface]
-trait IMapContract<TContractState> {
+pub trait IMapContract<TContractState> {
     fn set(ref self: TContractState, key: ContractAddress, value: felt252);
     fn get(self: @TContractState, key: ContractAddress) -> felt252;
 }
 
 #[starknet::contract]
-mod MapContract {
+pub mod MapContract {
     use starknet::ContractAddress;
 
     #[storage]

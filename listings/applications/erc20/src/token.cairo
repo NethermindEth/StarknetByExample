@@ -29,7 +29,7 @@ trait IERC20<TContractState> {
 // ANCHOR: erc20
 #[starknet::contract]
 mod erc20 {
-    use core::{zeroable, zeroable::{NonZero, Zeroable}};
+    use core::num::traits::Zero;
     use starknet::get_caller_address;
     use starknet::contract_address_const;
     use starknet::ContractAddress;
@@ -64,12 +64,12 @@ mod erc20 {
     }
 
     mod Errors {
-        const APPROVE_FROM_ZERO: felt252 = 'ERC20: approve from 0';
-        const APPROVE_TO_ZERO: felt252 = 'ERC20: approve to 0';
-        const TRANSFER_FROM_ZERO: felt252 = 'ERC20: transfer from 0';
-        const TRANSFER_TO_ZERO: felt252 = 'ERC20: transfer to 0';
-        const BURN_FROM_ZERO: felt252 = 'ERC20: burn from 0';
-        const MINT_TO_ZERO: felt252 = 'ERC20: mint to 0';
+        pub const APPROVE_FROM_ZERO: felt252 = 'ERC20: approve from 0';
+        pub const APPROVE_TO_ZERO: felt252 = 'ERC20: approve to 0';
+        pub const TRANSFER_FROM_ZERO: felt252 = 'ERC20: transfer from 0';
+        pub const TRANSFER_TO_ZERO: felt252 = 'ERC20: transfer to 0';
+        pub const BURN_FROM_ZERO: felt252 = 'ERC20: burn from 0';
+        pub const MINT_TO_ZERO: felt252 = 'ERC20: mint to 0';
     }
 
     #[constructor]
@@ -195,10 +195,10 @@ mod erc20 {
 
         fn mint(ref self: ContractState, recipient: ContractAddress, amount: felt252) {
             assert(!recipient.is_zero(), Errors::MINT_TO_ZERO);
-            let supply = self.total_supply.read() + amount; // What can go wrong here?
+            let supply = self.total_supply.read() + amount;
             self.total_supply.write(supply);
             let balance = self.balances.read(recipient) + amount;
-            self.balances.write(recipient, amount);
+            self.balances.write(recipient, balance);
             self
                 .emit(
                     Event::Transfer(

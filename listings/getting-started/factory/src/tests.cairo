@@ -1,7 +1,5 @@
 mod tests {
-    use core::option::OptionTrait;
-    use core::traits::Into;
-    use core::traits::TryInto;
+    use starknet::SyscallResultTrait;
     use starknet::{ContractAddress, ClassHash, contract_address_const};
     use starknet::syscalls::deploy_syscall;
 
@@ -14,8 +12,8 @@ mod tests {
     fn deploy_factory(
         counter_class_hash: ClassHash, init_value: u128
     ) -> ICounterFactoryDispatcher {
-        let caller_address: ContractAddress = contract_address_const::<'caller'>();
-        let deployed_contract_address = contract_address_const::<'market_factory'>();
+        // let caller_address: ContractAddress = contract_address_const::<'caller'>();
+        // let deployed_contract_address = contract_address_const::<'market_factory'>();
 
         let mut constructor_calldata: Array::<felt252> = array![
             init_value.into(), counter_class_hash.into()
@@ -27,7 +25,7 @@ mod tests {
             constructor_calldata.span(),
             false
         )
-            .expect('failed to deploy factory');
+            .unwrap_syscall();
 
         ICounterFactoryDispatcher { contract_address: factory_address }
     }

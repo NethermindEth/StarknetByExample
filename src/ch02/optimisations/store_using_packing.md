@@ -28,5 +28,3 @@ Here's an example of storing a `Time` struct with two `u8` values using the `Sto
 ```rust
 {{#include ../../../listings/advanced-concepts/store_using_packing/src/contract.cairo}}
 ```
-
-Play with this contract in [Remix](https://remix.ethereum.org/?#activate=Starknet-cairo1-compiler&url=https://github.com/NethermindEth/StarknetByExample/blob/main/listings/advanced-concepts/store_using_packing/src/contract.cairo).
