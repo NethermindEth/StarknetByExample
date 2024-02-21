@@ -52,7 +52,6 @@ Summary
 - [Defi Vault](./ch01/simple_vault.md)
 - [ERC20 Token](./ch01/erc20.md)
 - [Constant Product AMM](./ch01/constant-product-amm.md)
-- [Signature Verification](./ch01/signature_verification.md)
 
 <!-- ch02 -->
 
@@ -68,3 +67,4 @@ Summary
   - [Storage Optimisations](./ch02/optimisations/store_using_packing.md)
 - [List](./ch02/list.md)
 - [Plugins](./ch02/plugins.md)
+- [Signature Verification](./ch02/signature_verification.md)
