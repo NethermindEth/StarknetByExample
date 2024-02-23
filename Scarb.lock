@@ -49,6 +49,10 @@ name = "custom_type_serde"
 version = "0.1.0"
 
 [[package]]
+name = "ecdsa_verification"
+version = "0.1.0"
+
+[[package]]
 name = "erc20"
 version = "0.1.0"
 
