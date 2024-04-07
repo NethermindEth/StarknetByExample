@@ -12,9 +12,12 @@ test = "$(git rev-parse --show-toplevel)/scripts/test_resolver.sh"
 # [workspace.tool.snforge]
 
 [workspace.dependencies]
-starknet = ">=2.5.4"
+starknet = ">=2.6.3"
 # snforge_std = { git = "https://github.com/foundry-rs/starknet-foundry.git", tag = "v0.11.0" }
-openzeppelin = { git = "https://github.com/OpenZeppelin/cairo-contracts.git", tag="v0.9.0" }
+openzeppelin = { git = "https://github.com/OpenZeppelin/cairo-contracts.git", tag="v0.11.0" }
+
+# [workspace.dev-dependencies]
+# openzeppelin = { git = "https://github.com/OpenZeppelin/cairo-contracts.git", tag="v0.11.0" }
 
 [workspace.package]
 description = "Collection of examples of how to use the Cairo programming language to create smart contracts on Starknet."
