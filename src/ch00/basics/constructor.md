@@ -5,5 +5,5 @@ Constructors are a special type of function that runs only once when deploying a
 Here's a simple example that demonstrates how to initialize the state of a contract on deployment by defining logic inside a constructor.
 
 ```rust
-{{#include ../../../listings/getting-started/constructor/src/constructor.cairo}}
+{{#rustdoc_include ../../../listings/getting-started/constructor/src/constructor.cairo:contract}}
 ```
