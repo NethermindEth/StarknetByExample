@@ -21,12 +21,12 @@ Local variables are stored in memory and are not stored on the blockchain. This 
 Here's a simple example of a contract with only local variables:
 
 ```rust
-{{#include ../../../listings/getting-started/variables/src/local_variables.cairo}}
+{{#rustdoc_include ../../../listings/getting-started/variables/src/local_variables.cairo:contract}}
 ```
 
 ## Storage Variables
 
-Storage variables are persistent data stored on the blockchain. They can be accessed from one execution to another, allowing the contract to remember and update information over time.
+Storage variables are persistent data stored on the blockchain. They can be accessed from one execution to another, allowing the contract to remember and update information over time. See [Storage](./storage.md) for more information.
 
 To write or update a storage variable, you need to interact with the contract through an external entrypoint by sending a transaction.
 
@@ -35,17 +35,17 @@ On the other hand, you can read state variables, for free, without any transacti
 Here's a simple example of a contract with one storage variable:
 
 ```rust
-{{#include ../../../listings/getting-started/variables/src/storage_variables.cairo}}
+{{#rustdoc_include ../../../listings/getting-started/variables/src/storage_variables.cairo:contract}}
 ```
 
 ## Global Variables
 
 Global variables are predefined variables that provide information about the blockchain and the current execution environment. They can be accessed at any time and from anywhere!
 
-In Starknet, you can access global variables by using specific functions contained in the starknet core libraries.
+In Starknet, you can access global variables by using specific functions from the starknet core library.
 
 For example, the `get_caller_address` function returns the address of the caller of the current transaction, and the `get_contract_address` function returns the address of the current contract.
 
 ```rust
-{{#include ../../../listings/getting-started/variables/src/global_variables.cairo}}
+{{#rustdoc_include ../../../listings/getting-started/variables/src/global_variables.cairo:contract}}
 ```
