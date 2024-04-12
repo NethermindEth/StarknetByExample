@@ -34,8 +34,7 @@ mod test {
         LocalVariablesExample, ILocalVariablesExampleDispatcher,
         ILocalVariablesExampleDispatcherTrait
     };
-    use starknet::SyscallResultTrait;
-    use starknet::syscalls::deploy_syscall;
+    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
 
     #[test]
     fn test_can_deploy_and_do_something() {

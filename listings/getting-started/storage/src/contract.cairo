@@ -13,11 +13,10 @@ pub mod Contract {
 #[cfg(test)]
 mod test {
     use super::Contract;
-    use starknet::SyscallResultTrait;
-    use starknet::syscalls::deploy_syscall;
-    use storage::contract::Contract::__member_module_a::InternalContractMemberStateTrait as InternalA;
-    use storage::contract::Contract::__member_module_b::InternalContractMemberStateTrait as InternalB;
-    use storage::contract::Contract::__member_module_c::InternalContractMemberStateTrait as InternalC;
+    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
+    use storage::contract::Contract::{
+        aContractMemberStateTrait, bContractMemberStateTrait, cContractMemberStateTrait
+    };
 
     #[starknet::interface]
     trait ITestContract<T> {}
