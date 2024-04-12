@@ -33,24 +33,18 @@ pub mod MapContract {
 #[cfg(test)]
 mod test {
     use super::{MapContract, IMapContractDispatcher, IMapContractDispatcherTrait};
-    use starknet::ContractAddress;
-    use starknet::SyscallResultTrait;
-    use starknet::syscalls::deploy_syscall;
+    use starknet::{ContractAddress, SyscallResultTrait, syscalls::deploy_syscall};
 
     #[test]
     fn test_deploy_and_set_get() {
-        let mut calldata: Array<felt252> = array![];
-        let (address0, _) = deploy_syscall(
-            MapContract::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
+        let (contract_address, _) = deploy_syscall(
+            MapContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
         )
             .unwrap_syscall();
-
-        let mut contract = IMapContractDispatcher { contract_address: address0 };
+        let mut contract = IMapContractDispatcher { contract_address };
 
         // Write to map.
         let value: felt252 = 1;
-        let contract_address: ContractAddress = address0;
-
         contract.set(key: contract_address, value: value);
 
         // Read from map.

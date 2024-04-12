@@ -39,7 +39,7 @@ pub mod ExampleContract {
     // We name the trait `PrivateFunctionsTrait` to indicate that it is an
     // internal trait allowing us to call internal functions.
     #[generate_trait]
-    impl PrivateFunctions of PrivateFunctionsTrait {
+    pub impl PrivateFunctions of PrivateFunctionsTrait {
         // The `_read_value` function is outside the implementation that is
         // marked as `#[abi(embed_v0)]`, so it's an _internal_ function
         // and can only be called from within the contract.
@@ -54,28 +54,49 @@ pub mod ExampleContract {
 
 #[cfg(test)]
 mod test {
-    use visibility::visibility::{IExampleContract, ExampleContract};
+    use super::{ExampleContract, IExampleContractDispatcher, IExampleContractDispatcherTrait};
+    use starknet::{ContractAddress, SyscallResultTrait, syscalls::deploy_syscall};
 
-    use starknet::{
-        ContractAddress, get_contract_address, contract_address_const,
-        testing::{set_contract_address}
-    };
-
-    fn setup() -> ExampleContract::ContractState {
-        let mut state = ExampleContract::contract_state_for_testing();
-        let contract_address = contract_address_const::<0x1>();
-        set_contract_address(contract_address);
-        state
-    }
+    // These imports will allow us to directly access and set the contract state:
+    // - for `value` storage variable access
+    use super::ExampleContract::valueContractMemberStateTrait;
+    // - for `PrivateFunctionsTrait` internal functions access
+    //   implementation need to be public to be able to access it
+    use super::ExampleContract::PrivateFunctionsTrait;
+    // to set the contract address for the state
+    // and also be able to use the dispatcher on the same contract
+    use starknet::testing::set_contract_address;
 
     #[test]
-    #[available_gas(2000000000)]
     fn can_call_set_and_get() {
-        let mut state = setup();
-        let init_value: u32 = 42;
-        state.set(init_value);
-        let received_value = state.get();
+        let (contract_address, _) = deploy_syscall(
+            ExampleContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+        )
+            .unwrap_syscall();
 
-        assert(received_value == init_value, 'wrong value received');
+        // You can interact with the external entrypoints of the contract using the dispatcher.
+        let contract = IExampleContractDispatcher { contract_address };
+        // But for internal functions, you need to use the contract state.
+        let mut state = ExampleContract::contract_state_for_testing();
+        set_contract_address(contract_address);
+
+        // The contract dispatcher and state refer to the same contract.
+        assert_eq!(contract.get(), state.value.read());
+
+        // We can set from the dispatcher
+        contract.set(42);
+        assert_eq!(contract.get(), state.value.read());
+        assert_eq!(42, state.value.read());
+        assert_eq!(42, contract.get());
+
+        // Or directly from the state for more complex operations
+        state.value.write(24);
+        assert_eq!(contract.get(), state.value.read());
+        assert_eq!(24, state.value.read());
+        assert_eq!(24, contract.get());
+
+        // We can also acces internal functions from the state
+        assert_eq!(state._read_value(), state.value.read());
+        assert_eq!(state._read_value(), contract.get());
     }
 }

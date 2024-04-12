@@ -26,8 +26,7 @@ pub mod GlobalExample {
 #[cfg(test)]
 mod test {
     use super::GlobalExample;
-    use starknet::SyscallResultTrait;
-    use starknet::syscalls::deploy_syscall;
+    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
 
     #[test]
     fn test_can_deploy() {

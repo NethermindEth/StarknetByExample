@@ -44,17 +44,17 @@ pub mod SimpleCounter {
 #[cfg(test)]
 mod test {
     use super::{SimpleCounter, ISimpleCounterDispatcher, ISimpleCounterDispatcherTrait};
-    use starknet::ContractAddress;
-    use starknet::syscalls::deploy_syscall;
-    use starknet::SyscallResultTrait;
+    use starknet::{ContractAddress, SyscallResultTrait, syscalls::deploy_syscall};
 
     fn deploy(init_value: u128) -> ISimpleCounterDispatcher {
-        let calldata: Array<felt252> = array![init_value.into()];
-        let (address0, _) = deploy_syscall(
-            SimpleCounter::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
+        let (contract_address, _) = deploy_syscall(
+            SimpleCounter::TEST_CLASS_HASH.try_into().unwrap(),
+            0,
+            array![init_value.into()].span(),
+            false
         )
             .unwrap_syscall();
-        ISimpleCounterDispatcher { contract_address: address0 }
+        ISimpleCounterDispatcher { contract_address }
     }
 
     #[test]
@@ -63,49 +63,46 @@ mod test {
         let contract = deploy(init_value);
 
         let read_value = contract.get_current_count();
-        assert(read_value == init_value, 'wrong init value');
+        assert_eq!(read_value, init_value);
     }
 
     #[test]
-    #[available_gas(2000000000)]
     fn should_increment() {
         let init_value = 10;
         let contract = deploy(init_value);
 
         contract.increment();
-        assert(contract.get_current_count() == init_value + 1, 'wrong increment value');
+        assert_eq!(contract.get_current_count(), init_value + 1);
 
         contract.increment();
         contract.increment();
-        assert(contract.get_current_count() == init_value + 3, 'wrong increment value');
+        assert_eq!(contract.get_current_count(), init_value + 3);
     }
 
     #[test]
-    #[available_gas(2000000000)]
     fn should_decrement() {
         let init_value = 10;
         let contract = deploy(init_value);
 
         contract.decrement();
-        assert(contract.get_current_count() == init_value - 1, 'wrong decrement value');
+        assert_eq!(contract.get_current_count(), init_value - 1);
 
         contract.decrement();
         contract.decrement();
-        assert(contract.get_current_count() == init_value - 3, 'wrong decrement value');
+        assert_eq!(contract.get_current_count(), init_value - 3);
     }
 
     #[test]
-    #[available_gas(2000000000)]
     fn should_increment_and_decrement() {
         let init_value = 10;
         let contract = deploy(init_value);
 
         contract.increment();
         contract.decrement();
-        assert(contract.get_current_count() == init_value, 'wrong value');
+        assert_eq!(contract.get_current_count(), init_value);
 
         contract.decrement();
         contract.increment();
-        assert(contract.get_current_count() == init_value, 'wrong value');
+        assert_eq!(contract.get_current_count(), init_value);
     }
 }

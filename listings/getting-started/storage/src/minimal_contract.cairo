@@ -9,8 +9,7 @@ pub mod Contract {
 #[cfg(test)]
 mod test {
     use super::Contract;
-    use starknet::SyscallResultTrait;
-    use starknet::syscalls::deploy_syscall;
+    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
 
     #[test]
     fn test_can_deploy() {

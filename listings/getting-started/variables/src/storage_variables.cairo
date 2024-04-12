@@ -37,8 +37,7 @@ mod test {
         StorageVariablesExample, StorageVariablesExample::valueContractMemberStateTrait,
         IStorageVariableExampleDispatcher, IStorageVariableExampleDispatcherTrait
     };
-    use starknet::SyscallResultTrait;
-    use starknet::syscalls::deploy_syscall;
+    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
     use starknet::testing::set_contract_address;
 
     #[test]
