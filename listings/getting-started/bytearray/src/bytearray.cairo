@@ -39,7 +39,7 @@ mod tests {
     #[test]
     #[available_gas(2000000000)]
     fn message_contract_tests() {
-        let mut state = MessageContract::unsafe_new_contract_state();
+        let mut state = MessageContract::contract_state_for_testing();
         state.message.write("World!");
 
         let message = state.message.read();
