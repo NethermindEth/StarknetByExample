@@ -16,6 +16,14 @@ Starknet By Example is for anyone who wants to quickly learn how to write smart 
 The first chapters will give you a basic understanding of the Cairo programming language and how to write, deploy and use smart contracts on Starknet.
 The later chapters will cover more advanced topics and show you how to write more complex smart contracts.
 
+## How to use this book?
+
+Each chapter is a standalone example that demonstrates a specific feature or common use case of smart contracts on Starknet. If you are new to Starknet, it is recommended to read the chapters in order.
+
+Most examples contains interfaces and tests that are hidden by default. You can hover over the code blocks and click on the "Show hidden lines" (eyes icon) to see the hidden code.
+
+You can run each examples online by using the [Starknet Remix Plugin](https://remix.ethereum.org/?#activate=Starknet).
+
 ## Further reading
 
 If you want to learn more about the Cairo programming language, you can read the [Cairo Book](https://book.cairo-lang.org).
