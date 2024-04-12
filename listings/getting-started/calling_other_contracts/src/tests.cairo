@@ -33,7 +33,7 @@ mod tests {
         let (callee, caller) = deploy();
         caller.set_value_from_address(callee.contract_address, init_value);
 
-        let state = Callee::unsafe_new_contract_state();
+        let state = Callee::contract_state_for_testing();
         set_contract_address(callee.contract_address);
 
         let value_read: u128 = state.value.read();
