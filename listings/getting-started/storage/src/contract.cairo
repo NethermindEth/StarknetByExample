@@ -18,9 +18,6 @@ mod test {
         aContractMemberStateTrait, bContractMemberStateTrait, cContractMemberStateTrait
     };
 
-    #[starknet::interface]
-    trait ITestContract<T> {}
-
     #[test]
     fn test_can_deploy() {
         let (_contract_address, _) = deploy_syscall(

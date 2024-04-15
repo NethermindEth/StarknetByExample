@@ -13,10 +13,12 @@ To throw an error, use the `assert` or `panic` functions:
   It should be used when the condition to check is complex and for internal errors. It's similar to the `revert` statement in Solidity.
   (Use `panic_with_felt252` to be able to directly pass a felt252 as the error value)
 
+The `assert_eq!`, `assert_ne!`, `assert_lt!`, `assert_le!`, `assert_gt!` and `assert_ge!` macros can be used as an `assert` shorthand to compare two values, but **only** in tests. In contract, you should only use the `assert` function.
+
 Here's a simple example that demonstrates the use of these functions:
 
 ```rust
-{{#include ../../../listings/getting-started/errors/src/simple_errors.cairo}}
+{{#rustdoc_include ../../../listings/getting-started/errors/src/simple_errors.cairo:contract}}
 ```
 
 ## Custom errors
@@ -24,7 +26,7 @@ Here's a simple example that demonstrates the use of these functions:
 You can make error handling easier by defining your error codes in a specific module.
 
 ```rust
-{{#include ../../../listings/getting-started/errors/src/custom_errors.cairo}}
+{{#rustdoc_include ../../../listings/getting-started/errors/src/custom_errors.cairo:contract}}
 ```
 
 ## Vault example
@@ -32,5 +34,5 @@ You can make error handling easier by defining your error codes in a specific mo
 Here's another example that demonstrates the use of errors in a more complex contract:
 
 ```rust
-{{#include ../../../listings/getting-started/errors/src/vault_errors.cairo}}
+{{#rustdoc_include ../../../listings/getting-started/errors/src/vault_errors.cairo:contract}}
 ```
