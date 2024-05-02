@@ -40,9 +40,10 @@ You may also need the `info` module from the corelib, which allows you to access
 - `get_block_timestamp() -> u64`
 - `get_block_number() -> u64`
 
-
 You can found the full list of functions in the [Starknet Corelib repo](https://github.com/starkware-libs/cairo/tree/main/corelib/src/starknet).
 You can also find a detailed explanation of testing in cairo in the [Cairo book - Chapter 9](https://book.cairo-lang.org/ch09-01-how-to-write-tests.html).
+
+<!-- Todo: add testing events, see "events::counter.cairo::test_events" -->
 
 ## Starknet Foundry
 
