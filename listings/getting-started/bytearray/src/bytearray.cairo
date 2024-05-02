@@ -1,10 +1,10 @@
-// ANCHOR: contract
 #[starknet::interface]
 pub trait IMessage<TContractState> {
     fn append(ref self: TContractState, str: ByteArray);
     fn prepend(ref self: TContractState, str: ByteArray);
 }
 
+// ANCHOR: contract
 #[starknet::contract]
 pub mod MessageContract {
     #[storage]
