@@ -1,9 +1,9 @@
-// ANCHOR: contract
 #[starknet::interface]
 pub trait IEventCounter<TContractState> {
     fn increment(ref self: TContractState, amount: u128);
 }
 
+// ANCHOR: contract
 #[starknet::contract]
 pub mod EventCounter {
     use starknet::{get_caller_address, ContractAddress};
