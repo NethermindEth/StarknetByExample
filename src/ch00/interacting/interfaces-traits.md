@@ -11,18 +11,18 @@ You can use the `#[generate_trait]` attribute to implicitly generate the trait f
 In summary, there's two ways to handle interfaces:
 
 - Explicitly, by defining a trait annoted with `#[starknet::interface]`
-- Implicitly, by using `#[generate_trait]` combined with the #[abi(per_item)]` attributes, and annotating each function inside the implementation block with the appropriate attribute.
+- Implicitly, by using `#[generate_trait]` combined with the `#[abi(per_item)]` attributes, and annotating each function inside the implementation block with the appropriate attribute.
 
 ## Explicit interface
 
 ```rust
-{{#include ../../../listings/getting-started/interfaces_traits/src/explicit.cairo}}
+{{#rustdoc_include ../../../listings/getting-started/interfaces_traits/src/explicit.cairo:contract}}
 ```
 
 ## Implicit interface
 
 ```rust
-{{#include ../../../listings/getting-started/interfaces_traits/src/implicit.cairo}}
+{{#rustdoc_include ../../../listings/getting-started/interfaces_traits/src/implicit.cairo:contract}}
 ```
 
 > Note: You can import an implicitly generated contract interface with `use contract::{GeneratedContractInterface}`. However, the `Dispatcher` will not be generated automatically.
@@ -33,5 +33,5 @@ You can also use `#[generate_trait]` for your internal functions.
 Since this trait is generated in the context of the contract, you can define pure functions as well (functions without the `self` parameter).
 
 ```rust
-{{#include ../../../listings/getting-started/interfaces_traits/src/implicit_internal.cairo}}
+{{#rustdoc_include ../../../listings/getting-started/interfaces_traits/src/implicit_internal.cairo:contract}}
 ```
