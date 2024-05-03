@@ -7,7 +7,6 @@ pub trait ICallee<TContractState> {
 
 #[starknet::contract]
 pub mod Callee {
-
     #[storage]
     struct Storage {
         value: u128,
