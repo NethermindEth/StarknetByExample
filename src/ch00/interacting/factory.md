@@ -17,7 +17,7 @@ Using the factory pattern, we can deploy multiple instances of the same contract
 Here's a minimal example of a factory contract that deploy the `SimpleCounter` contract:
 
 ```rust
-{{#include ../../../listings/getting-started/factory/src/simple_factory.cairo:contract}}
+{{#rustdoc_include ../../../listings/getting-started/factory/src/simple_factory.cairo:contract}}
 ```
 
 This factory can be used to deploy multiple instances of the `SimpleCounter` contract by calling the `create_counter` and `create_counter_at` functions.
