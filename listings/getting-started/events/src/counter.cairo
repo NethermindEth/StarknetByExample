@@ -94,17 +94,17 @@ mod tests {
         assert_eq!(state.counter.read(), amount);
 
         // Notice the order: the first event emitted is the first to be popped.
-        /// ANCHOR: test_event
+        /// ANCHOR: test_events
         assert_eq!(
             starknet::testing::pop_log(contract_address),
             Option::Some(Event::CounterIncreased(CounterIncreased { amount }))
         );
+        // ANCHOR_END: test_events
         assert_eq!(
             starknet::testing::pop_log(contract_address),
             Option::Some(
                 Event::UserIncreaseCounter(UserIncreaseCounter { user: caller, new_value: amount })
             )
         );
-    // ANCHOR_END: test_events
     }
 }
