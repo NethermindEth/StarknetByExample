@@ -38,7 +38,8 @@ pub trait IDiceGame<TContractState> {
 #[starknet::contract]
 mod DiceGame {
     use starknet::{
-        ContractAddress, contract_address_const, get_block_number, get_caller_address, get_contract_address
+        ContractAddress, contract_address_const, get_block_number, get_caller_address,
+        get_contract_address
     };
     use pragma_lib::abi::{IRandomnessDispatcher, IRandomnessDispatcherTrait};
     use openzeppelin::token::erc20::interface::{ERC20ABIDispatcher, ERC20ABIDispatcherTrait};
@@ -78,7 +79,11 @@ mod DiceGame {
     }
 
     #[constructor]
-    fn constructor(ref self: ContractState, pragma_vrf_contract_address: ContractAddress, owner: ContractAddress) {
+    fn constructor(
+        ref self: ContractState,
+        pragma_vrf_contract_address: ContractAddress,
+        owner: ContractAddress
+    ) {
         self.ownable.initializer(owner);
         self.pragma_vrf_contract_address.write(pragma_vrf_contract_address);
         self.game_window.write(true);
@@ -88,7 +93,7 @@ mod DiceGame {
     impl DiceGame of super::IDiceGame<ContractState> {
         fn guess(ref self: ContractState, guess: u8) {
             assert(self.game_window.read(), 'GAME_INACTIVE');
-            assert(guess >= 1 && guess <=6, 'INVALID_GUESS');
+            assert(guess >= 1 && guess <= 6, 'INVALID_GUESS');
 
             let caller = get_caller_address();
             self.user_guesses.write(caller, guess);
@@ -115,17 +120,27 @@ mod DiceGame {
             let reduced_random_number: u256 = self.last_random_number.read().into() % 6 + 1;
 
             if user_guess == reduced_random_number.try_into().unwrap() {
-                self.emit(Event::GameWinner(ResultAnnouncement {
-                    caller: caller,
-                    guess: user_guess,
-                    random_number: reduced_random_number
-                }));
+                self
+                    .emit(
+                        Event::GameWinner(
+                            ResultAnnouncement {
+                                caller: caller,
+                                guess: user_guess,
+                                random_number: reduced_random_number
+                            }
+                        )
+                    );
             } else {
-                self.emit(Event::GameLost(ResultAnnouncement {
-                    caller: caller,
-                    guess: user_guess,
-                    random_number: reduced_random_number
-                }));
+                self
+                    .emit(
+                        Event::GameLost(
+                            ResultAnnouncement {
+                                caller: caller,
+                                guess: user_guess,
+                                random_number: reduced_random_number
+                            }
+                        )
+                    );
             }
         }
     }
@@ -212,3 +227,4 @@ mod DiceGame {
     }
 }
 // ANCHOR_END: DiceGameContract 
+
