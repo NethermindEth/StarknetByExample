@@ -62,6 +62,7 @@ Summary
 - [Simple Storage with Starknet-js](./applications/simple_storage_starknetjs.md)
 - [Crowdfunding Campaign](./applications/crowdfunding.md)
 - [AdvancedFactory: Crowdfunding](./applications/advanced_factory.md)
+- [Dice Game VRF](./applications/dice_game_vrf.md)
 
 <!-- advanced-concepts -->
 
