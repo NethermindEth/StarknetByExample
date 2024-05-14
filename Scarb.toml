@@ -18,6 +18,7 @@ components = { path = "listings/applications/components" }
 snforge_std = { git = "https://github.com/foundry-rs/starknet-foundry.git", tag = "v0.25.0" }
 # The latest Alexandria release supports only Cairo v2.6.0, so using explicit rev that supports Cairo v2.6.3
 alexandria_storage = { git = "https://github.com/keep-starknet-strange/alexandria.git", rev="800f5ad" }
+pragma_lib = { git = "https://github.com/astraly-labs/pragma-lib" }
 
 [workspace.package]
 description = "Collection of examples of how to use the Cairo programming language to create smart contracts on Starknet."
