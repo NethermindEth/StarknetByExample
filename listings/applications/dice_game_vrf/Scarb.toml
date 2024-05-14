@@ -1,0 +1,14 @@
+[package]
+name = "dice_game_vrf"
+version = "0.1.0"
+edition = "2023_11"
+
+[dependencies]
+starknet.workspace = true
+openzeppelin.workspace = true
+pragma_lib.workspace = true
+
+[scripts]
+test.workspace = true
+
+[[target.starknet-contract]]

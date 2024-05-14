@@ -49,6 +49,14 @@ name = "custom_type_serde"
 version = "0.1.0"
 
 [[package]]
+name = "dice_game_vrf"
+version = "0.1.0"
+dependencies = [
+ "openzeppelin",
+ "pragma_lib",
+]
+
+[[package]]
 name = "ecdsa_verification"
 version = "0.1.0"
 
@@ -88,6 +96,11 @@ version = "0.1.0"
 name = "openzeppelin"
 version = "0.11.0"
 source = "git+https://github.com/OpenZeppelin/cairo-contracts.git?tag=v0.11.0#a83f36b23f1af6e160288962be4a2701c3ecbcda"
+
+[[package]]
+name = "pragma_lib"
+version = "1.0.0"
+source = "git+https://github.com/astraly-labs/pragma-lib#2eca9b70dc505788423da1eedbf2d65563cc3102"
 
 [[package]]
 name = "scarb"
