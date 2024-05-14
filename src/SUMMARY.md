@@ -55,6 +55,7 @@ Summary
 - [Defi Vault](./ch01/simple_vault.md)
 - [ERC20 Token](./ch01/erc20.md)
 - [Constant Product AMM](./ch01/constant-product-amm.md)
+- [Dice Game VRF](./ch01/dice_game_vrf.md)
 
 <!-- ch02 -->
 
