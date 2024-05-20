@@ -3,7 +3,7 @@
 #[starknet::interface]
 pub trait ICommitmentRevealTrait<T> {
     fn commit(ref self: T, name: felt252, amount: felt252) -> felt252;
-    fn reveal(ref self: T, name: felt252, amount: felt252) -> bool;
+    fn reveal(self: @T, name: felt252, amount: felt252) -> bool;
 }
 
 // ANCHOR: hash
@@ -35,7 +35,7 @@ pub mod CommitmentRevealTraits {
             pedersen_hash
         }
 
-        fn reveal(ref self: ContractState, name: felt252, amount: felt252) -> bool {
+        fn reveal(self: @ContractState, name: felt252, amount: felt252) -> bool {
             let auction = Auction { amount, name };
             let hash = PedersenTrait::new(0).update_with(auction).finalize();
             let pedersen_hash = self.message_hash.read();
