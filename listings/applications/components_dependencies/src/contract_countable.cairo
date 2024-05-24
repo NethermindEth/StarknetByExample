@@ -1,4 +1,4 @@
-// ANCHOR: contract
+// [!region contract]
 #[starknet::contract]
 mod CountableContract {
     use components_dependencies::countable_dep_switch::countable_component;
@@ -39,8 +39,9 @@ mod CountableContract {
         CountableEvent: countable_component::Event,
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
+// [!region tests]
 #[cfg(test)]
 mod tests {
     use super::CountableContract;
@@ -116,3 +117,4 @@ mod tests {
         assert(counter.get() == 6, 'Counter did not increment');
     }
 }
+// [!endregion tests]

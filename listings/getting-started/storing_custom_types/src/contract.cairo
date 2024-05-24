@@ -1,9 +1,9 @@
+// [!region contract]
 #[starknet::interface]
 pub trait IStoringCustomType<TContractState> {
     fn set_person(ref self: TContractState, person: Person);
 }
 
-// ANCHOR: contract
 // Deriving the starknet::Store trait
 // allows us to store the `Person` struct in the contract's storage.
 #[derive(Drop, Serde, Copy, starknet::Store)]
@@ -28,8 +28,9 @@ pub mod StoringCustomType {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
+// [!region tests]
 #[cfg(test)]
 mod tests {
     use super::{
@@ -50,3 +51,4 @@ mod tests {
         assert(person.name == read_person.name, 'wrong name');
     }
 }
+// [!endregion tests]

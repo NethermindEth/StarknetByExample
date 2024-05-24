@@ -1,10 +1,10 @@
+// [!region contract]
 #[starknet::interface]
 pub trait IMessage<TContractState> {
     fn append(ref self: TContractState, str: ByteArray);
     fn prepend(ref self: TContractState, str: ByteArray);
 }
 
-// ANCHOR: contract
 #[starknet::contract]
 pub mod MessageContract {
     #[storage]
@@ -28,8 +28,9 @@ pub mod MessageContract {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
+// [!region tests]
 #[cfg(test)]
 mod tests {
     use bytearray::bytearray::{
@@ -52,3 +53,4 @@ mod tests {
         assert(state.message.read() == "Hello, World! Good day, sir!", 'wrong message (prepend)');
     }
 }
+// [!endregion tests]

@@ -1,5 +1,5 @@
 fn do_loop() {
-    // ANCHOR: sheet
+    // [!region sheet]
     let mut arr = array![];
 
     let mut i: u32 = 0;
@@ -7,5 +7,5 @@ fn do_loop() {
         arr.append(i);
         i += 1;
     };
-// ANCHOR_END: sheet
+// [!endregion sheet]
 }

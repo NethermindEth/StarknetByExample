@@ -1,3 +1,4 @@
+// [!region tests]
 mod switch_collision_tests {
     use components::switchable::switchable_component::SwitchableInternalTrait;
     use components::switchable::{ISwitchable, ISwitchableDispatcher, ISwitchableDispatcherTrait};
@@ -24,7 +25,7 @@ mod switch_collision_tests {
 
     #[test]
     #[available_gas(2000000)]
-    // ANCHOR: collision
+    // [!region collision]
     fn test_collision() {
         let (mut contract, mut contract_iswitch) = deploy();
 
@@ -41,5 +42,6 @@ mod switch_collision_tests {
         contract.set(false);
         assert(contract.get() == contract_iswitch.is_on(), 'value != switch');
     }
-// ANCHOR_END: collision
+// [!endregion collision]
 }
+// [!endregion tests]

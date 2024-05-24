@@ -8,7 +8,7 @@ pub mod countable_component {
         countable_value: u32,
     }
 
-    // ANCHOR: impl
+    // [!region impl]
     #[embeddable_as(Countable)]
     impl CountableImpl<
         TContractState, +HasComponent<TContractState>, +ISwitchable<TContractState>
@@ -23,5 +23,5 @@ pub mod countable_component {
             }
         }
     }
-// ANCHOR_END: impl
+// [!endregion impl]
 }

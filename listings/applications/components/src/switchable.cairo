@@ -1,11 +1,11 @@
-// ANCHOR: component
+// [!region component]
 #[starknet::interface]
-// ANCHOR: interface
+// [!region interface]
 pub trait ISwitchable<TContractState> {
     fn is_on(self: @TContractState) -> bool;
     fn switch(ref self: TContractState);
 }
-// ANCHOR_END: interface
+// [!endregion interface]
 
 #[starknet::component]
 pub mod switchable_component {
@@ -46,6 +46,6 @@ pub mod switchable_component {
         }
     }
 }
-// ANCHOR_END: component
+// [!endregion component]
 
 

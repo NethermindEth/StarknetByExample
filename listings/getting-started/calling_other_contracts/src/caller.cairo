@@ -1,4 +1,4 @@
-// ANCHOR: callee_contract
+// [!region callee_contract]
 // This will automatically generate ICalleeDispatcher and ICalleeDispatcherTrait
 #[starknet::interface]
 pub trait ICallee<TContractState> {
@@ -20,8 +20,9 @@ pub mod Callee {
         }
     }
 }
-// ANCHOR_END: callee_contract
+// [!endregion callee_contract]
 
+// [!region caller_contract]
 #[starknet::interface]
 pub trait ICaller<TContractState> {
     fn set_value_from_address(
@@ -29,7 +30,6 @@ pub trait ICaller<TContractState> {
     );
 }
 
-// ANCHOR: caller_contract
 #[starknet::contract]
 pub mod Caller {
     // We need to import the dispatcher of the callee contract
@@ -47,8 +47,9 @@ pub mod Caller {
         }
     }
 }
-// ANCHOR_END: caller_contract
+// [!endregion caller_contract]
 
+// [!region tests]
 #[cfg(test)]
 mod tests {
     use super::{
@@ -90,3 +91,4 @@ mod tests {
         assert_eq!(value_read, init_value);
     }
 }
+// [!endregion tests]

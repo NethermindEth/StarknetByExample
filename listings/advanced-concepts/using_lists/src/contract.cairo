@@ -1,3 +1,4 @@
+// [!region contract]
 #[derive(Copy, Drop, Serde, starknet::Store)]
 pub struct Task {
     pub description: felt252,
@@ -70,3 +71,4 @@ pub mod ListExample {
         }
     }
 }
+// [!endregion contract]
