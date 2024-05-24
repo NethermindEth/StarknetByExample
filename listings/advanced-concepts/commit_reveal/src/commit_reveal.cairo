@@ -82,6 +82,6 @@ mod tests {
         let test_reveal = contract.reveal(name, amount);
         println!("test reveal: {}", test_reveal);
         println!("test hash: {}", test_hash);
-        assert(test_reveal == true, 'You incorrect auction details');
+        assert(test_reveal == true, 'incorrect auction details');
     }
 }
