@@ -1,6 +1,7 @@
 import { defineConfig } from "vocs";
 
 export default defineConfig({
+  rootDir: ".",
   title: "Starknet by Example",
   topNav: [
     {

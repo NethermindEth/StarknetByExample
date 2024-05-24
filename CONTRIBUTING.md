@@ -1,6 +1,6 @@
 # Contributing
 
-When contributing to this repository, please first discuss the change you wish to make via issue or in the telegram channel before making a change. 
+When contributing to this repository, please first discuss the change you wish to make via issue or in the telegram channel before making a change.
 
 Join the telegram channel: https://t.me/StarknetByExample
 
@@ -14,6 +14,7 @@ Please note we have a code of conduct, please follow it in all your interactions
   - [Working with Markdown Files](#working-with-markdown-files)
   - [Adding a new chapter](#adding-a-new-chapter)
   - [Adding a new Cairo program](#adding-a-new-cairo-program)
+    - [Verification script](#verification-script)
     - [Tests](#tests)
     - [Use of region](#use-of-region)
   - [Code of Conduct](#code-of-conduct)
@@ -29,18 +30,27 @@ Please note we have a code of conduct, please follow it in all your interactions
 1. Clone this repository.
 
 2. Install the required dependencies using pnpm:
+
 ```
 pnpm i
 ```
 
-3. Start the development server:
+3. Rust related packages:
+
+   - Install toolchain providing `cargo` using [rustup](https://rustup.rs/).
+   - Install [mdBook](https://rust-lang.github.io/mdBook/guide/installation.html) and the required extension with `cargo install mdbook  mdbook-i18n-helpers mdbook-last-changed `.
+
+4. Install `scarb` using [asdf](https://asdf-vm.com/) with `asdf install`. Alternatively, you can install `scarb` manually by following the instructions [here](https://docs.swmansion.com/scarb/).
+
+5. Start the development server:
+
 ```
 pnpm dev
 ```
 
 ## Working with Markdown Files
 
-All Markdown files (*.md) MUST be edited in English. Follow these steps to work locally with Markdown files:
+All Markdown files (\*.md) MUST be edited in English. Follow these steps to work locally with Markdown files:
 
 - Make changes to the desired .md files in your preferred text editor.
 - Save the changes, and your browser window should automatically refresh to reflect the updates.
@@ -52,10 +62,62 @@ All Markdown files (*.md) MUST be edited in English. Follow these steps to work 
 
 ## Adding a new chapter
 
-To add a new chapter, create a new markdown file in the `docs/pages` directory. All the Markdown files **MUST** be edited in english. In order to add them to the book, you need to add in the `vocs.config.ts` file.
+- To add a new chapter, create a new markdown file in the `pages` directory. All the Markdown files **MUST** be edited in english. In order to add them to the book, you need to add in the `vocs.config.ts` file.
+
+- Do not write directly Cairo program inside the markdown files. Instead, use code blocks that import the Cairo programs from the `listings` directory. These programs are bundled into scarb projects, which makes it easier to test and build all programs. See the next section for more details.
 
 ## Adding a new Cairo program
-Do not write directly Cairo program inside the markdown files. Instead, use code blocks that import the Cairo programs from the `docs/snippets/listings` directory.
+
+You can add or modify examples in the `listings` directory. Each listing is a scarb project.
+You can find a template of a blank scarb project in the `listings/template` directory.
+(You can also use `scarb init` to create a new scarb project, but be sure to remove the generated git repository)
+
+Here's the required `Scarb.toml` configuration:
+
+```toml
+[package]
+name = "pkg_name"
+version.workspace = true
+
+# Specify that this can be used as a dependency in another scarb project:
+[lib]
+
+[dependencies]
+starknet.workspace = true
+# Uncomment the following lines if you want to use additional dependencies:
+# Starknet Foundry:
+# snforge_std.workspace = true
+# OpenZeppelin:
+# openzeppelin.workspace = true
+
+# If you want to use another Starknet By Example's listing, you can add it as a dependency like this:
+# erc20 = { path = "../../getting-started/erc20" }
+
+[scripts]
+test.workspace = true
+
+[[target.starknet-contract]]
+casm = true
+```
+
+You also NEED to do the following:
+
+- Remove the generated git repository, `rm -rf .git` (this is important!)
+- Double check that the `pkg_name` is the same as the name of the directory
+
+### Verification script
+
+The current book has script that verifies the compilation of all Cairo programs in the book.
+Instead of directly writing Cairo programs in the markdown files, we use code blocks that import the Cairo programs from the `listing` directory.
+These programs are bundled into scarb packages, which makes it easier to test and build entire packages.
+
+To run the script locally, ensure that you are at the root of the repository, and run:
+
+`bash scripts/cairo_programs_verifier.sh`
+
+This will check that all the Cairo programs in the book compile successfully using `scarb build`, that every tests passes using `scarb test`, and that the `scarb fmt -c` command does not identify any formatting issues.
+
+You can also use `scarb fmt` to format all the Cairo programs.
 
 ### Tests
 
@@ -83,6 +145,7 @@ mod tests;
 ### Use of region
 
 You can add delimiting comments to select part of the code in the book.
+
 ```cairo
 file.cairo:
 
@@ -95,11 +158,11 @@ c
 
 Then, in the markdown file, you can use the following syntax to include only the code between the delimiting comments:
 
-```markdown
+````markdown
     ```rust
-    // [!include ~/snippets/listings/src/contract.cairo:region_name]
+    // [!include ~/listings/src/contract.cairo:region_name]
     ```
-```
+````
 
 This will result in the following code being included in the book:
 
@@ -109,19 +172,19 @@ b
 
 To render code in tabs format you can use `:::code-group`. Example you can render contract and tests in separate tabs like this:
 
-```
+````
     :::code-group
 
     ```rust [contract]
-    // [!include ~/snippets/listings/src/contract.cairo:contract]
+    // [!include ~/listings/src/contract.cairo:contract]
     ```
 
     ```rust [tests]
-    // [!include ~/snippets/listings/src/contract.cairo:tests]
+    // [!include ~/listings/src/contract.cairo:tests]
     ```
 
     :::
-```
+````
 
 ## Code of Conduct
 
@@ -139,21 +202,21 @@ orientation.
 Examples of behavior that contributes to creating a positive environment
 include:
 
-* Using welcoming and inclusive language
-* Being respectful of differing viewpoints and experiences
-* Gracefully accepting constructive criticism
-* Focusing on what is best for the community
-* Showing empathy towards other community members
+- Using welcoming and inclusive language
+- Being respectful of differing viewpoints and experiences
+- Gracefully accepting constructive criticism
+- Focusing on what is best for the community
+- Showing empathy towards other community members
 
 Examples of unacceptable behavior by participants include:
 
-* The use of sexualized language or imagery and unwelcome sexual attention or
-advances
-* Trolling, insulting/derogatory comments, and personal or political attacks
-* Public or private harassment
-* Publishing others' private information, such as a physical or electronic
+- The use of sexualized language or imagery and unwelcome sexual attention or
+  advances
+- Trolling, insulting/derogatory comments, and personal or political attacks
+- Public or private harassment
+- Publishing others' private information, such as a physical or electronic
   address, without explicit permission
-* Other conduct which could reasonably be considered inappropriate in a
+- Other conduct which could reasonably be considered inappropriate in a
   professional setting
 
 ### Our Responsibilities
