@@ -2,7 +2,7 @@ use starknet::ContractAddress;
 
 // ANCHOR: interface
 #[starknet::interface]
-trait IERC20<TContractState> {
+pub trait IERC20<TContractState> {
     fn get_name(self: @TContractState) -> felt252;
     fn get_symbol(self: @TContractState) -> felt252;
     fn get_decimals(self: @TContractState) -> u8;
@@ -28,7 +28,7 @@ trait IERC20<TContractState> {
 
 // ANCHOR: erc20
 #[starknet::contract]
-mod erc20 {
+pub mod erc20 {
     use core::num::traits::Zero;
     use starknet::get_caller_address;
     use starknet::contract_address_const;
@@ -45,22 +45,22 @@ mod erc20 {
     }
 
     #[event]
-    #[derive(Drop, starknet::Event)]
-    enum Event {
+    #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
+    pub enum Event {
         Transfer: Transfer,
         Approval: Approval,
     }
-    #[derive(Drop, starknet::Event)]
-    struct Transfer {
-        from: ContractAddress,
-        to: ContractAddress,
-        value: felt252,
+    #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
+    pub struct Transfer {
+        pub from: ContractAddress,
+        pub to: ContractAddress,
+        pub value: felt252,
     }
-    #[derive(Drop, starknet::Event)]
-    struct Approval {
-        owner: ContractAddress,
-        spender: ContractAddress,
-        value: felt252,
+    #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
+    pub struct Approval {
+        pub owner: ContractAddress,
+        pub spender: ContractAddress,
+        pub value: felt252,
     }
 
     mod Errors {
