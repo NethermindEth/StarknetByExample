@@ -47,7 +47,7 @@ mod tests {
 
     #[test]
     #[available_gas(2000000)]
-    #[should_panic(expected : ('ERC20: mint to 0', 'CONSTRUCTOR_FAILED'))]
+    #[should_panic(expected: ('ERC20: mint to 0', 'CONSTRUCTOR_FAILED'))]
     fn test_deploy_when_recipient_is_address_zero() {
         let recipient: ContractAddress = zero_address();
 
@@ -138,7 +138,7 @@ mod tests {
 
     #[test]
     #[available_gas(2000000)]
-    #[should_panic(expected:('ERC20: approve to 0','ENTRYPOINT_FAILED'))]
+    #[should_panic(expected: ('ERC20: approve to 0', 'ENTRYPOINT_FAILED'))]
     fn test_approval_spender_is_address_zero() {
         let spender: ContractAddress = zero_address();
 
@@ -176,7 +176,7 @@ mod tests {
 
     #[test]
     #[available_gas(2000000)]
-    #[should_panic(expected:('ERC20: approve to 0','ENTRYPOINT_FAILED'))]
+    #[should_panic(expected: ('ERC20: approve to 0', 'ENTRYPOINT_FAILED'))]
     fn test_should_increase_allowance_with_spender_zero_address() {
         let spender = zero_address();
         let (dispatcher, _) = deploy();
@@ -219,7 +219,7 @@ mod tests {
 
     #[test]
     #[available_gas(2000000)]
-    #[should_panic (expected:('ERC20: approve to 0','ENTRYPOINT_FAILED'))]
+    #[should_panic(expected: ('ERC20: approve to 0', 'ENTRYPOINT_FAILED'))]
     fn test_should_decrease_allowance_with_spender_zero_address() {
         let spender = zero_address();
         let (dispatcher, _) = deploy();
@@ -263,7 +263,7 @@ mod tests {
 
     #[test]
     #[available_gas(2000000)]
-    #[should_panic (expected:('ERC20: transfer from 0','ENTRYPOINT_FAILED'))]
+    #[should_panic(expected: ('ERC20: transfer from 0', 'ENTRYPOINT_FAILED'))]
     fn test_transfer_when_sender_is_address_zero() {
         let reciever = spender_address();
         let (dispatcher, _) = deploy();
@@ -272,8 +272,8 @@ mod tests {
 
     #[test]
     #[available_gas(2000000)]
-    #[should_panic (expected:('ERC20: transfer to 0','ENTRYPOINT_FAILED'))]
-    #[should_panic ]
+    #[should_panic(expected: ('ERC20: transfer to 0', 'ENTRYPOINT_FAILED'))]
+    #[should_panic]
     fn test_transfer_when_recipient_is_address_zero() {
         let caller = contract_address_const::<'caller'>();
         let reciever = zero_address();
@@ -310,8 +310,8 @@ mod tests {
 
     #[test]
     #[available_gas(2000000)]
-    #[should_panic (expected:('ERC20: transfer from 0','ENTRYPOINT_FAILED'))]
-    #[should_panic ]
+    #[should_panic(expected: ('ERC20: transfer from 0', 'ENTRYPOINT_FAILED'))]
+    #[should_panic]
     fn test_transferFrom_when_sender_is_address_zero() {
         let sender = zero_address();
         let reciever = spender_address();
@@ -321,8 +321,8 @@ mod tests {
 
     #[test]
     #[available_gas(2000000)]
-    #[should_panic (expected:('ERC20: transfer to 0','ENTRYPOINT_FAILED'))]
-    #[should_panic ]
+    #[should_panic(expected: ('ERC20: transfer to 0', 'ENTRYPOINT_FAILED'))]
+    #[should_panic]
     fn test_transferFrom_when_recipient_is_address_zero() {
         let caller = contract_address_const::<'caller'>();
         let reciever = zero_address();
