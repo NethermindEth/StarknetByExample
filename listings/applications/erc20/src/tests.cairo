@@ -46,7 +46,8 @@ mod tests {
     }
 
     #[test]
-    #[should_panic]
+    #[available_gas(2000000)]
+    #[should_panic(expected : ('ERC20: mint to 0', 'CONSTRUCTOR_FAILED'))]
     fn test_deploy_when_recipient_is_address_zero() {
         let recipient: ContractAddress = zero_address();
 
@@ -64,6 +65,7 @@ mod tests {
             .unwrap_syscall();
     }
     #[test]
+    #[available_gas(2000000)]
     fn test_deploy_success() {
         let recipient = recipient_address();
         let (_, contract_address) = deploy();
@@ -77,6 +79,7 @@ mod tests {
 
 
     #[test]
+    #[available_gas(2000000)]
     fn test_get_name() {
         let (dispatcher, _) = deploy();
         let name = dispatcher.get_name();
@@ -84,24 +87,28 @@ mod tests {
     }
 
     #[test]
+    #[available_gas(2000000)]
     fn test_get_symbol() {
         let (dispatcher, _) = deploy();
         assert(dispatcher.get_symbol() == 'mtk', 'wrong symbol');
     }
 
     #[test]
+    #[available_gas(2000000)]
     fn test_get_decimals() {
         let (dispatcher, _) = deploy();
         assert(dispatcher.get_decimals() == 18, 'wrong decimals');
     }
 
     #[test]
+    #[available_gas(2000000)]
     fn test_total_supply() {
         let (dispatcher, _) = deploy();
         assert(dispatcher.get_total_supply() == 100000, 'wrong total supply');
     }
 
     #[test]
+    #[available_gas(2000000)]
     fn test_balance_of_recipient_deployed() {
         let recipient = recipient_address();
         let (dispatcher, _) = deploy();
@@ -109,6 +116,7 @@ mod tests {
     }
 
     #[test]
+    #[available_gas(2000000)]
     fn test_allowance_without_approval() {
         let caller = contract_address_const::<'caller'>();
         let spender = spender_address();
@@ -118,6 +126,7 @@ mod tests {
     }
 
     #[test]
+    #[available_gas(2000000)]
     fn test_allowance_after_approval() {
         let caller = contract_address_const::<'caller'>();
         let spender = spender_address();
@@ -128,7 +137,8 @@ mod tests {
     }
 
     #[test]
-    #[should_panic]
+    #[available_gas(2000000)]
+    #[should_panic(expected:('ERC20: approve to 0','ENTRYPOINT_FAILED'))]
     fn test_approval_spender_is_address_zero() {
         let spender: ContractAddress = zero_address();
 
@@ -137,6 +147,7 @@ mod tests {
     }
 
     #[test]
+    #[available_gas(2000000)]
     fn test_approval_success() {
         let recipient = recipient_address();
         let spender = spender_address();
@@ -164,7 +175,8 @@ mod tests {
     }
 
     #[test]
-    #[should_panic]
+    #[available_gas(2000000)]
+    #[should_panic(expected:('ERC20: approve to 0','ENTRYPOINT_FAILED'))]
     fn test_should_increase_allowance_with_spender_zero_address() {
         let spender = zero_address();
         let (dispatcher, _) = deploy();
@@ -172,6 +184,7 @@ mod tests {
     }
 
     #[test]
+    #[available_gas(2000000)]
     fn test_should_increase_allowance() {
         let caller = contract_address_const::<'caller'>();
         let recipient = recipient_address();
@@ -205,7 +218,8 @@ mod tests {
     }
 
     #[test]
-    #[should_panic]
+    #[available_gas(2000000)]
+    #[should_panic (expected:('ERC20: approve to 0','ENTRYPOINT_FAILED'))]
     fn test_should_decrease_allowance_with_spender_zero_address() {
         let spender = zero_address();
         let (dispatcher, _) = deploy();
@@ -213,6 +227,7 @@ mod tests {
     }
 
     #[test]
+    #[available_gas(2000000)]
     fn test_should_decrease_allowance() {
         let caller = contract_address_const::<'caller'>();
         let recipient = recipient_address();
@@ -247,7 +262,8 @@ mod tests {
     }
 
     #[test]
-    #[should_panic]
+    #[available_gas(2000000)]
+    #[should_panic (expected:('ERC20: transfer from 0','ENTRYPOINT_FAILED'))]
     fn test_transfer_when_sender_is_address_zero() {
         let reciever = spender_address();
         let (dispatcher, _) = deploy();
@@ -255,7 +271,9 @@ mod tests {
     }
 
     #[test]
-    #[should_panic]
+    #[available_gas(2000000)]
+    #[should_panic (expected:('ERC20: transfer to 0','ENTRYPOINT_FAILED'))]
+    #[should_panic ]
     fn test_transfer_when_recipient_is_address_zero() {
         let caller = contract_address_const::<'caller'>();
         let reciever = zero_address();
@@ -265,6 +283,7 @@ mod tests {
     }
 
     #[test]
+    #[available_gas(2000000)]
     fn test_transfer_success() {
         let caller = recipient_address();
         let reciever = contract_address_const::<'receiver'>();
@@ -290,7 +309,9 @@ mod tests {
 
 
     #[test]
-    #[should_panic]
+    #[available_gas(2000000)]
+    #[should_panic (expected:('ERC20: transfer from 0','ENTRYPOINT_FAILED'))]
+    #[should_panic ]
     fn test_transferFrom_when_sender_is_address_zero() {
         let sender = zero_address();
         let reciever = spender_address();
@@ -299,7 +320,9 @@ mod tests {
     }
 
     #[test]
-    #[should_panic]
+    #[available_gas(2000000)]
+    #[should_panic (expected:('ERC20: transfer to 0','ENTRYPOINT_FAILED'))]
+    #[should_panic ]
     fn test_transferFrom_when_recipient_is_address_zero() {
         let caller = contract_address_const::<'caller'>();
         let reciever = zero_address();
@@ -309,6 +332,7 @@ mod tests {
     }
 
     #[test]
+    #[available_gas(2000000)]
     fn test_transferFrom_success() {
         let caller = recipient_address();
         let reciever = contract_address_const::<'receiver'>();
