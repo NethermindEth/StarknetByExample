@@ -25,3 +25,73 @@ pub mod countable_component {
     }
 // ANCHOR_END: impl
 }
+
+#[starknet::contract]
+mod MockContract {
+    use super::countable_component;
+    use components::switchable::ISwitchable;  
+
+    component!(path: countable_component, storage: counter, event: CountableEvent);
+
+     #[storage]
+    struct Storage {
+        #[substorage(v0)]
+        counter: countable_component::Storage,
+        switch:bool,
+    }
+
+    #[event]
+    #[derive(Drop, starknet::Event)]
+    enum Event {
+        CountableEvent: countable_component::Event,
+    }
+
+    #[abi(embed_v0)]
+    impl CountableImpl = countable_component::Countable<ContractState>;
+    #[abi(embed_v0)]
+    impl Switchable of ISwitchable<ContractState> {
+        fn switch(ref self: ContractState) {
+            self.switch.write(!self.switch.read());
+        }
+
+        fn is_on(self: @ContractState) -> bool {
+            self.switch.read()
+        }
+    }
+
+    #[constructor]
+    fn constructor(ref self: ContractState) {
+        self.switch.write(true);
+    }
+
+}
+
+
+#[cfg(test)]
+mod test{
+    use super::MockContract;
+    use components::countable::{ICountableDispatcher, ICountableDispatcherTrait};
+    use starknet::syscalls::deploy_syscall;
+    use starknet::SyscallResultTrait;
+
+    fn deploy_countable() -> ICountableDispatcher {
+        let (address, _) = deploy_syscall(
+            MockContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+        )
+            .unwrap_syscall();
+        ICountableDispatcher { contract_address: address }
+}
+
+    #[test]
+    fn test_get() {
+        let countable = deploy_countable();
+        assert_eq!(countable.get(), 0);
+    }
+
+    #[test]
+    fn test_increment() {
+        let countable = deploy_countable();
+        countable.increment();
+        assert_eq!(countable.get(), 1);
+    }
+}
