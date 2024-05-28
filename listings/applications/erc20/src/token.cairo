@@ -220,6 +220,7 @@ mod tests {
         ContractAddress, SyscallResultTrait, syscalls::deploy_syscall, get_caller_address,
         contract_address_const
     };
+    use core::num::traits::Zero;
 
     use starknet::testing::{set_contract_address, set_account_contract_address};
 
@@ -246,7 +247,7 @@ mod tests {
     #[test]
     #[should_panic(expected: ('ERC20: mint to 0', 'CONSTRUCTOR_FAILED'))]
     fn test_deploy_when_recipient_is_address_zero() {
-        let recipient: ContractAddress = get_caller_address();
+        let recipient: ContractAddress = Zero::zero();
 
         let (contract_address, _) = deploy_syscall(
             erc20::TEST_CLASS_HASH.try_into().unwrap(),
@@ -264,7 +265,7 @@ mod tests {
             starknet::testing::pop_log(contract_address),
             Option::Some(
                 Event::Transfer(
-                    Transfer { from: get_caller_address(), to: recipient, value: initial_supply }
+                    Transfer { from: Zero::zero(), to: recipient, value: initial_supply }
                 )
             )
         );
@@ -328,7 +329,7 @@ mod tests {
     #[test]
     #[should_panic(expected: ('ERC20: approve to 0', 'ENTRYPOINT_FAILED'))]
     fn test_approval_spender_is_address_zero() {
-        let spender: ContractAddress = get_caller_address();
+        let spender: ContractAddress = Zero::zero();
         let amount = 100;
         let (dispatcher, _) = deploy();
         dispatcher.approve(spender, amount);
@@ -349,7 +350,7 @@ mod tests {
             starknet::testing::pop_log(contract_address),
             Option::Some(
                 Event::Transfer(
-                    Transfer { from: get_caller_address(), to: recipient, value: initial_supply }
+                    Transfer { from: Zero::zero(), to: recipient, value: initial_supply }
                 )
             )
         );
@@ -363,7 +364,7 @@ mod tests {
     #[test]
     #[should_panic(expected: ('ERC20: approve to 0', 'ENTRYPOINT_FAILED'))]
     fn test_should_increase_allowance_with_spender_zero_address() {
-        let spender = get_caller_address();
+        let spender = Zero::zero();
         let amount = 100;
         let (dispatcher, _) = deploy();
         dispatcher.increase_allowance(spender, amount);
@@ -391,7 +392,7 @@ mod tests {
             starknet::testing::pop_log(contract_address),
             Option::Some(
                 Event::Transfer(
-                    Transfer { from: get_caller_address(), to: recipient, value: initial_supply }
+                    Transfer { from: Zero::zero(), to: recipient, value: initial_supply }
                 )
             )
         );
@@ -410,7 +411,7 @@ mod tests {
     #[test]
     #[should_panic(expected: ('ERC20: approve to 0', 'ENTRYPOINT_FAILED'))]
     fn test_should_decrease_allowance_with_spender_zero_address() {
-        let spender = get_caller_address();
+        let spender = Zero::zero();
         let amount = 100;
         let (dispatcher, _) = deploy();
         dispatcher.decrease_allowance(spender, amount);
@@ -439,7 +440,7 @@ mod tests {
             starknet::testing::pop_log(contract_address),
             Option::Some(
                 Event::Transfer(
-                    Transfer { from: get_caller_address(), to: recipient, value: initial_supply }
+                    Transfer { from: Zero::zero(), to: recipient, value: initial_supply }
                 )
             )
         );
@@ -469,7 +470,7 @@ mod tests {
     #[should_panic]
     fn test_transfer_when_recipient_is_address_zero() {
         let caller = contract_address_const::<'caller'>();
-        let reciever = get_caller_address();
+        let reciever = Zero::zero();
         let amount = 100;
         let (dispatcher, _) = deploy();
         set_contract_address(caller);
@@ -490,9 +491,7 @@ mod tests {
         assert_eq!(
             starknet::testing::pop_log(contract_address),
             Option::Some(
-                Event::Transfer(
-                    Transfer { from: get_caller_address(), to: caller, value: initial_supply }
-                )
+                Event::Transfer(Transfer { from: Zero::zero(), to: caller, value: initial_supply })
             )
         );
 
@@ -507,7 +506,7 @@ mod tests {
     #[should_panic(expected: ('ERC20: transfer from 0', 'ENTRYPOINT_FAILED'))]
     #[should_panic]
     fn test_transferFrom_when_sender_is_address_zero() {
-        let sender = get_caller_address();
+        let sender = Zero::zero();
         let amount = 100;
         let reciever = contract_address_const::<'spender'>();
         let (dispatcher, _) = deploy();
@@ -519,7 +518,7 @@ mod tests {
     #[should_panic]
     fn test_transferFrom_when_recipient_is_address_zero() {
         let caller = contract_address_const::<'caller'>();
-        let reciever = get_caller_address();
+        let reciever = Zero::zero();
         let amount = 100;
         let (dispatcher, _) = deploy();
         set_contract_address(caller);
@@ -541,9 +540,7 @@ mod tests {
         assert_eq!(
             starknet::testing::pop_log(contract_address),
             Option::Some(
-                Event::Transfer(
-                    Transfer { from: get_caller_address(), to: caller, value: initial_supply }
-                )
+                Event::Transfer(Transfer { from: Zero::zero(), to: caller, value: initial_supply })
             )
         );
 
