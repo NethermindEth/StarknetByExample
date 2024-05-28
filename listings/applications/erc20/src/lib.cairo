@@ -1,4 +1,4 @@
-pub mod token;
+mod token;
 
 #[cfg(test)]
 mod tests;
