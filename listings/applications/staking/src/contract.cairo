@@ -22,6 +22,7 @@ mod Errors {
 
 #[starknet::contract]
 pub mod StakingContract {
+    use core::starknet::event::EventEmitter;
     use core::traits::Into;
     use core::num::traits::Zero;
     use starknet::{ContractAddress, get_caller_address, get_block_timestamp, get_contract_address};
@@ -40,13 +41,37 @@ pub mod StakingContract {
         last_updated_at: u256,
         last_user_reward_per_staked_token: LegacyMap::<ContractAddress, u256>,
         unclaimed_rewards: LegacyMap::<ContractAddress, u256>,
+        total_distributed_rewards: u256,
         // total amount of staked tokens
         total_supply: u256,
         // amount of staked tokens per user
         balance_of: LegacyMap::<ContractAddress, u256>,
     }
 
-    // TODO: events
+    #[event]
+    #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
+    pub enum Event {
+        Deposit: Deposit,
+        Withdrawal: Withdrawal,
+        RewardsFinished: RewardsFinished,
+    }
+
+    #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
+    pub struct Deposit {
+        pub user: ContractAddress,
+        pub amount: u256,
+    }
+
+    #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
+    pub struct Withdrawal {
+        pub user: ContractAddress,
+        pub amount: u256,
+    }
+
+    #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
+    pub struct RewardsFinished {
+        pub msg: felt252,
+    }
 
     #[constructor]
     fn constructor(
@@ -86,7 +111,6 @@ pub mod StakingContract {
             let block_timestamp: u256 = get_block_timestamp().into();
 
             let rate = if self.finish_at.read() < block_timestamp {
-                // TODO: check what the division gives exactly
                 amount / self.duration.read()
             } else {
                 let remaining_rewards = self.reward_rate.read()
@@ -105,6 +129,9 @@ pub mod StakingContract {
             // even if the previous reward duration was not finished, we reset the finish_at variable
             self.finish_at.write(block_timestamp + self.duration.read());
             self.last_updated_at.write(block_timestamp);
+
+            // reset total distributed rewards
+            self.total_distributed_rewards.write(0);
         }
 
         fn stake(ref self: ContractState, amount: u256) {
@@ -116,6 +143,8 @@ pub mod StakingContract {
             self.balance_of.write(user, self.balance_of.read(user) + amount);
             self.total_supply.write(self.total_supply.read() + amount);
             self.staking_token.read().transfer_from(user, get_contract_address(), amount);
+
+            self.emit(Deposit { user, amount });
         }
 
         fn withdraw(ref self: ContractState, amount: u256) {
@@ -127,6 +156,8 @@ pub mod StakingContract {
             self.balance_of.write(user, self.balance_of.read(user) - amount);
             self.total_supply.write(self.total_supply.read() - amount);
             self.staking_token.read().transfer(user, amount);
+
+            self.emit(Withdrawal { user, amount });
         }
 
         fn compute_rewards(self: @ContractState, account: ContractAddress) -> u256 {
@@ -161,11 +192,31 @@ pub mod StakingContract {
 
             if account.is_non_zero() {
                 // compute earned rewards since last update for the user `account`
-                self.unclaimed_rewards.write(account, self.compute_rewards(account));
+                let user_rewards = self.compute_rewards(account);
+                self.unclaimed_rewards.write(account, user_rewards);
+
+                // track amount of total rewards distributed
+                self
+                    .total_distributed_rewards
+                    .write(self.total_distributed_rewards.read() + user_rewards);
 
                 self
                     .last_user_reward_per_staked_token
                     .write(account, self.current_reward_per_staked_token.read());
+
+                // check if we send a RewardsFinished event
+                if self.last_updated_at.read() == self.finish_at.read() {
+                    let total_rewards = self.reward_rate.read() * self.duration.read();
+
+                    if total_rewards != 0
+                        && self.total_distributed_rewards.read() == total_rewards {
+                        // owner should set up NEW rewards into the contract
+                        self.emit(RewardsFinished { msg: 'Rewards all distributed' });
+                    } else {
+                        // owner should set up rewards into the contract (or add duration by setting up rewards)
+                        self.emit(RewardsFinished { msg: 'Rewards not active yet' });
+                    }
+                }
             }
         }
 

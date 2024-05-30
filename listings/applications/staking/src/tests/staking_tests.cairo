@@ -13,14 +13,18 @@ mod tests {
     use staking::contract::IStakingContractDispatcherTrait;
     use staking::tests::tokens::{RewardToken, StakingToken};
     use staking::contract::{
-        StakingContract, IStakingContractDispatcher, StakingContract::ownerContractMemberStateTrait
+        StakingContract, IStakingContractDispatcher, StakingContract::ownerContractMemberStateTrait,
+        StakingContract::Event, StakingContract::Deposit, StakingContract::Withdrawal,
+        StakingContract::RewardsFinished
     };
     use openzeppelin::token::erc20::{interface::IERC20Dispatcher};
     use starknet::syscalls::deploy_syscall;
     use starknet::SyscallResultTrait;
     use core::serde::Serde;
     use core::starknet::class_hash::{ClassHash, class_hash_const};
-    use starknet::testing::{set_caller_address, set_contract_address, set_block_timestamp};
+    use starknet::testing::{
+        set_caller_address, set_contract_address, set_block_timestamp, pop_log, pop_log_raw
+    };
     use starknet::{contract_address_const, ContractAddress, get_contract_address};
 
     #[derive(Copy, Drop)]
@@ -101,7 +105,6 @@ mod tests {
         state.erc20._mint(deployed_contract, amount);
     }
 
-    // TODO: add events tests
     // TODO: add a complex test for set reward_duration
 
     #[test]
@@ -163,6 +166,16 @@ mod tests {
             '1- wrong staking token balance'
         );
 
+        // check 1st & 2nd event - when user stakes
+        assert_eq!(
+            pop_log(deploy.contract.contract_address),
+            Option::Some(Event::RewardsFinished(RewardsFinished { msg: 'Rewards not active yet' }))
+        );
+        assert_eq!(
+            pop_log(deploy.contract.contract_address),
+            Option::Some(Event::Deposit(Deposit { user, amount: stake_amount }))
+        );
+
         /// when - withdrawal
         set_contract_address(user);
         let withdrawal_amount = 20;
@@ -184,6 +197,16 @@ mod tests {
                 - stake_amount
                 + withdrawal_amount,
             '2- wrong staking token balance'
+        );
+
+        // check 3rd & 4th events - when user withdraws
+        assert_eq!(
+            pop_log(deploy.contract.contract_address),
+            Option::Some(Event::RewardsFinished(RewardsFinished { msg: 'Rewards not active yet' }))
+        );
+        assert_eq!(
+            pop_log(deploy.contract.contract_address),
+            Option::Some(Event::Withdrawal(Withdrawal { user, amount: withdrawal_amount }))
         );
     }
 
@@ -209,7 +232,7 @@ mod tests {
         let block_timestamp: u256 = 1000;
         set_block_timestamp(block_timestamp.try_into().unwrap());
         let reward_duration = 100;
-        // have to set again the contract_address because it got changed in mint_reward_tokens_to
+        // have to set again the contract_address because it got changed in mint_reward_tokens_to function
         set_contract_address(owner);
         deploy.contract.set_reward_duration(reward_duration);
         deploy.contract.set_reward_amount(reward_tokens_amount);
@@ -366,7 +389,7 @@ mod tests {
         assert(state.unclaimed_rewards.read(bob) == 0, 'Bob: unclaimed rewards');
         assert(state.unclaimed_rewards.read(john) == 0, 'John: unclaimed rewards');
 
-        // check amount of staked tokens left for each user
+        // check amount of staked tokens left in contract for each user
         assert(state.balance_of.read(alice) == 0, 'Alice: staked tokens left');
         assert(state.balance_of.read(bob) == 0, 'Bob: staked tokens left');
         assert(state.balance_of.read(john) == 10, 'John: wrong staked tokens');
@@ -384,6 +407,7 @@ mod tests {
         // 1000 - 600 - 40 - 300 = 60
         assert(deployed_contract_rewards == 60, 'Contract: wrong rewards');
 
+        // check amount of staking tokens each user has back in their balance
         let alice_staking_tokens = deploy.staking_token.balance_of(alice);
         let bob_staking_tokens = deploy.staking_token.balance_of(bob);
         let john_staking_tokens = deploy.staking_token.balance_of(john);
@@ -393,6 +417,82 @@ mod tests {
         assert(bob_staking_tokens == bob_amount_tokens_minted, 'Bob: wrong amount of staking');
         assert(
             john_staking_tokens == john_amount_tokens_minted - 10, 'John: wrong amount of staking'
+        );
+    }
+
+    #[test]
+    #[available_gas(20000000)]
+    fn all_rewards_distributed_event() {
+        /// set up
+
+        // deploy
+        let owner = contract_address_const::<'owner'>();
+        set_contract_address(owner);
+        let deploy = setup();
+
+        // mint reward tokens to the deployed contract
+        let reward_tokens_amount = 1000;
+        mint_reward_tokens_to(
+            deploy.contract.contract_address,
+            reward_tokens_amount,
+            deploy.reward_token.contract_address
+        );
+
+        // owner sets up rewards duration and amount
+        let block_timestamp: u256 = 1000;
+        set_block_timestamp(block_timestamp.try_into().unwrap());
+        let reward_duration = 100;
+        // have to set again the contract_address because it got changed in mint_reward_tokens_to function
+        set_contract_address(owner);
+        deploy.contract.set_reward_duration(reward_duration);
+        deploy.contract.set_reward_amount(reward_tokens_amount);
+
+        // mint staking tokens to alice
+        let alice = contract_address_const::<'alice'>();
+        let alice_stake_amount = 100;
+        mint_and_approve_staking_tokens_to(alice, alice_stake_amount, deploy, alice_stake_amount);
+
+        // alice stakes
+        set_contract_address(alice);
+        deploy.contract.stake(alice_stake_amount);
+
+        // alice claims her rewards after the duration is over
+        set_block_timestamp(
+            block_timestamp.try_into().unwrap() + reward_duration.try_into().unwrap()
+        );
+        deploy.contract.claim_rewards();
+
+        /// when
+
+        // mint staking tokens to bob
+        let bob = contract_address_const::<'bob'>();
+        let bob_stake_amount = 50;
+        mint_and_approve_staking_tokens_to(bob, bob_stake_amount, deploy, bob_stake_amount);
+
+        // bob stakes
+        set_contract_address(bob);
+        deploy.contract.stake(bob_stake_amount);
+
+        /// then
+
+        // check 1st event - when alice stakes
+        assert_eq!(
+            pop_log(deploy.contract.contract_address),
+            Option::Some(Event::Deposit(Deposit { user: alice, amount: alice_stake_amount }))
+        );
+        // check 2nd event - when alice claims
+        assert_eq!(
+            pop_log(deploy.contract.contract_address),
+            Option::Some(Event::RewardsFinished(RewardsFinished { msg: 'Rewards all distributed' }))
+        );
+        // check 3rd & 4th events - when bob stakes
+        assert_eq!(
+            pop_log(deploy.contract.contract_address),
+            Option::Some(Event::RewardsFinished(RewardsFinished { msg: 'Rewards all distributed' }))
+        );
+        assert_eq!(
+            pop_log(deploy.contract.contract_address),
+            Option::Some(Event::Deposit(Deposit { user: bob, amount: bob_stake_amount }))
         );
     }
 }
