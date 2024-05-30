@@ -21,10 +21,7 @@ mod tests {
     use starknet::syscalls::deploy_syscall;
     use starknet::SyscallResultTrait;
     use core::serde::Serde;
-    use core::starknet::class_hash::{ClassHash, class_hash_const};
-    use starknet::testing::{
-        set_caller_address, set_contract_address, set_block_timestamp, pop_log, pop_log_raw
-    };
+    use starknet::testing::{set_caller_address, set_contract_address, set_block_timestamp, pop_log};
     use starknet::{contract_address_const, ContractAddress, get_contract_address};
 
     #[derive(Copy, Drop)]
@@ -104,8 +101,6 @@ mod tests {
         set_contract_address(reward_token_address);
         state.erc20._mint(deployed_contract, amount);
     }
-
-    // TODO: add a complex test for set reward_duration
 
     #[test]
     #[available_gas(20000000)]
@@ -494,5 +489,74 @@ mod tests {
             pop_log(deploy.contract.contract_address),
             Option::Some(Event::Deposit(Deposit { user: bob, amount: bob_stake_amount }))
         );
+    }
+
+    #[test]
+    #[available_gas(20000000)]
+    fn set_up_reward_complex() {
+        /// Set up
+
+        // deploy
+        let owner = contract_address_const::<'owner'>();
+        set_contract_address(owner);
+        let deploy = setup();
+
+        // mint reward tokens to the deployed contract
+        let reward_tokens_amount = 1000;
+        mint_reward_tokens_to(
+            deploy.contract.contract_address,
+            reward_tokens_amount,
+            deploy.reward_token.contract_address
+        );
+
+        // owner sets up rewards duration and amount
+        let block_timestamp: u256 = 1000;
+        set_block_timestamp(block_timestamp.try_into().unwrap());
+        let reward_duration = 100;
+        let initial_reward = 400;
+        // have to set again the contract_address because it got changed in mint_reward_tokens_to function
+        set_contract_address(owner);
+        deploy.contract.set_reward_duration(reward_duration);
+        deploy.contract.set_reward_amount(initial_reward);
+
+        // middle check
+        let state = StakingContract::contract_state_for_testing();
+        set_contract_address(deploy.contract.contract_address);
+
+        // timestamp = 1000
+        // finish_at = 1100
+        // reward_rate = 400 / 100 = 4 tokens/timestamp_unit
+
+        assert(state.finish_at.read() == block_timestamp + reward_duration, '1- Wrong finish date');
+        assert(state.last_updated_at.read() == block_timestamp, '1- Wrong last update date');
+        assert(state.reward_rate.read() == 4, '1- Wrong reward rate');
+
+        /// When
+
+        // in the middle of the duration, the owner adds some rewards
+        let middle_timestamp = block_timestamp + 50;
+        set_block_timestamp(middle_timestamp.try_into().unwrap());
+        let rewards_to_add = 300;
+        set_contract_address(owner);
+        deploy.contract.set_reward_amount(rewards_to_add);
+
+        /// Then
+
+        // timestamp = 1050
+        // old_finish_at = 1100
+        // old_reward_rate = 4
+        // remaining_rewards = 4 * (1100 - 1050) = 200 tokens
+        // new_reward_rate = (200 + 300) / 100 = 5
+        // new_finish_at = 1050 + 100 = 1150
+
+        let state = StakingContract::contract_state_for_testing();
+        set_contract_address(deploy.contract.contract_address);
+
+        // the finish_at date is reset
+        assert(
+            state.finish_at.read() == middle_timestamp + reward_duration, '2- Wrong finish date'
+        );
+        assert(state.last_updated_at.read() == middle_timestamp, '2- Wrong last update date');
+        assert(state.reward_rate.read() == 5, '');
     }
 }
