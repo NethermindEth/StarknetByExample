@@ -98,6 +98,13 @@ name = "simple_vault"
 version = "0.1.0"
 
 [[package]]
+name = "staking"
+version = "0.1.0"
+dependencies = [
+ "openzeppelin",
+]
+
+[[package]]
 name = "storage"
 version = "0.1.0"
 
