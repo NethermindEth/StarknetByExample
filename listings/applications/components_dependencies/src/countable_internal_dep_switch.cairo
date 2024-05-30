@@ -57,3 +57,82 @@ pub mod countable_component {
         }
     }
 }
+
+#[starknet::contract]
+mod MockContract{
+    use super::countable_component;
+    use components::switchable::ISwitchable;
+
+    use components::switchable::switchable_component;
+    use switchable_component::{SwitchableInternalImpl, SwitchableInternalTrait};
+
+
+    component!(path: countable_component, storage: counter, event: CountableEvent);
+    component!(path: switchable_component, storage: switch, event: SwitchableEvent);
+
+    #[storage]
+    struct Storage {
+        #[substorage(v0)]
+        counter: countable_component::Storage,
+        #[substorage(v0)]
+        switch: switchable_component::Storage,
+        switched: bool,
+    }
+
+    #[event]
+    #[derive(Drop, starknet::Event)]
+    enum Event {
+        CountableEvent: countable_component::Event,
+        SwitchableEvent: switchable_component::Event,
+    }
+    
+
+    #[abi(embed_v0)]
+    impl CountableImpl = countable_component::Countable<ContractState>;
+    
+    #[abi(embed_v0)]
+    impl Switchable of ISwitchable<ContractState> {
+        fn switch(ref self: ContractState) {
+            self.switched.write(!self.switched.read());
+        }
+
+        fn is_on(self: @ContractState) -> bool {
+            self.switched.read()
+        }
+    }
+
+    #[constructor]
+    fn constructor(ref self: ContractState) {
+        self.switched.write(true);
+    }
+  
+}
+
+#[cfg(test)]
+mod test{
+    use super::MockContract;
+    use components::countable::{ICountableDispatcher, ICountableDispatcherTrait};
+    use starknet::syscalls::deploy_syscall;
+    use starknet::SyscallResultTrait;
+
+    fn deploy_countable() -> ICountableDispatcher {
+        let (address, _) = deploy_syscall(
+            MockContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+        )
+            .unwrap_syscall();
+        ICountableDispatcher { contract_address: address }
+}
+
+    #[test]
+    fn test_get() {
+        let countable = deploy_countable();
+        assert_eq!(countable.get(), 0);
+    }
+
+    #[test]
+    fn test_increment() {
+        let countable = deploy_countable();
+        countable.increment();
+        assert_eq!(countable.get(), 1);
+    }
+}
