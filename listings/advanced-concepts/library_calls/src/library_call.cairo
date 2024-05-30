@@ -22,7 +22,7 @@ pub mod MathUtils {
 }
 
 
-// contract B to make library call to contract A
+// contract B to make library call to the class of contract A
 #[starknet::contract]
 pub mod MathUtilsLibraryCall {
     use starknet::{class_hash::class_hash_const, ContractAddress};
@@ -47,4 +47,5 @@ pub mod MathUtilsLibraryCall {
     }
 }
 // ANCHOR_END: library_dispatcher
+
 
