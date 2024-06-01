@@ -93,3 +93,128 @@ pub mod ownable_component {
         }
     }
 }
+
+#[starknet::contract]
+mod MockContract {
+    use super::{IOwnable, ownable_component, ownable_component::OwnableInternalTrait};
+
+    component!(path: ownable_component, storage: ownable, event: OwnableEvent);
+
+    #[abi(embed_v0)]
+    impl OwnableImpl = ownable_component::Ownable<ContractState>;
+    
+    #[storage]
+    struct Storage {
+        #[substorage(v0)]
+        ownable: ownable_component::Storage,
+    }
+
+    #[constructor]
+    fn constructor(ref self: ContractState) {
+        self.ownable._init(starknet::get_caller_address());
+    }
+
+    #[event]
+    #[derive(Drop, starknet::Event)]
+    enum Event {
+        OwnableEvent: ownable_component::Event,
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::MockContract;
+    use starknet::ContractAddress;
+    use components::ownable::{IOwnableDispatcher, IOwnableDispatcherTrait};
+    use core::traits::TryInto;
+    use core::num::traits::Zero;
+    use starknet::{ syscalls::deploy_syscall, SyscallResultTrait, contract_address_const};
+    use starknet::testing::{set_caller_address, set_contract_address};
+    use super::Errors;
+
+    fn deploy() -> IOwnableDispatcher {
+        let (contract_address, _) = deploy_syscall(
+            MockContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+        )
+            .unwrap_syscall();
+
+        IOwnableDispatcher { contract_address }
+    }
+
+    #[test]
+    fn test_initial_state() {
+        let owner = contract_address_const::<'owner'>();
+        set_contract_address(owner);
+        let ownable = deploy();
+
+        assert(ownable.owner() == owner, 'wrong_owner');
+    }
+
+    #[test]
+    fn test_transfer_ownership_by_owner() {
+        set_contract_address(contract_address_const::<'initial'>());
+        let ownable = deploy();
+        let owner = contract_address_const::<'owner'>();
+        ownable.transfer_ownership(owner);
+
+        assert(ownable.owner() == owner, 'wrong_owner');
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_transfer_ownership_not_owner() {
+        set_contract_address(contract_address_const::<'initial'>());
+        let ownable = deploy();
+
+        set_contract_address(contract_address_const::<'not_owner'>());
+        ownable.transfer_ownership(contract_address_const::<'new_owner'>());
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_transfer_ownership_account_zero() {
+        set_contract_address(contract_address_const::<'initial'>());
+        let ownable = deploy();
+
+        ownable.transfer_ownership(Zero::zero());
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_transfer_ownership_by_zero() {
+        set_contract_address(Zero::zero());
+        let ownable = deploy();
+
+        ownable.transfer_ownership(contract_address_const::<'new_owner'>());
+    }
+    
+    #[test]
+    fn test_renounce_ownership() {
+        set_contract_address(contract_address_const::<'owner'>());
+        let ownable = deploy();
+
+        ownable.renounce_ownership();
+        assert(ownable.owner() == Zero::zero(), 'not_zero_owner');
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_renounce_ownership_previous_owner() {
+        set_contract_address(contract_address_const::<'owner'>());
+        let ownable = deploy();
+
+        ownable.renounce_ownership();
+        ownable.transfer_ownership(contract_address_const::<'new_owner'>());
+    }
+    
+    #[test]
+    #[should_panic]
+    fn test_renounce_ownership_not_owner() {
+        set_contract_address(contract_address_const::<'owner'>());
+        let ownable = deploy();
+
+        set_contract_address(contract_address_const::<'not_owner'>());
+        ownable.renounce_ownership();
+    }
+    
+}
