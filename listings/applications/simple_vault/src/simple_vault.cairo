@@ -4,23 +4,34 @@ use starknet::ContractAddress;
 // we need to have the interface of the remote ERC20 contract defined to import the Dispatcher.
 #[starknet::interface]
 pub trait IERC20<TContractState> {
-    fn name(self: @TContractState) -> felt252;
-    fn symbol(self: @TContractState) -> felt252;
-    fn decimals(self: @TContractState) -> u8;
-    fn total_supply(self: @TContractState) -> u256;
-    fn balance_of(self: @TContractState, account: ContractAddress) -> u256;
-    fn allowance(self: @TContractState, owner: ContractAddress, spender: ContractAddress) -> u256;
-    fn transfer(ref self: TContractState, recipient: ContractAddress, amount: u256) -> bool;
+    fn get_name(self: @TContractState) -> felt252;
+    fn get_symbol(self: @TContractState) -> felt252;
+    fn get_decimals(self: @TContractState) -> u8;
+    fn get_total_supply(self: @TContractState) -> felt252;
+    fn balance_of(self: @TContractState, account: ContractAddress) -> felt252;
+    fn allowance(
+        self: @TContractState, owner: ContractAddress, spender: ContractAddress
+    ) -> felt252;
+    fn transfer(ref self: TContractState, recipient: ContractAddress, amount: felt252);
     fn transfer_from(
-        ref self: TContractState, sender: ContractAddress, recipient: ContractAddress, amount: u256
-    ) -> bool;
-    fn approve(ref self: TContractState, spender: ContractAddress, amount: u256) -> bool;
+        ref self: TContractState,
+        sender: ContractAddress,
+        recipient: ContractAddress,
+        amount: felt252
+    );
+    fn approve(ref self: TContractState, spender: ContractAddress, amount: felt252);
+    fn increase_allowance(ref self: TContractState, spender: ContractAddress, added_value: felt252);
+    fn decrease_allowance(
+        ref self: TContractState, spender: ContractAddress, subtracted_value: felt252
+    );
 }
 
 #[starknet::interface]
 pub trait ISimpleVault<TContractState> {
     fn deposit(ref self: TContractState, amount: u256);
     fn withdraw(ref self: TContractState, shares: u256);
+    fn user_balance_of(ref self: TContractState, account: ContractAddress) -> u256;
+    fn contract_total_supply(ref self: TContractState) -> u256;
 }
 
 #[starknet::contract]
@@ -30,14 +41,14 @@ pub mod SimpleVault {
 
     #[storage]
     struct Storage {
-        token: IERC20Dispatcher,
+        token: ContractAddress,
         total_supply: u256,
         balance_of: LegacyMap<ContractAddress, u256>
     }
 
     #[constructor]
     fn constructor(ref self: ContractState, token: ContractAddress) {
-        self.token.write(IERC20Dispatcher { contract_address: token });
+        self.token.write(token);
     }
 
     #[generate_trait]
@@ -53,17 +64,24 @@ pub mod SimpleVault {
         }
     }
 
+    // Inline conversion implementation for `U256TryIntoFelt252`
+    fn u256_to_felt252(value: u256) -> felt252 {
+        // Implement the conversion logic from u256 to felt252
+        // Placeholder implementation; replace with actual logic
+        value.low.into()
+    }
+
     #[abi(embed_v0)]
     impl SimpleVault of super::ISimpleVault<ContractState> {
+        fn user_balance_of(ref self: ContractState, account: ContractAddress) -> u256 {
+            self.balance_of.read(account)
+        }
+
+        fn contract_total_supply(ref self: ContractState) -> u256 {
+            self.total_supply.read()
+        }
+
         fn deposit(ref self: ContractState, amount: u256) {
-            // a = amount
-            // B = balance of token before deposit
-            // T = total supply
-            // s = shares to mint
-            //
-            // (T + s) / T = (a + B) / B 
-            //
-            // s = aT / B
             let caller = get_caller_address();
             let this = get_contract_address();
 
@@ -71,31 +89,120 @@ pub mod SimpleVault {
             if self.total_supply.read() == 0 {
                 shares = amount;
             } else {
-                let balance = self.token.read().balance_of(this);
+                let balance: u256 = IERC20Dispatcher { contract_address: self.token.read() }
+                    .balance_of(this)
+                    .try_into()
+                    .unwrap();
                 shares = (amount * self.total_supply.read()) / balance;
             }
 
             PrivateFunctions::_mint(ref self, caller, shares);
-            self.token.read().transfer_from(caller, this, amount);
+
+            let new_shares: felt252 = u256_to_felt252(shares);
+            IERC20Dispatcher { contract_address: self.token.read() }
+                .transfer_from(caller.into(), this.into(), new_shares);
         }
 
         fn withdraw(ref self: ContractState, shares: u256) {
-            // a = amount
-            // B = balance of token before withdraw
-            // T = total supply
-            // s = shares to burn
-            //
-            // (T - s) / T = (B - a) / B 
-            //
-            // a = sB / T
             let caller = get_caller_address();
             let this = get_contract_address();
 
-            let balance = self.token.read().balance_of(this);
-            let amount = (shares * balance) / self.total_supply.read();
+            let balance = self.user_balance_of(this);
+            let amount: felt252 = u256_to_felt252((shares * balance) / self.total_supply.read());
             PrivateFunctions::_burn(ref self, caller, shares);
-            self.token.read().transfer(caller, amount);
+
+            IERC20Dispatcher { contract_address: self.token.read() }.transfer(caller, amount);
         }
     }
 }
 
+#[cfg(test)]
+mod tests {
+    use core::traits::Into;
+    use super::{
+        SimpleVault, ISimpleVaultDispatcher, ISimpleVaultDispatcherTrait, IERC20Dispatcher,
+        IERC20DispatcherTrait
+    };
+
+    use super::super::erc20::{
+        erc_20, IERC20DispatcherTrait as IERC20DispatcherTrait_token,
+        IERC20Dispatcher as IERC20Dispatcher_token
+    };
+    use starknet::testing::{set_contract_address, set_account_contract_address};
+    use starknet::{
+        ContractAddress, SyscallResultTrait, syscalls::deploy_syscall, get_caller_address,
+        contract_address_const
+    };
+
+    fn deploy() -> (ISimpleVaultDispatcher, ContractAddress, IERC20Dispatcher_token) {
+        let _token_address: ContractAddress = contract_address_const::<'token_address'>();
+        let caller = contract_address_const::<'caller'>();
+
+        let (token_contract_address, _) = deploy_syscall(
+            erc_20::TEST_CLASS_HASH.try_into().unwrap(),
+            caller.into(),
+            array![caller.into(), 'myToken', '8', '1000'.into(), 'MYT'].span(),
+            false
+        )
+            .unwrap_syscall();
+
+        let (contract_address, _) = deploy_syscall(
+            SimpleVault::TEST_CLASS_HASH.try_into().unwrap(),
+            0,
+            array![token_contract_address.into()].span(),
+            false
+        )
+            .unwrap_syscall();
+
+        (
+            ISimpleVaultDispatcher { contract_address },
+            contract_address,
+            IERC20Dispatcher_token { contract_address: token_contract_address }
+        )
+    }
+
+    #[test]
+    fn test_deposit() {
+        let caller = contract_address_const::<'caller'>();
+        let (dispatcher, vault_address, token_dispatcher) = deploy();
+
+        // Approve the vault to transfer tokens on behalf of the caller
+        let amount: felt252 = 10.into();
+        token_dispatcher.approve(vault_address.into(), amount);
+        set_contract_address(caller);
+
+        // Deposit tokens into the vault
+        let amount: u256 = 10.into();
+        dispatcher.deposit(amount);
+
+        // Check balances and total supply
+        let balance_of_caller = dispatcher.user_balance_of(caller);
+        let total_supply = dispatcher.contract_total_supply();
+
+        assert(balance_of_caller == amount, 'Deposit failed');
+        assert(total_supply == amount, 'total supply mismatch');
+
+    }
+
+    #[test]
+    fn test_deposit_withdraw() {
+        let caller = contract_address_const::<'caller'>();
+        let (dispatcher, vault_address, token_dispatcher) = deploy();
+
+        // Approve the vault to transfer tokens on behalf of the caller
+        let amount: felt252 = 10.into();
+        token_dispatcher.approve(vault_address.into(), amount);
+        set_contract_address(caller);
+        set_account_contract_address(vault_address);
+
+        // Deposit tokens into the vault
+        let amount: u256 = 10.into();
+        dispatcher.deposit(amount);
+        dispatcher.withdraw(amount);
+
+        // Check balances of user in the vault after withdraw
+        let balance_of_caller = dispatcher.user_balance_of(caller);
+
+        assert(balance_of_caller == 0.into(), 'withdraw failed');
+    }
+}
