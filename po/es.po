@@ -426,11 +426,11 @@ msgstr ""
 
 #: src/ch00/basics/storage.md:29
 msgid ""
-"> Actually these two contracts have the same underlying sierra program.\n"
+"> Actually these two contracts have the same underlying Sierra program.\n"
 "> From the compiler's perspective, the storage variables don't exist until "
 "they are used."
 msgstr ""
-"> En realidad estos dos contratos tienen el mismo programa sierra "
+"> En realidad estos dos contratos tienen el mismo programa Sierra "
 "subyacente.\n"
 "> Desde la perspectiva del compilador, las variables de almacenamiento no "
 "existen hasta que se utilizan."

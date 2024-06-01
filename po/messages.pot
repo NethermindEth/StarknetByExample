@@ -291,7 +291,7 @@ msgstr ""
 
 #: src/ch00/basics/storage.md:29
 msgid ""
-"Actually these two contracts have the same underlying sierra program. From "
+"Actually these two contracts have the same underlying Sierra program. From "
 "the compiler's perspective, the storage variables don't exist until they are "
 "used."
 msgstr ""
