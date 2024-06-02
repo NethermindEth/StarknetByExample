@@ -719,7 +719,7 @@ msgid ""
 "`h(...h(h(sn_keccak(variable_name),k_1),k_2),...,k_n)` where `ℎ` is the "
 "Pedersen hash and the final value is taken `mod2251−256`. You can learn more "
 "about the contract storage layout in the [Starknet "
-"Documentation](https://docs.starknet.io/documentation/architecture_and_concepts/Contracts/contract-storage/#storage_variables)"
+"Documentation](https://docs.starknet.io/documentation/architecture_and_concepts/Contracts/contract-storage/#storage_variables)."
 msgstr ""
 
 #: src/ch00/basics/mappings.md:28
