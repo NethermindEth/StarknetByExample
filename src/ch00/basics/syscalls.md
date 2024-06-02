@@ -7,6 +7,7 @@ Some of the OS functionalities are exposed to smart contracts through the use of
 Syscalls return a `SyscallResult` which is either `Sucess` of `Failure`, allowing the contract to handle errors.
 
 Here's the available syscalls:
+
 - [get_block_hash](#get_block_hash)
 - [get_execution_info](#get_execution_info)
 - [call_contract](#call_contract)
@@ -91,6 +92,7 @@ pub struct TxInfo {
 ```
 
 `starknet::info` provides helper functions to access the `ExecutionInfo` fields in a more convenient way:
+
 - `get_execution_info() -> Box<ExecutionInfo>`
 - `get_caller_address() -> ContractAddress`
 - `get_contract_address() -> ContractAddress`
@@ -108,9 +110,9 @@ fn call_contract_syscall(
 ```
 
 Call a contract at `address` with the given `entry_point_selector` and `calldata`.
-Failure can't be caught for this syscall, if the call fails, the whole transaction will revert.
+Failure can't be caught for this syscall, and if the call fails, the whole transaction will revert.
 
-This is not the recommended way to call a contract. Instead, use the dispatcher generated from the contract interface as shown in the [Calling other contracts](../interacting/calling_other_contracts.md).
+This is not the recommended way to call a contract. Instead, use the dispatcher generated from the contract interface as shown in the [Calling other contracts](../interacting/calling_other_contracts.md) chapter.
 
 <!-- TODO Add example ? / with interact chapter -->
 
@@ -206,7 +208,7 @@ This is used for contract upgrades. Here's an example from the [Upgradeable Cont
 ```
 
 The new class code will only be used for future calls to the contract.
-The current transaction containing the `replace_class` syscall will continue to use the old class code. (You can explicitly use the new class code by calling `call_contract` after the `replace_class` syscall in the same transaction)
+The current transaction containing the `replace_class` syscall will continue to use the old class code. Note that you can explicitly use the new class code in the same transaction by calling `call_contract` after the `replace_class` syscall.
 
 #### storage_read
 
@@ -233,7 +235,7 @@ Similar to `storage_read`, this low-level syscall is used to write the value `va
 
 ## Documentation
 
-Syscalls are defined in [`starknet::syscall`](https://github.com/starkware-libs/cairo/blob/ec14a5e2c484190ff40811c973a72a53739cedb7/corelib/src/starknet/syscalls.cairo)
+Syscalls are defined in [`starknet::syscall`](https://github.com/starkware-libs/cairo/blob/ec14a5e2c484190ff40811c973a72a53739cedb7/corelib/src/starknet/syscalls.cairo).
 
 You can also read the [official documentation page](https://docs.starknet.io/documentation/architecture_and_concepts/Smart_Contracts/system-calls-cairo1/) for more details.
 
@@ -267,5 +269,5 @@ mod gas_costs {
 }
 ```
 
-Specific gas cost are defined in this [file](https://github.com/starkware-libs/cairo/blob/ec14a5e2c484190ff40811c973a72a53739cedb7/crates/cairo-lang-runner/src/casm_run/mod.rs#L333) 
+Specific gas cost are defined in this [file](https://github.com/starkware-libs/cairo/blob/ec14a5e2c484190ff40811c973a72a53739cedb7/crates/cairo-lang-runner/src/casm_run/mod.rs#L333)
 -->
