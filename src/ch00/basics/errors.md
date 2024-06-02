@@ -11,7 +11,7 @@ To throw an error, use the `assert` or `panic` functions:
 
 - `panic` immediately halts the execution with the given error value.
   It should be used for complex condition checks and for internal errors. It's similar to the `revert` statement in Solidity.
-  You can use `panic_with_felt252` to be able to directly pass a `felt252` as the error value.
+  You can use `panic_with_felt252` to directly pass a `felt252` as the error value.
 
 The `assert_eq!`, `assert_ne!`, `assert_lt!`, `assert_le!`, `assert_gt!` and `assert_ge!` macros can be used as an `assert` shorthand to compare two values, but **only** in tests. In contracts, you should only use the `assert` function.
 
