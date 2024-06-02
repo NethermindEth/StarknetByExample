@@ -5,11 +5,11 @@ The following staking contract is designed to allow users to stake tokens in exc
 ### Key Features:
 
 1. Token staking and unstaking:
-    - Users can take a specific (determined at deployment) ERC20 token into the contract.
+    - Users can stake a ERC20 token, specified at deployment.
     - Users can withdraw their staked tokens at any time.
 
 2. Reward calculation and distribution:
-    - The contract distributes another type (determined at deployment) of ERC20 token as rewards.
+    - The rewards are distributed as an ERC20, also specified at deployment (can be different from the staking token).
     - Rewards are calculated based on the duration of staking and the amount the user staked relative to the total staked amount by all users.
     - A user’s reward accumulates over time up until the reward period's end and can be claimed anytime by the user.
 

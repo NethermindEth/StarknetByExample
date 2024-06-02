@@ -6,7 +6,7 @@ pub trait IStakingContract<TContractState> {
     fn set_reward_duration(ref self: TContractState, duration: u256);
     fn stake(ref self: TContractState, amount: u256);
     fn withdraw(ref self: TContractState, amount: u256);
-    fn compute_rewards(self: @TContractState, account: ContractAddress) -> u256;
+    fn get_rewards(self: @TContractState, account: ContractAddress) -> u256;
     fn claim_rewards(ref self: TContractState);
 }
 
@@ -16,8 +16,8 @@ mod Errors {
     pub const NULL_AMOUNT: felt252 = 'Amount must be > 0';
     pub const NULL_DURATION: felt252 = 'Duration must be > 0';
     pub const UNFINISHED_DURATION: felt252 = 'Reward duration not finished';
-    pub const ZERO_ADDRESS_CALLER: felt252 = 'Caller is the zero address';
     pub const NOT_OWNER: felt252 = 'Caller is not the owner';
+    pub const NOT_ENOUGH_BALANCE: felt252 = 'Balance too low';
 }
 
 #[starknet::contract]
@@ -151,6 +151,12 @@ pub mod StakingContract {
             assert(amount > 0, super::Errors::NULL_AMOUNT);
 
             let user = get_caller_address();
+
+            assert(
+                self.staking_token.read().balance_of(user) >= amount,
+                super::Errors::NOT_ENOUGH_BALANCE
+            );
+
             self.update_rewards(user);
 
             self.balance_of.write(user, self.balance_of.read(user) - amount);
@@ -160,11 +166,8 @@ pub mod StakingContract {
             self.emit(Withdrawal { user, amount });
         }
 
-        fn compute_rewards(self: @ContractState, account: ContractAddress) -> u256 {
-            self.unclaimed_rewards.read(account)
-                + self.balance_of.read(account)
-                    * (self.current_reward_per_staked_token.read()
-                        - self.last_user_reward_per_staked_token.read(account))
+        fn get_rewards(self: @ContractState, account: ContractAddress) -> u256 {
+            self.unclaimed_rewards.read(account) + self.compute_new_rewards(account)
         }
 
         fn claim_rewards(ref self: ContractState) {
@@ -191,31 +194,38 @@ pub mod StakingContract {
             self.last_updated_at.write(self.last_time_applicable());
 
             if account.is_non_zero() {
-                // compute earned rewards since last update for the user `account`
-                let user_rewards = self.compute_rewards(account);
-                self.unclaimed_rewards.write(account, user_rewards);
-
-                // track amount of total rewards distributed
-                self
-                    .total_distributed_rewards
-                    .write(self.total_distributed_rewards.read() + user_rewards);
+                self.distribute_user_rewards(account);
 
                 self
                     .last_user_reward_per_staked_token
                     .write(account, self.current_reward_per_staked_token.read());
 
-                // check if we send a RewardsFinished event
-                if self.last_updated_at.read() == self.finish_at.read() {
-                    let total_rewards = self.reward_rate.read() * self.duration.read();
+                self.send_rewards_finished_event();
+            }
+        }
 
-                    if total_rewards != 0
-                        && self.total_distributed_rewards.read() == total_rewards {
-                        // owner should set up NEW rewards into the contract
-                        self.emit(RewardsFinished { msg: 'Rewards all distributed' });
-                    } else {
-                        // owner should set up rewards into the contract (or add duration by setting up rewards)
-                        self.emit(RewardsFinished { msg: 'Rewards not active yet' });
-                    }
+        fn distribute_user_rewards(ref self: ContractState, account: ContractAddress) {
+            // compute earned rewards since last update for the user `account`
+            let user_rewards = self.get_rewards(account);
+            self.unclaimed_rewards.write(account, user_rewards);
+
+            // track amount of total rewards distributed
+            self
+                .total_distributed_rewards
+                .write(self.total_distributed_rewards.read() + user_rewards);
+        }
+
+        fn send_rewards_finished_event(ref self: ContractState) {
+            // check if we send a RewardsFinished event
+            if self.last_updated_at.read() == self.finish_at.read() {
+                let total_rewards = self.reward_rate.read() * self.duration.read();
+
+                if total_rewards != 0 && self.total_distributed_rewards.read() == total_rewards {
+                    // owner should set up NEW rewards into the contract
+                    self.emit(RewardsFinished { msg: 'Rewards all distributed' });
+                } else {
+                    // owner should set up rewards into the contract (or add duration by setting up rewards)
+                    self.emit(RewardsFinished { msg: 'Rewards not active yet' });
                 }
             }
         }
@@ -229,6 +239,12 @@ pub mod StakingContract {
                         * (self.last_time_applicable() - self.last_updated_at.read())
                         / self.total_supply.read()
             }
+        }
+
+        fn compute_new_rewards(self: @ContractState, account: ContractAddress) -> u256 {
+            self.balance_of.read(account)
+                * (self.current_reward_per_staked_token.read()
+                    - self.last_user_reward_per_staked_token.read(account))
         }
 
         #[inline(always)]
@@ -247,7 +263,6 @@ pub mod StakingContract {
 
         fn only_owner(self: @ContractState) {
             let caller = get_caller_address();
-            assert(caller.is_non_zero(), super::Errors::ZERO_ADDRESS_CALLER);
             assert(caller == self.owner.read(), super::Errors::NOT_OWNER);
         }
     }
