@@ -17,7 +17,7 @@ pub mod GlobalExample {
         fn foo(ref self: ContractState) {
             // Call the get_caller_address function to get the sender address
             let _caller = get_caller_address();
-            // ...
+        // ...
         }
     }
 }
@@ -34,6 +34,6 @@ mod test {
             GlobalExample::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
         )
             .unwrap_syscall();
-        // Not much to test
+    // Not much to test
     }
 }
