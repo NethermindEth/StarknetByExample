@@ -1,14 +1,14 @@
 # Documentation
 
-It's important to take the time to document your code. It will helps developers and users to understand the contract and its functionalities.
+It's important to take the time to document your code. It will help developers and users to understand the contract and its functionalities.
 
 In Cairo, you can add comments with `//`.
 
-### Best Practices:
+### Best Practices
 
 Since Cairo 1, the community has adopted a [Rust-like documentation style](https://doc.rust-lang.org/rust-by-example/meta/doc.html).
 
-### Contract Interface:
+### Contract Interface
 
 In smart contracts, you will often have a trait that defines the contract's interface (with `#[starknet::interface]`).
 This is the perfect place to include detailed documentation explaining the purpose and functionality of the contract entry points. You can follow this template:
@@ -32,8 +32,8 @@ trait IContract<TContractState> {
 
 Keep in mind that this should not describe the implementation details of the function, but rather the high-level purpose and functionality of the contract from the perspective of a user.
 
-### Implementation Details:
+### Implementation Details
 
-When writing the logic of the contract, you can add comments to describe the technical implementation details of the functions.
+When writing the contract logic, you can add comments to describe the technical implementation details of the functions.
 
 > Avoid over-commenting: Comments should provide additional value and clarity.
