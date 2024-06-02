@@ -7,7 +7,7 @@ pub trait IVaultErrorsExample<TContractState> {
 // ANCHOR: contract
 pub mod VaultErrors {
     pub const INSUFFICIENT_BALANCE: felt252 = 'insufficient_balance';
-// you can define more errors here
+    // you can define more errors here
 }
 
 #[starknet::contract]
