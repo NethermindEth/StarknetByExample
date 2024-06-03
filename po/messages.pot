@@ -1579,7 +1579,7 @@ msgid "// Since a felt252 is smaller than a u256, we can use the into() method\n
 msgstr ""
 
 #: src/ch00/cairo_cheatsheet/type_casting.md:29
-msgid "//note a usize is smaller than a felt so we use the try_into\n"
+msgid "// Note: usize is smaller than felt252, so we use try_into\n"
 msgstr ""
 
 #: src/ch01/upgradeable_contract.md:3
