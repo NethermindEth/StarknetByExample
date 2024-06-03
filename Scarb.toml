@@ -3,13 +3,13 @@ members = [
   "listings/getting-started/*",
   "listings/applications/*",
   "listings/advanced-concepts/*",
-  "listings/templates/*"
+  "listings/templates/*",
 ]
 
 [workspace.scripts]
 test = "$(git rev-parse --show-toplevel)/scripts/test_resolver.sh"
 
-# [workspace.tool.snforge]
+[workspace.tool.snforge]
 
 [workspace.dependencies]
 starknet = ">=2.6.3"

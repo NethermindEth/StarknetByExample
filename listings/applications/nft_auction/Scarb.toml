@@ -6,6 +6,9 @@ edition = '2023_11'
 [dependencies]
 starknet.workspace = true
 
+[dev-dependencies]
+snforge_std.workspace = true
+
 [scripts]
 test.workspace = true
 
