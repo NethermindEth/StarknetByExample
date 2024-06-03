@@ -55,7 +55,7 @@ We make the `Countable` component depend on the `Switchable` component.
 This will allow to do `switchable::ComponentState<TContractState>` -> `TContractState` -> `countable::ComponentState<TcontractState>` and access the internal functions of the `Switchable` component inside the `Countable` component:
 
 ```rust
-{{#rustdoc_include ../../listings/applications/components_dependencies/src/countable_internal_dep_switch.cairo}}
+{{#rustdoc_include ../../listings/applications/components_dependencies/src/countable_internal_dep_switch.cairo:contract}}
 ```
 
 The contract remains the same that the previous example, but the implementation of the `Countable` component is different:
