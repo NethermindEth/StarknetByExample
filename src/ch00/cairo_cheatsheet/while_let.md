@@ -8,4 +8,5 @@ A `while let` loop is a combination of a `while` loop and a `let` statement. It 
 
 ### See also
 
-[while](while.md)
+- [while](while.md)
+- [if let](if_let.md)

@@ -1,6 +1,7 @@
 # `loop`
 
 A `loop` specifies a block of code that will run repetitively until a halting condition is encountered.
+
 For example:
 
 ```rust

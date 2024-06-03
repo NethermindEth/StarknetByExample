@@ -21,7 +21,7 @@ fn type_casting() {
     let _new_u256: u256 = my_felt252.into();
     let _new_felt252: felt252 = new_u16.into();
 
-    //note a usize is smaller than a felt so we use the try_into
+    // Note: usize is smaller than felt252, so we use try_into
     let _new_usize: usize = my_felt252.try_into().unwrap();
 // ANCHOR_END: sheet
 }

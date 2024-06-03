@@ -20,16 +20,16 @@ Each test is defined as a function with the `#[test]` attribute. You can also ch
 
 As we are in the context of a smart contract, you can also set up the gas limit for a test by using the `#[available_gas(X)]`. This is a great way to ensure that some of your contract's features stay under a certain gas limit!
 
-> Note: The term "gas" here refers to Sierra gas, not L1 gas
+> Note: The term "gas" here refers to Sierra gas, not L1 gas.
 
 Now, let's move on to the testing process:
 
-- Use the `deploy` function logic to declare and deploy your contract.
-- Use `assert` to verify that the contract behaves as expected in the given context.
-  - You can also use assertions macros: `assert_eq`, `assert_ne`, `assert_gt`, `assert_ge`, `assert_lt`, `assert_le`
+- Use the `deploy` function logic to declare and deploy your contract
+- Use `assert` to verify that the contract behaves as expected in the given context
+  - You can also use assertion macros: `assert_eq!`, `assert_ne!`, `assert_gt!`, `assert_ge!`, `assert_lt!`, `assert_le!`
 
-If you didn't noticed yet, every examples in this book have hidden tests, you can see them by clicking on the "Show hidden lines" (eyes icon) on the top right of code blocks.
-You can also find a detailed explanation of testing in cairo in the [Cairo book - Chapter 10](https://book.cairo-lang.org/ch10-00-testing-cairo-programs.html).
+If you haven't noticed yet, every example in this book has hidden tests, you can see them by clicking the "Show hidden lines" (eyes icon) on the top right of code blocks.
+You can also find a detailed explanation of testing in Cairo in [The Cairo Book](https://book.cairo-lang.org/ch10-00-testing-cairo-programs.html).
 
 ## Using the contract state
 
@@ -82,12 +82,12 @@ You may also need the `info` module from the corelib, which allows you to access
 - `get_block_timestamp() -> u64`
 - `get_block_number() -> u64`
 
-You can found the full list of functions in the [Starknet Corelib repo](https://github.com/starkware-libs/cairo/tree/main/corelib/src/starknet).
+You can find the full list of functions in the [Starknet Corelib repo](https://github.com/starkware-libs/cairo/tree/main/corelib/src/starknet).
 
 ## Starknet Foundry
 
 Starknet Foundry is a powerful toolkit for developing smart contracts on Starknet. It offers support for testing Starknet smart contracts on top of `scarb` with the `Forge` tool.
 
-Testing with `snforge` is similar to the process we just described but simplified. Moreover, additional features are on the way, including cheatcodes or parallel tests execution. We highly recommend exploring Starknet Foundry and incorporating it into your projects.
+Testing with `snforge` is similar to the process we just described, but simplified. Moreover, additional features are on the way, including cheatcodes and parallel test execution. We highly recommend exploring Starknet Foundry and incorporating it into your projects.
 
 For more detailed information about testing contracts with Starknet Foundry, check out the [Starknet Foundry Book - Testing Contracts](https://foundry-rs.github.io/starknet-foundry/testing/contracts.html).

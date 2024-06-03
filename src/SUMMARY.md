@@ -72,3 +72,4 @@ Summary
 - [List](./ch02/list.md)
 - [Plugins](./ch02/plugins.md)
 - [Signature Verification](./ch02/signature_verification.md)
+- [Library Calls](./ch02/library_calls.md)
