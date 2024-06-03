@@ -6,7 +6,7 @@ pub trait ISerdeCustomType<TContractState> {
 
 // ANCHOR: contract
 // Deriving the `Serde` trait allows us to use
-// the Person type as an entrypoint parameter and return value
+// the `Person` type as an entrypoint parameter and as a return value
 #[derive(Drop, Serde)]
 pub struct Person {
     pub age: u8,

@@ -12,21 +12,21 @@ pub mod ExampleContract {
         value: u32
     }
 
-    // The `abi(embed_v0)` attribute indicates that all
+    // The `#[abi(embed_v0)]` attribute indicates that all
     // the functions in this implementation can be called externally.
     // Omitting this attribute would make all the functions internal.
     #[abi(embed_v0)]
     impl ExampleContract of super::IExampleContract<ContractState> {
         // The `set` function can be called externally
-        // because it is written inside an implementation marked as `#[external]`.
+        // because it is written inside an implementation marked as `#[abi(embed_v0)]`.
         // It can modify the contract's state as it is passed as a reference.
         fn set(ref self: ContractState, value: u32) {
             self.value.write(value);
         }
 
         // The `get` function can be called externally
-        // because it is written inside an implementation marked as `#[external]`.
-        // However, it can't modify the contract's state is passed as a snapshot
+        // because it is written inside an implementation marked as `#[abi(embed_v0)]`.
+        // However, it can't modify the contract's state, as it is passed as a snapshot
         // -> It's only a "view" function.
         fn get(self: @ContractState) -> u32 {
             // We can call an internal function from any functions within the contract
@@ -34,7 +34,7 @@ pub mod ExampleContract {
         }
     }
 
-    // The lack of the `external` attribute indicates that all the functions in
+    // The lack of the `#[abi(embed_v0)]` attribute indicates that all the functions in
     // this implementation can only be called internally.
     // We name the trait `PrivateFunctionsTrait` to indicate that it is an
     // internal trait allowing us to call internal functions.
@@ -43,7 +43,7 @@ pub mod ExampleContract {
         // The `_read_value` function is outside the implementation that is
         // marked as `#[abi(embed_v0)]`, so it's an _internal_ function
         // and can only be called from within the contract.
-        // However, it can't modify the contract's state is passed
+        // However, it can't modify the contract's state, as it is passed
         // as a snapshot: it is only a "view" function.
         fn _read_value(self: @ContractState) -> u32 {
             self.value.read()

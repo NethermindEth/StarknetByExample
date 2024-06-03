@@ -9,11 +9,11 @@ Each character is encoded on 8 bits following the ASCII standard, so it's possib
 Short strings are declared with single quotes, like this: `'Hello, World!'`.
 See the [Felt](../cairo_cheatsheet/felt.md) section for more information about short strings with the `felt252` type.
 
-> Notice that any short string only use up to 31 bytes, so it's possible to represent any short string with the `bytes31`.
+> Notice that any short string only use up to 31 bytes, so it's possible to represent any short string with `bytes31`.
 
 ## ByteArray (Long strings)
 
-The `ByteArray` struct is used to store strings of arbitrary length. It contain a field `data` of type `Array<bytes31>` to store a sequence of short strings.
+The `ByteArray` struct is used to store strings of arbitrary length. It contains a field `data` of type `Array<bytes31>` to store a sequence of short strings.
 
 ByteArrays are declared with double quotes, like this: `"Hello, World!"`.
 

@@ -15,7 +15,7 @@ You can define [storage variables](./variables.md#storage-variables) in your con
 {{#rustdoc_include ../../../listings/getting-started/storage/src/contract.cairo:contract}}
 ```
 
-> Actually these two contracts have the same underlying sierra program.
+> Actually these two contracts have the same underlying Sierra program.
 > From the compiler's perspective, the storage variables don't exist until they are used.
 
-You can also read about [storing custom types](./storing-custom-types.md)
+You can also read about [storing custom types](./storing-custom-types.md).
