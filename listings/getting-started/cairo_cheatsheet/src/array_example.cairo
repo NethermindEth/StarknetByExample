@@ -12,6 +12,6 @@ fn array() -> bool {
     let second_value = *arr.at(0);
     assert(second_value == 20, 'second value should match');
 
-    // Returns true if an array is empty, then false if it isn't.
+    // Returns true if an array is empty, and false if it isn't.
     arr.is_empty()
 }

@@ -3672,12 +3672,12 @@ msgstr "# 分支"
 
 #: src/ch00/cairo_cheatsheet/match.md:3
 msgid ""
-"The \"match\" expression in Cairo allows us to control the flow of our code "
-"by comparing a felt data type or an enum against various patterns and then "
+"The `match` expression in Cairo allows us to control the flow of our code "
+"by comparing a `felt252` data type or an enum against various patterns and then "
 "running specific code based on the pattern that matches.\n"
 "For example:"
 msgstr ""
-"在 Cairo 中，”match” 表达式允许我们通过将 felt 数据类型或枚举与各种模式进行比"
+"在 Cairo 中，`match` 表达式允许我们通过将 `felt252` 数据类型或枚举与各种模式进行比"
 "较，然后根据匹配的模式运行特定的代码来控制代码的流程。例如："
 
 #: src/ch00/cairo_cheatsheet/match.md:6
