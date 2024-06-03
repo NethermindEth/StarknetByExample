@@ -127,7 +127,6 @@ mod ERC721 {
         ////////////////////////////////
         fn owner_of(self: @ContractState, token_id: u256) -> ContractAddress {
             let owner = self.owners.read(token_id);
-            assert(owner.is_non_zero(), 'ERC721: invalid token ID');
             owner
         }
 

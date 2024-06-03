@@ -1,22 +1,28 @@
 use starknet::ContractAddress;
 
-// In order to make contract calls within our Vault,
-// we need to have the interface of the remote ERC20 contract defined to import the Dispatcher.
 #[starknet::interface]
 pub trait IERC20<TContractState> {
-    fn name(self: @TContractState) -> felt252;
-    fn symbol(self: @TContractState) -> felt252;
-    fn decimals(self: @TContractState) -> u8;
-    fn total_supply(self: @TContractState) -> u256;
-    fn balance_of(self: @TContractState, account: ContractAddress) -> u256;
-    fn allowance(self: @TContractState, owner: ContractAddress, spender: ContractAddress) -> u256;
-    fn transfer(ref self: TContractState, recipient: ContractAddress, amount: u256) -> bool;
+    fn get_name(self: @TContractState) -> felt252;
+    fn get_symbol(self: @TContractState) -> felt252;
+    fn get_decimals(self: @TContractState) -> u8;
+    fn get_total_supply(self: @TContractState) -> felt252;
+    fn balance_of(self: @TContractState, account: ContractAddress) -> felt252;
+    fn allowance(
+        self: @TContractState, owner: ContractAddress, spender: ContractAddress
+    ) -> felt252;
+    fn transfer(ref self: TContractState, recipient: ContractAddress, amount: felt252);
     fn transfer_from(
-        ref self: TContractState, sender: ContractAddress, recipient: ContractAddress, amount: u256
-    ) -> bool;
-    fn approve(ref self: TContractState, spender: ContractAddress, amount: u256) -> bool;
+        ref self: TContractState,
+        sender: ContractAddress,
+        recipient: ContractAddress,
+        amount: felt252
+    );
+    fn approve(ref self: TContractState, spender: ContractAddress, amount: felt252);
+    fn increase_allowance(ref self: TContractState, spender: ContractAddress, added_value: felt252);
+    fn decrease_allowance(
+        ref self: TContractState, spender: ContractAddress, subtracted_value: felt252
+    );
 }
-
 
 #[starknet::interface]
 trait IERC721<TContractState> {
@@ -40,6 +46,7 @@ trait IERC721<TContractState> {
 #[starknet::interface]
 pub trait INFTAuction<TContractState> {
     fn buy(ref self: TContractState, token_id: u256);
+    fn get_price(self: @TContractState) -> u64;
 }
 
 #[starknet::contract]
@@ -49,8 +56,8 @@ pub mod NFTAuction {
 
     #[storage]
     struct Storage {
-        erc20_token: IERC20Dispatcher,
-        erc721_token: IERC721Dispatcher,
+        erc20_token: ContractAddress,
+        erc721_token: ContractAddress,
         starting_price: u64,
         seller: ContractAddress,
         duration: u64,
@@ -74,44 +81,48 @@ pub mod NFTAuction {
     ) {
         assert(starting_price >= discount_rate * duration, 'starting price too low');
 
-        self.erc20_token.write(IERC20Dispatcher { contract_address: erc20_token });
-        self.erc721_token.write(IERC721Dispatcher { contract_address: erc721_token });
+        self.erc20_token.write(erc20_token);
+        self.erc721_token.write(erc721_token);
         self.starting_price.write(starting_price);
         self.seller.write(seller);
         self.duration.write(duration);
         self.discount_rate.write(discount_rate);
         self.start_at.write(get_block_timestamp());
-        self.expires_at.write(get_block_timestamp() + duration);
+        self.expires_at.write(get_block_timestamp() + duration * 1000);
         self.total_supply.write(total_supply);
-    }
-
-    #[generate_trait]
-    impl PrivateFunctions of PrivateFunctionsTrait {
-        fn get_price(self: @ContractState) -> u64 {
-            let time_elapsed = get_block_timestamp() - self.start_at.read();
-            let discount = self.discount_rate.read() * time_elapsed;
-            self.starting_price.read() - discount
-        }
     }
 
     #[abi(embed_v0)]
     impl NFTAuction of super::INFTAuction<ContractState> {
+        fn get_price(self: @ContractState) -> u64 {
+            let time_elapsed = (get_block_timestamp() - self.start_at.read())
+                / 1000; // Ignore milliseconds
+            let discount = self.discount_rate.read() * time_elapsed;
+            let price: u64 = self.starting_price.read() - discount;
+            price
+        }
+
         fn buy(ref self: ContractState, token_id: u256) {
             // Check duration
             assert(get_block_timestamp() < self.expires_at.read(), 'auction ended');
             // Check total supply
             assert(self.purchase_count.read() < self.total_supply.read(), 'auction ended');
 
-            let caller = get_caller_address();
+            let erc20_dispatcher = IERC20Dispatcher { contract_address: self.erc20_token.read() };
+            let erc721_dispatcher = IERC721Dispatcher {
+                contract_address: self.erc721_token.read()
+            };
 
+            let caller = get_caller_address();
             // Get NFT price
             let price: u256 = self.get_price().into();
+            let buyer_balance: u256 = erc20_dispatcher.balance_of(caller).into();
             // Check payment token balance
-            assert(self.erc20_token.read().balance_of(caller) >= price, 'insufficient balance');
+            assert(buyer_balance >= price, 'insufficient balance');
             // Transfer payment token to contract
-            self.erc20_token.read().transfer(self.seller.read(), price);
+            erc20_dispatcher.transfer_from(caller, self.seller.read(), price.try_into().unwrap());
             // Mint token to buyer's address
-            self.erc721_token.read().mint(caller, 1);
+            erc721_dispatcher.mint(caller, token_id);
 
             // Increase purchase count
             self.purchase_count.write(self.purchase_count.read() + 1);
