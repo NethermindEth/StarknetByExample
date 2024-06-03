@@ -55,6 +55,7 @@ Summary
 - [Upgradeable Contract](./ch01/upgradeable_contract.md)
 - [Defi Vault](./ch01/simple_vault.md)
 - [ERC20 Token](./ch01/erc20.md)
+- [NFT Dutch Auction](./ch01/nft_dutch_auction.md)
 - [Constant Product AMM](./ch01/constant-product-amm.md)
 - [TimeLock](./ch01/timelock.md)
 - [Staking](./ch01/staking.md)

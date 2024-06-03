@@ -14,14 +14,12 @@ use super::{
 pub const erc721_name: felt252 = 'My NFT';
 pub const erc721_symbol: felt252 = 'MNFT';
 
-
 // ERC20 token
 pub const erc20_name: felt252 = 'My Token';
 pub const erc20_symbol: felt252 = 'MTKN';
 pub const erc20_recipient: felt252 = 'admin';
 pub const erc20_decimals: u8 = 1_u8;
 pub const erc20_initial_supply: u128 = 10000_u128;
-
 
 // NFT Auction
 pub const starting_price: felt252 = 500;

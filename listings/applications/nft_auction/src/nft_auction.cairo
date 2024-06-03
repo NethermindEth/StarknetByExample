@@ -117,13 +117,12 @@ pub mod NFTAuction {
             // Get NFT price
             let price: u256 = self.get_price().into();
             let buyer_balance: u256 = erc20_dispatcher.balance_of(caller).into();
-            // Check payment token balance
+            // Ensure buyer has enough token for payment
             assert(buyer_balance >= price, 'insufficient balance');
-            // Transfer payment token to contract
+            // Transfer payment token from buyer to seller
             erc20_dispatcher.transfer_from(caller, self.seller.read(), price.try_into().unwrap());
             // Mint token to buyer's address
             erc721_dispatcher.mint(caller, token_id);
-
             // Increase purchase count
             self.purchase_count.write(self.purchase_count.read() + 1);
         }
