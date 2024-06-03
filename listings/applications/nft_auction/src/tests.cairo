@@ -96,7 +96,7 @@ fn test_buy() {
     assert_eq!(erc721_dispatcher.owner_of(nft_id_1), buyer);
 
     // Forward block timestamp in order for a reduced nft price    
-    let forward_blocktime_by = 4000;
+    let forward_blocktime_by = 4000; // milliseconds
     warp(CheatTarget::One(nft_auction_address), forward_blocktime_by, CheatSpan::TargetCalls(1));
 
     // Buy token again after some time
@@ -104,6 +104,103 @@ fn test_buy() {
 
     // buyer approves nft auction contract to spend own erc20 token
     erc20_dispatcher.approve(nft_auction_address, nft_price);
+
+    assert_ne!(erc721_dispatcher.owner_of(nft_id_2), buyer);
     nft_auction_dispatcher.buy(nft_id_2);
     assert_eq!(erc721_dispatcher.owner_of(nft_id_2), buyer);
+}
+
+#[test]
+#[should_panic(expected: 'auction ended')]
+fn test_buy_should_panic_when_total_supply_reached() {
+    let (_, erc20_address, nft_auction_address) = get_contract_addresses();
+    let erc20_dispatcher = IERC20Dispatcher { contract_address: erc20_address };
+    let nft_auction_dispatcher = INFTAuctionDispatcher { contract_address: nft_auction_address };
+    let erc20_admin: ContractAddress = 'admin'.try_into().unwrap();
+    let buyer: ContractAddress = 'buyer'.try_into().unwrap();
+
+    // Transfer erc20 tokens to buyer
+    prank(CheatTarget::One(erc20_address), erc20_admin, CheatSpan::TargetCalls(1));
+    let transfer_amt = 5000;
+    erc20_dispatcher.transfer(buyer, transfer_amt.into());
+
+    // Buy token
+    prank(CheatTarget::One(nft_auction_address), buyer, CheatSpan::TargetCalls(4));
+    prank(CheatTarget::One(erc20_address), buyer, CheatSpan::TargetCalls(3));
+
+    let nft_id_1 = 1;
+    let nft_price = nft_auction_dispatcher.get_price().into();
+
+    // buyer approves nft auction contract to spend own erc20 token
+    erc20_dispatcher.approve(nft_auction_address, nft_price);
+    nft_auction_dispatcher.buy(nft_id_1);
+
+    // Forward block timestamp in order for a reduced nft price    
+    let forward_blocktime_by = 4000; // 4 seconds (in milliseconds)
+    warp(CheatTarget::One(nft_auction_address), forward_blocktime_by, CheatSpan::TargetCalls(1));
+
+    // Buy token again after some time
+    let nft_id_2 = 2;
+    // buyer approves nft auction contract to spend own erc20 token
+    erc20_dispatcher.approve(nft_auction_address, nft_price);
+    nft_auction_dispatcher.buy(nft_id_2);
+
+    // Buy token again after the total supply has reached
+    let nft_id_3 = 3;
+    // buyer approves nft auction contract to spend own erc20 token
+    erc20_dispatcher.approve(nft_auction_address, nft_price);
+    nft_auction_dispatcher.buy(nft_id_3);
+}
+
+#[test]
+#[should_panic(expected: 'auction ended')]
+fn test_buy_should_panic_when_duration_ended() {
+    let (_, erc20_address, nft_auction_address) = get_contract_addresses();
+    let erc20_dispatcher = IERC20Dispatcher { contract_address: erc20_address };
+    let nft_auction_dispatcher = INFTAuctionDispatcher { contract_address: nft_auction_address };
+    let erc20_admin: ContractAddress = 'admin'.try_into().unwrap();
+    let buyer: ContractAddress = 'buyer'.try_into().unwrap();
+
+    // Transfer erc20 tokens to buyer
+    prank(CheatTarget::One(erc20_address), erc20_admin, CheatSpan::TargetCalls(1));
+    let transfer_amt = 5000;
+    erc20_dispatcher.transfer(buyer, transfer_amt.into());
+
+    // Buy token
+    prank(CheatTarget::One(nft_auction_address), buyer, CheatSpan::TargetCalls(4));
+    prank(CheatTarget::One(erc20_address), buyer, CheatSpan::TargetCalls(3));
+
+    let nft_id_1 = 1;
+    let nft_price = nft_auction_dispatcher.get_price().into();
+
+    // buyer approves nft auction contract to spend own erc20 token
+    erc20_dispatcher.approve(nft_auction_address, nft_price);
+    nft_auction_dispatcher.buy(nft_id_1);
+
+    // Forward block timestamp to a time after duration has ended
+    // During deployment, duration was set to 60 seconds 
+    let forward_blocktime_by = 61000; // 61 seconds (in milliseconds)
+    warp(CheatTarget::One(nft_auction_address), forward_blocktime_by, CheatSpan::TargetCalls(1));
+
+    // Buy token again after some time
+    let nft_id_2 = 2;
+    // buyer approves nft auction contract to spend own erc20 token
+    erc20_dispatcher.approve(nft_auction_address, nft_price);
+    nft_auction_dispatcher.buy(nft_id_2);
+}
+
+#[test]
+fn test_price_decreases_after_some_time() {
+    let (_, _, nft_auction_address) = get_contract_addresses();
+    let nft_auction_dispatcher = INFTAuctionDispatcher { contract_address: nft_auction_address };
+
+    let nft_price_before_time_travel = nft_auction_dispatcher.get_price();
+
+    // Forward time
+    let forward_blocktime_by = 10000; // 10 seconds (in milliseconds)
+    warp(CheatTarget::One(nft_auction_address), forward_blocktime_by, CheatSpan::TargetCalls(1));
+
+    let nft_price_after_time_travel = nft_auction_dispatcher.get_price();
+
+    assert_gt!(nft_price_before_time_travel, nft_price_after_time_travel);
 }
