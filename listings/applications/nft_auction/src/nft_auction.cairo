@@ -17,15 +17,29 @@ pub trait IERC20<TContractState> {
     fn approve(ref self: TContractState, spender: ContractAddress, amount: u256) -> bool;
 }
 
+
 #[starknet::interface]
-pub trait IERC721<TContractState> {
-    fn total_supply(self: @TContractState) -> u128;
-    fn safe_mint(ref self: TContractState, recipient: ContractAddress, tokenId: u256);
+trait IERC721<TContractState> {
+    fn get_name(self: @TContractState) -> felt252;
+    fn get_symbol(self: @TContractState) -> felt252;
+    fn get_token_uri(self: @TContractState, token_id: u256) -> felt252;
+    fn balance_of(self: @TContractState, account: ContractAddress) -> u256;
+    fn owner_of(self: @TContractState, token_id: u256) -> ContractAddress;
+    fn get_approved(self: @TContractState, token_id: u256) -> ContractAddress;
+    fn is_approved_for_all(
+        self: @TContractState, owner: ContractAddress, operator: ContractAddress
+    ) -> bool;
+    fn approve(ref self: TContractState, to: ContractAddress, token_id: u256);
+    fn set_approval_for_all(ref self: TContractState, operator: ContractAddress, approved: bool);
+    fn transfer_from(
+        ref self: TContractState, from: ContractAddress, to: ContractAddress, token_id: u256
+    );
+    fn mint(ref self: TContractState, to: ContractAddress, token_id: u256);
 }
 
 #[starknet::interface]
 pub trait INFTAuction<TContractState> {
-    fn buy(ref self: TContractState);
+    fn buy(ref self: TContractState, token_id: u256);
 }
 
 #[starknet::contract]
@@ -43,7 +57,8 @@ pub mod NFTAuction {
         discount_rate: u64,
         start_at: u64,
         expires_at: u64,
-        purchase_count: u128
+        purchase_count: u128,
+        total_supply: u128
     }
 
     #[constructor]
@@ -55,6 +70,7 @@ pub mod NFTAuction {
         seller: ContractAddress,
         duration: u64,
         discount_rate: u64,
+        total_supply: u128
     ) {
         assert(starting_price >= discount_rate * duration, 'starting price too low');
 
@@ -66,6 +82,7 @@ pub mod NFTAuction {
         self.discount_rate.write(discount_rate);
         self.start_at.write(get_block_timestamp());
         self.expires_at.write(get_block_timestamp() + duration);
+        self.total_supply.write(total_supply);
     }
 
     #[generate_trait]
@@ -79,14 +96,11 @@ pub mod NFTAuction {
 
     #[abi(embed_v0)]
     impl NFTAuction of super::INFTAuction<ContractState> {
-        fn buy(ref self: ContractState) {
+        fn buy(ref self: ContractState, token_id: u256) {
             // Check duration
             assert(get_block_timestamp() < self.expires_at.read(), 'auction ended');
             // Check total supply
-            assert(
-                self.purchase_count.read() <= self.erc721_token.read().total_supply(),
-                'auction ended'
-            );
+            assert(self.purchase_count.read() < self.total_supply.read(), 'auction ended');
 
             let caller = get_caller_address();
 
@@ -97,7 +111,7 @@ pub mod NFTAuction {
             // Transfer payment token to contract
             self.erc20_token.read().transfer(self.seller.read(), price);
             // Mint token to buyer's address
-            self.erc721_token.read().safe_mint(caller, 1);
+            self.erc721_token.read().mint(caller, 1);
 
             // Increase purchase count
             self.purchase_count.write(self.purchase_count.read() + 1);

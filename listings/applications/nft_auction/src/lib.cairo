@@ -1,6 +1,6 @@
-mod nft_auction;
-mod erc20;
-mod erc721;
+pub mod nft_auction;
+pub mod erc20;
+pub mod erc721;
 
 #[cfg(test)]
-mod tests;
+pub mod tests;
