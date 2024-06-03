@@ -291,7 +291,7 @@ msgstr ""
 
 #: src/ch00/basics/storage.md:29
 msgid ""
-"Actually these two contracts have the same underlying sierra program. From "
+"Actually these two contracts have the same underlying Sierra program. From "
 "the compiler's perspective, the storage variables don't exist until they are "
 "used."
 msgstr ""
@@ -583,7 +583,7 @@ msgstr ""
 
 #: src/ch00/basics/visibility-mutability.md:42
 msgid ""
-"// The `abi(embed_v0)` attribute indicates that all the functions in this "
+"// The `#[abi(embed_v0)]` attribute indicates that all the functions in this "
 "implementation can be called externally.\n"
 "    // Omitting this attribute would make all the functions in this "
 "implementation internal.\n"
@@ -592,7 +592,7 @@ msgstr ""
 #: src/ch00/basics/visibility-mutability.md:46
 msgid ""
 "// The `set` function can be called externally because it is written inside "
-"an implementation marked as `#[external]`.\n"
+"an implementation marked as `#[abi(embed_v0)]`.\n"
 "        // It can modify the contract's state as it is passed as a "
 "reference.\n"
 msgstr ""
@@ -600,8 +600,8 @@ msgstr ""
 #: src/ch00/basics/visibility-mutability.md:52
 msgid ""
 "// The `get` function can be called externally because it is written inside "
-"an implementation marked as `#[external]`.\n"
-"        // However, it can't modify the contract's state is passed as a "
+"an implementation marked as `#[abi(embed_v0)]`.\n"
+"        // However, it can't modify the contract's state, as it is passed as a "
 "snapshot: it is only a \"view\" function.\n"
 msgstr ""
 
@@ -623,7 +623,7 @@ msgid ""
 "// The `_read_value` function is outside the implementation that is marked "
 "as `#[abi(embed_v0)]`, so it's an _internal_ function\n"
 "        // and can only be called from within the contract.\n"
-"        // However, it can't modify the contract's state is passed as a "
+"        // However, it can't modify the contract's state, as it is passed as a "
 "snapshot: it is only a \"view\" function.\n"
 msgstr ""
 
@@ -719,7 +719,7 @@ msgid ""
 "`h(...h(h(sn_keccak(variable_name),k_1),k_2),...,k_n)` where `ℎ` is the "
 "Pedersen hash and the final value is taken `mod2251−256`. You can learn more "
 "about the contract storage layout in the [Starknet "
-"Documentation](https://docs.starknet.io/documentation/architecture_and_concepts/Contracts/contract-storage/#storage_variables)"
+"Documentation](https://docs.starknet.io/documentation/architecture_and_concepts/Contracts/contract-storage/#storage_variables)."
 msgstr ""
 
 #: src/ch00/basics/mappings.md:28
@@ -1507,8 +1507,8 @@ msgstr ""
 
 #: src/ch00/cairo_cheatsheet/match.md:3
 msgid ""
-"The \"match\" expression in Cairo allows us to control the flow of our code "
-"by comparing a felt data type or an enum against various patterns and then "
+"The `match` expression in Cairo allows us to control the flow of our code "
+"by comparing a `felt252` data type or an enum against various patterns and then "
 "running specific code based on the pattern that matches. For example:"
 msgstr ""
 
@@ -1579,7 +1579,7 @@ msgid "// Since a felt252 is smaller than a u256, we can use the into() method\n
 msgstr ""
 
 #: src/ch00/cairo_cheatsheet/type_casting.md:29
-msgid "//note a usize is smaller than a felt so we use the try_into\n"
+msgid "// Note: usize is smaller than felt252, so we use try_into\n"
 msgstr ""
 
 #: src/ch01/upgradeable_contract.md:3

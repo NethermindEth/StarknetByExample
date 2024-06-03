@@ -2,7 +2,7 @@ fn while_let() {
     // ANCHOR: sheet
     let mut option = Option::Some(0_usize);
 
-    // "while `let` destructures `option` into `Some(i)`:
+    // "while `let` destructures `option` into `Some(i)`,
     // evaluate the block (`{}`), else `break`
     while let Option::Some(i) =
         option {

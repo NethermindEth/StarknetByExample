@@ -202,14 +202,14 @@ mod tests_with_states {
         assert_eq!(state.get_value(), initial_value);
         assert_eq!(state.get_owner(), owner);
 
-        // Mutating the state from the contract change the testing state
+        // Mutating the state from the contract changes the testing state
         set_contract_address(owner);
         let new_value: u32 = 20;
         contract.set_value(new_value);
         set_contract_address(contract.contract_address);
         assert_eq!(state.get_value(), new_value);
 
-        // Mutating the state from the testing state change the contract state
+        // Mutating the state from the testing state changes the contract state
         set_caller_address(owner);
         state.set_value(initial_value);
         assert_eq!(contract.get_value(), initial_value);
