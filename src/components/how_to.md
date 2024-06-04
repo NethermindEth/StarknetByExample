@@ -28,7 +28,7 @@ A component is really similar to a contract and can also have:
 - Events
 - Internal functions
 
-It doen't have a constructor, but you can create an `_init` internal function and call it from the contract's constructor. In the previous example, the `_off` function will be used this way.
+It doesn't have a constructor, but you can create an `_init` internal function and call it from the contract's constructor. In the previous example, the `_off` function will be used this way.
 
 > It's currently not possible to use the same component multiple times in the same contract.
 > This is a known limitation that may be lifted in the future.
