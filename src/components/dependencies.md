@@ -14,7 +14,7 @@ Instead, we add the trait `Switchable` as a dependency to the `Countable` compon
 
 #### Implementation of the trait in the contract
 
-First we import the `ISwitchable` trait defined in chapter ["Components How-To"](./how_to.md):
+First, we import the `ISwitchable` trait defined in chapter ["Components How-To"](./how_to.md):
 
 ```rust
 {{#include ../../listings/applications/components/src/switchable.cairo:interface}}
