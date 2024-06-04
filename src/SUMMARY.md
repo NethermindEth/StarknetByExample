@@ -35,6 +35,7 @@ Summary
   - [while](./ch00/cairo_cheatsheet/while.md)
   - [if let](./ch00/cairo_cheatsheet/if_let.md)
   - [while let](./ch00/cairo_cheatsheet/while_let.md)
+  - [Enums](./ch00/cairo_cheatsheet/enums.md)
   - [Match](./ch00/cairo_cheatsheet/match.md)
   - [Tuples](./ch00/cairo_cheatsheet/tuples.md)
   - [Struct](./ch00/cairo_cheatsheet/struct.md)
