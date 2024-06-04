@@ -1,28 +1,11 @@
 use starknet::ContractAddress;
+use starknet::account::Call;
 
 #[starknet::interface]
 pub trait ITimeLock<TState> {
-    fn get_tx_id(
-        self: @TState,
-        target: ContractAddress,
-        selector: felt252,
-        calldata: Span<felt252>,
-        timestamp: u64
-    ) -> felt252;
-    fn queue(
-        ref self: TState,
-        target: ContractAddress,
-        selector: felt252,
-        calldata: Span<felt252>,
-        timestamp: u64
-    ) -> felt252;
-    fn execute(
-        ref self: TState,
-        target: ContractAddress,
-        selector: felt252,
-        calldata: Span<felt252>,
-        timestamp: u64
-    ) -> Span<felt252>;
+    fn get_tx_id(self: @TState, call: Call, timestamp: u64) -> felt252;
+    fn queue(ref self: TState, call: Call, timestamp: u64) -> felt252;
+    fn execute(ref self: TState, call: Call, timestamp: u64) -> Span<felt252>;
     fn cancel(ref self: TState, tx_id: felt252);
 }
 
@@ -33,19 +16,20 @@ pub mod TimeLock {
     use starknet::{
         ContractAddress, get_caller_address, get_block_timestamp, SyscallResultTrait, syscalls
     };
-    use openzeppelin::access::ownable::OwnableComponent;
+    use starknet::account::Call;
+    use components::ownable::ownable_component;
 
-    component!(path: OwnableComponent, storage: ownable, event: OwnableEvent);
+    component!(path: ownable_component, storage: ownable, event: OwnableEvent);
 
     // Ownable
     #[abi(embed_v0)]
-    impl OwnableImpl = OwnableComponent::OwnableImpl<ContractState>;
-    impl OwnableInternalImpl = OwnableComponent::InternalImpl<ContractState>;
+    impl OwnableImpl = ownable_component::Ownable<ContractState>;
+    impl OwnableInternalImpl = ownable_component::OwnableInternalImpl<ContractState>;
 
     #[storage]
     struct Storage {
         #[substorage(v0)]
-        ownable: OwnableComponent::Storage,
+        ownable: ownable_component::Storage,
         queued: LegacyMap::<felt252, bool>,
     }
 
@@ -53,7 +37,7 @@ pub mod TimeLock {
     #[derive(Drop, starknet::Event)]
     pub enum Event {
         #[flat]
-        OwnableEvent: OwnableComponent::Event,
+        OwnableEvent: ownable_component::Event,
         Queue: Queue,
         Execute: Execute,
         Cancel: Cancel
@@ -63,10 +47,7 @@ pub mod TimeLock {
     pub struct Queue {
         #[key]
         pub tx_id: felt252,
-        #[key]
-        pub target: ContractAddress,
-        pub selector: felt252,
-        pub calldata: Span<felt252>,
+        pub call: Call,
         pub timestamp: u64
     }
 
@@ -74,10 +55,7 @@ pub mod TimeLock {
     pub struct Execute {
         #[key]
         pub tx_id: felt252,
-        #[key]
-        pub target: ContractAddress,
-        pub selector: felt252,
-        pub calldata: Span<felt252>,
+        pub call: Call,
         pub timestamp: u64
     }
 
@@ -97,41 +75,28 @@ pub mod TimeLock {
         pub const NOT_QUEUED: felt252 = 'TimeLock: not queued';
         pub const TIMESTAMP_NOT_PASSED: felt252 = 'TimeLock: timestamp not passed';
         pub const TIMESTAMP_EXPIRED: felt252 = 'TimeLock: timestamp expired';
-        pub const TX_FAILED: felt252 = 'TimeLock: tx failed';
     }
 
     #[constructor]
     fn constructor(ref self: ContractState) {
-        self.ownable.initializer(get_caller_address());
+        self.ownable._init(get_caller_address());
     }
 
     #[abi(embed_v0)]
     impl TimeLockImpl of super::ITimeLock<ContractState> {
-        fn get_tx_id(
-            self: @ContractState,
-            target: ContractAddress,
-            selector: felt252,
-            calldata: Span<felt252>,
-            timestamp: u64
-        ) -> felt252 {
+        fn get_tx_id(self: @ContractState, call: Call, timestamp: u64) -> felt252 {
             PoseidonTrait::new()
-                .update(target.into())
-                .update(selector.into())
-                .update(poseidon_hash_span(calldata))
+                .update(call.to.into())
+                .update(call.selector.into())
+                .update(poseidon_hash_span(call.calldata))
                 .update(timestamp.into())
                 .finalize()
         }
 
-        fn queue(
-            ref self: ContractState,
-            target: ContractAddress,
-            selector: felt252,
-            calldata: Span<felt252>,
-            timestamp: u64
-        ) -> felt252 {
-            self.ownable.assert_only_owner();
+        fn queue(ref self: ContractState, call: Call, timestamp: u64) -> felt252 {
+            self.ownable._assert_only_owner();
 
-            let tx_id = self.get_tx_id(target, selector, calldata, timestamp);
+            let tx_id = self.get_tx_id(self._copy_call(@call), timestamp);
             assert(!self.queued.read(tx_id), Errors::ALREADY_QUEUED);
             // ---|------------|---------------|-------
             //  block    block + min     block + max
@@ -144,21 +109,15 @@ pub mod TimeLock {
             );
 
             self.queued.write(tx_id, true);
-            self.emit(Queue { tx_id, target, selector, calldata, timestamp });
+            self.emit(Queue { tx_id, call: self._copy_call(@call), timestamp });
 
             tx_id
         }
 
-        fn execute(
-            ref self: ContractState,
-            target: ContractAddress,
-            selector: felt252,
-            calldata: Span<felt252>,
-            timestamp: u64
-        ) -> Span<felt252> {
-            self.ownable.assert_only_owner();
+        fn execute(ref self: ContractState, call: Call, timestamp: u64) -> Span<felt252> {
+            self.ownable._assert_only_owner();
 
-            let tx_id = self.get_tx_id(target, selector, calldata, timestamp);
+            let tx_id = self.get_tx_id(self._copy_call(@call), timestamp);
             assert(self.queued.read(tx_id), Errors::NOT_QUEUED);
             // ----|-------------------|-------
             //  timestamp    timestamp + grace period
@@ -168,22 +127,29 @@ pub mod TimeLock {
 
             self.queued.write(tx_id, false);
 
-            let result = syscalls::call_contract_syscall(target, selector, calldata)
+            let result = syscalls::call_contract_syscall(call.to, call.selector, call.calldata)
                 .unwrap_syscall();
 
-            self.emit(Execute { tx_id, target, selector, calldata, timestamp });
+            self.emit(Execute { tx_id, call: self._copy_call(@call), timestamp });
 
             result
         }
 
         fn cancel(ref self: ContractState, tx_id: felt252) {
-            self.ownable.assert_only_owner();
+            self.ownable._assert_only_owner();
 
             assert(self.queued.read(tx_id), Errors::NOT_QUEUED);
 
             self.queued.write(tx_id, false);
 
             self.emit(Cancel { tx_id });
+        }
+    }
+
+    #[generate_trait]
+    impl InternalImpl of InternalTrait {
+        fn _copy_call(self: @ContractState, call: @Call) -> Call {
+            Call { to: *call.to, selector: *call.selector, calldata: *call.calldata }
         }
     }
 }

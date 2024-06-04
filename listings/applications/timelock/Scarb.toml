@@ -9,6 +9,8 @@ starknet.workspace = true
 snforge_std.workspace = true
 # OpenZeppelin:
 openzeppelin.workspace = true
+# StarknetByExample Components
+components.workspace = true
 
 [scripts]
 test.workspace = true
