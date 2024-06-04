@@ -1,4 +1,4 @@
-mod tests { 
+mod tests {
     use starknet::class_hash::ClassHash;
 
     use super::super::upgradeable_contract_v0::{
