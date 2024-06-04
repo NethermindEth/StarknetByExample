@@ -1,6 +1,6 @@
 # Simple Defi Vault
 
-This is the Cairo adaptation of the [Solidity by example Vault](https://solidity-by-example.org/defi/vault/).
+This is the Cairo adaptation of the [Solidity by Example - Vault](https://solidity-by-example.org/defi/vault/).
 Here's how it works:
 
 - When a user deposits a token, the contract calculates the amount of shares to mint.
