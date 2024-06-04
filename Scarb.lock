@@ -107,6 +107,13 @@ version = "0.24.0"
 source = "git+https://github.com/foundry-rs/starknet-foundry.git?tag=v0.24.0#95e9fb09cb91b3c05295915179ee1b55bf923653"
 
 [[package]]
+name = "staking"
+version = "0.1.0"
+dependencies = [
+ "openzeppelin",
+]
+
+[[package]]
 name = "storage"
 version = "0.1.0"
 
