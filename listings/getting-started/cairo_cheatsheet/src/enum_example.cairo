@@ -22,7 +22,6 @@ enum Action {
 }
 // ANCHOR_END: enums
 
-
 // ANCHOR: enum_contract
 #[starknet::interface]
 trait IEnumContract<TContractState> {
@@ -47,18 +46,12 @@ mod EnumContract {
         fn register_action(ref self: ContractState, action: Action) {
             // quick note: match takes ownership of variable (but enum Action implements Copy trait)
             match action {
-                Action::Quit => {
-                    println!("Quit");
-                },
-                Action::Move(value) => {
-                    println!("Move with x: {} and y: {}", value.x, value.y);
-                },
-                Action::SendMessage(msg) => {
-                    println!("Write with message: {}", msg);
-                },
-                Action::ChangeAvatarColor((r, g, b)) => {
-                    println!("Change color to r: {}, g: {}, b: {}", r, g, b);
-                },
+                Action::Quit => { println!("Quit"); },
+                Action::Move(value) => { println!("Move with x: {} and y: {}", value.x, value.y); },
+                Action::SendMessage(msg) => { println!("Write with message: {}", msg); },
+                Action::ChangeAvatarColor((
+                    r, g, b
+                )) => { println!("Change color to r: {}, g: {}, b: {}", r, g, b); },
                 Action::ProfileState(state) => {
                     let profile_state = match state {
                         UserCommand::Login => 1,
@@ -70,13 +63,12 @@ mod EnumContract {
             };
 
             self.most_recent_action.write(action);
-
         }
 
         fn generate_default_actions_list(self: @ContractState) -> Array<Action> {
             let actions = array![
                 Action::Quit,
-                Action::Move(Position {x: 1, y: 2}),
+                Action::Move(Position { x: 1, y: 2 }),
                 Action::SendMessage('here is my message'),
                 Action::ChangeAvatarColor((1, 2, 3)),
                 Action::ProfileState(UserCommand::Login),
@@ -87,3 +79,5 @@ mod EnumContract {
     }
 }
 // ANCHOR_END: enum_contract
+
+
