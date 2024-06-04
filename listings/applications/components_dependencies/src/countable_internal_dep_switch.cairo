@@ -60,3 +60,4 @@ pub mod countable_component {
 }
 //ANCHOR_END: contract
 
+
