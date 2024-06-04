@@ -71,6 +71,7 @@ trait ISRC6 {
 } 
 ```
 
+
 ```__execute__``` this method is a crucial part of the SNIP-6 interface for smart wallets. It performs the actual execution of a series of contract calls after the validation phase. It is called by the Starknet protocol during different stages of the lifecycle of a transaction. This doesn’t mean that only the Starknet protocol can use those methods, as a matter of fact, anyone can call those methods even if the contract account doesn’t belong to them. 
 
 
