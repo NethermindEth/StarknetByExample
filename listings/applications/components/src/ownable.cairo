@@ -67,17 +67,17 @@ pub mod ownable_component {
     > of OwnableInternalTrait<TContractState> {
         fn _assert_only_owner(self: @ComponentState<TContractState>) {
             let caller = get_caller_address();
-            assert(!caller.is_zero(), Errors::ZERO_ADDRESS_CALLER);
+            assert(caller.is_non_zero(), Errors::ZERO_ADDRESS_CALLER);
             assert(caller == self.ownable_owner.read(), Errors::UNAUTHORIZED);
         }
 
         fn _init(ref self: ComponentState<TContractState>, owner: ContractAddress) {
-            assert(!owner.is_zero(), Errors::ZERO_ADDRESS_OWNER);
+            assert(owner.is_non_zero(), Errors::ZERO_ADDRESS_OWNER);
             self.ownable_owner.write(owner);
         }
 
         fn _transfer_ownership(ref self: ComponentState<TContractState>, new: ContractAddress) {
-            assert(!new.is_zero(), Errors::ZERO_ADDRESS_OWNER);
+            assert(new.is_non_zero(), Errors::ZERO_ADDRESS_OWNER);
             let previous = self.ownable_owner.read();
             self.ownable_owner.write(new);
             self
