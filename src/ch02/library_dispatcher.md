@@ -11,6 +11,3 @@ For further reading: [Cairo book](https://book.cairo-lang.org/ch15-02-contract-d
 ```rust
 {{#rustdoc_include ../../listings/advanced-concepts/library_calls/src/library_call.cairo:library_dispatcher}}
 ```
-
-
-
