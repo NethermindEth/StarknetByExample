@@ -1,7 +1,7 @@
 use using_lists::contract::IListExample;
 use using_lists::contract::{Task, ListExample};
 use using_lists::contract::ListExample::{
-    amountContractMemberStateTrait, tasksContractMemberStateTrait
+    amountsContractMemberStateTrait, tasksContractMemberStateTrait
 };
 
 fn STATE() -> ListExample::ContractState {
@@ -13,7 +13,7 @@ fn STATE() -> ListExample::ContractState {
 fn test_add_in_amount() {
     let mut state = STATE();
     state.add_in_amount(200);
-    assert(state.amount.read()[0] == 200, 'should be 200');
+    assert(state.amounts.read()[0] == 200, 'should be 200');
 }
 
 #[test]
@@ -67,7 +67,7 @@ fn test_set_from_index() {
     let mut state = STATE();
     state.add_in_amount(200);
     state.set_from_index(0, 400);
-    assert(state.amount.read()[0] == 400, 'should be 400');
+    assert(state.amounts.read()[0] == 400, 'should be 400');
 }
 
 #[test]
