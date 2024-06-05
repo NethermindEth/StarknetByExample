@@ -126,7 +126,7 @@ pub mod StakingContract {
 
             self.reward_rate.write(rate);
 
-            // even if the previous reward duration was not finished, we reset the finish_at variable
+            // even if the previous reward duration has not finished, we reset the finish_at variable
             self.finish_at.write(block_timestamp + self.duration.read());
             self.last_updated_at.write(block_timestamp);
 
@@ -216,7 +216,7 @@ pub mod StakingContract {
         }
 
         fn send_rewards_finished_event(ref self: ContractState) {
-            // check if we send a RewardsFinished event
+            // check whether we should send a RewardsFinished event
             if self.last_updated_at.read() == self.finish_at.read() {
                 let total_rewards = self.reward_rate.read() * self.duration.read();
 
