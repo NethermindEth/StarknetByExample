@@ -1,4 +1,4 @@
-# Library Dispatcher
+# Library Calls
 
 External calls can be made on Starknet by two means: Contract dispatchers or Library dispatchers. Dispatchers are automatically created and exported by the compiler when a contract interface is defined.
 
@@ -11,6 +11,3 @@ For further reading: [Cairo book](https://book.cairo-lang.org/ch15-02-contract-d
 ```rust
 {{#rustdoc_include ../../listings/advanced-concepts/library_calls/src/library_call.cairo:library_dispatcher}}
 ```
-
-
-
