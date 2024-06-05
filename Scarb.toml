@@ -13,10 +13,11 @@ test = "$(git rev-parse --show-toplevel)/scripts/test_resolver.sh"
 
 [workspace.dependencies]
 starknet = ">=2.6.3"
-# snforge_std = { git = "https://github.com/foundry-rs/starknet-foundry.git", tag = "v0.11.0" }
 openzeppelin = { git = "https://github.com/OpenZeppelin/cairo-contracts.git", tag="v0.11.0" }
+components = { path = "listings/applications/components" }
 
 # [workspace.dev-dependencies]
+snforge_std = { git = "https://github.com/foundry-rs/starknet-foundry.git", tag = "v0.24.0" }
 # openzeppelin = { git = "https://github.com/OpenZeppelin/cairo-contracts.git", tag="v0.11.0" }
 
 [workspace.package]

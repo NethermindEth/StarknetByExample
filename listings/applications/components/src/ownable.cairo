@@ -7,7 +7,7 @@ pub trait IOwnable<TContractState> {
     fn renounce_ownership(ref self: TContractState);
 }
 
-mod Errors {
+pub mod Errors {
     pub const UNAUTHORIZED: felt252 = 'Not owner';
     pub const ZERO_ADDRESS_OWNER: felt252 = 'Owner cannot be zero';
     pub const ZERO_ADDRESS_CALLER: felt252 = 'Caller cannot be zero';
@@ -43,7 +43,7 @@ pub mod ownable_component {
     }
 
     #[embeddable_as(Ownable)]
-    impl OwnableImpl<
+    pub impl OwnableImpl<
         TContractState, +HasComponent<TContractState>
     > of super::IOwnable<ComponentState<TContractState>> {
         fn owner(self: @ComponentState<TContractState>) -> ContractAddress {
