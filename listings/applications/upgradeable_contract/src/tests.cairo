@@ -23,8 +23,6 @@ mod tests {
 
     // deploy v0 contract
     fn deploy_v0() -> (IUpgradeableContractDispatcher_v0, ContractAddress, ClassHash) {
-        let recipient: ContractAddress = contract_address_const::<'deployer'>();
-
         let (contract_address, _) = deploy_syscall(
             UpgradeableContract_V0::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
         )
@@ -38,8 +36,6 @@ mod tests {
 
     //  deploy v1 contract 
     fn deploy_v1() -> (IUpgradeableContractDispatcher_v1, ContractAddress, ClassHash) {
-        let recipient: ContractAddress = contract_address_const::<'deployer'>();
-
         let (contract_address, _) = deploy_syscall(
             UpgradeableContract_V1::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
         )
@@ -53,25 +49,24 @@ mod tests {
 
     #[test]
     fn test_deploy_v0() {
-        let (_, contract_address, _) = deploy_v0();
+        deploy_v0();
     }
 
     #[test]
     fn test_deploy_v1() {
-        let (_, contract_address, _) = deploy_v1();
+        deploy_v1();
     }
 
     #[test]
     fn test_version_from_v0() {
-        let (dispatcher, contract_address, _) = deploy_v0();
-        let expected_result: u8 = 0;
-        assert(dispatcher.version() == expected_result, 'incorrect version');
+        let (dispatcher, _, _) = deploy_v0();
+        assert(dispatcher.version() == 0, 'incorrect version');
     }
 
     #[test]
     #[should_panic(expected: ('Class hash cannot be zero', 'ENTRYPOINT_FAILED'))]
     fn test_upgrade_when_classhash_is_zero() {
-        let (dispatcher_v0, contract_address, _) = deploy_v0();
+        let (dispatcher_v0, _, _) = deploy_v0();
         dispatcher_v0.upgrade(Zero::zero());
     }
 
@@ -86,7 +81,6 @@ mod tests {
             Option::Some(Event::Upgraded(Upgraded { implementation: class_hash }))
         );
 
-        let expected_result: u8 = 1;
-        assert(dispatcher_v0.version() == expected_result, ' version did not upgrade');
+        assert(dispatcher_v0.version() == 1, ' version did not upgrade');
     }
 }

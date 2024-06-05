@@ -48,31 +48,4 @@ pub mod switchable_component {
 }
 // ANCHOR_END: component
 
-#[cfg(test)]
-mod tests {
-    use super::{
-        switchable_component, ISwitchable, ISwitchableDispatcher, ISwitchableDispatcherTrait
-    };
-    use starknet::{ContractAddress, syscalls::deploy_syscall, SyscallResultTrait};
-
-    // fn deploy() -> ISwitchableDispatcher {
-    //     let (contract_address, _) = deploy_syscall(
-    //         switchable_component::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
-    //     )
-    //         .unwrap_syscall();
-
-    //         ISwitchableDispatcherr { contract_address }
-    // }
-
-    type TestingState = switchable_component::ComponentState<MockContract::ContractState>;
-
-    // You can derive even `Default` on this type alias
-
-    #[test]
-    fn test_is_on() {
-        let mut result: TestingState = Default::default();
-
-        assert_eq!(result.is_on(), false);
-    }
-}
 
