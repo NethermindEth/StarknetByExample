@@ -8,7 +8,7 @@ use snforge_std::{
 use super::{
     erc20::{IERC20Dispatcher, IERC20DispatcherTrait},
     erc721::{IERC721Dispatcher, IERC721DispatcherTrait},
-    nft_auction::{INFTAuctionDispatcher, INFTAuctionDispatcherTrait}
+    nft_dutch_auction::{INFTDutchAuctionDispatcher, INFTDutchAuctionDispatcherTrait}
 };
 
 // ERC721 token
@@ -42,7 +42,7 @@ fn get_contract_addresses() -> (ContractAddress, ContractAddress, ContractAddres
         erc20_symbol
     ];
     let (erc20_address, _) = erc20.deploy(@erc20_constructor_calldata).unwrap();
-    let nft_auction = declare("NFTAuction").unwrap();
+    let nft_auction = declare("NFTDutchAuction").unwrap();
     let nft_auction_constructor_calldata = array![
         erc20_address.into(),
         erc721_address.into(),
@@ -61,7 +61,9 @@ fn test_buy() {
     let (erc721_address, erc20_address, nft_auction_address) = get_contract_addresses();
     let erc721_dispatcher = IERC721Dispatcher { contract_address: erc721_address };
     let erc20_dispatcher = IERC20Dispatcher { contract_address: erc20_address };
-    let nft_auction_dispatcher = INFTAuctionDispatcher { contract_address: nft_auction_address };
+    let nft_auction_dispatcher = INFTDutchAuctionDispatcher {
+        contract_address: nft_auction_address
+    };
     let erc20_admin: ContractAddress = 'admin'.try_into().unwrap();
     let seller: ContractAddress = 'seller'.try_into().unwrap();
     let buyer: ContractAddress = 'buyer'.try_into().unwrap();
@@ -114,7 +116,9 @@ fn test_buy() {
 fn test_buy_should_panic_when_total_supply_reached() {
     let (_, erc20_address, nft_auction_address) = get_contract_addresses();
     let erc20_dispatcher = IERC20Dispatcher { contract_address: erc20_address };
-    let nft_auction_dispatcher = INFTAuctionDispatcher { contract_address: nft_auction_address };
+    let nft_auction_dispatcher = INFTDutchAuctionDispatcher {
+        contract_address: nft_auction_address
+    };
     let erc20_admin: ContractAddress = 'admin'.try_into().unwrap();
     let buyer: ContractAddress = 'buyer'.try_into().unwrap();
 
@@ -156,7 +160,9 @@ fn test_buy_should_panic_when_total_supply_reached() {
 fn test_buy_should_panic_when_duration_ended() {
     let (_, erc20_address, nft_auction_address) = get_contract_addresses();
     let erc20_dispatcher = IERC20Dispatcher { contract_address: erc20_address };
-    let nft_auction_dispatcher = INFTAuctionDispatcher { contract_address: nft_auction_address };
+    let nft_auction_dispatcher = INFTDutchAuctionDispatcher {
+        contract_address: nft_auction_address
+    };
     let erc20_admin: ContractAddress = 'admin'.try_into().unwrap();
     let buyer: ContractAddress = 'buyer'.try_into().unwrap();
 
@@ -191,7 +197,9 @@ fn test_buy_should_panic_when_duration_ended() {
 #[test]
 fn test_price_decreases_after_some_time() {
     let (_, _, nft_auction_address) = get_contract_addresses();
-    let nft_auction_dispatcher = INFTAuctionDispatcher { contract_address: nft_auction_address };
+    let nft_auction_dispatcher = INFTDutchAuctionDispatcher {
+        contract_address: nft_auction_address
+    };
 
     let nft_price_before_time_travel = nft_auction_dispatcher.get_price();
 
@@ -200,6 +208,8 @@ fn test_price_decreases_after_some_time() {
     cheat_block_timestamp(nft_auction_address, forward_blocktime_by, CheatSpan::TargetCalls(1));
 
     let nft_price_after_time_travel = nft_auction_dispatcher.get_price();
+
+    println!("price: {:?}", nft_price_after_time_travel);
 
     assert_gt!(nft_price_before_time_travel, nft_price_after_time_travel);
 }

@@ -1,5 +1,5 @@
 [package]
-name = "nft_auction"
+name = "nft_dutch_auction"
 version.workspace = true
 edition = '2023_11'
 

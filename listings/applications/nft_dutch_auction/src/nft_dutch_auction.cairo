@@ -44,13 +44,13 @@ trait IERC721<TContractState> {
 }
 
 #[starknet::interface]
-pub trait INFTAuction<TContractState> {
+pub trait INFTDutchAuction<TContractState> {
     fn buy(ref self: TContractState, token_id: u256);
     fn get_price(self: @TContractState) -> u64;
 }
 
 #[starknet::contract]
-pub mod NFTAuction {
+pub mod NFTDutchAuction {
     use super::{IERC20Dispatcher, IERC20DispatcherTrait, IERC721Dispatcher, IERC721DispatcherTrait};
     use starknet::{ContractAddress, get_caller_address, get_contract_address, get_block_timestamp};
 
@@ -99,7 +99,7 @@ pub mod NFTAuction {
     }
 
     #[abi(embed_v0)]
-    impl NFTAuction of super::INFTAuction<ContractState> {
+    impl NFTDutchAuction of super::INFTDutchAuction<ContractState> {
         fn get_price(self: @ContractState) -> u64 {
             let time_elapsed = (get_block_timestamp() - self.start_at.read())
                 / 1000; // Ignore milliseconds
