@@ -6,10 +6,10 @@ use snforge_std::{
     cheat_block_timestamp
 };
 use super::{
-    erc20::{IERC20Dispatcher, IERC20DispatcherTrait},
     erc721::{IERC721Dispatcher, IERC721DispatcherTrait},
     nft_dutch_auction::{INFTDutchAuctionDispatcher, INFTDutchAuctionDispatcherTrait}
 };
+use erc20::token::{IERC20Dispatcher, IERC20DispatcherTrait};
 
 // ERC721 token
 pub const erc721_name: felt252 = 'My NFT';
@@ -33,7 +33,7 @@ fn get_contract_addresses() -> (ContractAddress, ContractAddress, ContractAddres
     let erc721 = declare("ERC721").unwrap();
     let erc721_constructor_calldata = array![erc721_name, erc721_symbol];
     let (erc721_address, _) = erc721.deploy(@erc721_constructor_calldata).unwrap();
-    let erc20 = declare("ERC20").unwrap();
+    let erc20 = declare("erc20").unwrap();
     let erc20_constructor_calldata = array![
         erc20_recipient,
         erc20_name,

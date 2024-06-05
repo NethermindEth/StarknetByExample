@@ -4,6 +4,7 @@ version.workspace = true
 edition = '2023_11'
 
 [dependencies]
+erc20 = { path = "../erc20" }
 starknet.workspace = true
 
 [dev-dependencies]
@@ -13,3 +14,4 @@ snforge_std.workspace = true
 test.workspace = true
 
 [[target.starknet-contract]]
+build-external-contracts = ["erc20::token::erc20"]

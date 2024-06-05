@@ -92,6 +92,7 @@ version = "0.1.0"
 name = "nft_dutch_auction"
 version = "0.1.0"
 dependencies = [
+ "erc20",
  "snforge_std",
 ]
 
