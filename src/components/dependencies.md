@@ -1,6 +1,6 @@
-# Components Dependencies
+# Component Dependencies
 
-A component with a dependency on a trait T can be used in a contract as long as the contract implements the trait T.
+A component with a dependency on a trait `T` can be used in a contract as long as the contract implements the trait `T`.
 
 We will use a new `Countable` component as an example:
 
@@ -8,13 +8,13 @@ We will use a new `Countable` component as an example:
 {{#include ../../listings/applications/components/src/countable.cairo}}
 ```
 
-We want to add a way to enable or disable the counter, in a way that calling `increment` on a disabled counter will not increment the counter.
+We want to add a way to enable or disable the counter, in a way that calling `increment` on a disabled counter will not increment it.
 But we don't want to add this switch logic to the `Countable` component itself.
-We instead add the trait `Switchable` as a dependency to the `Countable` component.
+Instead, we add the trait `Switchable` as a dependency to the `Countable` component.
 
 #### Implementation of the trait in the contract
 
-We first define the `ISwitchable` trait:
+First, we import the `ISwitchable` trait defined in chapter ["Components How-To"](./how_to.md):
 
 ```rust
 {{#include ../../listings/applications/components/src/switchable.cairo:interface}}
@@ -36,19 +36,19 @@ A contract that uses the `Countable` component must implement the `ISwitchable` 
 
 In the previous example, we implemented the `ISwitchable` trait in the contract.
 
-We already implemented a [`Switchable`](./how_to.md) component that provide an implementation of the `ISwitchable` trait.
-By using the `Switchable` component in a contract, we embed the implementation of the `ISwitchable` trait in the contract and resolve the dependency on the `ISwitchable` trait.
+We already implemented a [`Switchable`](./how_to.md) component that provides an implementation of the `ISwitchable` trait.
+By using the `Switchable` component in a contract, we can embed the implementation of the `ISwitchable` trait in the contract and resolve the dependency on the `ISwitchable` trait.
 
 ```rust
 {{#rustdoc_include ../../listings/applications/components_dependencies/src/contract_countable_switchable.cairo:contract}}
 ```
 
-#### Dependency on other components internal functions
+#### Dependency on other component's internal functions
 
 The previous example shows how to use the `ISwitchable` trait implementation from the `Switchable` component inside the `Countable` component by embedding the implementation in the contract.
 However, suppose we would like to turn off the switch after each increment. There's no `set` function in the `ISwitchable` trait, so we can't do it directly.
 
-But the Switchable component implements the internal function `_off` from the `SwitchableInternalTrait` that set the switch to `false`.
+But the `Switchable` component implements the internal function `_off` from the `SwitchableInternalTrait` that set the switch to `false`.
 We can't embed `SwitchableInternalImpl`, but we can add `switchable::HasComponent<TContractState>` as a dependency inside `CountableImpl`.
 
 We make the `Countable` component depend on the `Switchable` component.
@@ -58,7 +58,4 @@ This will allow to do `switchable::ComponentState<TContractState>` -> `TContract
 {{#rustdoc_include ../../listings/applications/components_dependencies/src/countable_internal_dep_switch.cairo:contract}}
 ```
 
-The contract remains the same that the previous example, but the implementation of the `Countable` component is different:
-```rust
-{{#rustdoc_include ../../listings/applications/components_dependencies/src/contract_countable_switchable_internal.cairo:contract}}
-```
+The `CountableContract` contract remains the same as in the previous example, only the implementation of the `Countable` component is different.
