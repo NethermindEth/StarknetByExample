@@ -68,6 +68,12 @@ pub mod NFTAuction {
         total_supply: u128
     }
 
+    mod Errors {
+        pub const AUCTION_ENDED: felt252 = 'auction has ended';
+        pub const LOW_STARTING_PRICE: felt252 = 'low starting price';
+        pub const INSUFFICIENT_BALANCE: felt252 = 'insufficient balance';
+    }
+
     #[constructor]
     fn constructor(
         ref self: ContractState,
@@ -79,7 +85,7 @@ pub mod NFTAuction {
         discount_rate: u64,
         total_supply: u128
     ) {
-        assert(starting_price >= discount_rate * duration, 'starting price too low');
+        assert(starting_price >= discount_rate * duration, Errors::LOW_STARTING_PRICE);
 
         self.erc20_token.write(erc20_token);
         self.erc721_token.write(erc721_token);
@@ -98,15 +104,14 @@ pub mod NFTAuction {
             let time_elapsed = (get_block_timestamp() - self.start_at.read())
                 / 1000; // Ignore milliseconds
             let discount = self.discount_rate.read() * time_elapsed;
-            let price: u64 = self.starting_price.read() - discount;
-            price
+            self.starting_price.read() - discount
         }
 
         fn buy(ref self: ContractState, token_id: u256) {
             // Check duration
-            assert(get_block_timestamp() < self.expires_at.read(), 'auction ended');
+            assert(get_block_timestamp() < self.expires_at.read(), Errors::AUCTION_ENDED);
             // Check total supply
-            assert(self.purchase_count.read() < self.total_supply.read(), 'auction ended');
+            assert(self.purchase_count.read() < self.total_supply.read(), Errors::AUCTION_ENDED);
 
             let erc20_dispatcher = IERC20Dispatcher { contract_address: self.erc20_token.read() };
             let erc721_dispatcher = IERC721Dispatcher {
@@ -118,7 +123,7 @@ pub mod NFTAuction {
             let price: u256 = self.get_price().into();
             let buyer_balance: u256 = erc20_dispatcher.balance_of(caller).into();
             // Ensure buyer has enough token for payment
-            assert(buyer_balance >= price, 'insufficient balance');
+            assert(buyer_balance >= price, Errors::INSUFFICIENT_BALANCE);
             // Transfer payment token from buyer to seller
             erc20_dispatcher.transfer_from(caller, self.seller.read(), price.try_into().unwrap());
             // Mint token to buyer's address
