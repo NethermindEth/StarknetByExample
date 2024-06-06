@@ -3,7 +3,7 @@ use starknet::ClassHash;
 #[starknet::interface]
 pub trait ICampaign<TContractState> {
     fn contribute(ref self: TContractState, amount: u256);
-    fn withdraw(ref self: TContractState);
+    fn claim(ref self: TContractState);
     fn upgrade(ref self: TContractState, impl_hash: ClassHash);
 }
 
@@ -44,7 +44,7 @@ pub mod Campaign {
         #[flat]
         OwnableEvent: ownable_component::Event,
         ContributionMade: ContributionMade,
-        Withdrawn: Withdrawn,
+        Claimed: Claimed,
         Upgraded: Upgraded,
     }
 
@@ -56,7 +56,7 @@ pub mod Campaign {
     }
 
     #[derive(Drop, starknet::Event)]
-    pub struct Withdrawn {
+    pub struct Claimed {
         pub amount: u256,
     }
 
@@ -72,7 +72,7 @@ pub mod Campaign {
         pub const ZERO_DONATION: felt252 = 'Donation must be > 0';
         pub const ZERO_TARGET: felt252 = 'Target must be > 0';
         pub const ZERO_DURATION: felt252 = 'Duration must be > 0';
-        pub const ZERO_FUNDS: felt252 = 'No funds to withdraw';
+        pub const ZERO_FUNDS: felt252 = 'No funds to claim';
         pub const TRANSFER_FAILED: felt252 = 'Transfer failed';
         pub const TITLE_EMPTY: felt252 = 'Title empty';
         pub const CLASS_HASH_ZERO: felt252 = 'Class hash cannot be zero';
@@ -126,7 +126,7 @@ pub mod Campaign {
             self.emit(Event::ContributionMade(ContributionMade { contributor, amount }));
         }
 
-        fn withdraw(ref self: ContractState) {
+        fn claim(ref self: ContractState) {
             self.ownable._assert_only_owner();
             assert(get_block_timestamp() >= self.end_time.read(), Errors::STILL_ACTIVE);
 
@@ -142,7 +142,7 @@ pub mod Campaign {
             let success = eth_token.transfer(get_caller_address(), amount);
             assert(success, Errors::TRANSFER_FAILED);
 
-            self.emit(Event::Withdrawn(Withdrawn { amount }));
+            self.emit(Event::Claimed(Claimed { amount }));
         }
 
         fn upgrade(ref self: ContractState, impl_hash: ClassHash) {
