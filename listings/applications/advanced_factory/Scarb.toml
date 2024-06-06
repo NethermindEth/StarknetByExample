@@ -1,0 +1,19 @@
+[package]
+name = "advanced_factory"
+version.workspace = true
+edition = "2023_11"
+
+[dependencies]
+starknet.workspace = true
+# Starknet Foundry:
+snforge_std.workspace = true
+# OpenZeppelin:
+openzeppelin.workspace = true
+# StarknetByExample Components
+components.workspace = true
+
+[scripts]
+test.workspace = true
+
+[[target.starknet-contract]]
+casm = true
