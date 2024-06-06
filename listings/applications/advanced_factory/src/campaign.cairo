@@ -133,7 +133,7 @@ pub mod Campaign {
             assert(amount > 0, Errors::ZERO_FUNDS);
 
             // no need to set total_donations to 0, as the campaign has ended
-            // and the field can be left as a testament to how much was raised
+            // and the field can be used as a testament to how much was raised
 
             let success = eth_token.transfer(get_caller_address(), amount);
             assert(success, Errors::TRANSFER_FAILED);
