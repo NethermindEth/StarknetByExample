@@ -104,7 +104,8 @@ pub mod Campaign {
 
             let donor = get_caller_address();
             let this = get_contract_address();
-            self.eth_token.read().transfer_from(donor, this, amount);
+            let success = self.eth_token.read().transfer_from(donor, this, amount);
+            assert(success, Errors::TRANSFER_FAILED);
 
             self.donations.write(donor, self.donations.read(donor) + amount);
             self.total_donations.write(self.total_donations.read() + amount);
