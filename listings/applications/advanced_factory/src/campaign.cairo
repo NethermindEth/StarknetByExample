@@ -1,18 +1,20 @@
+use starknet::ClassHash;
+
 #[starknet::interface]
 pub trait ICampaign<TContractState> {
-    fn get_current_count(self: @TContractState) -> u128;
-    fn increment(ref self: TContractState);
-    fn decrement(ref self: TContractState);
+    fn donate(ref self: TContractState, amount: u256);
+    fn withdraw(ref self: TContractState);
+    fn upgrade(ref self: TContractState, impl_hash: ClassHash);
 }
-
 
 #[starknet::contract]
 pub mod Campaign {
     use components::ownable::ownable_component::OwnableInternalTrait;
     use core::num::traits::zero::Zero;
+    use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
     use starknet::{
-        ClassHash, ContractAddress, get_block_timestamp, syscalls::replace_class_syscall,
-        get_caller_address
+        ClassHash, ContractAddress, get_block_timestamp, contract_address_const,
+        syscalls::replace_class_syscall, get_caller_address, get_contract_address
     };
     use components::ownable::ownable_component;
 
@@ -26,11 +28,12 @@ pub mod Campaign {
     struct Storage {
         #[substorage(v0)]
         ownable: ownable_component::Storage,
-        donations: LegacyMap<ContractAddress, u128>,
+        donations: LegacyMap<ContractAddress, u256>,
         end_time: u64,
+        eth_token: IERC20Dispatcher,
         factory: ContractAddress,
-        target: u128,
-        total_donations: u128,
+        target: u256,
+        total_donations: u256,
     }
 
     #[event]
@@ -47,12 +50,12 @@ pub mod Campaign {
     pub struct Donated {
         #[key]
         pub donor: ContractAddress,
-        pub amount: u128,
+        pub amount: u256,
     }
 
     #[derive(Drop, starknet::Event)]
     pub struct Withdrawn {
-        pub amount: u128,
+        pub amount: u256,
     }
 
     #[derive(Drop, starknet::Event)]
@@ -63,13 +66,14 @@ pub mod Campaign {
     pub mod Errors {
         pub const NOT_FACTORY: felt252 = 'Not factory';
         pub const INACTIVE: felt252 = 'Campaign no longer active';
+        pub const ZERO_DONATION: felt252 = 'Donation must be > 0';
     }
 
     #[constructor]
     fn constructor(
         ref self: ContractState,
         creator: ContractAddress,
-        target: u128,
+        target: u256,
         duration: u64,
         factory: ContractAddress
     ) {
@@ -78,15 +82,36 @@ pub mod Campaign {
         assert(target > 0, 'target == 0');
         assert(duration > 0, 'duration == 0');
 
+        let eth_address = contract_address_const::<
+            0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7
+        >();
+        self.eth_token.write(IERC20Dispatcher { contract_address: eth_address });
+
         self.target.write(target);
         self.end_time.write(get_block_timestamp() + duration);
         self.factory.write(factory);
         self.ownable._init(creator);
     }
-    // #[abi(embed_v0)]
-    // impl Campaign of super::ICampaign<ContractState> {
 
-    // }
+    #[abi(embed_v0)]
+    impl Campaign of super::ICampaign<ContractState> {
+        fn donate(ref self: ContractState, amount: u256) {
+            assert(amount > 0, Errors::ZERO_DONATION);
+
+            let donor = get_caller_address();
+            let this = get_contract_address();
+            self.eth_token.read().transfer_from(donor, this, amount);
+
+            self.donations.write(donor, self.donations.read(donor) + amount);
+            self.total_donations.write(self.total_donations.read() + amount);
+
+            self.emit(Event::Donated(Donated { donor, amount }));
+        }
+
+        fn withdraw(ref self: ContractState) {}
+
+        fn upgrade(ref self: ContractState, impl_hash: ClassHash) {}
+    }
 
     #[generate_trait]
     impl CampaignInternal of CampaignInternalTrait {
