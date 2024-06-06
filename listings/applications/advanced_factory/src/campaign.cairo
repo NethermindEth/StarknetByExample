@@ -126,7 +126,7 @@ pub mod Campaign {
             assert(get_block_timestamp() < self.end_time.read(), Errors::INACTIVE);
         }
 
-        fn _assert_is_ended(self: @ContractState) {
+        fn _assert_campaign_ended(self: @ContractState) {
             assert(get_block_timestamp() >= self.end_time.read(), Errors::STILL_ACTIVE);
         }
     }
