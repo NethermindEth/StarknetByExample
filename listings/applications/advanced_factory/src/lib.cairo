@@ -129,4 +129,4 @@ pub mod CounterFactory {
 
 #[cfg(test)]
 mod tests;
-mod simple_counter;
+mod campaign;
