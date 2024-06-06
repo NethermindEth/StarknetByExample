@@ -18,11 +18,23 @@ pub trait ICounterFactory<TContractState> {
 
 #[starknet::contract]
 pub mod CounterFactory {
+    use components::ownable::ownable_component::OwnableInternalTrait;
     use core::starknet::event::EventEmitter;
-    use starknet::{ContractAddress, ClassHash, SyscallResultTrait, syscalls::deploy_syscall};
+    use starknet::{
+        ContractAddress, ClassHash, SyscallResultTrait, syscalls::deploy_syscall, get_caller_address
+    };
+    use components::ownable::ownable_component;
+
+    component!(path: ownable_component, storage: ownable, event: OwnableEvent);
+
+    #[abi(embed_v0)]
+    impl OwnableImpl = ownable_component::Ownable<ContractState>;
+    impl OwnableInternalImpl = ownable_component::OwnableInternalImpl<ContractState>;
 
     #[storage]
     struct Storage {
+        #[substorage(v0)]
+        ownable: ownable_component::Storage,
         /// Store the constructor arguments of the contract to deploy
         init_value: u128,
         /// Store the class hash of the contract to deploy
@@ -32,6 +44,8 @@ pub mod CounterFactory {
     #[event]
     #[derive(Drop, starknet::Event)]
     pub enum Event {
+        #[flat]
+        OwnableEvent: ownable_component::Event,
         ClassHashUpdated: ClassHashUpdated,
         CounterCreated: CounterCreated,
         InitValueUpdated: InitValueUpdated,
@@ -58,6 +72,7 @@ pub mod CounterFactory {
     fn constructor(ref self: ContractState, init_value: u128, class_hash: ClassHash) {
         self.init_value.write(init_value);
         self.counter_class_hash.write(class_hash);
+        self.ownable._init(get_caller_address());
     }
 
     #[abi(embed_v0)]
@@ -84,6 +99,7 @@ pub mod CounterFactory {
         }
 
         fn update_init_value(ref self: ContractState, new_init_value: u128) {
+            self.ownable._assert_only_owner();
             let previous_init_value = self.init_value.read();
             self.init_value.write(new_init_value);
             self
@@ -95,6 +111,7 @@ pub mod CounterFactory {
         }
 
         fn update_counter_class_hash(ref self: ContractState, new_class_hash: ClassHash) {
+            self.ownable._assert_only_owner();
             let previous_class_hash = self.counter_class_hash.read();
             self.counter_class_hash.write(new_class_hash);
             self
