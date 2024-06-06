@@ -2,7 +2,7 @@ use starknet::ClassHash;
 
 #[starknet::interface]
 pub trait ICampaign<TContractState> {
-    fn donate(ref self: TContractState, amount: u256);
+    fn contribute(ref self: TContractState, amount: u256);
     fn withdraw(ref self: TContractState);
     fn upgrade(ref self: TContractState, impl_hash: ClassHash);
 }
@@ -28,14 +28,14 @@ pub mod Campaign {
     struct Storage {
         #[substorage(v0)]
         ownable: ownable_component::Storage,
-        donations: LegacyMap<ContractAddress, u256>,
+        contributions: LegacyMap<ContractAddress, u256>,
         end_time: u64,
         eth_token: IERC20Dispatcher,
         factory: ContractAddress,
         target: u256,
         title: ByteArray,
         description: ByteArray,
-        total_donations: u256,
+        total_contributions: u256,
     }
 
     #[event]
@@ -43,15 +43,15 @@ pub mod Campaign {
     pub enum Event {
         #[flat]
         OwnableEvent: ownable_component::Event,
-        Donated: Donated,
+        ContributionMade: ContributionMade,
         Withdrawn: Withdrawn,
         Upgraded: Upgraded,
     }
 
     #[derive(Drop, starknet::Event)]
-    pub struct Donated {
+    pub struct ContributionMade {
         #[key]
-        pub donor: ContractAddress,
+        pub contributor: ContractAddress,
         pub amount: u256,
     }
 
@@ -111,19 +111,19 @@ pub mod Campaign {
 
     #[abi(embed_v0)]
     impl Campaign of super::ICampaign<ContractState> {
-        fn donate(ref self: ContractState, amount: u256) {
+        fn contribute(ref self: ContractState, amount: u256) {
             assert(get_block_timestamp() < self.end_time.read(), Errors::INACTIVE);
             assert(amount > 0, Errors::ZERO_DONATION);
 
-            let donor = get_caller_address();
+            let contributor = get_caller_address();
             let this = get_contract_address();
-            let success = self.eth_token.read().transfer_from(donor, this, amount);
+            let success = self.eth_token.read().transfer_from(contributor, this, amount);
             assert(success, Errors::TRANSFER_FAILED);
 
-            self.donations.write(donor, self.donations.read(donor) + amount);
-            self.total_donations.write(self.total_donations.read() + amount);
+            self.contributions.write(contributor, self.contributions.read(contributor) + amount);
+            self.total_contributions.write(self.total_contributions.read() + amount);
 
-            self.emit(Event::Donated(Donated { donor, amount }));
+            self.emit(Event::ContributionMade(ContributionMade { contributor, amount }));
         }
 
         fn withdraw(ref self: ContractState) {
@@ -136,7 +136,7 @@ pub mod Campaign {
             let amount = eth_token.balance_of(this);
             assert(amount > 0, Errors::ZERO_FUNDS);
 
-            // no need to set total_donations to 0, as the campaign has ended
+            // no need to set total_contributions to 0, as the campaign has ended
             // and the field can be used as a testament to how much was raised
 
             let success = eth_token.transfer(get_caller_address(), amount);
