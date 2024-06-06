@@ -9,6 +9,7 @@ pub trait ICampaign<TContractState> {
 
 #[starknet::contract]
 pub mod Campaign {
+    use core::byte_array::ByteArrayTrait;
     use components::ownable::ownable_component::OwnableInternalTrait;
     use core::num::traits::zero::Zero;
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
@@ -33,6 +34,8 @@ pub mod Campaign {
         eth_token: IERC20Dispatcher,
         factory: ContractAddress,
         target: u256,
+        title: ByteArray,
+        description: ByteArray,
         total_donations: u256,
     }
 
@@ -70,12 +73,15 @@ pub mod Campaign {
         pub const ZERO_DONATION: felt252 = 'Donation must be > 0';
         pub const ZERO_FUNDS: felt252 = 'No funds to withdraw';
         pub const TRANSFER_FAILED: felt252 = 'Transfer failed';
+        pub const TITLE_EMPTY: felt252 = 'Title empty';
     }
 
     #[constructor]
     fn constructor(
         ref self: ContractState,
         creator: ContractAddress,
+        title: ByteArray,
+        description: ByteArray,
         target: u256,
         duration: u64,
         factory: ContractAddress
@@ -84,12 +90,15 @@ pub mod Campaign {
         assert(creator.is_non_zero(), 'creator address zero');
         assert(target > 0, 'target == 0');
         assert(duration > 0, 'duration == 0');
+        assert(title.len() > 0, Errors::TITLE_EMPTY);
 
         let eth_address = contract_address_const::<
             0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7
         >();
         self.eth_token.write(IERC20Dispatcher { contract_address: eth_address });
 
+        self.title.write(title);
+        self.description.write(description);
         self.target.write(target);
         self.end_time.write(get_block_timestamp() + duration);
         self.factory.write(factory);
