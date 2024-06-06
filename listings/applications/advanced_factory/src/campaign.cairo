@@ -68,6 +68,8 @@ pub mod Campaign {
         pub const INACTIVE: felt252 = 'Campaign already ended';
         pub const STILL_ACTIVE: felt252 = 'Campaign not ended';
         pub const ZERO_DONATION: felt252 = 'Donation must be > 0';
+        pub const ZERO_FUNDS: felt252 = 'No funds to withdraw';
+        pub const TRANSFER_FAILED: felt252 = 'Transfer failed';
     }
 
     #[constructor]
@@ -110,7 +112,24 @@ pub mod Campaign {
             self.emit(Event::Donated(Donated { donor, amount }));
         }
 
-        fn withdraw(ref self: ContractState) {}
+        fn withdraw(ref self: ContractState) {
+            self.ownable._assert_only_owner();
+            self._assert_campaign_ended();
+
+            let this = get_contract_address();
+            let eth_token = self.eth_token.read();
+
+            let amount = eth_token.balance_of(this);
+            assert(amount > 0, Errors::ZERO_FUNDS);
+
+            // no need to set total_donations to 0, as the campaign has ended
+            // and the field can be left as a testament to how much was raised
+
+            let success = eth_token.transfer(get_caller_address(), amount);
+            assert(success, Errors::TRANSFER_FAILED);
+
+            self.emit(Event::Withdrawn(Withdrawn { amount }));
+        }
 
         fn upgrade(ref self: ContractState, impl_hash: ClassHash) {}
     }
