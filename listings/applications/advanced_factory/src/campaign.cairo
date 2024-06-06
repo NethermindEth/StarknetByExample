@@ -70,10 +70,14 @@ pub mod Campaign {
         pub const INACTIVE: felt252 = 'Campaign already ended';
         pub const STILL_ACTIVE: felt252 = 'Campaign not ended';
         pub const ZERO_DONATION: felt252 = 'Donation must be > 0';
+        pub const ZERO_TARGET: felt252 = 'Target must be > 0';
+        pub const ZERO_DURATION: felt252 = 'Duration must be > 0';
         pub const ZERO_FUNDS: felt252 = 'No funds to withdraw';
         pub const TRANSFER_FAILED: felt252 = 'Transfer failed';
         pub const TITLE_EMPTY: felt252 = 'Title empty';
         pub const CLASS_HASH_ZERO: felt252 = 'Class hash cannot be zero';
+        pub const FACTORY_ZERO: felt252 = 'Factory address cannot be zero';
+        pub const CREATOR_ZERO: felt252 = 'Creator address cannot be zero';
     }
 
     #[constructor]
@@ -86,11 +90,11 @@ pub mod Campaign {
         duration: u64,
         factory: ContractAddress
     ) {
-        assert(factory.is_non_zero(), 'factory address zero');
-        assert(creator.is_non_zero(), 'creator address zero');
-        assert(target > 0, 'target == 0');
-        assert(duration > 0, 'duration == 0');
+        assert(factory.is_non_zero(), Errors::FACTORY_ZERO);
+        assert(creator.is_non_zero(), Errors::CREATOR_ZERO);
         assert(title.len() > 0, Errors::TITLE_EMPTY);
+        assert(target > 0, Errors::ZERO_TARGET);
+        assert(duration > 0, Errors::ZERO_DURATION);
 
         let eth_address = contract_address_const::<
             0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7
