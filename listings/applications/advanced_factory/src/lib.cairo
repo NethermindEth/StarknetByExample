@@ -59,6 +59,7 @@ pub mod CounterFactory {
 
     #[derive(Drop, starknet::Event)]
     struct CounterCreated {
+        caller: ContractAddress,
         deployed_address: ContractAddress
     }
 
@@ -88,7 +89,8 @@ pub mod CounterFactory {
             )
                 .unwrap_syscall();
 
-            self.emit(Event::CounterCreated(CounterCreated { deployed_address }));
+            let caller = get_caller_address();
+            self.emit(Event::CounterCreated(CounterCreated { caller, deployed_address }));
 
             deployed_address
         }
