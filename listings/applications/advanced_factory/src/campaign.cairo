@@ -97,7 +97,7 @@ pub mod Campaign {
     #[abi(embed_v0)]
     impl Campaign of super::ICampaign<ContractState> {
         fn donate(ref self: ContractState, amount: u256) {
-            self._assert_only_active();
+            self._assert_campaign_active();
             assert(amount > 0, Errors::ZERO_DONATION);
 
             let donor = get_caller_address();
@@ -122,7 +122,7 @@ pub mod Campaign {
             assert(caller == self.factory.read(), Errors::NOT_FACTORY);
         }
 
-        fn _assert_only_active(self: @ContractState) {
+        fn _assert_campaign_active(self: @ContractState) {
             assert(get_block_timestamp() < self.end_time.read(), Errors::INACTIVE);
         }
 
