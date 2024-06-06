@@ -9,13 +9,14 @@ pub trait ICampaign<TContractState> {
 
 #[starknet::contract]
 pub mod Campaign {
+    use core::starknet::SyscallResultTrait;
     use core::byte_array::ByteArrayTrait;
     use components::ownable::ownable_component::OwnableInternalTrait;
     use core::num::traits::zero::Zero;
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
     use starknet::{
-        ClassHash, ContractAddress, get_block_timestamp, contract_address_const,
-        syscalls::replace_class_syscall, get_caller_address, get_contract_address
+        ClassHash, ContractAddress, get_block_timestamp, contract_address_const, get_caller_address,
+        get_contract_address
     };
     use components::ownable::ownable_component;
 
@@ -74,6 +75,7 @@ pub mod Campaign {
         pub const ZERO_FUNDS: felt252 = 'No funds to withdraw';
         pub const TRANSFER_FAILED: felt252 = 'Transfer failed';
         pub const TITLE_EMPTY: felt252 = 'Title empty';
+        pub const CLASS_HASH_ZERO: felt252 = 'Class hash cannot be zero';
     }
 
     #[constructor]
@@ -141,16 +143,18 @@ pub mod Campaign {
             self.emit(Event::Withdrawn(Withdrawn { amount }));
         }
 
-        fn upgrade(ref self: ContractState, impl_hash: ClassHash) {}
+        fn upgrade(ref self: ContractState, impl_hash: ClassHash) {
+            assert(get_caller_address() == self.factory.read(), Errors::NOT_FACTORY);
+            assert(impl_hash.is_non_zero(), Errors::CLASS_HASH_ZERO);
+
+            starknet::syscalls::replace_class_syscall(impl_hash).unwrap_syscall();
+
+            self.emit(Event::Upgraded(Upgraded { implementation: impl_hash }));
+        }
     }
 
     #[generate_trait]
     impl CampaignInternal of CampaignInternalTrait {
-        fn _assert_only_factory(self: @ContractState) {
-            let caller = get_caller_address();
-            assert(caller == self.factory.read(), Errors::NOT_FACTORY);
-        }
-
         fn _assert_campaign_active(self: @ContractState) {
             assert(get_block_timestamp() < self.end_time.read(), Errors::INACTIVE);
         }
