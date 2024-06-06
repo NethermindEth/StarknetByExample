@@ -64,8 +64,9 @@ pub mod Campaign {
     }
 
     pub mod Errors {
-        pub const NOT_FACTORY: felt252 = 'Not factory';
-        pub const INACTIVE: felt252 = 'Campaign no longer active';
+        pub const NOT_FACTORY: felt252 = 'Caller not factory';
+        pub const INACTIVE: felt252 = 'Campaign already ended';
+        pub const STILL_ACTIVE: felt252 = 'Campaign not ended';
         pub const ZERO_DONATION: felt252 = 'Donation must be > 0';
     }
 
@@ -96,6 +97,7 @@ pub mod Campaign {
     #[abi(embed_v0)]
     impl Campaign of super::ICampaign<ContractState> {
         fn donate(ref self: ContractState, amount: u256) {
+            self._assert_only_active();
             assert(amount > 0, Errors::ZERO_DONATION);
 
             let donor = get_caller_address();
@@ -122,6 +124,10 @@ pub mod Campaign {
 
         fn _assert_only_active(self: @ContractState) {
             assert(get_block_timestamp() < self.end_time.read(), Errors::INACTIVE);
+        }
+
+        fn _assert_is_ended(self: @ContractState) {
+            assert(get_block_timestamp() >= self.end_time.read(), Errors::STILL_ACTIVE);
         }
     }
 }
