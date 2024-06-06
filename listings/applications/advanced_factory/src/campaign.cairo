@@ -9,14 +9,12 @@ pub trait ICampaign<TContractState> {
 
 #[starknet::contract]
 pub mod Campaign {
-    use core::starknet::SyscallResultTrait;
-    use core::byte_array::ByteArrayTrait;
     use components::ownable::ownable_component::OwnableInternalTrait;
     use core::num::traits::zero::Zero;
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
     use starknet::{
-        ClassHash, ContractAddress, get_block_timestamp, contract_address_const, get_caller_address,
-        get_contract_address
+        ClassHash, ContractAddress, SyscallResultTrait, get_block_timestamp, contract_address_const,
+        get_caller_address, get_contract_address
     };
     use components::ownable::ownable_component;
 
@@ -110,7 +108,7 @@ pub mod Campaign {
     #[abi(embed_v0)]
     impl Campaign of super::ICampaign<ContractState> {
         fn donate(ref self: ContractState, amount: u256) {
-            self._assert_campaign_active();
+            assert(get_block_timestamp() < self.end_time.read(), Errors::INACTIVE);
             assert(amount > 0, Errors::ZERO_DONATION);
 
             let donor = get_caller_address();
@@ -126,7 +124,7 @@ pub mod Campaign {
 
         fn withdraw(ref self: ContractState) {
             self.ownable._assert_only_owner();
-            self._assert_campaign_ended();
+            assert(get_block_timestamp() >= self.end_time.read(), Errors::STILL_ACTIVE);
 
             let this = get_contract_address();
             let eth_token = self.eth_token.read();
@@ -150,17 +148,6 @@ pub mod Campaign {
             starknet::syscalls::replace_class_syscall(impl_hash).unwrap_syscall();
 
             self.emit(Event::Upgraded(Upgraded { implementation: impl_hash }));
-        }
-    }
-
-    #[generate_trait]
-    impl CampaignInternal of CampaignInternalTrait {
-        fn _assert_campaign_active(self: @ContractState) {
-            assert(get_block_timestamp() < self.end_time.read(), Errors::INACTIVE);
-        }
-
-        fn _assert_campaign_ended(self: @ContractState) {
-            assert(get_block_timestamp() >= self.end_time.read(), Errors::STILL_ACTIVE);
         }
     }
 }
