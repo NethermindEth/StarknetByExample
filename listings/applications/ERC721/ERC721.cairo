@@ -196,3 +196,47 @@ mod ERC721Contract {
         }
     }
 }
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use starknet::testing::ContractState;
+
+    #[test]
+    fn test_mint() {
+        let mut contract = ERC721Contract::new();
+        let to = ContractAddress::from(1);
+        let token_id = 1.into();
+
+        contract._mint(to, token_id);
+
+        assert_eq!(contract.owner_of(token_id), to);
+        assert_eq!(contract.balance_of(to), 1.into());
+    }
+
+    #[test]
+    fn test_transfer() {
+        let mut contract = ERC721Contract::new();
+        let to = ContractAddress::from(1);
+        let from = ContractAddress::from(2);
+        let token_id = 1.into();
+
+        contract._mint(from, token_id);
+        contract._transfer(from, to, token_id);
+
+        assert_eq!(contract.owner_of(token_id), to);
+        assert_eq!(contract.balance_of(to), 1.into());
+        assert_eq!(contract.balance_of(from), 0.into());
+    }
+
+    #[test]
+    fn test_approve() {
+        let mut contract = ERC721Contract::new();
+        let owner = ContractAddress::from(1);
+        let approved = ContractAddress::from(2);
+        let token_id = 1.into();
+
+        contract._mint(owner, token_id);
+        contract.approve(approved,
+
