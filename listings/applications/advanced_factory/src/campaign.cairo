@@ -33,8 +33,7 @@ pub mod Campaign {
         eth_token: IERC20Dispatcher,
         factory: ContractAddress,
         target: u256,
-        title: ByteArray,
-        description: ByteArray,
+        title: felt252,
         total_contributions: u256,
     }
 
@@ -84,15 +83,14 @@ pub mod Campaign {
     fn constructor(
         ref self: ContractState,
         creator: ContractAddress,
-        title: ByteArray,
-        description: ByteArray,
-        target: u256,
+        title: felt252,
+        target: u128,
         duration: u64,
         factory: ContractAddress
     ) {
         assert(factory.is_non_zero(), Errors::FACTORY_ZERO);
         assert(creator.is_non_zero(), Errors::CREATOR_ZERO);
-        assert(title.len() > 0, Errors::TITLE_EMPTY);
+        assert(title != 0, Errors::TITLE_EMPTY);
         assert(target > 0, Errors::ZERO_TARGET);
         assert(duration > 0, Errors::ZERO_DURATION);
 
@@ -102,8 +100,7 @@ pub mod Campaign {
         self.eth_token.write(IERC20Dispatcher { contract_address: eth_address });
 
         self.title.write(title);
-        self.description.write(description);
-        self.target.write(target);
+        self.target.write(target.into());
         self.end_time.write(get_block_timestamp() + duration);
         self.factory.write(factory);
         self.ownable._init(creator);
@@ -117,7 +114,7 @@ pub mod Campaign {
 
             let contributor = get_caller_address();
             let this = get_contract_address();
-            let success = self.eth_token.read().transfer_from(contributor, this, amount);
+            let success = self.eth_token.read().transfer_from(contributor, this, amount.into());
             assert(success, Errors::TRANSFER_FAILED);
 
             self.contributions.write(contributor, self.contributions.read(contributor) + amount);
