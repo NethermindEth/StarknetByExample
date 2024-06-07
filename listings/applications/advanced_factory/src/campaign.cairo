@@ -34,6 +34,7 @@ pub mod Campaign {
         factory: ContractAddress,
         target: u256,
         title: ByteArray,
+        description: ByteArray,
         total_contributions: u256,
     }
 
@@ -84,6 +85,7 @@ pub mod Campaign {
         ref self: ContractState,
         creator: ContractAddress,
         title: ByteArray,
+        description: ByteArray,
         target: u256,
         duration: u64,
         factory: ContractAddress
@@ -101,6 +103,7 @@ pub mod Campaign {
 
         self.title.write(title);
         self.target.write(target);
+        self.description.write(description);
         self.end_time.write(get_block_timestamp() + duration);
         self.factory.write(factory);
         self.ownable._init(creator);

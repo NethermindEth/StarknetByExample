@@ -4,7 +4,11 @@ pub use starknet::{ContractAddress, ClassHash};
 #[starknet::interface]
 pub trait ICrowdfundingFactory<TContractState> {
     fn create_campaign(
-        ref self: TContractState, title: ByteArray, target: u256, duration: u64
+        ref self: TContractState,
+        title: ByteArray,
+        description: ByteArray,
+        target: u256,
+        duration: u64
     ) -> ContractAddress;
     fn update_campaign_class_hash(ref self: TContractState, new_class_hash: ClassHash);
 }
@@ -72,15 +76,19 @@ pub mod CrowdfundingFactory {
     impl CrowdfundingFactory of super::ICrowdfundingFactory<ContractState> {
         // ANCHOR: deploy
         fn create_campaign(
-            ref self: ContractState, title: ByteArray, target: u256, duration: u64
+            ref self: ContractState,
+            title: ByteArray,
+            description: ByteArray,
+            target: u256,
+            duration: u64
         ) -> ContractAddress {
             let caller = get_caller_address();
             let this = get_contract_address();
 
             // Create contructor arguments
             let mut constructor_calldata: Array::<felt252> = array![];
-            (caller, title, target, duration).serialize(ref constructor_calldata);
-            this.serialize(ref constructor_calldata);
+            ((caller, title, description, target), duration, this)
+                .serialize(ref constructor_calldata);
 
             // Contract deployment
             let (contract_address, _) = deploy_syscall(
