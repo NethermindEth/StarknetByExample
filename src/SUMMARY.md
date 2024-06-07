@@ -2,44 +2,44 @@ Summary
 
 [Introduction](./starknet-by-example.md)
 
-<!-- ch00 -->
+<!-- getting-started -->
 
 # Getting Started
 
-  <!-- - [Local environment setup](./ch00/env_setup.md) -->
+  <!-- - [Local environment setup](./getting-started/env_setup.md) -->
 
-- [Basics of a Starknet contract](./ch00/basics/introduction.md)
-  - [Storage](./ch00/basics/storage.md)
-  - [Constructor](./ch00/basics/constructor.md)
-  - [Variables](./ch00/basics/variables.md)
-  - [Visibility and Mutability](./ch00/basics/visibility-mutability.md)
-  - [Counter Example](./ch00/basics/counter.md)
-  - [Mappings](./ch00/basics/mappings.md)
-  - [Errors](./ch00/basics/errors.md)
-  - [Events](./ch00/basics/events.md)
-  - [Syscalls](./ch00/basics/syscalls.md)
-  - [Strings and ByteArrays](./ch00/basics/bytearrays-strings.md)
-  - [Storing Custom Types](./ch00/basics/storing-custom-types.md)
-  - [Custom types in entrypoints](./ch00/basics/custom-types-in-entrypoints.md)
-  - [Documentation](./ch00/basics/documentation.md)
-- [Deploy and interact with contracts](./ch00/interacting/interacting.md)
-  - [Contract interfaces and Traits generation](./ch00/interacting/interfaces-traits.md)
-  - [Calling other contracts](./ch00/interacting/calling_other_contracts.md)
-  - [Factory pattern](./ch00/interacting/factory.md)
-- [Testing contracts](./ch00/testing/contract-testing.md)
-- [Cairo cheatsheet](./ch00/cairo_cheatsheet/cairo_cheatsheet.md)
-  - [Felt](./ch00/cairo_cheatsheet/felt.md)
-  - [LegacyMap](./ch00/cairo_cheatsheet/mapping.md)
-  - [Arrays](./ch00/cairo_cheatsheet/arrays.md)
-  - [loop](./ch00/cairo_cheatsheet/loop.md)
-  - [while](./ch00/cairo_cheatsheet/while.md)
-  - [if let](./ch00/cairo_cheatsheet/if_let.md)
-  - [while let](./ch00/cairo_cheatsheet/while_let.md)
-  - [Enums](./ch00/cairo_cheatsheet/enums.md)
-  - [Match](./ch00/cairo_cheatsheet/match.md)
-  - [Tuples](./ch00/cairo_cheatsheet/tuples.md)
-  - [Struct](./ch00/cairo_cheatsheet/struct.md)
-  - [Type casting](./ch00/cairo_cheatsheet/type_casting.md)
+- [Basics of a Starknet contract](./getting-started/basics/introduction.md)
+  - [Storage](./getting-started/basics/storage.md)
+  - [Constructor](./getting-started/basics/constructor.md)
+  - [Variables](./getting-started/basics/variables.md)
+  - [Visibility and Mutability](./getting-started/basics/visibility-mutability.md)
+  - [Counter Example](./getting-started/basics/counter.md)
+  - [Mappings](./getting-started/basics/mappings.md)
+  - [Errors](./getting-started/basics/errors.md)
+  - [Events](./getting-started/basics/events.md)
+  - [Syscalls](./getting-started/basics/syscalls.md)
+  - [Strings and ByteArrays](./getting-started/basics/bytearrays-strings.md)
+  - [Storing Custom Types](./getting-started/basics/storing-custom-types.md)
+  - [Custom types in entrypoints](./getting-started/basics/custom-types-in-entrypoints.md)
+  - [Documentation](./getting-started/basics/documentation.md)
+- [Deploy and interact with contracts](./getting-started/interacting/interacting.md)
+  - [Contract interfaces and Traits generation](./getting-started/interacting/interfaces-traits.md)
+  - [Calling other contracts](./getting-started/interacting/calling_other_contracts.md)
+  - [Factory pattern](./getting-started/interacting/factory.md)
+- [Testing contracts](./getting-started/testing/contract-testing.md)
+- [Cairo cheatsheet](./getting-started/cairo_cheatsheet/cairo_cheatsheet.md)
+  - [Felt](./getting-started/cairo_cheatsheet/felt.md)
+  - [LegacyMap](./getting-started/cairo_cheatsheet/mapping.md)
+  - [Arrays](./getting-started/cairo_cheatsheet/arrays.md)
+  - [loop](./getting-started/cairo_cheatsheet/loop.md)
+  - [while](./getting-started/cairo_cheatsheet/while.md)
+  - [if let](./getting-started/cairo_cheatsheet/if_let.md)
+  - [while let](./getting-started/cairo_cheatsheet/while_let.md)
+  - [Enums](./getting-started/cairo_cheatsheet/enums.md)
+  - [Match](./getting-started/cairo_cheatsheet/match.md)
+  - [Tuples](./getting-started/cairo_cheatsheet/tuples.md)
+  - [Struct](./getting-started/cairo_cheatsheet/struct.md)
+  - [Type casting](./getting-started/cairo_cheatsheet/type_casting.md)
 
 # Components
 
@@ -48,31 +48,30 @@ Summary
 - [Storage Collisions](./components/collisions.md)
 - [Ownable](./components/ownable.md)
 
-<!-- ch01 -->
+<!-- applications -->
 
 # Applications
 
-- [Upgradeable Contract](./ch01/upgradeable_contract.md)
-- [Defi Vault](./ch01/simple_vault.md)
-- [ERC20 Token](./ch01/erc20.md)
-- [NFT Dutch Auction](./ch01/nft_dutch_auction.md)
-- [Constant Product AMM](./ch01/constant-product-amm.md)
-- [TimeLock](./ch01/timelock.md)
-- [Staking](./ch01/staking.md)
+- [Upgradeable Contract](./applications/upgradeable_contract.md)
+- [Defi Vault](./applications/simple_vault.md)
+- [ERC20 Token](./applications/erc20.md)
+- [Constant Product AMM](./applications/constant-product-amm.md)
+- [TimeLock](./applications/timelock.md)
+- [Staking](./applications/staking.md)
 
-<!-- ch02 -->
+<!-- advanced-concepts -->
 
 # Advanced concepts
 
-- [Writing to any storage slot](./ch02/write_to_any_slot.md)
-- [Storing Arrays](./ch02/storing_arrays.md)
-- [Struct as mapping key](./ch02/struct-mapping-key.md)
-- [Hashing](./ch02/hashing.md)
+- [Writing to any storage slot](./advanced-concepts/write_to_any_slot.md)
+- [Storing Arrays](./advanced-concepts/storing_arrays.md)
+- [Struct as mapping key](./advanced-concepts/struct-mapping-key.md)
+- [Hashing](./advanced-concepts/hashing.md)
   <!-- Hidden until #123 is solved -->
-  <!-- - [Hash Solidity Compatible](./ch02/hash-solidity-compatible.md) -->
-- [Optimisations](./ch02/optimisations/optimisations.md)
-  - [Storage Optimisations](./ch02/optimisations/store_using_packing.md)
-- [List](./ch02/list.md)
-- [Plugins](./ch02/plugins.md)
-- [Signature Verification](./ch02/signature_verification.md)
-- [Library Calls](./ch02/library_calls.md)
+  <!-- - [Hash Solidity Compatible](./advanced-concepts/hash-solidity-compatible.md) -->
+- [Optimisations](./advanced-concepts/optimisations/optimisations.md)
+  - [Storage Optimisations](./advanced-concepts/optimisations/store_using_packing.md)
+- [List](./advanced-concepts/list.md)
+- [Plugins](./advanced-concepts/plugins.md)
+- [Signature Verification](./advanced-concepts/signature_verification.md)
+- [Library Calls](./advanced-concepts/library_calls.md)

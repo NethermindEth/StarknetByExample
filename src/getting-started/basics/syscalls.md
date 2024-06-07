@@ -201,7 +201,7 @@ fn replace_class_syscall(
 
 Replace the class of the calling contract with the class `class_hash`.
 
-This is used for contract upgrades. Here's an example from the [Upgradeable Contract](../../ch01/upgradeable_contract.md):
+This is used for contract upgrades. Here's an example from the [Upgradeable Contract](../../applications/upgradeable_contract.md):
 
 ```rust
 {{#rustdoc_include ../../../listings/applications/upgradeable_contract/src/upgradeable_contract_v0.cairo:upgrade}}
