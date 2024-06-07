@@ -33,7 +33,7 @@ pub mod Campaign {
         eth_token: IERC20Dispatcher,
         factory: ContractAddress,
         target: u256,
-        title: felt252,
+        title: ByteArray,
         total_contributions: u256,
     }
 
@@ -83,14 +83,14 @@ pub mod Campaign {
     fn constructor(
         ref self: ContractState,
         creator: ContractAddress,
-        title: felt252,
-        target: u128,
+        title: ByteArray,
+        target: u256,
         duration: u64,
         factory: ContractAddress
     ) {
         assert(factory.is_non_zero(), Errors::FACTORY_ZERO);
         assert(creator.is_non_zero(), Errors::CREATOR_ZERO);
-        assert(title != 0, Errors::TITLE_EMPTY);
+        assert(title.len() > 0, Errors::TITLE_EMPTY);
         assert(target > 0, Errors::ZERO_TARGET);
         assert(duration > 0, Errors::ZERO_DURATION);
 
@@ -100,7 +100,7 @@ pub mod Campaign {
         self.eth_token.write(IERC20Dispatcher { contract_address: eth_address });
 
         self.title.write(title);
-        self.target.write(target.into());
+        self.target.write(target);
         self.end_time.write(get_block_timestamp() + duration);
         self.factory.write(factory);
         self.ownable._init(creator);
