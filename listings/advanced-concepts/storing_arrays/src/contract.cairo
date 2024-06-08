@@ -1,7 +1,6 @@
 use starknet::SyscallResultTrait;
 use starknet::{Store, SyscallResult};
-use starknet::storage_access::{StorageBaseAddress, storage_address_from_base_and_offset};
-use starknet::syscalls::{storage_read_syscall, storage_write_syscall};
+use starknet::storage_access::StorageBaseAddress;
 
 // ANCHOR: StorageAccessImpl
 impl StoreFelt252Array of Store<Array<felt252>> {
@@ -20,7 +19,7 @@ impl StoreFelt252Array of Store<Array<felt252>> {
     ) -> SyscallResult<Array<felt252>> {
         let mut arr: Array<felt252> = array![];
 
-        // Read the stored array's length. If the length is superior to 255, the read will fail.
+        // Read the stored array's length. If the length is greater than 255, the read will fail.
         let len: u8 = Store::<u8>::read_at_offset(address_domain, base, offset)
             .expect('Storage Span too large');
         offset += 1;
@@ -44,7 +43,7 @@ impl StoreFelt252Array of Store<Array<felt252>> {
     fn write_at_offset(
         address_domain: u32, base: StorageBaseAddress, mut offset: u8, mut value: Array<felt252>
     ) -> SyscallResult<()> {
-        // // Store the length of the array in the first storage slot.
+        // Store the length of the array in the first storage slot.
         let len: u8 = value.len().try_into().expect('Storage - Span too large');
         Store::<u8>::write_at_offset(address_domain, base, offset, len).unwrap();
         offset += 1;
