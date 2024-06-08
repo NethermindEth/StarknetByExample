@@ -33,7 +33,7 @@ It doesn't have a constructor, but you can create an `_init` internal function a
 > It's currently not possible to use the same component multiple times in the same contract.
 > This is a known limitation that may be lifted in the future.
 >
-> For now, you can view components as implementations of a specific interfaces or features (`Ownable`, `Upgradeable`, ... `~able`).
+> For now, you can view components as implementations of specific interfaces or features (`Ownable`, `Upgradeable`, ... `~able`).
 > This is why we called the component in the above example `Switchable`, and not `Switch`; the contract _is switchable_, it does not _have a switch_.
 
 ## How to use a component

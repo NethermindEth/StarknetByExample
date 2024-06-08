@@ -24,14 +24,14 @@ pub mod TimeContract {
         fn pack(value: Time) -> felt252 {
             let msb: felt252 = 256 * value.hour.into();
             let lsb: felt252 = value.minute.into();
-            return msb + lsb;
+            msb + lsb
         }
         fn unpack(value: felt252) -> Time {
             let value: u16 = value.try_into().unwrap();
             let (q, r) = DivRem::div_rem(value, 256_u16.try_into().unwrap());
             let hour: u8 = Into::<u16, felt252>::into(q).try_into().unwrap();
             let minute: u8 = Into::<u16, felt252>::into(r).try_into().unwrap();
-            return Time { hour, minute };
+            Time { hour, minute }
         }
     }
 
