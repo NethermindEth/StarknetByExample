@@ -284,51 +284,51 @@ msgid ""
 "strange/awesome-starknet)."
 msgstr ""
 
-#: src/starknet-by-example.md:31 src/ch00/basics/storage.md:34
-#: src/ch00/basics/constructor.md:27 src/ch00/basics/variables.md:126
-#: src/ch00/basics/visibility-mutability.md:75 src/ch00/basics/counter.md:56
-#: src/ch00/basics/mappings.md:46 src/ch00/basics/errors.md:139
-#: src/ch00/basics/events.md:68 src/ch00/basics/storing-custom-types.md:39
-#: src/ch00/basics/custom-types-in-entrypoints.md:39
-#: src/ch00/interacting/interfaces-traits.md:129
-#: src/ch00/interacting/calling_other_contracts.md:69
-#: src/ch00/testing/contract-testing.md:176 src/ch00/cairo_cheatsheet/felt.md:15
-#: src/ch00/cairo_cheatsheet/mapping.md:58
-#: src/ch00/cairo_cheatsheet/arrays.md:42 src/ch00/cairo_cheatsheet/loop.md:23
-#: src/ch00/cairo_cheatsheet/match.md:59 src/ch00/cairo_cheatsheet/tuples.md:18
-#: src/ch00/cairo_cheatsheet/struct.md:15
-#: src/ch00/cairo_cheatsheet/type_casting.md:33 src/components/how_to.md:114
-#: src/ch01/upgradeable_contract.md:117 src/ch01/simple_vault.md:114
-#: src/ch01/erc20.md:228 src/ch01/constant-product-amm.md:275
-#: src/ch02/write_to_any_slot.md:58 src/ch02/storing_arrays.md:105
-#: src/ch02/struct-mapping-key.md:46 src/ch02/hash-solidity-compatible.md:46
-#: src/ch02/optimisations/store_using_packing.md:90 src/ch02/list.md:139
+#: src/starknet-by-example.md:31 src/getting-started/basics/storage.md:34
+#: src/getting-started/basics/constructor.md:27 src/getting-started/basics/variables.md:126
+#: src/getting-started/basics/visibility-mutability.md:75 src/getting-started/basics/counter.md:56
+#: src/getting-started/basics/mappings.md:46 src/getting-started/basics/errors.md:139
+#: src/getting-started/basics/events.md:68 src/getting-started/basics/storing-custom-types.md:39
+#: src/getting-started/basics/custom-types-in-entrypoints.md:39
+#: src/getting-started/interacting/interfaces-traits.md:129
+#: src/getting-started/interacting/calling_other_contracts.md:69
+#: src/getting-started/testing/contract-testing.md:176 src/getting-started/cairo_cheatsheet/felt.md:15
+#: src/getting-started/cairo_cheatsheet/mapping.md:58
+#: src/getting-started/cairo_cheatsheet/arrays.md:42 src/getting-started/cairo_cheatsheet/loop.md:23
+#: src/getting-started/cairo_cheatsheet/match.md:59 src/getting-started/cairo_cheatsheet/tuples.md:18
+#: src/getting-started/cairo_cheatsheet/struct.md:15
+#: src/getting-started/cairo_cheatsheet/type_casting.md:33 src/components/how_to.md:114
+#: src/applications/upgradeable_contract.md:117 src/applications/simple_vault.md:114
+#: src/applications/erc20.md:228 src/applications/constant-product-amm.md:275
+#: src/advanced-concepts/write_to_any_slot.md:58 src/advanced-concepts/storing_arrays.md:105
+#: src/advanced-concepts/struct-mapping-key.md:46 src/advanced-concepts/hash-solidity-compatible.md:46
+#: src/advanced-concepts/optimisations/store_using_packing.md:90 src/advanced-concepts/list.md:139
 msgid "<footer id=\"last-change\">Last change: 2023-12-07</footer>"
 msgstr "<footer id=\"last-change\">Last change: 2023-12-07</footer>"
 
-#: src/ch00/basics/introduction.md:1
+#: src/getting-started/basics/introduction.md:1
 msgid "# Basics of Smart Contracts in Cairo"
 msgstr "# Cairo的智能合约基础知识"
 
-#: src/ch00/basics/introduction.md:3
+#: src/getting-started/basics/introduction.md:3
 msgid ""
 "The following chapters will introduce you to Starknet smart contracts and how "
 "to write them in Cairo."
 msgstr "以下章节将向你介绍Starknet智能合约以及如何用Cairo编写这些合约。"
 
-#: src/ch00/basics/introduction.md:5 src/ch02/optimisations/optimisations.md:5
+#: src/getting-started/basics/introduction.md:5 src/advanced-concepts/optimisations/optimisations.md:5
 msgid "<footer id=\"last-change\">Last change: 2023-10-12</footer>"
 msgstr "<footer id=\"last-change\">Last change: 2023-10-12</footer>"
 
-#: src/ch00/basics/storage.md:1
+#: src/getting-started/basics/storage.md:1
 msgid "# Storage"
 msgstr "# 存储"
 
-#: src/ch00/basics/storage.md:3
+#: src/getting-started/basics/storage.md:3
 msgid "Here's the most minimal contract you can write in Cairo:"
 msgstr "这是您用Cairo能写的最简短的合约："
 
-#: src/ch00/basics/storage.md:5
+#: src/getting-started/basics/storage.md:5
 msgid ""
 "```rust\n"
 "#[starknet::contract]\n"
@@ -346,7 +346,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/storage.md:13
+#: src/getting-started/basics/storage.md:13
 msgid ""
 "Storage is a struct annoted with `#[storage]`. Every contract must have one "
 "and only one storage.\n"
@@ -356,7 +356,7 @@ msgstr ""
 "存储是一个结构体，用 `#[storage]`标注。每个合约必须有且仅有一个存储空间。\n"
 "它是一个键值存储空间，其中每个键都将映射到合约存储空间的存储地址。"
 
-#: src/ch00/basics/storage.md:16
+#: src/getting-started/basics/storage.md:16
 msgid ""
 "You can define [storage variables](./variables.md#storage-variables) in your "
 "contract, and then use them to store and retrieve data."
@@ -364,7 +364,7 @@ msgstr ""
 "您可以在合约中定义 [存储变量]（./variables.md#storage-variables），然后使用它"
 "们来存储和检索数据。"
 
-#: src/ch00/basics/storage.md:17
+#: src/getting-started/basics/storage.md:17
 msgid ""
 "```rust\n"
 "#[starknet::contract]\n"
@@ -390,7 +390,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/storage.md:29
+#: src/getting-started/basics/storage.md:29
 msgid ""
 "> Actually these two contracts have the same underlying Sierra program.\n"
 "> From the compiler's perspective, the storage variables don't exist until "
@@ -399,16 +399,16 @@ msgstr ""
 "> 实际上，这两个合约的底层 Sierra 程序是一样的。\n"
 "> 从编译器的角度来看，存储变量在使用之前是不存在的。"
 
-#: src/ch00/basics/storage.md:32
+#: src/getting-started/basics/storage.md:32
 msgid ""
 "You can also read about [storing custom types](./storing-custom-types.md)"
 msgstr "您还可以阅读有关 [存储自定义类型](./storing-custom-types.md) 的内容。"
 
-#: src/ch00/basics/constructor.md:1
+#: src/getting-started/basics/constructor.md:1
 msgid "# Constructor"
 msgstr "# 构造函数"
 
-#: src/ch00/basics/constructor.md:3
+#: src/getting-started/basics/constructor.md:3
 msgid ""
 "Constructors are a special type of function that runs only once when "
 "deploying a contract, and can be used to initialize the state of the "
@@ -420,7 +420,7 @@ msgstr ""
 "你的合约不能有一个以上的构造函数，而且构造函数必须使用 `#[constructor]` 属性注"
 "释。此外，一个好的做法是将该函数命名为 `constructor`。"
 
-#: src/ch00/basics/constructor.md:5
+#: src/getting-started/basics/constructor.md:5
 msgid ""
 "Here's a simple example that demonstrates how to initialize the state of a "
 "contract on deployment by defining logic inside a constructor."
@@ -428,7 +428,7 @@ msgstr ""
 "下面是一个简单的示例，演示如何通过在构造函数中定义逻辑，在部署时初始化合约的状"
 "态。"
 
-#: src/ch00/basics/constructor.md:7
+#: src/getting-started/basics/constructor.md:7
 msgid ""
 "```rust\n"
 "#[starknet::contract]\n"
@@ -470,7 +470,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/constructor.md:25
+#: src/getting-started/basics/constructor.md:25
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x017fd6558e67451dA583d123D77F4e2651E91502D08F8F8432355293b11e1f8F) "
@@ -485,15 +485,15 @@ msgstr ""
 "blob/main/listings/getting-started/constructor/src/constructor.cairo) 中尝试"
 "它。"
 
-#: src/ch00/basics/variables.md:1
+#: src/getting-started/basics/variables.md:1
 msgid "# Variables"
 msgstr "# 变量"
 
-#: src/ch00/basics/variables.md:3
+#: src/getting-started/basics/variables.md:3
 msgid "There are 3 types of variables in Cairo contracts:"
 msgstr "Cairo合约中有 3 种变量："
 
-#: src/ch00/basics/variables.md:5
+#: src/getting-started/basics/variables.md:5
 msgid ""
 "- Local\n"
 "  - declared inside a function\n"
@@ -515,11 +515,11 @@ msgstr ""
 "  - 提供有关区块链的信息\n"
 "  - 可在任何地方访问，甚至在库函数中"
 
-#: src/ch00/basics/variables.md:15
+#: src/getting-started/basics/variables.md:15
 msgid "## Local Variables"
 msgstr "## 局部变量"
 
-#: src/ch00/basics/variables.md:17
+#: src/getting-started/basics/variables.md:17
 msgid ""
 "Local variables are used and accessed within the scope of a specific function "
 "or block of code. They are temporary and exist only for the duration of that "
@@ -528,7 +528,7 @@ msgstr ""
 "局部变量在特定函数或代码块的范围内使用和访问。它们是临时的，只在特定函数或代码"
 "块执行期间存在。"
 
-#: src/ch00/basics/variables.md:19
+#: src/getting-started/basics/variables.md:19
 msgid ""
 "Local variables are stored in memory and are not stored on the blockchain. "
 "This means they cannot be accessed from one execution to another. Local "
@@ -540,11 +540,11 @@ msgstr ""
 "局部变量可用于存储仅在特定上下文中相关的临时数据。通过为中间值命名，它们还能使"
 "代码更具可读性。"
 
-#: src/ch00/basics/variables.md:21
+#: src/getting-started/basics/variables.md:21
 msgid "Here's a simple example of a contract with only local variables:"
 msgstr "下面是一个只有局部变量的简单合约示例："
 
-#: src/ch00/basics/variables.md:23
+#: src/getting-started/basics/variables.md:23
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -608,7 +608,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/variables.md:50
+#: src/getting-started/basics/variables.md:50
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x015B3a10F9689BeD741Ca3C210017BC097122CeF76f3cAA191A20ff8b9b56b96) "
@@ -623,11 +623,11 @@ msgstr ""
 "blob/main/listings/getting-started/variables/src/local_variables.cairo) 中尝试"
 "它。"
 
-#: src/ch00/basics/variables.md:52
+#: src/getting-started/basics/variables.md:52
 msgid "## Storage Variables"
 msgstr "## 存储用变量"
 
-#: src/ch00/basics/variables.md:54
+#: src/getting-started/basics/variables.md:54
 msgid ""
 "Storage variables are persistent data stored on the blockchain. They can be "
 "accessed from one execution to another, allowing the contract to remember and "
@@ -636,23 +636,23 @@ msgstr ""
 "存储变量是存储在区块链上的持久数据。它们可以在不同的执行过程中被访问，从而使合"
 "约能够保存和更新信息。"
 
-#: src/ch00/basics/variables.md:56
+#: src/getting-started/basics/variables.md:56
 msgid ""
 "To write or update a storage variable, you need to interact with the contract "
 "through an external entrypoint by sending a transaction."
 msgstr "要写入或更新存储变量，需要通过外部入口点发送交易与合约交互。"
 
-#: src/ch00/basics/variables.md:58
+#: src/getting-started/basics/variables.md:58
 msgid ""
 "On the other hand, you can read state variables, for free, without any "
 "transaction, simply by interacting with a node."
 msgstr "另一方面，只需与节点交互，就可以免费读取状态变量，无需发出任何交易。"
 
-#: src/ch00/basics/variables.md:60
+#: src/getting-started/basics/variables.md:60
 msgid "Here's a simple example of a contract with one storage variable:"
 msgstr "下面是一个带有一个存储变量的简单合约示例："
 
-#: src/ch00/basics/variables.md:62
+#: src/getting-started/basics/variables.md:62
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -720,7 +720,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/variables.md:92
+#: src/getting-started/basics/variables.md:92
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x06eA827B32875483709b785A7F9e846a52776Cd8D42C3fE696218c2624b0DCCa) "
@@ -735,11 +735,11 @@ msgstr ""
 "blob/main/listings/getting-started/variables/src/storage_variables.cairo)中尝"
 "试它。"
 
-#: src/ch00/basics/variables.md:94
+#: src/getting-started/basics/variables.md:94
 msgid "## Global Variables"
 msgstr "## 全局变量"
 
-#: src/ch00/basics/variables.md:96
+#: src/getting-started/basics/variables.md:96
 msgid ""
 "Global variables are predefined variables that provide information about the "
 "blockchain and the current execution environment. They can be accessed at any "
@@ -748,14 +748,14 @@ msgstr ""
 "全局变量是预定义变量，可提供有关区块链和当前执行环境的信息。可以随时随地访问它"
 "们！"
 
-#: src/ch00/basics/variables.md:98
+#: src/getting-started/basics/variables.md:98
 msgid ""
 "In Starknet, you can access global variables by using specific functions "
 "contained in the starknet core libraries."
 msgstr ""
 "在 Starknet 中，您可以通过使用 starknet 核心库中的特定函数来访问全局变量。"
 
-#: src/ch00/basics/variables.md:100
+#: src/getting-started/basics/variables.md:100
 msgid ""
 "For example, the `get_caller_address` function returns the address of the "
 "caller of the current transaction, and the `get_contract_address` function "
@@ -764,7 +764,7 @@ msgstr ""
 "例如，`get_caller_address`函数返回当前事务的调用者地址，`get_contract_address`"
 "函数返回当前合约的地址。"
 
-#: src/ch00/basics/variables.md:102
+#: src/getting-started/basics/variables.md:102
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -816,7 +816,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/variables.md:125
+#: src/getting-started/basics/variables.md:125
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x05bD2F3943bd4e030f85678b55b2EC2C1be939e32388530FB20ED967B3Be433F) "
@@ -831,19 +831,19 @@ msgstr ""
 "blob/main/listings/getting-started/variables/src/global_variables.cairo) 中尝"
 "试它。"
 
-#: src/ch00/basics/visibility-mutability.md:1
+#: src/getting-started/basics/visibility-mutability.md:1
 msgid "# Visibility and Mutability"
 msgstr "# 可见性和可变性"
 
-#: src/ch00/basics/visibility-mutability.md:3
+#: src/getting-started/basics/visibility-mutability.md:3
 msgid "## Visibility"
 msgstr "## 可见性"
 
-#: src/ch00/basics/visibility-mutability.md:5
+#: src/getting-started/basics/visibility-mutability.md:5
 msgid "There are two types of functions in Starknet contracts:"
 msgstr "Starknet合约有两种功能："
 
-#: src/ch00/basics/visibility-mutability.md:7
+#: src/getting-started/basics/visibility-mutability.md:7
 msgid ""
 "- Functions that are accessible externally and can be called by anyone.\n"
 "- Functions that are only accessible internally and can only be called by "
@@ -852,7 +852,7 @@ msgstr ""
 "- 外部可访问、任何人都可调用的函数。\n"
 "- 只能在内部访问的函数，只能被合约中的其他函数调用。"
 
-#: src/ch00/basics/visibility-mutability.md:10
+#: src/getting-started/basics/visibility-mutability.md:10
 msgid ""
 "These functions are also typically divided into two different implementations "
 "blocks. The first `impl` block for externally accessible functions is "
@@ -867,11 +867,11 @@ msgstr ""
 "调用。第二个用于内部可访问函数的 `impl` 块没有注释任何属性，这意味着该块中的所"
 "有函数默认都是私有的。"
 
-#: src/ch00/basics/visibility-mutability.md:12
+#: src/getting-started/basics/visibility-mutability.md:12
 msgid "## State Mutability"
 msgstr "## 状态可变性"
 
-#: src/ch00/basics/visibility-mutability.md:14
+#: src/getting-started/basics/visibility-mutability.md:14
 msgid ""
 "Regardless of whether a function is internal or external, it can either "
 "modify the contract's state or not. When we declare functions that interact "
@@ -885,7 +885,7 @@ msgstr ""
 "我们需要将 `ContractState`添加为函数的第一个参数，明确说明我们正在访问 合约的"
 "状态。这有两种不同的方法："
 
-#: src/ch00/basics/visibility-mutability.md:17
+#: src/getting-started/basics/visibility-mutability.md:17
 msgid ""
 "- If we want our function to be able to mutate the state of the contract, we "
 "pass it by reference like this: `ref self: ContractState`.\n"
@@ -897,7 +897,7 @@ msgstr ""
 "- 如果我们希望我们的函数是只读的，并且不更改合约的状态，我们可以通过快照传递"
 "它，如下所示：`self：@ContractState`."
 
-#: src/ch00/basics/visibility-mutability.md:20
+#: src/getting-started/basics/visibility-mutability.md:20
 msgid ""
 "Read-only functions, also called view functions, can be directly called "
 "without making a transaction. You can interact with them directly through a "
@@ -909,17 +909,17 @@ msgstr ""
 "节点与它们交互，读取合约的状态，而且可以自由调用！\n"
 "而修改合约状态的外部函数则只能通过交易来调用。"
 
-#: src/ch00/basics/visibility-mutability.md:23
+#: src/getting-started/basics/visibility-mutability.md:23
 msgid ""
 "Internal functions can't be called externally, but the same principle applies "
 "regarding state mutability."
 msgstr "内部函数不能被外部调用，同样的原则也适用于状态可变性。"
 
-#: src/ch00/basics/visibility-mutability.md:25
+#: src/getting-started/basics/visibility-mutability.md:25
 msgid "Let's take a look at a simple example contract to see these in action:"
 msgstr "让我们通过一个简单的合约示例来了解这些功能："
 
-#: src/ch00/basics/visibility-mutability.md:27
+#: src/getting-started/basics/visibility-mutability.md:27
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -1037,7 +1037,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/visibility-mutability.md:73
+#: src/getting-started/basics/visibility-mutability.md:73
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x0071dE3093AB58053b0292C225aa0eED40293e7694A0042685FF6D813d39889F) "
@@ -1051,19 +1051,19 @@ msgstr ""
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
 "blob/main/listings/getting-started/visibility/src/visibility.cairo)中尝试它。"
 
-#: src/ch00/basics/counter.md:1
+#: src/getting-started/basics/counter.md:1
 msgid "# Simple Counter"
 msgstr "# 简单计数器"
 
-#: src/ch00/basics/counter.md:3
+#: src/getting-started/basics/counter.md:3
 msgid "This is a simple counter contract."
 msgstr "这是一个简单的计数合约。"
 
-#: src/ch00/basics/counter.md:5
+#: src/getting-started/basics/counter.md:5
 msgid "Here's how it works:"
 msgstr "这个合约是这样工作的："
 
-#: src/ch00/basics/counter.md:7
+#: src/getting-started/basics/counter.md:7
 msgid ""
 "- The contract has a state variable called 'counter' that is initialized to "
 "0.\n"
@@ -1078,7 +1078,7 @@ msgstr ""
 "\n"
 "- 当用户调用 'decrement'时，合约会将计数器递减 1。"
 
-#: src/ch00/basics/counter.md:13
+#: src/getting-started/basics/counter.md:13
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -1164,7 +1164,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/counter.md:54
+#: src/getting-started/basics/counter.md:54
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x01664a69Fe701a1df7Bb0ae4A353792d0cf4E27146ee860075cbf6108b1D5718) "
@@ -1178,11 +1178,11 @@ msgstr ""
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
 "blob/main/listings/getting-started/counter/src/contracts.cairo) 中尝试它。"
 
-#: src/ch00/basics/mappings.md:1
+#: src/getting-started/basics/mappings.md:1
 msgid "# Mappings"
 msgstr "# 映射"
 
-#: src/ch00/basics/mappings.md:3
+#: src/getting-started/basics/mappings.md:3
 msgid ""
 "Maps are a key-value data structure used to store data within a smart "
 "contract. In Cairo they are implemented using the `LegacyMap` type. It's "
@@ -1193,7 +1193,7 @@ msgstr ""
 "`LegacyMap` 类型实现。值得注意的是，`LegacyMap`类型只能在合约的 `Storage`结构"
 "中使用，不能用在其他地方。"
 
-#: src/ch00/basics/mappings.md:5
+#: src/getting-started/basics/mappings.md:5
 msgid ""
 "Here we demonstrate how to use the `LegacyMap` type within a Cairo contract, "
 "to map between a key of type `ContractAddress` and value of type `felt252`. "
@@ -1207,11 +1207,11 @@ msgstr ""
 "调用 `write()` 方法，传入键和值，写入映射。同样，我们可以通过调用 `read()` 方"
 "法并输入相关键值来读取与给定键值相关的值。"
 
-#: src/ch00/basics/mappings.md:7
+#: src/getting-started/basics/mappings.md:7
 msgid "Some additional notes:"
 msgstr "一些补充说明："
 
-#: src/ch00/basics/mappings.md:9
+#: src/getting-started/basics/mappings.md:9
 msgid ""
 "- More complex key-value mappings are possible, for example we could use "
 "`LegacyMap::<(ContractAddress, ContractAddress), felt252>` to create an "
@@ -1233,7 +1233,7 @@ msgstr ""
 "io/documentation/architecture_and_concepts/Contracts/contract-storage/"
 "#storage_variables)。"
 
-#: src/ch00/basics/mappings.md:13
+#: src/getting-started/basics/mappings.md:13
 msgid ""
 "```rust\n"
 "use starknet::ContractAddress;\n"
@@ -1303,7 +1303,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/mappings.md:44
+#: src/getting-started/basics/mappings.md:44
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x06214AB4c23Cc545bf2221D465eB83aFb7412779AD498BD48a724B3F645E3505) "
@@ -1317,11 +1317,11 @@ msgstr ""
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
 "blob/main/listings/getting-started/mappings/src/mappings.cairo) 中尝试它。"
 
-#: src/ch00/basics/errors.md:1
+#: src/getting-started/basics/errors.md:1
 msgid "# Errors"
 msgstr "# 错误"
 
-#: src/ch00/basics/errors.md:3
+#: src/getting-started/basics/errors.md:3
 msgid ""
 "Errors can be used to handle validation and other conditions that may occur "
 "during the execution of a smart contract.\n"
@@ -1332,11 +1332,11 @@ msgstr ""
 "如果在执行智能合约调用期间抛出错误，则将停止执行，并恢复在交易期间所做的任何更"
 "改。"
 
-#: src/ch00/basics/errors.md:6
+#: src/getting-started/basics/errors.md:6
 msgid "To throw an error, use the `assert` or `panic` functions:"
 msgstr "要抛出错误，请使用 `assert` 或 `panic`函数："
 
-#: src/ch00/basics/errors.md:8
+#: src/getting-started/basics/errors.md:8
 msgid ""
 "- `assert` is used to validate conditions.\n"
 "  If the check fails, an error is thrown along with a specified value, often "
@@ -1358,11 +1358,11 @@ msgstr ""
 "`revert` 语句。\n"
 "  （使用`panic_with_felt252` 可以直接传递一个felt252作为错误值）"
 
-#: src/ch00/basics/errors.md:16
+#: src/getting-started/basics/errors.md:16
 msgid "Here's a simple example that demonstrates the use of these functions:"
 msgstr "下面是一个简单的示例，演示了这些函数的用法："
 
-#: src/ch00/basics/errors.md:18
+#: src/getting-started/basics/errors.md:18
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -1422,7 +1422,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/errors.md:46
+#: src/getting-started/basics/errors.md:46
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x0022664463FF0b711CC9B549a9E87d65A0882bB1D29338C4108696B8F2216a40) "
@@ -1436,17 +1436,17 @@ msgstr ""
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
 "blob/main/listings/getting-started/errors/src/simple_errors.cairo) 中尝试它。"
 
-#: src/ch00/basics/errors.md:48
+#: src/getting-started/basics/errors.md:48
 msgid "## Custom errors"
 msgstr "## 自定义错误"
 
-#: src/ch00/basics/errors.md:50
+#: src/getting-started/basics/errors.md:50
 msgid ""
 "You can make error handling easier by defining your error codes in a specific "
 "module."
 msgstr "您可以通过在特定模块中定义错误代码来简化错误处理。"
 
-#: src/ch00/basics/errors.md:52
+#: src/getting-started/basics/errors.md:52
 msgid ""
 "```rust\n"
 "mod Errors {\n"
@@ -1516,7 +1516,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/errors.md:85
+#: src/getting-started/basics/errors.md:85
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x0501CD5da5B453a18515B5A20b8029bd7583DFE7a399ad9f79c284F7829e4A57) "
@@ -1530,17 +1530,17 @@ msgstr ""
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
 "blob/main/listings/getting-started/errors/src/custom_errors.cairo)中尝试它。"
 
-#: src/ch00/basics/errors.md:87
+#: src/getting-started/basics/errors.md:87
 msgid "## Vault example"
 msgstr "## Vault 示例"
 
-#: src/ch00/basics/errors.md:89
+#: src/getting-started/basics/errors.md:89
 msgid ""
 "Here's another example that demonstrates the use of errors in a more complex "
 "contract:"
 msgstr "下面是另一个示例，演示了在更复杂的合约中使用错误："
 
-#: src/ch00/basics/errors.md:91
+#: src/getting-started/basics/errors.md:91
 msgid ""
 "```rust\n"
 "mod VaultErrors {\n"
@@ -1636,7 +1636,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/errors.md:137
+#: src/getting-started/basics/errors.md:137
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x020C2da26F42A28Ef54ED428eF1810FE433784b055f9bF315C5d992b1579C268) "
@@ -1650,11 +1650,11 @@ msgstr ""
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
 "blob/main/listings/getting-started/errors/src/vault_errors.cairo) 中尝试它。"
 
-#: src/ch00/basics/events.md:1
+#: src/getting-started/basics/events.md:1
 msgid "# Events"
 msgstr "# 事件"
 
-#: src/ch00/basics/events.md:3
+#: src/getting-started/basics/events.md:3
 msgid ""
 "Events are a way to emit data from a contract. All events must be defined in "
 "the `Event` enum, which must be annotated with the `#[event]` attribute.\n"
@@ -1670,7 +1670,7 @@ msgstr ""
 "据。可以对事件编制索引，以便在以后查询数据时轻松快速地访问。可以通过向字段成员"
 "添加`#[key]` 属性来索引事件数据。"
 
-#: src/ch00/basics/events.md:6
+#: src/getting-started/basics/events.md:6
 msgid ""
 "Here's a simple example of a contract using events that emit an event each "
 "time a counter is incremented by the \"increment\" function:"
@@ -1678,7 +1678,7 @@ msgstr ""
 "下面是合约使用事件的简单示例，这些事件在每次计数器通过“increment”函数递增时发"
 "出一个事件："
 
-#: src/ch00/basics/events.md:8
+#: src/getting-started/basics/events.md:8
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -1804,7 +1804,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/events.md:66
+#: src/getting-started/basics/events.md:66
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x022e3B59518EA04aBb5da671ea04ecC3a154400f226d2Df38eFE146741b9E2F6) "
@@ -1818,11 +1818,11 @@ msgstr ""
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
 "blob/main/listings/getting-started/events/src/counter.cairo) 中尝试它。"
 
-#: src/ch00/basics/storing-custom-types.md:1
+#: src/getting-started/basics/storing-custom-types.md:1
 msgid "# Storing Custom Types"
 msgstr "# 存储自定义类型"
 
-#: src/ch00/basics/storing-custom-types.md:3
+#: src/getting-started/basics/storing-custom-types.md:3
 msgid ""
 "While native types can be stored in a contract's storage without any "
 "additional work, custom types require a bit more work. This is because at "
@@ -1836,7 +1836,7 @@ msgstr ""
 "问题，我们需要为我们的自定义类型实现 `Store` trait。希望我们可以为我们的自定义类"
 "型派生这个trait - 除非它包含数组或字典。"
 
-#: src/ch00/basics/storing-custom-types.md:5
+#: src/getting-started/basics/storing-custom-types.md:5
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -1902,7 +1902,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/storing-custom-types.md:37
+#: src/getting-started/basics/storing-custom-types.md:37
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
@@ -1912,11 +1912,11 @@ msgstr ""
 "com/NethermindEth/StarknetByExample/blob/main/listings/getting-started/"
 "storing_custom_types/src/contract.cairo) 中尝试这个合约。"
 
-#: src/ch00/basics/custom-types-in-entrypoints.md:1
+#: src/getting-started/basics/custom-types-in-entrypoints.md:1
 msgid "# Custom types in entrypoints"
 msgstr "# 入口点中的自定义类型"
 
-#: src/ch00/basics/custom-types-in-entrypoints.md:3
+#: src/getting-started/basics/custom-types-in-entrypoints.md:3
 msgid ""
 "Using custom types in entrypoints requires our type to implement the `Serde` "
 "trait. This is because when calling an entrypoint, the input is sent as an "
@@ -1931,7 +1931,7 @@ msgstr ""
 "数组。\n"
 "值得庆幸的是，我们可以为我们的自定义类型派生`Serde` trait。"
 
-#: src/ch00/basics/custom-types-in-entrypoints.md:6
+#: src/getting-started/basics/custom-types-in-entrypoints.md:6
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -1997,7 +1997,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/custom-types-in-entrypoints.md:37
+#: src/getting-started/basics/custom-types-in-entrypoints.md:37
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
@@ -2007,26 +2007,26 @@ msgstr ""
 "com/NethermindEth/StarknetByExample/blob/main/listings/getting-started/"
 "custom_type_serde/src/contract.cairo) 中尝试这个合约。"
 
-#: src/ch00/basics/documentation.md:1
+#: src/getting-started/basics/documentation.md:1
 msgid "# Documentation"
 msgstr "# 文档"
 
-#: src/ch00/basics/documentation.md:3
+#: src/getting-started/basics/documentation.md:3
 msgid ""
 "It's important to take the time to document your code. It will helps "
 "developers and users to understand the contract and its functionalities."
 msgstr ""
 "花时间为你的代码写文档非常重要。它将帮助开发人员和用户了解合约及其功能。"
 
-#: src/ch00/basics/documentation.md:5
+#: src/getting-started/basics/documentation.md:5
 msgid "In Cairo, you can add comments with `//`."
 msgstr "在Cairo，您可以使用“//”添加注释。"
 
-#: src/ch00/basics/documentation.md:7
+#: src/getting-started/basics/documentation.md:7
 msgid "### Best Practices:"
 msgstr "### 最佳实践："
 
-#: src/ch00/basics/documentation.md:9
+#: src/getting-started/basics/documentation.md:9
 msgid ""
 "Since Cairo 1, the community has adopted a [Rust-like documentation style]"
 "(https://doc.rust-lang.org/rust-by-example/meta/doc.html)."
@@ -2034,11 +2034,11 @@ msgstr ""
 "自 Cairo 1 以来，社区采用了 [类似 Rust 的文档风格](https://doc.rust-lang.org/"
 "rust-by-example/meta/doc.html)。"
 
-#: src/ch00/basics/documentation.md:11
+#: src/getting-started/basics/documentation.md:11
 msgid "### Contract Interface:"
 msgstr "### 合约接口："
 
-#: src/ch00/basics/documentation.md:13
+#: src/getting-started/basics/documentation.md:13
 msgid ""
 "In smart contracts, you will often have a trait that defines the contract's "
 "interface (with `#[starknet::interface]`).\n"
@@ -2051,7 +2051,7 @@ msgstr ""
 "这是包含详细文档的理想场所，这些文档解释了合约入口点的用途和功能。您可以遵循以"
 "下模板："
 
-#: src/ch00/basics/documentation.md:16
+#: src/getting-started/basics/documentation.md:16
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -2087,7 +2087,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/documentation.md:33
+#: src/getting-started/basics/documentation.md:33
 msgid ""
 "Keep in mind that this should not describe the implementation details of the "
 "function, but rather the high-level purpose and functionality of the contract "
@@ -2096,42 +2096,42 @@ msgstr ""
 "请记住，这不应该描述函数的实现细节，而应该从用户的角度描述合约的高级目的和功"
 "能。"
 
-#: src/ch00/basics/documentation.md:35
+#: src/getting-started/basics/documentation.md:35
 msgid "### Implementation Details:"
 msgstr "### 实装细节："
 
-#: src/ch00/basics/documentation.md:37
+#: src/getting-started/basics/documentation.md:37
 msgid ""
 "When writing the logic of the contract, you can add comments to describe the "
 "technical implementation details of the functions."
 msgstr "在编写合约逻辑时，可以添加注释来描述函数的技术实现细节。"
 
-#: src/ch00/basics/documentation.md:39
+#: src/getting-started/basics/documentation.md:39
 msgid ""
 "> Avoid over-commenting: Comments should provide additional value and clarity."
 msgstr "> 避免过度注释：注释应提供额外的价值和清晰度。"
 
-#: src/ch00/basics/documentation.md:41
+#: src/getting-started/basics/documentation.md:41
 msgid "<footer id=\"last-change\">Last change: 2023-12-05</footer>"
 msgstr "<footer id=\"last-change\">Last change: 2023-12-05</footer>"
 
-#: src/ch00/interacting/interacting.md:1
+#: src/getting-started/interacting/interacting.md:1
 msgid "# Deploy and interact with contracts"
 msgstr "# 部署合约并与合约交互"
 
-#: src/ch00/interacting/interacting.md:3
+#: src/getting-started/interacting/interacting.md:3
 msgid "In this chapter, we will see how to deploy and interact with contracts."
 msgstr "在本章中，我们将了解如何部署合约并与之交互。"
 
-#: src/ch00/interacting/interacting.md:4
+#: src/getting-started/interacting/interacting.md:4
 msgid "<footer id=\"last-change\">Last change: 2023-10-19</footer>"
 msgstr "<footer id=\"last-change\">Last change: 2023-10-19</footer>"
 
-#: src/ch00/interacting/interfaces-traits.md:1
+#: src/getting-started/interacting/interfaces-traits.md:1
 msgid "# Contract interfaces and Traits generation"
 msgstr "# 合约接口和Trait生成"
 
-#: src/ch00/interacting/interfaces-traits.md:3
+#: src/getting-started/interacting/interfaces-traits.md:3
 msgid ""
 "Contract interfaces define the structure and behavior of a contract, serving "
 "as the contract's public ABI. They list all the function signatures that a "
@@ -2143,7 +2143,7 @@ msgstr ""
 "签名。接口的详细说明可以参考 [Cairo之书](https://book.cairo-lang.org/"
 "ch99-01-02-a-simple-contract.html)。"
 
-#: src/ch00/interacting/interfaces-traits.md:5
+#: src/getting-started/interacting/interfaces-traits.md:5
 msgid ""
 "In cairo, to specify the interface you need to define a trait annotated with "
 "`#[starknet::interface]` and then implement that trait in the contract."
@@ -2151,7 +2151,7 @@ msgstr ""
 "在cairo中，要指定接口，您需要定义一个带有`#[starknet::interface]`注释的trait，"
 "然后在合约中实现该trait。"
 
-#: src/ch00/interacting/interfaces-traits.md:7
+#: src/getting-started/interacting/interfaces-traits.md:7
 msgid ""
 "When a function needs to access the contract state, it must have a `self` "
 "parameter of type `ContractState`. This implies that the corresponding "
@@ -2163,7 +2163,7 @@ msgstr ""
 "着接口trait中的相应函数签名也必须采用`TContractState`类型作为参数。需要注意的"
 "是，合约接口中的每个函数都必须具有此类型为`TContractState`的`self`参数。"
 
-#: src/ch00/interacting/interfaces-traits.md:9
+#: src/getting-started/interacting/interfaces-traits.md:9
 msgid ""
 "You can use the `#[generate_trait]` attribute to implicitly generate the "
 "trait for a specific implementation block. This attribute automatically "
@@ -2179,11 +2179,11 @@ msgstr ""
 "参数。但是，您需要使用`#[abi(per_item)]` 属性注释块，并且每个函数都具有适当的"
 "属性，具体取决于它是外部函数、构造函数还是 l1 处理程序。"
 
-#: src/ch00/interacting/interfaces-traits.md:11
+#: src/getting-started/interacting/interfaces-traits.md:11
 msgid "In summary, there's two ways to handle interfaces:"
 msgstr "总之，有两种方法可以处理接口："
 
-#: src/ch00/interacting/interfaces-traits.md:13
+#: src/getting-started/interacting/interfaces-traits.md:13
 msgid ""
 "- Explicitly, by defining a trait annoted with `#[starknet::interface]`\n"
 "- Implicitly, by using `#[generate_trait]` combined with the "
@@ -2194,11 +2194,11 @@ msgstr ""
 "- 隐式地，通过将`#[generate_trait]`与`#[abi(per_item)]`属性结合使用，并使用适"
 "当的属性注释实现块中的每个函数。"
 
-#: src/ch00/interacting/interfaces-traits.md:16
+#: src/getting-started/interacting/interfaces-traits.md:16
 msgid "## Explicit interface"
 msgstr "## 显式接口"
 
-#: src/ch00/interacting/interfaces-traits.md:18
+#: src/getting-started/interacting/interfaces-traits.md:18
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -2256,7 +2256,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/interacting/interfaces-traits.md:45
+#: src/getting-started/interacting/interfaces-traits.md:45
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
@@ -2266,11 +2266,11 @@ msgstr ""
 "com/NethermindEth/StarknetByExample/blob/main/listings/getting-started/"
 "interfaces_traits/src/explicit.cairo)中尝试这个合约。"
 
-#: src/ch00/interacting/interfaces-traits.md:47
+#: src/getting-started/interacting/interfaces-traits.md:47
 msgid "## Implicit interface"
 msgstr "## 隐式接口"
 
-#: src/ch00/interacting/interfaces-traits.md:49
+#: src/getting-started/interacting/interfaces-traits.md:49
 msgid ""
 "```rust\n"
 "#[starknet::contract]\n"
@@ -2320,7 +2320,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/interacting/interfaces-traits.md:73
+#: src/getting-started/interacting/interfaces-traits.md:73
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
@@ -2330,7 +2330,7 @@ msgstr ""
 "com/NethermindEth/StarknetByExample/blob/main/listings/getting-started/"
 "interfaces_traits/src/implicit.cairo) 中尝试这个合约。"
 
-#: src/ch00/interacting/interfaces-traits.md:75
+#: src/getting-started/interacting/interfaces-traits.md:75
 msgid ""
 "> Note: You can import an implicitly generated contract interface with `use "
 "contract::{GeneratedContractInterface}`. However, the `Dispatcher` will not "
@@ -2339,11 +2339,11 @@ msgstr ""
 "> 注意：您可以使用`use contract::{GeneratedContractInterface}`导入隐式生成的合"
 "约接口。但是，`Dispatcher`不会自动生成。"
 
-#: src/ch00/interacting/interfaces-traits.md:77
+#: src/getting-started/interacting/interfaces-traits.md:77
 msgid "## Internal functions"
 msgstr "## 内部函数"
 
-#: src/ch00/interacting/interfaces-traits.md:79
+#: src/getting-started/interacting/interfaces-traits.md:79
 msgid ""
 "You can also use `#[generate_trait]` for your internal functions.\n"
 "Since this trait is generated in the context of the contract, you can define "
@@ -2353,7 +2353,7 @@ msgstr ""
 "由于此trait是在合约的上下文中生成的，因此您也可以定义纯函数（没有“self”参数的函"
 "数）。"
 
-#: src/ch00/interacting/interfaces-traits.md:82
+#: src/getting-started/interacting/interfaces-traits.md:82
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -2447,7 +2447,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/interacting/interfaces-traits.md:127
+#: src/getting-started/interacting/interfaces-traits.md:127
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
@@ -2458,15 +2458,15 @@ msgstr ""
 "com/NethermindEth/StarknetByExample/blob/main/listings/getting-started/"
 "interfaces_traits/src/implicit_internal.cairo) 中尝试这个合约。"
 
-#: src/ch00/interacting/calling_other_contracts.md:1
+#: src/getting-started/interacting/calling_other_contracts.md:1
 msgid "# Calling other contracts"
 msgstr "# 调用其他合约"
 
-#: src/ch00/interacting/calling_other_contracts.md:3
+#: src/getting-started/interacting/calling_other_contracts.md:3
 msgid "There are two different ways to call other contracts in Cairo."
 msgstr "在Cairo，有两种不同的方式可以调用其他合约。"
 
-#: src/ch00/interacting/calling_other_contracts.md:5
+#: src/getting-started/interacting/calling_other_contracts.md:5
 msgid ""
 "The easiest way to call other contracts is by using the dispatcher of the "
 "contract you want to call.\n"
@@ -2479,7 +2479,7 @@ msgstr ""
 "dispatcher-library-dispatcher-and-system-calls.html#contract-dispatcher)  中阅"
 "读有关 Dispatchers 的更多信息"
 
-#: src/ch00/interacting/calling_other_contracts.md:8
+#: src/getting-started/interacting/calling_other_contracts.md:8
 msgid ""
 "The other way is to use the `starknet::call_contract_syscall` syscall "
 "yourself. However, this method is not recommended."
@@ -2487,7 +2487,7 @@ msgstr ""
 "另一种方法是自己使用`starknet::call_contract_syscall`系统调用。但是，不建议使"
 "用此方法。"
 
-#: src/ch00/interacting/calling_other_contracts.md:10
+#: src/getting-started/interacting/calling_other_contracts.md:10
 msgid ""
 "In order to call other contracts using dispatchers, you will need to define "
 "the called contract's interface as a trait annotated with the `#[starknet::"
@@ -2498,7 +2498,7 @@ msgstr ""
 "interface]` 属性注释的trait，然后将 `IContractDispatcher` 和 "
 "`IContractDispatcherTrait` 项导入到合约中。"
 
-#: src/ch00/interacting/calling_other_contracts.md:12
+#: src/getting-started/interacting/calling_other_contracts.md:12
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -2546,7 +2546,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/interacting/calling_other_contracts.md:34
+#: src/getting-started/interacting/calling_other_contracts.md:34
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x015c3Bb6D0DE26b64FEAF9A8f4655CfADb5c128bF4510398972704ee12775DB1) "
@@ -2561,7 +2561,7 @@ msgstr ""
 "blob/main/listings/getting-started/calling_other_contracts/src/callee.cairo)中"
 "尝试它。"
 
-#: src/ch00/interacting/calling_other_contracts.md:36
+#: src/getting-started/interacting/calling_other_contracts.md:36
 msgid ""
 "```rust\n"
 "use starknet::ContractAddress;\n"
@@ -2633,7 +2633,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/interacting/calling_other_contracts.md:68
+#: src/getting-started/interacting/calling_other_contracts.md:68
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x05fa8aF796343d2f22c53C17149386b67B7AC4aB52D9e308Aa507C185aA44778) "
@@ -2648,18 +2648,18 @@ msgstr ""
 "blob/main/listings/getting-started/calling_other_contracts/src/caller.cairo) "
 "中尝试它。"
 
-#: src/ch00/interacting/factory.md:1
+#: src/getting-started/interacting/factory.md:1
 msgid "# Factory Pattern"
 msgstr "# 工厂模式"
 
-#: src/ch00/interacting/factory.md:3
+#: src/getting-started/interacting/factory.md:3
 msgid ""
 "The factory pattern is a well known pattern in object oriented programming. "
 "It provides an abstraction on how to instantiate a class. "
 msgstr ""
 "工厂模式是面向对象编程中众所周知的模式。它提供了有关如何实例化类的抽象。"
 
-#: src/ch00/interacting/factory.md:5
+#: src/getting-started/interacting/factory.md:5
 msgid ""
 "In the case of smart contracts, we can use this pattern by defining a factory "
 "contract that have the sole responsibility of creating and managing other "
@@ -2668,11 +2668,11 @@ msgstr ""
 "在智能合约里，我们可以通过定义一个工厂合约来使用这种模式，该合约全权负责创建和"
 "管理其他合约。"
 
-#: src/ch00/interacting/factory.md:7
+#: src/getting-started/interacting/factory.md:7
 msgid "## Class hash and contract instance"
 msgstr "## 类哈希(Class hash)和合约实例"
 
-#: src/ch00/interacting/factory.md:9
+#: src/getting-started/interacting/factory.md:9
 msgid ""
 "In Starknet, there's a separation between contract's classes and instances. A "
 "contract class serves as a blueprint, defined by the underling Cairo "
@@ -2684,7 +2684,7 @@ msgstr ""
 "约的入口点、ABI 和 Sierra 程序哈希定义。合约类由类哈希标识。当您想向网络添加一"
 "个新类时，首先需要声明它。"
 
-#: src/ch00/interacting/factory.md:11
+#: src/getting-started/interacting/factory.md:11
 msgid ""
 "When deploying a contract, you need to specify the class hash of the contract "
 "you want to deploy. Each instance of a contract has their own storage "
@@ -2693,23 +2693,23 @@ msgstr ""
 "部署合约时，需要指定要部署的合约的类哈希值。合约的每个实例都有自己的存储，这与"
 "类哈希无关。"
 
-#: src/ch00/interacting/factory.md:13
+#: src/getting-started/interacting/factory.md:13
 msgid ""
 "Using the factory pattern, we can deploy multiple instances of the same "
 "contract class and handle upgrades easily."
 msgstr "使用工厂模式，我们可以部署同一合约类的多个实例，并轻松处理升级。"
 
-#: src/ch00/interacting/factory.md:15
+#: src/getting-started/interacting/factory.md:15
 msgid "## Minimal example"
 msgstr "## 最小范例"
 
-#: src/ch00/interacting/factory.md:17
+#: src/getting-started/interacting/factory.md:17
 msgid ""
 "Here's a minimal example of a factory contract that deploy the "
 "`SimpleCounter` contract:"
 msgstr "下面是部署`SimpleCounter` 合约的工厂合约的最小范例："
 
-#: src/ch00/interacting/factory.md:19
+#: src/getting-started/interacting/factory.md:19
 msgid ""
 "```rust\n"
 "use starknet::{ContractAddress, ClassHash};\n"
@@ -2861,7 +2861,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/interacting/factory.md:86
+#: src/getting-started/interacting/factory.md:86
 msgid ""
 "<!-- This is not ready for \"Open in remix\" because we need multiple files --"
 ">"
@@ -2869,7 +2869,7 @@ msgstr ""
 "<!-- This is not ready for \"Open in remix\" because we need multiple files --"
 ">"
 
-#: src/ch00/interacting/factory.md:88
+#: src/getting-started/interacting/factory.md:88
 msgid ""
 "This factory can be used to deploy multiple instances of the `SimpleCounter` "
 "contract by calling the `create_counter` and `create_counter_at` functions."
@@ -2877,7 +2877,7 @@ msgstr ""
 "此工厂可用于通过调用`SimpleCounter`和`create_counter`函数来部署"
 "`create_counter_at`合约的多个实例。"
 
-#: src/ch00/interacting/factory.md:90
+#: src/getting-started/interacting/factory.md:90
 msgid ""
 "The `SimpleCounter` class hash is stored inside the factory, and can be "
 "upgraded with the `update_counter_class_hash` function which allows to reuse "
@@ -2886,14 +2886,14 @@ msgstr ""
 "`SimpleCounter`类哈希存储在工厂内部，可以使用`update_counter_class_hash` 函数"
 "进行升级，该函数允许在升级`SimpleCounter` 合约时重用相同的工厂合约。"
 
-#: src/ch00/interacting/factory.md:92
+#: src/getting-started/interacting/factory.md:92
 msgid ""
 "This minimal example lacks several useful features such as access control, "
 "tracking of deployed contracts, events, ..."
 msgstr ""
 "这个最小的范例缺少几个有用的功能，例如访问控制、跟踪已部署的合约、事件......"
 
-#: src/ch00/interacting/factory.md:94
+#: src/getting-started/interacting/factory.md:94
 msgid ""
 "<!-- TODO maybe add a more complete example at the end of this section or in "
 "the `Applications examples` chapter -->\n"
@@ -2905,11 +2905,11 @@ msgstr ""
 "\n"
 "<footer id=\"last-change\">Last change: 2023-12-07</footer>"
 
-#: src/ch00/testing/contract-testing.md:1
+#: src/getting-started/testing/contract-testing.md:1
 msgid "# Contract Testing"
 msgstr "# 合约测试"
 
-#: src/ch00/testing/contract-testing.md:3
+#: src/getting-started/testing/contract-testing.md:3
 msgid ""
 "Testing plays a crucial role in software development, especially for smart "
 "contracts. In this section, we'll guide you through the basics of testing a "
@@ -2918,11 +2918,11 @@ msgstr ""
 "测试在软件开发中起着至关重要的作用，尤其是对于智能合约而言。在本节中，我们将通"
 "过Starknet上的`scarb` ，引导你了解智能合约测试的基础知识。"
 
-#: src/ch00/testing/contract-testing.md:5
+#: src/getting-started/testing/contract-testing.md:5
 msgid "Let's start with a simple smart contract as an example:"
 msgstr "让我们以一个简单的智能合约作为例子开始："
 
-#: src/ch00/testing/contract-testing.md:6
+#: src/getting-started/testing/contract-testing.md:6
 msgid ""
 "```rust\n"
 "use starknet::ContractAddress;\n"
@@ -3012,11 +3012,11 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/testing/contract-testing.md:50
+#: src/getting-started/testing/contract-testing.md:50
 msgid "Now, take a look at the tests for this contract:"
 msgstr "现在，让我们看一下这个合约的测试："
 
-#: src/ch00/testing/contract-testing.md:51
+#: src/getting-started/testing/contract-testing.md:51
 msgid ""
 "```rust\n"
 "#[cfg(test)]\n"
@@ -3194,7 +3194,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/testing/contract-testing.md:132
+#: src/getting-started/testing/contract-testing.md:132
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
@@ -3204,7 +3204,7 @@ msgstr ""
 "com/NethermindEth/StarknetByExample/blob/main/listings/getting-started/"
 "testing_how_to/src/lib.cairo)中与这个合约进行互动。"
 
-#: src/ch00/testing/contract-testing.md:134
+#: src/getting-started/testing/contract-testing.md:134
 msgid ""
 "To define our test, we use scarb, which allows us to create a separate module "
 "guarded with `#[cfg(test)]`. This ensures that the test module is only "
@@ -3213,7 +3213,7 @@ msgstr ""
 "为了定义我们的测试，我们使用 scarb，它允许我们创建一个被 `#[cfg(test)]` 保护的"
 "独立模块。这样可以确保测试模块只在使用 `scarb test` 运行测试时被编译。"
 
-#: src/ch00/testing/contract-testing.md:136
+#: src/getting-started/testing/contract-testing.md:136
 msgid ""
 "Each test is defined as a function with the `#[test]` attribute. You can also "
 "check if a test panics using the `#[should_panic]` attribute."
@@ -3221,7 +3221,7 @@ msgstr ""
 "每个测试都被定义为带有 `#[test]` 属性的函数。您还可以使用 `#[should_panic]` 属"
 "性检查测试是否会引发 panic。"
 
-#: src/ch00/testing/contract-testing.md:138
+#: src/getting-started/testing/contract-testing.md:138
 msgid ""
 "As we are in the context of a smart contract, it's essential to set up the "
 "gas limit. You do this by using the `#[available_gas(X)]` attribute to "
@@ -3232,15 +3232,15 @@ msgstr ""
 "`#[available_gas(X)]` 属性来指定测试的 gas 限制。这也是确保合约功能保持在某个"
 "特定 gas 限制下的好方法！"
 
-#: src/ch00/testing/contract-testing.md:140
+#: src/getting-started/testing/contract-testing.md:140
 msgid "> Note: The term \"gas\" here refers to Sierra gas, not L1 gas"
 msgstr "> 注意：这里的 “gas” 一词指的是 Sierra gas，而不是 L1 的 gas"
 
-#: src/ch00/testing/contract-testing.md:142
+#: src/getting-started/testing/contract-testing.md:142
 msgid "Now, let's move on to the testing process:"
 msgstr "现在，让我们进入测试过程："
 
-#: src/ch00/testing/contract-testing.md:143
+#: src/getting-started/testing/contract-testing.md:143
 msgid ""
 "- Use the `deploy` function logic to declare and deploy your contract.\n"
 "- Use `assert` to verify that the contract behaves as expected in the given "
@@ -3249,13 +3249,13 @@ msgstr ""
 "- 使用 `deploy` 函数的逻辑来声明和部署您的合约。\n"
 "- 使用 `assert` 来验证合约在给定的上下文中的行为是否符合预期。"
 
-#: src/ch00/testing/contract-testing.md:146
+#: src/getting-started/testing/contract-testing.md:146
 msgid ""
 "To make testing more convenient, the `testing` module of the corelib provides "
 "some helpful functions:"
 msgstr "为了使测试更加方便，corelib 的 `testing` 模块提供了一些有用的函数："
 
-#: src/ch00/testing/contract-testing.md:147
+#: src/getting-started/testing/contract-testing.md:147
 msgid ""
 "- `set_caller_address(address: ContractAddress)`\n"
 "- `set_contract_address(address: ContractAddress)`\n"
@@ -3271,14 +3271,14 @@ msgstr ""
 "- `set_account_contract_address(address: ContractAddress)`\n"
 "- `set_max_fee(fee: u128)`"
 
-#: src/ch00/testing/contract-testing.md:154
+#: src/getting-started/testing/contract-testing.md:154
 msgid ""
 "You may also need the `info` module from the corelib, which allows you to "
 "access information about the current transaction context:"
 msgstr ""
 "你可能还需要 corelib 中的 `info` 模块，它允许你访问有关当前交易上下文的信息："
 
-#: src/ch00/testing/contract-testing.md:155
+#: src/getting-started/testing/contract-testing.md:155
 msgid ""
 "- `get_caller_address() -> ContractAddress`\n"
 "- `get_contract_address() -> ContractAddress`\n"
@@ -3294,7 +3294,7 @@ msgstr ""
 "- `get_block_timestamp() -> u64`\n"
 "- `get_block_number() -> u64`"
 
-#: src/ch00/testing/contract-testing.md:163
+#: src/getting-started/testing/contract-testing.md:163
 msgid ""
 "You can found the full list of functions in the [Starknet Corelib repo]"
 "(https://github.com/starkware-libs/cairo/tree/main/corelib/src/starknet).\n"
@@ -3307,15 +3307,15 @@ msgstr ""
 "你还可以在 [Cairo book 第8章](https://book.cairo-lang.org/ch08-01-how-to-"
 "write-tests.html) 中找到有关在 cairo 中进行测试的详细说明。"
 
-#: src/ch00/testing/contract-testing.md:166
+#: src/getting-started/testing/contract-testing.md:166
 msgid "## Starknet Foundry"
 msgstr "## Starknet Foundry"
 
-#: src/ch00/testing/contract-testing.md:168
+#: src/getting-started/testing/contract-testing.md:168
 msgid "<!-- TODO update this when Starknet Foundry is more mature. -->"
 msgstr "<!— TODO update this when Starknet Foundry is more mature. —>"
 
-#: src/ch00/testing/contract-testing.md:170
+#: src/getting-started/testing/contract-testing.md:170
 msgid ""
 "Starknet Foundry is a powerful toolkit for developing smart contracts on "
 "Starknet. It offers support for testing Starknet smart contracts on top of "
@@ -3324,7 +3324,7 @@ msgstr ""
 "Starknet Foundry是在Starknet上开发智能合约的强大工具包。它提供了对使用`Forge` "
 "工具在 `scarb` 上测试Starknet智能合约的支持。"
 
-#: src/ch00/testing/contract-testing.md:172
+#: src/getting-started/testing/contract-testing.md:172
 msgid ""
 "Testing with `snforge` is similar to the process we just described but "
 "simplified. Moreover, additional features are on the way, including "
@@ -3335,7 +3335,7 @@ msgstr ""
 "正在开发中，包括作弊码或并行测试执行。我们强烈推荐探索Starknet Foundry并将其纳"
 "入您你的项目中。"
 
-#: src/ch00/testing/contract-testing.md:174
+#: src/getting-started/testing/contract-testing.md:174
 msgid ""
 "For more detailed information about testing contracts with Starknet Foundry, "
 "check out the [Starknet Foundry Book - Testing Contracts](https://foundry-rs."
@@ -3345,25 +3345,25 @@ msgstr ""
 "合约测试](https://foundry-rs.github.io/starknet-foundry/testing/contracts."
 "html)。"
 
-#: src/ch00/cairo_cheatsheet/cairo_cheatsheet.md:1
+#: src/getting-started/cairo_cheatsheet/cairo_cheatsheet.md:1
 msgid "# Cairo Cheatsheet"
 msgstr "# Cairo 备忘单"
 
-#: src/ch00/cairo_cheatsheet/cairo_cheatsheet.md:3
+#: src/getting-started/cairo_cheatsheet/cairo_cheatsheet.md:3
 msgid ""
 "This chapter aims to provide a quick reference for the most common Cairo "
 "constructs."
 msgstr "本章旨在为最常见的Cairo结构提供快速参考。"
 
-#: src/ch00/cairo_cheatsheet/cairo_cheatsheet.md:5
+#: src/getting-started/cairo_cheatsheet/cairo_cheatsheet.md:5
 msgid "<footer id=\"last-change\">Last change: 2023-10-31</footer>"
 msgstr "<footer id=“last-change”>Last change: 2023-10-31</footer>"
 
-#: src/ch00/cairo_cheatsheet/felt.md:1
+#: src/getting-started/cairo_cheatsheet/felt.md:1
 msgid "# Felt252"
 msgstr "# Felt252"
 
-#: src/ch00/cairo_cheatsheet/felt.md:3
+#: src/getting-started/cairo_cheatsheet/felt.md:3
 msgid ""
 "Felt252 is a fundamental data type in Cairo from which all other data types "
 "are derived.\n"
@@ -3373,12 +3373,12 @@ msgstr ""
 "Felt252是Cairo中的基本数据类型，所有其他数据类型都派生自它。\n"
 "Felt252也可以用于存储最多31个字符长度的短字符串表示。"
 
-#: src/ch00/cairo_cheatsheet/felt.md:6 src/ch00/cairo_cheatsheet/arrays.md:20
-#: src/ch02/hash-solidity-compatible.md:5
+#: src/getting-started/cairo_cheatsheet/felt.md:6 src/getting-started/cairo_cheatsheet/arrays.md:20
+#: src/advanced-concepts/hash-solidity-compatible.md:5
 msgid "For example:"
 msgstr "例如："
 
-#: src/ch00/cairo_cheatsheet/felt.md:8
+#: src/getting-started/cairo_cheatsheet/felt.md:8
 msgid ""
 "```rust\n"
 "    let felt: felt252 = 100;\n"
@@ -3394,16 +3394,16 @@ msgstr ""
 "    let felt = felt + felt_as_str;\n"
 "```"
 
-#: src/ch00/cairo_cheatsheet/mapping.md:1
+#: src/getting-started/cairo_cheatsheet/mapping.md:1
 msgid "# Mapping"
 msgstr "# Mapping"
 
-#: src/ch00/cairo_cheatsheet/mapping.md:3
+#: src/getting-started/cairo_cheatsheet/mapping.md:3
 msgid ""
 "The ```LegacyMap``` type can be used to represent a collection of key-value."
 msgstr "`LegacyMap` 类型可以用于表示键值对的集合。"
 
-#: src/ch00/cairo_cheatsheet/mapping.md:5
+#: src/getting-started/cairo_cheatsheet/mapping.md:5
 msgid ""
 "```rust\n"
 "use starknet::ContractAddress;\n"
@@ -3532,11 +3532,11 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/cairo_cheatsheet/arrays.md:1
+#: src/getting-started/cairo_cheatsheet/arrays.md:1
 msgid "# Arrays"
 msgstr "# 数组"
 
-#: src/ch00/cairo_cheatsheet/arrays.md:3
+#: src/getting-started/cairo_cheatsheet/arrays.md:3
 msgid ""
 "Arrays are collections of elements of the same type.\n"
 "The possible operations on arrays are defined with the `array::ArrayTrait` of "
@@ -3545,7 +3545,7 @@ msgstr ""
 "数组是相同类型元素的集合。\n"
 "可以使用 corelib 的 `array::ArrayTrait` 来定义可能的数组操作："
 
-#: src/ch00/cairo_cheatsheet/arrays.md:6
+#: src/getting-started/cairo_cheatsheet/arrays.md:6
 msgid ""
 "```rust\n"
 "trait ArrayTrait<T> {\n"
@@ -3575,7 +3575,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/cairo_cheatsheet/arrays.md:22
+#: src/getting-started/cairo_cheatsheet/arrays.md:22
 msgid ""
 "```rust\n"
 "fn array() -> bool {\n"
@@ -3617,11 +3617,11 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/cairo_cheatsheet/loop.md:1
+#: src/getting-started/cairo_cheatsheet/loop.md:1
 msgid "# Loop"
 msgstr "# 循环"
 
-#: src/ch00/cairo_cheatsheet/loop.md:3
+#: src/getting-started/cairo_cheatsheet/loop.md:3
 msgid ""
 "A loop specifies a block of code that will run repetitively until a halting "
 "condition is encountered.\n"
@@ -3630,7 +3630,7 @@ msgstr ""
 "循环指定一个代码块，该代码块将重复运行，直到遇到停止条件。\n"
 "例如："
 
-#: src/ch00/cairo_cheatsheet/loop.md:6
+#: src/getting-started/cairo_cheatsheet/loop.md:6
 msgid ""
 "```rust\n"
 "    let mut arr = ArrayTrait::new();\n"
@@ -3666,11 +3666,11 @@ msgstr ""
 "    };\n"
 "```"
 
-#: src/ch00/cairo_cheatsheet/match.md:1
+#: src/getting-started/cairo_cheatsheet/match.md:1
 msgid "# Match"
 msgstr "# 分支"
 
-#: src/ch00/cairo_cheatsheet/match.md:3
+#: src/getting-started/cairo_cheatsheet/match.md:3
 msgid ""
 "The `match` expression in Cairo allows us to control the flow of our code "
 "by comparing a `felt252` data type or an enum against various patterns and then "
@@ -3680,7 +3680,7 @@ msgstr ""
 "在 Cairo 中，`match` 表达式允许我们通过将 `felt252` 数据类型或枚举与各种模式进行比"
 "较，然后根据匹配的模式运行特定的代码来控制代码的流程。例如："
 
-#: src/ch00/cairo_cheatsheet/match.md:6
+#: src/getting-started/cairo_cheatsheet/match.md:6
 msgid ""
 "```rust\n"
 "#[derive(Drop, Serde)]\n"
@@ -3788,11 +3788,11 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/cairo_cheatsheet/tuples.md:1
+#: src/getting-started/cairo_cheatsheet/tuples.md:1
 msgid "# Tuples"
 msgstr "# 元组"
 
-#: src/ch00/cairo_cheatsheet/tuples.md:3
+#: src/getting-started/cairo_cheatsheet/tuples.md:3
 msgid ""
 "Tuples is a data type to group a fixed number of items of potentially "
 "different types into a single compound structure. Unlike arrays, tuples have "
@@ -3805,7 +3805,7 @@ msgstr ""
 "就无法更改。\n"
 "例如："
 
-#: src/ch00/cairo_cheatsheet/tuples.md:6
+#: src/getting-started/cairo_cheatsheet/tuples.md:6
 msgid ""
 "```rust\n"
 "    let address = \"0x000\";\n"
@@ -3831,11 +3831,11 @@ msgstr ""
 "    let (address, age, active) = stored_tuple;\n"
 "```"
 
-#: src/ch00/cairo_cheatsheet/struct.md:1
+#: src/getting-started/cairo_cheatsheet/struct.md:1
 msgid "# Struct"
 msgstr "# 结构体"
 
-#: src/ch00/cairo_cheatsheet/struct.md:3
+#: src/getting-started/cairo_cheatsheet/struct.md:3
 msgid ""
 "A struct is a data type similar to tuple. Like tuples they can be used to "
 "hold data of different types.\n"
@@ -3845,7 +3845,7 @@ msgstr ""
 "据。\n"
 "例如："
 
-#: src/ch00/cairo_cheatsheet/struct.md:6
+#: src/getting-started/cairo_cheatsheet/struct.md:6
 msgid ""
 "```rust\n"
 "// With Store, you can store Data's structs in the storage part of "
@@ -3866,11 +3866,11 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/cairo_cheatsheet/type_casting.md:1
+#: src/getting-started/cairo_cheatsheet/type_casting.md:1
 msgid "# Type casting"
 msgstr "# 类型转换"
 
-#: src/ch00/cairo_cheatsheet/type_casting.md:3
+#: src/getting-started/cairo_cheatsheet/type_casting.md:3
 msgid ""
 "Cairo supports the conversion from one scalar types to another by using the "
 "into and try_into methods.\n"
@@ -3884,7 +3884,7 @@ msgstr ""
 "用于从较大的数据类型转换为较小的数据类型，可能会发生溢出的情况。\n"
 "例如："
 
-#: src/ch00/cairo_cheatsheet/type_casting.md:7
+#: src/getting-started/cairo_cheatsheet/type_casting.md:7
 msgid ""
 "```rust\n"
 "    let a_number: u32 = 15;\n"
@@ -4154,11 +4154,11 @@ msgid ""
 "Components](https://book.cairo-lang.org/ch99-01-05-00-components.html)."
 msgstr ""
 
-#: src/ch01/upgradeable_contract.md:1
+#: src/applications/upgradeable_contract.md:1
 msgid "# Upgradeable Contract"
 msgstr "# 可升级合约"
 
-#: src/ch01/upgradeable_contract.md:3
+#: src/applications/upgradeable_contract.md:3
 msgid ""
 "In Starknet, contracts are divided into two parts: contract classes and "
 "contract\n"
@@ -4171,7 +4171,7 @@ msgstr ""
 "这种划分遵循了面向对象编程语言中的类和实例的概念。\n"
 "这样，我们区分了对象的定义和实现。"
 
-#: src/ch01/upgradeable_contract.md:8
+#: src/applications/upgradeable_contract.md:8
 msgid ""
 "A contract class is the definition of a contract: it specifies how the "
 "contract\n"
@@ -4183,7 +4183,7 @@ msgstr ""
 "合约类包含了关键信息，如Cairo字节码、提示信息、入口点名称等，\n"
 "以及一切明确定义合约类语义的内容。"
 
-#: src/ch01/upgradeable_contract.md:13
+#: src/applications/upgradeable_contract.md:13
 msgid ""
 "To identify different contract classes, Starknet assigns a unique identifier "
 "to each\n"
@@ -4197,7 +4197,7 @@ msgstr ""
 "合约实例是对应于特定合约类的已部署合约。\n"
 "可以将其视为在诸如Java等语言中对象的一个实例。"
 
-#: src/ch01/upgradeable_contract.md:18
+#: src/applications/upgradeable_contract.md:18
 msgid ""
 "Each class is identified by its class hash, which is analogous to a class "
 "name in an object-oriented programming language. A contract instance is a "
@@ -4206,7 +4206,7 @@ msgstr ""
 "每个类由其类哈希值标识，类似于面向对象编程语言中的类名。合约实例是对应于某个类"
 "的已部署合约。"
 
-#: src/ch01/upgradeable_contract.md:20
+#: src/applications/upgradeable_contract.md:20
 msgid ""
 "You can upgrade a deployed contract to a newer version by calling the "
 "`replace_class_syscall` function. By using this function, you can update the "
@@ -4218,7 +4218,7 @@ msgstr ""
 "使用这个函数，你可以更新与已部署合约相关联的类哈希，从而有效地升级合约的实现。"
 "然而，这不会修改合约中的存储，因此合约中存储的所有数据将保持不变。"
 
-#: src/ch01/upgradeable_contract.md:22
+#: src/applications/upgradeable_contract.md:22
 msgid ""
 "To illustrate this concept, let's consider an example with two contracts: "
 "`UpgradeableContract_V0`, and `UpgradeableContract_V1`.\n"
@@ -4235,7 +4235,7 @@ msgstr ""
 "函数的交易，将部署合约的类哈希升级为`UpgradeableContract_V1`的类哈希。然后，调"
 "用合约上的`version`方法，查看合约是否已升级到V1版本。"
 
-#: src/ch01/upgradeable_contract.md:25
+#: src/applications/upgradeable_contract.md:25
 msgid ""
 "```rust\n"
 "use starknet::class_hash::ClassHash;\n"
@@ -4327,7 +4327,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch01/upgradeable_contract.md:68
+#: src/applications/upgradeable_contract.md:68
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x005300003ade5d10447d941a42d48b7141074cd8bade2b16520684896a5090ea) "
@@ -4343,7 +4343,7 @@ msgstr ""
 "blob/main/listings/applications/upgradeable_contract/src/"
 "upgradeable_contract_v0.cairo)中尝试它 。"
 
-#: src/ch01/upgradeable_contract.md:71
+#: src/applications/upgradeable_contract.md:71
 msgid ""
 "```rust\n"
 "use starknet::class_hash::ClassHash;\n"
@@ -4435,7 +4435,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch01/upgradeable_contract.md:114
+#: src/applications/upgradeable_contract.md:114
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x017c86152badd1d665b9836571bd6b0a484f028748aa13d9b2d5d9c9192fafc6) "
@@ -4451,11 +4451,11 @@ msgstr ""
 "blob/main/listings/applications/upgradeable_contract/src/"
 "upgradeable_contract_v1.cairo) 中尝试它。"
 
-#: src/ch01/simple_vault.md:1
+#: src/applications/simple_vault.md:1
 msgid "# Simple Defi Vault"
 msgstr "# 简单的去中心化金融保险库"
 
-#: src/ch01/simple_vault.md:3
+#: src/applications/simple_vault.md:3
 msgid ""
 "This is the Cairo adaptation of the [Solidity by example Vault](https://"
 "solidity-by-example.org/defi/vault/).\n"
@@ -4465,7 +4465,7 @@ msgstr ""
 "的Cairo版本\n"
 "以下是它的工作原理："
 
-#: src/ch01/simple_vault.md:6
+#: src/applications/simple_vault.md:6
 msgid ""
 "- When a user deposits a token, the contract calculates the amount of shares "
 "to mint.\n"
@@ -4478,7 +4478,7 @@ msgstr ""
 "- 当用户取款时，合约会销毁他们的份额，计算收益，并提取存款的收益和初始代币金"
 "额。"
 
-#: src/ch01/simple_vault.md:10
+#: src/applications/simple_vault.md:10
 msgid ""
 "```rust\n"
 "use starknet::{ContractAddress};\n"
@@ -4704,7 +4704,7 @@ msgstr ""
 "\n"
 "```"
 
-#: src/ch01/simple_vault.md:113
+#: src/applications/simple_vault.md:113
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
@@ -4714,11 +4714,11 @@ msgstr ""
 "com/NethermindEth/StarknetByExample/blob/main/listings/applications/"
 "simple_vault/src/simple_vault.cairo) 中测试这个合约。"
 
-#: src/ch01/erc20.md:1
+#: src/applications/erc20.md:1
 msgid "# ERC20 Token"
 msgstr "# ERC20 代币"
 
-#: src/ch01/erc20.md:3
+#: src/applications/erc20.md:3
 msgid ""
 "Contracts that follow the [ERC20 Standard](https://eips.ethereum.org/EIPS/"
 "eip-20) are called ERC20 tokens. They are used to represent fungible assets."
@@ -4726,11 +4726,11 @@ msgstr ""
 "遵循 [ERC20 Standard](https://eips.ethereum.org/EIPS/eip-20) 的合约被称为 "
 "ERC20 代币。它们用于代表可互换的资产。"
 
-#: src/ch01/erc20.md:5
+#: src/applications/erc20.md:5
 msgid "To create an ERC20 conctract, it must implement the following interface:"
 msgstr "要创建 ERC20 合约，必须实现以下接口："
 
-#: src/ch01/erc20.md:7
+#: src/applications/erc20.md:7
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -4796,7 +4796,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch01/erc20.md:33
+#: src/applications/erc20.md:33
 msgid ""
 "In Starknet, function names should be written in *snake_case*. This is not "
 "the case in Solidity, where function names are written in *camelCase*.\n"
@@ -4807,11 +4807,11 @@ msgstr ""
 "使用*camelCase*（驼峰命名法）。因此，Starknet的ERC20接口与Solidity的ERC20接口"
 "略有不同。"
 
-#: src/ch01/erc20.md:36
+#: src/applications/erc20.md:36
 msgid "Here's an implementation of the ERC20 interface in Cairo:"
 msgstr "以下是一个在Cairo中实现的ERC20接口的示例："
 
-#: src/ch01/erc20.md:38
+#: src/applications/erc20.md:38
 msgid ""
 "```rust\n"
 "#[starknet::contract]\n"
@@ -5215,7 +5215,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch01/erc20.md:224
+#: src/applications/erc20.md:224
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
@@ -5225,7 +5225,7 @@ msgstr ""
 "com/NethermindEth/StarknetByExample/blob/main/listings/applications/erc20/src/"
 "token.cairo) 中测试这个合约。"
 
-#: src/ch01/erc20.md:226
+#: src/applications/erc20.md:226
 msgid ""
 "There's several other implementations, such as the [Open Zeppelin](https://"
 "docs.openzeppelin.com/contracts-cairo/0.7.0/erc20) or the [Cairo By Example]"
@@ -5235,11 +5235,11 @@ msgstr ""
 "contracts-cairo/0.7.0/erc20) 或者 [Cairo By Example](https://cairo-by-example."
 "com/examples/erc20/) 中的实现。"
 
-#: src/ch01/constant-product-amm.md:1
+#: src/applications/constant-product-amm.md:1
 msgid "# Constant Product AMM"
 msgstr "# 恒定乘积自动做市商"
 
-#: src/ch01/constant-product-amm.md:3
+#: src/applications/constant-product-amm.md:3
 msgid ""
 "This is the Cairo adaptation of the [Solidity by example Constant Product AMM]"
 "(https://solidity-by-example.org/defi/constant-product-amm/)."
@@ -5247,7 +5247,7 @@ msgstr ""
 "这个是 用Cairo 改编的 [Solidity by example Constant Product AMM](https://"
 "solidity-by-example.org/defi/constant-product-amm/)."
 
-#: src/ch01/constant-product-amm.md:5
+#: src/applications/constant-product-amm.md:5
 msgid ""
 "```rust\n"
 "use starknet::ContractAddress;\n"
@@ -5847,7 +5847,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch01/constant-product-amm.md:274
+#: src/applications/constant-product-amm.md:274
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
@@ -5858,11 +5858,11 @@ msgstr ""
 "com/NethermindEth/StarknetByExample/blob/main/listings/applications/"
 "constant_product_amm/src/constant_product_amm.cairo) 中测试这个合约。"
 
-#: src/ch02/write_to_any_slot.md:1
+#: src/advanced-concepts/write_to_any_slot.md:1
 msgid "# Writing to any storage slot"
 msgstr "# 写入任何存储槽"
 
-#: src/ch02/write_to_any_slot.md:3
+#: src/advanced-concepts/write_to_any_slot.md:3
 msgid ""
 "On Starknet, a contract's storage is a map with 2^251 slots, where each slot "
 "is a felt which is initialized to 0.\n"
@@ -5876,7 +5876,7 @@ msgstr ""
 "pedersen(keccak(变量名), keys)`。与存储变量的交互通常使用 `self.var.read()` "
 "和 `self.var.write()` 。"
 
-#: src/ch02/write_to_any_slot.md:6
+#: src/advanced-concepts/write_to_any_slot.md:6
 msgid ""
 "Nevertheless, we can use the `storage_write_syscall` and "
 "`storage_read_syscall` syscalls, to write to and read from any storage slot.\n"
@@ -5890,7 +5890,7 @@ msgstr ""
 "这在写入那些在编译时还未确定的存储变量时非常有用，这也可以确保即使合约升级且存"
 "储变量地址的计算方法改变，这些变量仍然可访问。"
 
-#: src/ch02/write_to_any_slot.md:9
+#: src/advanced-concepts/write_to_any_slot.md:9
 msgid ""
 "In the following example, we use the Poseidon hash function to compute the "
 "address of a storage variable. Poseidon is a ZK-friendly hash function that "
@@ -5902,7 +5902,7 @@ msgstr ""
 "ZK 友好的哈希函数，比 Pedersen 更便宜、更快，是链上计算的绝佳选择。一旦地址被"
 "计算出来，我们就使用存储相关的系统调用与之交互。"
 
-#: src/ch02/write_to_any_slot.md:11
+#: src/advanced-concepts/write_to_any_slot.md:11
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -6004,7 +6004,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch02/write_to_any_slot.md:56
+#: src/advanced-concepts/write_to_any_slot.md:56
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x033943CB781A4E63C9dcE0A1A09eAa3b617AA43CC61637C08c043a67f3fe0087) "
@@ -6019,11 +6019,11 @@ msgstr ""
 "blob/main/listings/advanced-concepts/write_to_any_slot/src/contract.cairo) 中"
 "测试它."
 
-#: src/ch02/storing_arrays.md:1
+#: src/advanced-concepts/storing_arrays.md:1
 msgid "# Storing Arrays"
 msgstr "# 存储数组"
 
-#: src/ch02/storing_arrays.md:3
+#: src/advanced-concepts/storing_arrays.md:3
 msgid ""
 "On Starknet, complex values (e.g., tuples or structs), are stored in a "
 "continuous segment starting from the address of the storage variable. There "
@@ -6040,7 +6040,7 @@ msgstr ""
 "前 Cairo 没有原生支持存储数组，所以你需要为你希望存储的数组类型实现自己的 "
 "`Store` 特性。"
 
-#: src/ch02/storing_arrays.md:5
+#: src/advanced-concepts/storing_arrays.md:5
 msgid ""
 "> Note: While storing arrays in storage is possible, it is not always "
 "recommended, as the read and write operations can get very costly. For "
@@ -6054,7 +6054,7 @@ msgstr ""
 "为 `n` 的数组写入需要进行 `n` 次存储写入。如果你只需要一次访问数组中的一个元"
 "素，建议使用 `LegacyMap` 并在另一个变量中存储数组长度。"
 
-#: src/ch02/storing_arrays.md:7
+#: src/advanced-concepts/storing_arrays.md:7
 msgid ""
 "The following example demonstrates how to write a simple implementation of "
 "the `StorageAccess` trait for the `Array<felt252>` type, allowing us to store "
@@ -6063,7 +6063,7 @@ msgstr ""
 "以下示例展示了如何为 `Array<felt252>` 类型实现一个简单的 `StorageAccess` 特"
 "性，使我们能够存储多达 255 个 `felt252` 元素的数组。"
 
-#: src/ch02/storing_arrays.md:9
+#: src/advanced-concepts/storing_arrays.md:9
 msgid ""
 "```rust\n"
 "impl StoreFelt252Array of Store<Array<felt252>> {\n"
@@ -6209,13 +6209,13 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch02/storing_arrays.md:73
+#: src/advanced-concepts/storing_arrays.md:73
 msgid ""
 "You can then import this implementation in your contract and use it to store "
 "arrays in storage:"
 msgstr "您可以在合约中导入上面的实现方式，并使用它来在存储中存储数组："
 
-#: src/ch02/storing_arrays.md:75
+#: src/advanced-concepts/storing_arrays.md:75
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -6275,7 +6275,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch02/storing_arrays.md:103
+#: src/advanced-concepts/storing_arrays.md:103
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x008F8069a3Fcd7691Db46Dc3b6F9D2C0436f9200E861330957Fd780A3595da86) "
@@ -6289,11 +6289,11 @@ msgstr ""
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
 "blob/main/listings/advanced-concepts/storing_arrays/src/contract.cairo)上测试."
 
-#: src/ch02/struct-mapping-key.md:1
+#: src/advanced-concepts/struct-mapping-key.md:1
 msgid "# Structs as mapping keys"
 msgstr "# 结构体作为映射键"
 
-#: src/ch02/struct-mapping-key.md:3
+#: src/advanced-concepts/struct-mapping-key.md:3
 msgid ""
 "In order to use structs as mapping keys, you can use `#[derive(Hash)]` on the "
 "struct definition. This will automatically generate a hash function for the "
@@ -6302,7 +6302,7 @@ msgstr ""
 "为了使用结构体作为映射键，您可以在结构体定义上使用 `#[derive(Hash)]`。这将为结"
 "构体自动生成一个哈希函数，可以在 `LegacyMap` 中将该结构体作为键来使用。"
 
-#: src/ch02/struct-mapping-key.md:5
+#: src/advanced-concepts/struct-mapping-key.md:5
 msgid ""
 "Consider the following example in which we would like to use an object of\n"
 "type `Pet` as a key in a `LegacyMap`. The `Pet` struct has three fields: "
@@ -6313,7 +6313,7 @@ msgstr ""
 "构体有三个字段：`name` 、`age` 和 `owner`。假设这三个字段的组合能唯一地标识一"
 "只宠物。"
 
-#: src/ch02/struct-mapping-key.md:8
+#: src/advanced-concepts/struct-mapping-key.md:8
 msgid ""
 "```rust\n"
 "#[derive(Copy, Drop, Serde, Hash)]\n"
@@ -6389,7 +6389,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch02/struct-mapping-key.md:45
+#: src/advanced-concepts/struct-mapping-key.md:45
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
@@ -6400,11 +6400,11 @@ msgstr ""
 "com/NethermindEth/StarknetByExample/blob/main/listings/advanced-concepts/"
 "struct_as_mapping_key/src/contract.cairo) 上测试这个合约."
 
-#: src/ch02/hash-solidity-compatible.md:1
+#: src/advanced-concepts/hash-solidity-compatible.md:1
 msgid "# Hash Solidity Compatible"
 msgstr "# 兼容Hash Solidity"
 
-#: src/ch02/hash-solidity-compatible.md:3
+#: src/advanced-concepts/hash-solidity-compatible.md:3
 msgid ""
 "This contract demonstrates Keccak hashing in Cairo to match Solidity's "
 "keccak256. While both use Keccak, their endianness differs: Cairo is little-"
@@ -6417,7 +6417,7 @@ msgstr ""
 "合约通过使用 `keccak_u256s_be_inputs` 以大端序进行哈希处理，并使用 "
 "`u128_byte_reverse` 反转结果的字节来实现兼容。"
 
-#: src/ch02/hash-solidity-compatible.md:7
+#: src/advanced-concepts/hash-solidity-compatible.md:7
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -6497,7 +6497,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch02/hash-solidity-compatible.md:44
+#: src/advanced-concepts/hash-solidity-compatible.md:44
 msgid ""
 "Play with the contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
@@ -6508,19 +6508,19 @@ msgstr ""
 "com/NethermindEth/StarknetByExample/blob/main/listings/advanced-concepts/"
 "hash_solidity_compatible/src/contract.cairo) 上测试这个合约."
 
-#: src/ch02/optimisations/optimisations.md:1
+#: src/advanced-concepts/optimisations/optimisations.md:1
 msgid "# Optimisations "
 msgstr "# 优化"
 
-#: src/ch02/optimisations/optimisations.md:3
+#: src/advanced-concepts/optimisations/optimisations.md:3
 msgid "A collection of optimisation patterns to save gas and steps."
 msgstr "这里列出了一系列优化模式，用以节省Gas和计算步骤。"
 
-#: src/ch02/optimisations/store_using_packing.md:1
+#: src/advanced-concepts/optimisations/store_using_packing.md:1
 msgid "# Storage optimisation "
 msgstr "# 存储优化"
 
-#: src/ch02/optimisations/store_using_packing.md:3
+#: src/advanced-concepts/optimisations/store_using_packing.md:3
 msgid ""
 "A smart contract has a limited amount of **storage slots**. Each slot can "
 "store a single `felt252` value.\n"
@@ -6530,7 +6530,7 @@ msgstr ""
 "智能合约只有有限的**存储槽位**。每个槽位可以存储一个 `felt252` 值。\n"
 "写入一个存储槽位会产生成本，因此我们希望尽可能少地使用存储槽位。"
 
-#: src/ch02/optimisations/store_using_packing.md:6
+#: src/advanced-concepts/optimisations/store_using_packing.md:6
 msgid ""
 "In Cairo, every type is derived from the `felt252` type, which uses 252 bits "
 "to store a value.\n"
@@ -6542,11 +6542,11 @@ msgstr ""
 "这种设计相当简单，但它有一个缺点：它在存储效率方面并不高。例如，如果要存储一"
 "个 `u8` 值，我们需要使用整个槽位，尽管我们只需要 8 位。"
 
-#: src/ch02/optimisations/store_using_packing.md:9
+#: src/advanced-concepts/optimisations/store_using_packing.md:9
 msgid "## Packing"
 msgstr "## 打包"
 
-#: src/ch02/optimisations/store_using_packing.md:11
+#: src/advanced-concepts/optimisations/store_using_packing.md:11
 msgid ""
 "When storing multiple values, we can use a technique called **packing**. "
 "Packing is a technique that allows us to store multiple values in a single "
@@ -6557,7 +6557,7 @@ msgstr ""
 "我们在单个 felt 值中存储多个值的技术。这是通过使用 felt 值的位来存储多个值来实"
 "现的。"
 
-#: src/ch02/optimisations/store_using_packing.md:13
+#: src/advanced-concepts/optimisations/store_using_packing.md:13
 msgid ""
 "For example, if we want to store two `u8` values, we can use the first 8 bits "
 "of the felt value to store the first `u8` value, and the last 8 bits to store "
@@ -6568,14 +6568,14 @@ msgstr ""
 "`u8` 值，而使用后 8 位来存储第二个 `u8` 值。这样，我们就可以在单个 felt 值中存"
 "储两个 `u8` 值。"
 
-#: src/ch02/optimisations/store_using_packing.md:15
+#: src/advanced-concepts/optimisations/store_using_packing.md:15
 msgid ""
 "Cairo provides a built-in store using packing that you can use with the "
 "`StorePacking` trait."
 msgstr ""
 "Cairo 提供了一个内置的打包存储功能，您可以通过 `StorePacking` 特性来使用它。"
 
-#: src/ch02/optimisations/store_using_packing.md:17
+#: src/advanced-concepts/optimisations/store_using_packing.md:17
 msgid ""
 "```rust\n"
 "trait StorePacking<T, PackedT> {\n"
@@ -6591,7 +6591,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch02/optimisations/store_using_packing.md:24
+#: src/advanced-concepts/optimisations/store_using_packing.md:24
 msgid ""
 "This allows to store the type `T` by first packing it into the type `PackedT` "
 "with the `pack` function, and then storing the `PackedT` value with it's "
@@ -6603,14 +6603,14 @@ msgstr ""
 "`Store` 实现来存储 `PackedT` 值。在读取值时，我们首先获取 `PackedT` 值，然后使"
 "用 `unpack` 函数将其解包为类型 `T`。"
 
-#: src/ch02/optimisations/store_using_packing.md:26
+#: src/advanced-concepts/optimisations/store_using_packing.md:26
 msgid ""
 "Here's an example of storing a `Time` struct with two `u8` values using the "
 "`StorePacking` trait:"
 msgstr ""
 "以下是一个使用 `StorePacking` 特性存储包含两个 `u8` 值的 `Time` 结构体的示例："
 
-#: src/ch02/optimisations/store_using_packing.md:28
+#: src/advanced-concepts/optimisations/store_using_packing.md:28
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -6740,7 +6740,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch02/optimisations/store_using_packing.md:88
+#: src/advanced-concepts/optimisations/store_using_packing.md:88
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet-cairo1-compiler&url=https://github.com/NethermindEth/"
@@ -6752,11 +6752,11 @@ msgstr ""
 "listings/advanced-concepts/store_using_packing/src/contract.cairo) 上测试这个"
 "合约."
 
-#: src/ch02/list.md:1
+#: src/advanced-concepts/list.md:1
 msgid "# List"
 msgstr "# 列表"
 
-#: src/ch02/list.md:3
+#: src/advanced-concepts/list.md:3
 msgid ""
 "By default, there is no list type supported in Cairo, but you can use "
 "Alexandria. You can refer to the [Alexandria documentation](https://github."
@@ -6766,15 +6766,15 @@ msgstr ""
 "[Alexandria 文档](https://github.com/keep-starknet-strange/alexandria/tree/"
 "main/src/storage) 获取更多详细信息。"
 
-#: src/ch02/list.md:5
+#: src/advanced-concepts/list.md:5
 msgid "## What is `List`?"
 msgstr "##  `List`是什么？"
 
-#: src/ch02/list.md:7
+#: src/advanced-concepts/list.md:7
 msgid "An ordered sequence of values that can be used in Starknet storage:"
 msgstr "可以在 Starknet 存储中使用的有序值序列："
 
-#: src/ch02/list.md:9
+#: src/advanced-concepts/list.md:9
 msgid ""
 "```rust\n"
 "#[storage]\n"
@@ -6790,11 +6790,11 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch02/list.md:16
+#: src/advanced-concepts/list.md:16
 msgid "### Interface"
 msgstr "### 接口"
 
-#: src/ch02/list.md:18
+#: src/advanced-concepts/list.md:18
 msgid ""
 "```rust\n"
 "trait ListTrait<T> {\n"
@@ -6820,14 +6820,14 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch02/list.md:30
+#: src/advanced-concepts/list.md:30
 msgid ""
 "`List` also implements `IndexView` so you can use the familiar bracket "
 "notation to access its members:"
 msgstr ""
 "`List` 还实现了 `IndexView`，因此您可以使用熟悉的方括号表示法来访问其成员："
 
-#: src/ch02/list.md:32
+#: src/advanced-concepts/list.md:32
 msgid ""
 "```rust\n"
 "let second = self.amounts.read()[1];\n"
@@ -6837,7 +6837,7 @@ msgstr ""
 "let second = self.amounts.read()[1];\n"
 "```"
 
-#: src/ch02/list.md:36
+#: src/advanced-concepts/list.md:36
 msgid ""
 "Note that unlike `get`, using this bracket notation panics when accessing an "
 "out of bounds index."
@@ -6845,11 +6845,11 @@ msgstr ""
 "请注意，与 `get` 不同的是，使用这种方括号表示法在访问越界索引时会引发 panic"
 "（崩溃）。"
 
-#: src/ch02/list.md:38
+#: src/advanced-concepts/list.md:38
 msgid "### Support for custom types"
 msgstr "### 支持自定义类型"
 
-#: src/ch02/list.md:40
+#: src/advanced-concepts/list.md:40
 msgid ""
 "`List` supports most of the corelib types out of the box. If you want to "
 "store a your own custom type in a `List`, it has to implement the `Store` "
@@ -6860,15 +6860,15 @@ msgstr ""
 "该类型必须实现 `Store` 特性。您可以使用 `#[derive(starknet::Store)]` 属性让编"
 "译器自动生成。"
 
-#: src/ch02/list.md:42
+#: src/advanced-concepts/list.md:42
 msgid "### Caveats"
 msgstr "### 注意事项"
 
-#: src/ch02/list.md:44
+#: src/advanced-concepts/list.md:44
 msgid "There are two idiosyncacies you should be aware of when using `List`"
 msgstr "在使用 `List` 时，有两个特点应该注意："
 
-#: src/ch02/list.md:46
+#: src/advanced-concepts/list.md:46
 msgid ""
 "1. The `append` operation costs 2 storage writes - one for the value itself "
 "and another one for updating the List's length\n"
@@ -6881,7 +6881,7 @@ msgstr ""
 "2. 由于编译器的限制，不能使用单个内联语句进行变更操作。例如，`self.amounts."
 "read().append(42);` 是不行的。你必须分两步进行："
 
-#: src/ch02/list.md:49
+#: src/advanced-concepts/list.md:49
 msgid ""
 "```rust\n"
 "let mut amounts = self.amounts.read();\n"
@@ -6893,15 +6893,15 @@ msgstr ""
 "amounts.append(42);\n"
 "```"
 
-#: src/ch02/list.md:54
+#: src/advanced-concepts/list.md:54
 msgid "### Dependencies"
 msgstr "### 依赖关系"
 
-#: src/ch02/list.md:56
+#: src/advanced-concepts/list.md:56
 msgid "Update your project dependencies by in the `Scarb.toml` file:"
 msgstr "在 `Scarb.toml` 里更新您项目的依赖："
 
-#: src/ch02/list.md:57
+#: src/advanced-concepts/list.md:57
 msgid ""
 "```rust\n"
 "[dependencies]\n"
@@ -6917,13 +6917,13 @@ msgstr ""
 "alexandria.git\" }\n"
 "```"
 
-#: src/ch02/list.md:63
+#: src/advanced-concepts/list.md:63
 msgid ""
 "For example, let's use `List` to create a contract that tracks a list of "
 "amounts and tasks:"
 msgstr "例如，我们用 `List` 来创建一个跟踪`amount`和`tasks`的合约："
 
-#: src/ch02/list.md:65
+#: src/advanced-concepts/list.md:65
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
