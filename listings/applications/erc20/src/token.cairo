@@ -249,7 +249,7 @@ mod tests {
     fn test_deploy_when_recipient_is_address_zero() {
         let recipient: ContractAddress = Zero::zero();
 
-        let (contract_address, _) = deploy_syscall(
+        let (_contract_address, _) = deploy_syscall(
             erc20::TEST_CLASS_HASH.try_into().unwrap(),
             recipient.into(),
             array![recipient.into(), token_name, decimals.into(), initial_supply, symbols].span(),
