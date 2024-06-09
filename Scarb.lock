@@ -89,6 +89,14 @@ name = "mappings"
 version = "0.1.0"
 
 [[package]]
+name = "nft_dutch_auction"
+version = "0.1.0"
+dependencies = [
+ "erc20",
+ "snforge_std",
+]
+
+[[package]]
 name = "openzeppelin"
 version = "0.11.0"
 source = "git+https://github.com/OpenZeppelin/cairo-contracts.git?tag=v0.11.0#a83f36b23f1af6e160288962be4a2701c3ecbcda"
