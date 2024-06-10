@@ -83,6 +83,7 @@ pub mod Campaign {
         pub const CLASS_HASH_ZERO: felt252 = 'Class hash cannot be zero';
         pub const FACTORY_ZERO: felt252 = 'Factory address cannot be zero';
         pub const CREATOR_ZERO: felt252 = 'Creator address cannot be zero';
+        pub const TARGET_NOT_REACHED: felt252 = 'Target not reached';
     }
 
     #[constructor]
@@ -119,6 +120,7 @@ pub mod Campaign {
         fn claim(ref self: ContractState) {
             self.ownable._assert_only_owner();
             assert(!self._is_active(), Errors::STILL_ACTIVE);
+            assert(self._is_target_reached(), Errors::TARGET_NOT_REACHED);
 
             let this = get_contract_address();
             let eth_token = self.eth_token.read();
@@ -180,6 +182,10 @@ pub mod Campaign {
     impl CampaignInternalImpl of CampaignInternalTrait {
         fn _is_active(self: @ContractState) -> bool {
             get_block_timestamp() < self.end_time.read()
+        }
+
+        fn _is_target_reached(self: @ContractState) -> bool {
+            self.total_contributions.read() >= self.target.read()
         }
     }
 }
