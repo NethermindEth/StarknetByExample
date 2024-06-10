@@ -6,6 +6,8 @@ pub trait ICampaign<TContractState> {
     fn contribute(ref self: TContractState, amount: u256);
     fn get_description(self: @TContractState) -> ByteArray;
     fn get_title(self: @TContractState) -> ByteArray;
+    fn get_target(self: @TContractState) -> u256;
+    fn get_end_time(self: @TContractState) -> u64;
     fn upgrade(ref self: TContractState, impl_hash: ClassHash);
 }
 
@@ -23,7 +25,7 @@ pub mod Campaign {
     component!(path: ownable_component, storage: ownable, event: OwnableEvent);
 
     #[abi(embed_v0)]
-    impl OwnableImpl = ownable_component::Ownable<ContractState>;
+    pub impl OwnableImpl = ownable_component::Ownable<ContractState>;
     impl OwnableInternalImpl = ownable_component::OwnableInternalImpl<ContractState>;
 
     #[storage]
@@ -153,6 +155,14 @@ pub mod Campaign {
 
         fn get_description(self: @ContractState) -> ByteArray {
             self.description.read()
+        }
+
+        fn get_target(self: @ContractState) -> u256 {
+            self.target.read()
+        }
+
+        fn get_end_time(self: @ContractState) -> u64 {
+            self.end_time.read()
         }
 
         fn upgrade(ref self: ContractState, impl_hash: ClassHash) {

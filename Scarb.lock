@@ -8,6 +8,7 @@ dependencies = [
  "alexandria_storage",
  "components",
  "openzeppelin",
+ "snforge_std",
 ]
 
 [[package]]
