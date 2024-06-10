@@ -4,6 +4,7 @@ use starknet::ClassHash;
 pub trait ICampaign<TContractState> {
     fn claim(ref self: TContractState);
     fn contribute(ref self: TContractState, amount: u256);
+    fn get_description(self: @TContractState) -> ByteArray;
     fn get_title(self: @TContractState) -> ByteArray;
     fn upgrade(ref self: TContractState, impl_hash: ClassHash);
 }
@@ -148,6 +149,10 @@ pub mod Campaign {
 
         fn get_title(self: @ContractState) -> ByteArray {
             self.title.read()
+        }
+
+        fn get_description(self: @ContractState) -> ByteArray {
+            self.description.read()
         }
 
         fn upgrade(ref self: ContractState, impl_hash: ClassHash) {
