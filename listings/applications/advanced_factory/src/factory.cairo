@@ -51,14 +51,14 @@ pub mod CrowdfundingFactory {
     }
 
     #[derive(Drop, starknet::Event)]
-    struct ClassHashUpdated {
-        new_class_hash: ClassHash,
+    pub struct ClassHashUpdated {
+        pub new_class_hash: ClassHash,
     }
 
     #[derive(Drop, starknet::Event)]
-    struct CampaignCreated {
-        caller: ContractAddress,
-        contract_address: ContractAddress
+    pub struct CampaignCreated {
+        pub caller: ContractAddress,
+        pub contract_address: ContractAddress
     }
 
     pub mod Errors {
