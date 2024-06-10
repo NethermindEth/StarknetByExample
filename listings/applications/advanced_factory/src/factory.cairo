@@ -115,10 +115,12 @@ pub mod CrowdfundingFactory {
             // upgrade each campaign with the new class hash
             let campaigns = self.campaigns.read();
             let mut i = 0;
-            while let Option::Some(campaign) = campaigns.get(i).unwrap_syscall() {
-                campaign.upgrade(new_class_hash);
-                i += 1;
-            };
+            while let Option::Some(campaign) = campaigns
+                .get(i)
+                .unwrap_syscall() {
+                    campaign.upgrade(new_class_hash);
+                    i += 1;
+                };
 
             self.emit(Event::ClassHashUpdated(ClassHashUpdated { new_class_hash }));
         }
