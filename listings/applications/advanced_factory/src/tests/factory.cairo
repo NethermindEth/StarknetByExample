@@ -2,7 +2,7 @@ use core::traits::TryInto;
 use core::clone::Clone;
 use core::result::ResultTrait;
 use advanced_factory::factory::{
-    CrowdfundingFactory, ICrowdfundingFactoryDispatcher, ICrowdfundingFactoryDispatcherTrait
+    CampaignFactory, ICampaignFactoryDispatcher, ICampaignFactoryDispatcherTrait
 };
 use starknet::{
     ContractAddress, ClassHash, get_block_timestamp, contract_address_const, get_caller_address
@@ -18,21 +18,21 @@ use components::ownable::{IOwnableDispatcher, IOwnableDispatcherTrait};
 
 
 /// Deploy a campaign factory contract with the provided campaign class hash
-fn deploy_factory_with(campaign_class_hash: ClassHash) -> ICrowdfundingFactoryDispatcher {
+fn deploy_factory_with(campaign_class_hash: ClassHash) -> ICampaignFactoryDispatcher {
     let mut constructor_calldata: @Array::<felt252> = @array![campaign_class_hash.into()];
 
-    let contract = declare("CrowdfundingFactory").unwrap();
+    let contract = declare("CampaignFactory").unwrap();
     let contract_address = contract.precalculate_address(constructor_calldata);
     let factory_owner: ContractAddress = contract_address_const::<'factory_owner'>();
     start_cheat_caller_address(contract_address, factory_owner);
 
     contract.deploy(constructor_calldata).unwrap();
 
-    ICrowdfundingFactoryDispatcher { contract_address }
+    ICampaignFactoryDispatcher { contract_address }
 }
 
 /// Deploy a campaign factory contract with default campaign class hash
-fn deploy_factory() -> ICrowdfundingFactoryDispatcher {
+fn deploy_factory() -> ICampaignFactoryDispatcher {
     let campaign_class_hash = declare("Campaign").unwrap().class_hash;
     deploy_factory_with(campaign_class_hash)
 }
@@ -80,8 +80,8 @@ fn test_deploy_campaign() {
             @array![
                 (
                     factory.contract_address,
-                    CrowdfundingFactory::Event::CampaignCreated(
-                        CrowdfundingFactory::CampaignCreated {
+                    CampaignFactory::Event::CampaignCreated(
+                        CampaignFactory::CampaignCreated {
                             caller: campaign_owner, contract_address: campaign_address
                         }
                     )
@@ -117,8 +117,8 @@ fn test_update_campaign_class_hash() {
             @array![
                 (
                     factory.contract_address,
-                    CrowdfundingFactory::Event::ClassHashUpdated(
-                        CrowdfundingFactory::ClassHashUpdated { new_class_hash }
+                    CampaignFactory::Event::ClassHashUpdated(
+                        CampaignFactory::ClassHashUpdated { new_class_hash }
                     )
                 )
             ]

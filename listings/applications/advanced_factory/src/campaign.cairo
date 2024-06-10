@@ -1,3 +1,4 @@
+// ANCHOR: contract
 use starknet::ClassHash;
 
 #[starknet::interface]
@@ -175,3 +176,5 @@ pub mod Campaign {
         }
     }
 }
+// ANCHOR_END: contract
+

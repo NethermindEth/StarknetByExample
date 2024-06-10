@@ -2,7 +2,7 @@
 pub use starknet::{ContractAddress, ClassHash};
 
 #[starknet::interface]
-pub trait ICrowdfundingFactory<TContractState> {
+pub trait ICampaignFactory<TContractState> {
     fn create_campaign(
         ref self: TContractState,
         title: ByteArray,
@@ -15,7 +15,7 @@ pub trait ICrowdfundingFactory<TContractState> {
 }
 
 #[starknet::contract]
-pub mod CrowdfundingFactory {
+pub mod CampaignFactory {
     use core::num::traits::zero::Zero;
     use starknet::{
         ContractAddress, ClassHash, SyscallResultTrait, syscalls::deploy_syscall,
@@ -74,7 +74,7 @@ pub mod CrowdfundingFactory {
 
 
     #[abi(embed_v0)]
-    impl CrowdfundingFactory of super::ICrowdfundingFactory<ContractState> {
+    impl CampaignFactory of super::ICampaignFactory<ContractState> {
         // ANCHOR: deploy
         fn create_campaign(
             ref self: ContractState,
@@ -132,5 +132,4 @@ pub mod CrowdfundingFactory {
     }
 }
 // ANCHOR_END: contract
-
 
