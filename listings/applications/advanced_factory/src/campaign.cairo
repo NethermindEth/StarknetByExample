@@ -10,6 +10,7 @@ pub trait ICampaign<TContractState> {
     fn get_target(self: @TContractState) -> u256;
     fn get_end_time(self: @TContractState) -> u64;
     fn upgrade(ref self: TContractState, impl_hash: ClassHash);
+    fn withdraw(ref self: TContractState);
 }
 
 #[starknet::contract]
@@ -51,6 +52,7 @@ pub mod Campaign {
         ContributionMade: ContributionMade,
         Claimed: Claimed,
         Upgraded: Upgraded,
+        Withdrawn: Withdrawn,
     }
 
     #[derive(Drop, starknet::Event)]
@@ -70,6 +72,13 @@ pub mod Campaign {
         pub implementation: ClassHash
     }
 
+    #[derive(Drop, starknet::Event)]
+    pub struct Withdrawn {
+        #[key]
+        pub contributor: ContractAddress,
+        pub amount: u256,
+    }
+
     pub mod Errors {
         pub const NOT_FACTORY: felt252 = 'Caller not factory';
         pub const ENDED: felt252 = 'Campaign already ended';
@@ -84,6 +93,8 @@ pub mod Campaign {
         pub const FACTORY_ZERO: felt252 = 'Factory address cannot be zero';
         pub const CREATOR_ZERO: felt252 = 'Creator address cannot be zero';
         pub const TARGET_NOT_REACHED: felt252 = 'Target not reached';
+        pub const TARGET_ALREADY_REACHED: felt252 = 'Target already reached';
+        pub const NOTHING_TO_WITHDRAW: felt252 = 'Nothing to withdraw';
     }
 
     #[constructor]
@@ -175,6 +186,23 @@ pub mod Campaign {
             starknet::syscalls::replace_class_syscall(impl_hash).unwrap_syscall();
 
             self.emit(Event::Upgraded(Upgraded { implementation: impl_hash }));
+        }
+
+        fn withdraw(ref self: ContractState) {
+            assert(!self._is_active(), Errors::STILL_ACTIVE);
+            assert(!self._is_target_reached(), Errors::TARGET_ALREADY_REACHED);
+            assert(self.contributions.read(get_caller_address()) != 0, Errors::NOTHING_TO_WITHDRAW);
+
+            let caller = get_caller_address();
+            let amount = self.contributions.read(caller);
+            self.contributions.write(caller, 0);
+
+            // no need to set total_contributions to 0, as the campaign has ended
+            // and the field can be used as a testament to how much was raised
+
+            self.eth_token.read().transfer(caller, amount);
+
+            self.emit(Event::Withdrawn(Withdrawn { contributor: caller, amount }));
         }
     }
 
