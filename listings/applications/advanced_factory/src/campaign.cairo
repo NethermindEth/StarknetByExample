@@ -118,7 +118,7 @@ pub mod Campaign {
     impl Campaign of super::ICampaign<ContractState> {
         fn claim(ref self: ContractState) {
             self.ownable._assert_only_owner();
-            self._assert_ended();
+            assert(!self._is_active(), Errors::STILL_ACTIVE);
 
             let this = get_contract_address();
             let eth_token = self.eth_token.read();
@@ -136,7 +136,7 @@ pub mod Campaign {
         }
 
         fn contribute(ref self: ContractState, amount: u256) {
-            self._assert_active();
+            assert(self._is_active(), Errors::ENDED);
             assert(amount > 0, Errors::ZERO_DONATION);
 
             let contributor = get_caller_address();
@@ -178,12 +178,8 @@ pub mod Campaign {
 
     #[generate_trait]
     impl CampaignInternalImpl of CampaignInternalTrait {
-        fn _assert_ended(self: @ContractState) {
-            assert(get_block_timestamp() >= self.end_time.read(), Errors::STILL_ACTIVE);
-        }
-
-        fn _assert_active(self: @ContractState) {
-            assert(get_block_timestamp() < self.end_time.read(), Errors::ENDED);
+        fn _is_active(self: @ContractState) -> bool {
+            get_block_timestamp() < self.end_time.read()
         }
     }
 }
