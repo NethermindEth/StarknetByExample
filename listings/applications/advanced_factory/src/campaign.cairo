@@ -72,7 +72,7 @@ pub mod Campaign {
 
     pub mod Errors {
         pub const NOT_FACTORY: felt252 = 'Caller not factory';
-        pub const INACTIVE: felt252 = 'Campaign already ended';
+        pub const ENDED: felt252 = 'Campaign already ended';
         pub const STILL_ACTIVE: felt252 = 'Campaign not ended';
         pub const ZERO_DONATION: felt252 = 'Donation must be > 0';
         pub const ZERO_TARGET: felt252 = 'Target must be > 0';
@@ -118,7 +118,7 @@ pub mod Campaign {
     impl Campaign of super::ICampaign<ContractState> {
         fn claim(ref self: ContractState) {
             self.ownable._assert_only_owner();
-            assert(get_block_timestamp() >= self.end_time.read(), Errors::STILL_ACTIVE);
+            self._assert_ended();
 
             let this = get_contract_address();
             let eth_token = self.eth_token.read();
@@ -136,7 +136,7 @@ pub mod Campaign {
         }
 
         fn contribute(ref self: ContractState, amount: u256) {
-            assert(get_block_timestamp() < self.end_time.read(), Errors::INACTIVE);
+            self._assert_active();
             assert(amount > 0, Errors::ZERO_DONATION);
 
             let contributor = get_caller_address();
@@ -175,6 +175,18 @@ pub mod Campaign {
             self.emit(Event::Upgraded(Upgraded { implementation: impl_hash }));
         }
     }
+
+    #[generate_trait]
+    impl CampaignInternalImpl of CampaignInternalTrait {
+        fn _assert_ended(self: @ContractState) {
+            assert(get_block_timestamp() >= self.end_time.read(), Errors::STILL_ACTIVE);
+        }
+
+        fn _assert_active(self: @ContractState) {
+            assert(get_block_timestamp() < self.end_time.read(), Errors::ENDED);
+        }
+    }
 }
 // ANCHOR_END: contract
+
 
