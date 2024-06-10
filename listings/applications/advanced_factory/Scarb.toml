@@ -5,13 +5,9 @@ edition = "2023_11"
 
 [dependencies]
 starknet.workspace = true
-# Starknet Foundry:
-snforge_std.workspace = true
-# OpenZeppelin:
 openzeppelin.workspace = true
-# StarknetByExample Components
 components.workspace = true
-alexandria_storage = { git = "https://github.com/keep-starknet-strange/alexandria.git" }
+alexandria_storage.workspace = true
 
 [scripts]
 test.workspace = true
