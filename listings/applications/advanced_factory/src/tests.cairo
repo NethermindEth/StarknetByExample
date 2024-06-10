@@ -138,22 +138,4 @@ fn test_update_campaign_class_hash() {
             ]
         );
 }
-// #[test]
-// fn test_deploy_multiple() {
-//     let init_value = 10;
-//     let argument_value = 20;
-
-//     let campaign_class_hash = declare("Campaign").unwrap().class_hash;
-//     let factory = deploy_factory(campaign_class_hash, init_value);
-
-//     let mut campaign_address = factory.create_campaign();
-//     let campaign_1 = ICampaignDispatcher { contract_address: campaign_address };
-
-//     campaign_address = factory.create_campaign_at(argument_value);
-//     let campaign_2 = ICampaignDispatcher { contract_address: campaign_address };
-
-//     assert_eq!(campaign_1.get_current_count(), init_value);
-//     assert_eq!(campaign_2.get_current_count(), argument_value);
-// }
-
 
