@@ -2,8 +2,9 @@ use starknet::ClassHash;
 
 #[starknet::interface]
 pub trait ICampaign<TContractState> {
-    fn contribute(ref self: TContractState, amount: u256);
     fn claim(ref self: TContractState);
+    fn contribute(ref self: TContractState, amount: u256);
+    fn get_title(self: @TContractState) -> ByteArray;
     fn upgrade(ref self: TContractState, impl_hash: ClassHash);
 }
 
@@ -111,21 +112,6 @@ pub mod Campaign {
 
     #[abi(embed_v0)]
     impl Campaign of super::ICampaign<ContractState> {
-        fn contribute(ref self: ContractState, amount: u256) {
-            assert(get_block_timestamp() < self.end_time.read(), Errors::INACTIVE);
-            assert(amount > 0, Errors::ZERO_DONATION);
-
-            let contributor = get_caller_address();
-            let this = get_contract_address();
-            let success = self.eth_token.read().transfer_from(contributor, this, amount.into());
-            assert(success, Errors::TRANSFER_FAILED);
-
-            self.contributions.write(contributor, self.contributions.read(contributor) + amount);
-            self.total_contributions.write(self.total_contributions.read() + amount);
-
-            self.emit(Event::ContributionMade(ContributionMade { contributor, amount }));
-        }
-
         fn claim(ref self: ContractState) {
             self.ownable._assert_only_owner();
             assert(get_block_timestamp() >= self.end_time.read(), Errors::STILL_ACTIVE);
@@ -143,6 +129,25 @@ pub mod Campaign {
             assert(success, Errors::TRANSFER_FAILED);
 
             self.emit(Event::Claimed(Claimed { amount }));
+        }
+
+        fn contribute(ref self: ContractState, amount: u256) {
+            assert(get_block_timestamp() < self.end_time.read(), Errors::INACTIVE);
+            assert(amount > 0, Errors::ZERO_DONATION);
+
+            let contributor = get_caller_address();
+            let this = get_contract_address();
+            let success = self.eth_token.read().transfer_from(contributor, this, amount.into());
+            assert(success, Errors::TRANSFER_FAILED);
+
+            self.contributions.write(contributor, self.contributions.read(contributor) + amount);
+            self.total_contributions.write(self.total_contributions.read() + amount);
+
+            self.emit(Event::ContributionMade(ContributionMade { contributor, amount }));
+        }
+
+        fn get_title(self: @ContractState) -> ByteArray {
+            self.title.read()
         }
 
         fn upgrade(ref self: ContractState, impl_hash: ClassHash) {

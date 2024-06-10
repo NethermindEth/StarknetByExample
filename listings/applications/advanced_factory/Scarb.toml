@@ -11,7 +11,7 @@ snforge_std.workspace = true
 openzeppelin.workspace = true
 # StarknetByExample Components
 components.workspace = true
-alexandria_math = { git = "https://github.com/keep-starknet-strange/alexandria.git" }
+alexandria_storage = { git = "https://github.com/keep-starknet-strange/alexandria.git" }
 
 [scripts]
 test.workspace = true

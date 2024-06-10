@@ -1,48 +1,51 @@
-// use core::result::ResultTrait;
-// use advanced_factory::{CounterFactory, ICounterFactoryDispatcher,
-// ICounterFactoryDispatcherTrait};
-// use starknet::{ContractAddress, ClassHash,};
-// use snforge_std::{declare, ContractClass, ContractClassTrait};
+use core::clone::Clone;
+use core::result::ResultTrait;
+use advanced_factory::factory::{
+    CrowdfundingFactory, ICrowdfundingFactoryDispatcher, ICrowdfundingFactoryDispatcherTrait
+};
+use starknet::{ContractAddress, ClassHash,};
+use snforge_std::{declare, ContractClass, ContractClassTrait};
 
-// // Define a target contract to deploy
-// use advanced_factory::simple_counter::{ISimpleCounterDispatcher, ISimpleCounterDispatcherTrait};
+// Define a target contract to deploy
+use advanced_factory::campaign::{ICampaignDispatcher, ICampaignDispatcherTrait};
 
-// /// Deploy a counter factory contract
-// fn deploy_factory(counter_class_hash: ClassHash, init_value: u128) -> ICounterFactoryDispatcher {
-//     let mut constructor_calldata: @Array::<felt252> = @array![
-//         init_value.into(), counter_class_hash.into()
-//     ];
+/// Deploy a campaign factory contract
+fn deploy_factory(campaign_class_hash: ClassHash) -> ICrowdfundingFactoryDispatcher {
+    let mut constructor_calldata: @Array::<felt252> = @array![campaign_class_hash.into()];
 
-//     let contract = declare("CounterFactory").unwrap();
-//     let (contract_address, _) = contract.deploy(constructor_calldata).unwrap();
+    let contract = declare("CrowdfundingFactory").unwrap();
+    let (contract_address, _) = contract.deploy(constructor_calldata).unwrap();
 
-//     ICounterFactoryDispatcher { contract_address }
-// }
+    ICrowdfundingFactoryDispatcher { contract_address }
+}
+
+#[test]
+fn test_deploy_campaign_constructor() {
+    let campaign_class_hash = declare("Campaign").unwrap().class_hash;
+    let factory = deploy_factory(campaign_class_hash);
+
+    let title: ByteArray = "New campaign";
+    let description: ByteArray = "Some description";
+    let target: u256 = 10000;
+    let duration: u64 = 60;
+
+    let campaign_address = factory.create_campaign(title, description, target, duration);
+    let campaign = ICampaignDispatcher { contract_address: campaign_address };
+
+    assert_eq!(campaign.get_title(), title);
+}
 // #[test]
-// fn test_deploy_counter_constructor() {
-//     let init_value = 10;
-
-//     let counter_class_hash = declare("SimpleCounter").unwrap().class_hash;
-//     let factory = deploy_factory(counter_class_hash, init_value);
-
-//     let counter_address = factory.create_counter();
-//     let counter = ISimpleCounterDispatcher { contract_address: counter_address };
-
-//     assert_eq!(counter.get_current_count(), init_value);
-// }
-
-// #[test]
-// fn test_deploy_counter_argument() {
+// fn test_deploy_campaign_argument() {
 //     let init_value = 10;
 //     let argument_value = 20;
 
-//     let counter_class_hash = declare("SimpleCounter").unwrap().class_hash;
-//     let factory = deploy_factory(counter_class_hash, init_value);
+//     let campaign_class_hash = declare("Campaign").unwrap().class_hash;
+//     let factory = deploy_factory(campaign_class_hash, init_value);
 
-//     let counter_address = factory.create_counter_at(argument_value);
-//     let counter = ISimpleCounterDispatcher { contract_address: counter_address };
+//     let campaign_address = factory.create_campaign_at(argument_value);
+//     let campaign = ICampaignDispatcher { contract_address: campaign_address };
 
-//     assert_eq!(counter.get_current_count(), argument_value);
+//     assert_eq!(campaign.get_current_count(), argument_value);
 // }
 
 // #[test]
@@ -50,17 +53,17 @@
 //     let init_value = 10;
 //     let argument_value = 20;
 
-//     let counter_class_hash = declare("SimpleCounter").unwrap().class_hash;
-//     let factory = deploy_factory(counter_class_hash, init_value);
+//     let campaign_class_hash = declare("Campaign").unwrap().class_hash;
+//     let factory = deploy_factory(campaign_class_hash, init_value);
 
-//     let mut counter_address = factory.create_counter();
-//     let counter_1 = ISimpleCounterDispatcher { contract_address: counter_address };
+//     let mut campaign_address = factory.create_campaign();
+//     let campaign_1 = ICampaignDispatcher { contract_address: campaign_address };
 
-//     counter_address = factory.create_counter_at(argument_value);
-//     let counter_2 = ISimpleCounterDispatcher { contract_address: counter_address };
+//     campaign_address = factory.create_campaign_at(argument_value);
+//     let campaign_2 = ICampaignDispatcher { contract_address: campaign_address };
 
-//     assert_eq!(counter_1.get_current_count(), init_value);
-//     assert_eq!(counter_2.get_current_count(), argument_value);
+//     assert_eq!(campaign_1.get_current_count(), init_value);
+//     assert_eq!(campaign_2.get_current_count(), argument_value);
 // }
 
 
