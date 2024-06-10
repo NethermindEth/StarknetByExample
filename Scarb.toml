@@ -16,6 +16,7 @@ starknet = ">=2.6.4"
 openzeppelin = { git = "https://github.com/OpenZeppelin/cairo-contracts.git", tag="v0.14.0" }
 components = { path = "listings/applications/components" }
 snforge_std = { git = "https://github.com/foundry-rs/starknet-foundry.git", tag = "v0.25.0" }
+alexandria_storage = { git = "https://github.com/keep-starknet-strange/alexandria.git", rev="800f5ad" }
 
 [workspace.package]
 description = "Collection of examples of how to use the Cairo programming language to create smart contracts on Starknet."
