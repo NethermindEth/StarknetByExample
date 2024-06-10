@@ -3,27 +3,51 @@ use core::result::ResultTrait;
 use advanced_factory::factory::{
     ICrowdfundingFactoryDispatcher, ICrowdfundingFactoryDispatcherTrait
 };
-use starknet::{ContractAddress, ClassHash, get_block_timestamp, contract_address_const};
+use starknet::{
+    ContractAddress, ClassHash, get_block_timestamp, contract_address_const, get_caller_address
+};
 use snforge_std::{declare, ContractClass, ContractClassTrait, start_cheat_caller_address};
 
 // Define a target contract to deploy
 use advanced_factory::campaign::{ICampaignDispatcher, ICampaignDispatcherTrait};
 use components::ownable::{IOwnableDispatcher, IOwnableDispatcherTrait};
 
-/// Deploy a campaign factory contract
-fn deploy_factory(campaign_class_hash: ClassHash) -> ICrowdfundingFactoryDispatcher {
+
+/// Deploy a campaign factory contract with the provided campaign class hash
+fn deploy_factory_with(campaign_class_hash: ClassHash) -> ICrowdfundingFactoryDispatcher {
     let mut constructor_calldata: @Array::<felt252> = @array![campaign_class_hash.into()];
 
     let contract = declare("CrowdfundingFactory").unwrap();
-    let (contract_address, _) = contract.deploy(constructor_calldata).unwrap();
+    let contract_address = contract.precalculate_address(constructor_calldata);
+    let factory_owner: ContractAddress = contract_address_const::<'factory_owner'>();
+    start_cheat_caller_address(contract_address, factory_owner);
+
+    contract.deploy(constructor_calldata).unwrap();
 
     ICrowdfundingFactoryDispatcher { contract_address }
 }
 
-#[test]
-fn test_deploy_campaign_constructor() {
+/// Deploy a campaign factory contract with default campaign class hash
+fn deploy_factory() -> ICrowdfundingFactoryDispatcher {
     let campaign_class_hash = declare("Campaign").unwrap().class_hash;
-    let factory = deploy_factory(campaign_class_hash);
+    deploy_factory_with(campaign_class_hash)
+}
+
+#[test]
+fn test_deploy_factory() {
+    let campaign_class_hash = declare("Campaign").unwrap().class_hash;
+    let factory = deploy_factory_with(campaign_class_hash);
+
+    assert_eq!(factory.get_campaign_class_hash(), campaign_class_hash);
+
+    let factory_owner: ContractAddress = contract_address_const::<'factory_owner'>();
+    let factory_ownable = IOwnableDispatcher { contract_address: factory.contract_address };
+    assert_eq!(factory_ownable.owner(), factory_owner);
+}
+
+#[test]
+fn test_deploy_campaign() {
+    let factory = deploy_factory();
 
     let campaign_owner: ContractAddress = contract_address_const::<'campaign_owner'>();
     start_cheat_caller_address(factory.contract_address, campaign_owner);

@@ -10,6 +10,7 @@ pub trait ICrowdfundingFactory<TContractState> {
         target: u256,
         duration: u64
     ) -> ContractAddress;
+    fn get_campaign_class_hash(self: @TContractState) -> ClassHash;
     fn update_campaign_class_hash(ref self: TContractState, new_class_hash: ClassHash);
 }
 
@@ -105,6 +106,10 @@ pub mod CrowdfundingFactory {
             contract_address
         }
         // ANCHOR_END: deploy
+
+        fn get_campaign_class_hash(self: @ContractState) -> ClassHash {
+            self.campaign_class_hash.read()
+        }
 
         fn update_campaign_class_hash(ref self: ContractState, new_class_hash: ClassHash) {
             self.ownable._assert_only_owner();
