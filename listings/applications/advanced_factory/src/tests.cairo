@@ -97,6 +97,9 @@ fn test_update_campaign_class_hash() {
     let campaign_address_1 = factory.create_campaign("title 1", "description 1", 10000, 60);
     let campaign_address_2 = factory.create_campaign("title 2", "description 2", 20000, 120);
 
+    assert_eq!(factory.get_campaign_class_hash(), get_class_hash(campaign_address_1));
+    assert_eq!(factory.get_campaign_class_hash(), get_class_hash(campaign_address_2));
+
     let mut spy_factory = spy_events(SpyOn::One(factory.contract_address));
     let mut spy_campaigns = spy_events(
         SpyOn::Multiple(array![campaign_address_1, campaign_address_2])
