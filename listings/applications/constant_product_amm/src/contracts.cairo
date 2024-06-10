@@ -147,7 +147,7 @@ pub mod ConstantProductAmm {
                 assert(reserve0 * amount1 == reserve1 * amount0, 'x / y != dx / dy');
             }
 
-            // How much shares to mint?
+            // How many shares to mint?
             //
             // f(x, y) = value of liquidity
             // We will define f(x, y) = sqrt(xy)
@@ -178,11 +178,11 @@ pub mod ConstantProductAmm {
             //
             // Multiply by sqrt(x) / sqrt(x)
             // Equation 2 = (sqrt(x^2y + 2xydx + dx^2 * y) - sqrt(x^2y)) / sqrt(x^2y)
-            //            = (sqrt(y)(sqrt(x^2 + 2xdx + dx^2) - sqrt(x^2)) / (sqrt(y)sqrt(x^2))
+            //            = (sqrt(y)(sqrt(x^2 + 2xdx + dx^2) - sqrt(x^2))) / (sqrt(y)sqrt(x^2))
             // sqrt(y) on top and bottom cancels out
             //
             // --- Equation 3 ---
-            // Equation 2 = (sqrt(x^2 + 2xdx + dx^2) - sqrt(x^2)) / (sqrt(x^2)
+            // Equation 2 = (sqrt(x^2 + 2xdx + dx^2) - sqrt(x^2)) / sqrt(x^2)
             // = (sqrt((x + dx)^2) - sqrt(x^2)) / sqrt(x^2)
             // = ((x + dx) - x) / x
             // = dx / x

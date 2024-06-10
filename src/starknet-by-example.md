@@ -2,7 +2,7 @@
 
 Starknet By Example is a collection of examples of how to use the Cairo programming language to create smart contracts on Starknet.
 
-Starknet is a permissionless Validity-Rollup that supports general computation. It is currently used as an Ethereum layer-2. Starknet use the STARK cryptographic proof system to ensure high safety and scalability.
+Starknet is a permissionless Validity-Rollup that supports general computation. It is currently used as an Ethereum layer-2. Starknet uses the STARK cryptographic proof system to ensure high safety and scalability.
 
 Starknet smart contracts are written in the Cairo language. Cairo is a Turing-complete programming language designed to write provable programs, abstracting the zk-STARK proof system away from the programmer.
 
@@ -20,9 +20,9 @@ The later chapters will cover more advanced topics and show you how to write mor
 
 Each chapter is a standalone example that demonstrates a specific feature or common use case of smart contracts on Starknet. If you are new to Starknet, it is recommended to read the chapters in order.
 
-Most examples contains interfaces and tests that are hidden by default. You can hover over the code blocks and click on the "Show hidden lines" (eyes icon) to see the hidden code.
+Most examples contain interfaces and tests that are hidden by default. You can hover over the code blocks and click on the "Show hidden lines" (eyes icon) to see the hidden code.
 
-You can run each examples online by using the [Starknet Remix Plugin](https://remix.ethereum.org/?#activate=Starknet).
+You can run each example online by using the [Starknet Remix Plugin](https://remix.ethereum.org/?#activate=Starknet).
 
 ## Further reading
 
@@ -33,7 +33,8 @@ For more resources, check [Awesome Starknet](https://github.com/keep-starknet-st
 
 ## Versions
 
-The current version of this book use:
+The current version this book uses:
+
 ```
 cairo 2.6.3
 edition = '2023_11'

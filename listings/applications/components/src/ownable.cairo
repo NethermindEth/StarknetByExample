@@ -7,7 +7,7 @@ pub trait IOwnable<TContractState> {
     fn renounce_ownership(ref self: TContractState);
 }
 
-mod Errors {
+pub mod Errors {
     pub const UNAUTHORIZED: felt252 = 'Not owner';
     pub const ZERO_ADDRESS_OWNER: felt252 = 'Owner cannot be zero';
     pub const ZERO_ADDRESS_CALLER: felt252 = 'Caller cannot be zero';
@@ -43,7 +43,7 @@ pub mod ownable_component {
     }
 
     #[embeddable_as(Ownable)]
-    impl OwnableImpl<
+    pub impl OwnableImpl<
         TContractState, +HasComponent<TContractState>
     > of super::IOwnable<ComponentState<TContractState>> {
         fn owner(self: @ComponentState<TContractState>) -> ContractAddress {
@@ -67,17 +67,17 @@ pub mod ownable_component {
     > of OwnableInternalTrait<TContractState> {
         fn _assert_only_owner(self: @ComponentState<TContractState>) {
             let caller = get_caller_address();
-            assert(!caller.is_zero(), Errors::ZERO_ADDRESS_CALLER);
+            assert(caller.is_non_zero(), Errors::ZERO_ADDRESS_CALLER);
             assert(caller == self.ownable_owner.read(), Errors::UNAUTHORIZED);
         }
 
         fn _init(ref self: ComponentState<TContractState>, owner: ContractAddress) {
-            assert(!owner.is_zero(), Errors::ZERO_ADDRESS_OWNER);
+            assert(owner.is_non_zero(), Errors::ZERO_ADDRESS_OWNER);
             self.ownable_owner.write(owner);
         }
 
         fn _transfer_ownership(ref self: ComponentState<TContractState>, new: ContractAddress) {
-            assert(!new.is_zero(), Errors::ZERO_ADDRESS_OWNER);
+            assert(new.is_non_zero(), Errors::ZERO_ADDRESS_OWNER);
             let previous = self.ownable_owner.read();
             self.ownable_owner.write(new);
             self

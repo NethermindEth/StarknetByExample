@@ -89,6 +89,14 @@ name = "mappings"
 version = "0.1.0"
 
 [[package]]
+name = "nft_dutch_auction"
+version = "0.1.0"
+dependencies = [
+ "erc20",
+ "snforge_std",
+]
+
+[[package]]
 name = "openzeppelin"
 version = "0.11.0"
 source = "git+https://github.com/OpenZeppelin/cairo-contracts.git?tag=v0.11.0#a83f36b23f1af6e160288962be4a2701c3ecbcda"
@@ -100,6 +108,18 @@ version = "0.1.0"
 [[package]]
 name = "simple_vault"
 version = "0.1.0"
+
+[[package]]
+name = "snforge_std"
+version = "0.24.0"
+source = "git+https://github.com/foundry-rs/starknet-foundry.git?tag=v0.24.0#95e9fb09cb91b3c05295915179ee1b55bf923653"
+
+[[package]]
+name = "staking"
+version = "0.1.0"
+dependencies = [
+ "openzeppelin",
+]
 
 [[package]]
 name = "storage"
@@ -124,6 +144,15 @@ version = "0.1.0"
 [[package]]
 name = "testing_how_to"
 version = "0.1.0"
+
+[[package]]
+name = "timelock"
+version = "0.1.0"
+dependencies = [
+ "components",
+ "openzeppelin",
+ "snforge_std",
+]
 
 [[package]]
 name = "upgradeable_contract"

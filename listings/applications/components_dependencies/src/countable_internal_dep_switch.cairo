@@ -1,3 +1,4 @@
+//ANCHOR: contract
 #[starknet::component]
 pub mod countable_component {
     use components::countable::ICountable;
@@ -57,3 +58,6 @@ pub mod countable_component {
         }
     }
 }
+//ANCHOR_END: contract
+
+
