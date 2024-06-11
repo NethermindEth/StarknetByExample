@@ -14,11 +14,11 @@ use components::ownable::{IOwnableDispatcher, IOwnableDispatcherTrait};
 
 /// Deploy a campaign contract with the provided data
 fn deploy_with(
-    title: ByteArray, description: ByteArray, target: u256, duration: u64,
+    title: ByteArray, description: ByteArray, target: u256, duration: u64, token: ContractAddress
 ) -> ICampaignDispatcher {
     let owner = contract_address_const::<'owner'>();
     let mut calldata: Array::<felt252> = array![];
-    ((owner, title, description, target), duration).serialize(ref calldata);
+    ((owner, title, description, target), duration, token).serialize(ref calldata);
 
     let contract = declare("Campaign").unwrap();
     let contract_address = contract.precalculate_address(@calldata);
@@ -34,7 +34,7 @@ fn deploy_with(
 
 /// Deploy a campaign contract with default data
 fn deploy() -> ICampaignDispatcher {
-    deploy_with("title 1", "description 1", 10000, 60)
+    deploy_with("title 1", "description 1", 10000, 60, contract_address_const::<'token'>())
 }
 
 #[test]

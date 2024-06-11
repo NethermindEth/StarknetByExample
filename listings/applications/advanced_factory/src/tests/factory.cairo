@@ -62,9 +62,10 @@ fn test_deploy_campaign() {
     let description: ByteArray = "Some description";
     let target: u256 = 10000;
     let duration: u64 = 60;
+    let token = contract_address_const::<'token'>();
 
     let campaign_address = factory
-        .create_campaign(title.clone(), description.clone(), target, duration);
+        .create_campaign(title.clone(), description.clone(), target, duration, token);
     let campaign = ICampaignDispatcher { contract_address: campaign_address };
 
     assert_eq!(campaign.get_title(), title);
@@ -94,8 +95,9 @@ fn test_deploy_campaign() {
 fn test_update_campaign_class_hash() {
     let factory = deploy_factory();
 
-    let campaign_address_1 = factory.create_campaign("title 1", "description 1", 10000, 60);
-    let campaign_address_2 = factory.create_campaign("title 2", "description 2", 20000, 120);
+    let token = contract_address_const::<'token'>();
+    let campaign_address_1 = factory.create_campaign("title 1", "description 1", 10000, 60, token);
+    let campaign_address_2 = factory.create_campaign("title 2", "description 2", 20000, 120, token);
 
     assert_eq!(factory.get_campaign_class_hash(), get_class_hash(campaign_address_1));
     assert_eq!(factory.get_campaign_class_hash(), get_class_hash(campaign_address_2));

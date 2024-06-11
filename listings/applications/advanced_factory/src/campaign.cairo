@@ -45,7 +45,7 @@ pub mod Campaign {
         #[substorage(v0)]
         contributions: contributable_component::Storage,
         end_time: u64,
-        eth_token: IERC20Dispatcher,
+        token: IERC20Dispatcher,
         factory: ContractAddress,
         target: u256,
         title: ByteArray,
@@ -54,7 +54,7 @@ pub mod Campaign {
         status: Status
     }
 
-    #[derive(Drop, PartialEq)]
+    #[derive(Drop, PartialEq, starknet::Store)]
     pub enum Status {
         ACTIVE,
         SUCCESSFUL,
@@ -130,16 +130,14 @@ pub mod Campaign {
         description: ByteArray,
         target: u256,
         duration: u64,
+        token_address: ContractAddress
     ) {
         assert(owner.is_non_zero(), Errors::CREATOR_ZERO);
         assert(title.len() > 0, Errors::TITLE_EMPTY);
         assert(target > 0, Errors::ZERO_TARGET);
         assert(duration > 0, Errors::ZERO_DURATION);
 
-        let eth_address = contract_address_const::<
-            0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7
-        >();
-        self.eth_token.write(IERC20Dispatcher { contract_address: eth_address });
+        self.token.write(IERC20Dispatcher { contract_address: token_address });
 
         self.title.write(title);
         self.target.write(target);
@@ -158,9 +156,9 @@ pub mod Campaign {
             assert(self._is_target_reached(), Errors::TARGET_NOT_REACHED);
 
             let this = get_contract_address();
-            let eth_token = self.eth_token.read();
+            let token = self.token.read();
 
-            let amount = eth_token.balance_of(this);
+            let amount = token.balance_of(this);
             assert(amount > 0, Errors::ZERO_FUNDS);
 
             self.status.write(Status::SUCCESSFUL);
@@ -168,7 +166,7 @@ pub mod Campaign {
             // no need to set total_contributions to 0, as the campaign has ended
             // and the field can be used as a testament to how much was raised
 
-            let success = eth_token.transfer(get_caller_address(), amount);
+            let success = token.transfer(get_caller_address(), amount);
             assert(success, Errors::TRANSFER_FAILED);
 
             self.emit(Event::Claimed(Claimed { amount }));
@@ -184,7 +182,7 @@ pub mod Campaign {
             while let Option::Some((contributor, amt)) = contributions
                 .pop_front() {
                     self.contributions.remove(contributor);
-                    self.eth_token.read().transfer(contributor, amt);
+                    self.token.read().transfer(contributor, amt);
                 };
 
             self.emit(Event::Closed(Closed { reason }));
@@ -196,7 +194,7 @@ pub mod Campaign {
 
             let contributor = get_caller_address();
             let this = get_contract_address();
-            let success = self.eth_token.read().transfer_from(contributor, this, amount.into());
+            let success = self.token.read().transfer_from(contributor, this, amount.into());
             assert(success, Errors::TRANSFER_FAILED);
 
             self.contributions.add(contributor, amount);
@@ -256,7 +254,7 @@ pub mod Campaign {
             // no need to set total_contributions to 0, as the campaign has ended
             // and the field can be used as a testament to how much was raised
 
-            self.eth_token.read().transfer(contributor, amount);
+            self.token.read().transfer(contributor, amount);
 
             self.emit(Event::Withdrawn(Withdrawn { contributor, amount }));
         }
