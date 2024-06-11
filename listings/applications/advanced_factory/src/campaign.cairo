@@ -6,6 +6,7 @@ use starknet::{ClassHash, ContractAddress};
 #[starknet::interface]
 pub trait ICampaign<TContractState> {
     fn claim(ref self: TContractState);
+    fn close(ref self: TContractState, reason: ByteArray);
     fn contribute(ref self: TContractState, amount: u256);
     fn get_contributions(self: @TContractState) -> Array<(ContractAddress, u256)>;
     fn get_description(self: @TContractState) -> ByteArray;
@@ -69,6 +70,7 @@ pub mod Campaign {
         ContributableEvent: contributable_component::Event,
         ContributionMade: ContributionMade,
         Claimed: Claimed,
+        Closed: Closed,
         Upgraded: Upgraded,
         Withdrawn: Withdrawn,
     }
@@ -83,6 +85,11 @@ pub mod Campaign {
     #[derive(Drop, starknet::Event)]
     pub struct Claimed {
         pub amount: u256,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    pub struct Closed {
+        pub reason: ByteArray,
     }
 
     #[derive(Drop, starknet::Event)]
@@ -167,6 +174,21 @@ pub mod Campaign {
             self.emit(Event::Claimed(Claimed { amount }));
         }
 
+        fn close(ref self: ContractState, reason: ByteArray) {
+            self.ownable._assert_only_owner();
+            assert(self._is_active(), Errors::ENDED);
+
+            self.status.write(Status::CLOSED);
+
+            let mut contributions = self.get_contributions();
+            while let Option::Some((contributor, amt)) = contributions
+                .pop_front() {
+                    self.contributions.remove(contributor);
+                    self.eth_token.read().transfer(contributor, amt);
+                };
+
+            self.emit(Event::Closed(Closed { reason }));
+        }
 
         fn contribute(ref self: ContractState, amount: u256) {
             assert(self._is_active(), Errors::ENDED);
@@ -229,7 +251,7 @@ pub mod Campaign {
             assert(self.contributions.get(get_caller_address()) != 0, Errors::NOTHING_TO_WITHDRAW);
 
             let contributor = get_caller_address();
-            let amount = self.contributions.withhold(contributor);
+            let amount = self.contributions.remove(contributor);
 
             // no need to set total_contributions to 0, as the campaign has ended
             // and the field can be used as a testament to how much was raised

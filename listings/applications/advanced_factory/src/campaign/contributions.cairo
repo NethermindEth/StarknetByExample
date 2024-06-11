@@ -5,7 +5,7 @@ pub trait IContributable<TContractState> {
     fn add(ref self: TContractState, contributor: ContractAddress, amount: u256);
     fn get(self: @TContractState, contributor: ContractAddress) -> u256;
     fn get_contributions_as_arr(self: @TContractState) -> Array<(ContractAddress, u256)>;
-    fn withhold(ref self: TContractState, contributor: ContractAddress) -> u256;
+    fn remove(ref self: TContractState, contributor: ContractAddress) -> u256;
 }
 
 #[starknet::component]
@@ -73,9 +73,7 @@ pub mod contributable_component {
             result
         }
 
-        fn withhold(
-            ref self: ComponentState<TContractState>, contributor: ContractAddress
-        ) -> u256 {
+        fn remove(ref self: ComponentState<TContractState>, contributor: ContractAddress) -> u256 {
             let amt_idx_opt: Option<(u256, u32)> = self.contributor_to_amt_idx.read(contributor);
             if let Option::Some((amt, idx)) = amt_idx_opt {
                 self.contributor_to_amt_idx.write(contributor, Option::None);
