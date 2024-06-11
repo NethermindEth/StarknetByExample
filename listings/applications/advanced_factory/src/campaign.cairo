@@ -3,16 +3,31 @@ mod contributions;
 // ANCHOR: contract
 use starknet::{ClassHash, ContractAddress};
 
+#[derive(Drop, Debug, Serde, PartialEq, starknet::Store)]
+pub enum Status {
+    ACTIVE,
+    SUCCESSFUL,
+    UNSUCCESSFUL,
+    CLOSED
+}
+
+#[derive(Drop, Serde)]
+pub struct Details {
+    pub target: u256,
+    pub title: ByteArray,
+    pub end_time: u64,
+    pub description: ByteArray,
+    pub status: Status,
+    pub token: ContractAddress,
+}
+
 #[starknet::interface]
 pub trait ICampaign<TContractState> {
     fn claim(ref self: TContractState);
     fn close(ref self: TContractState, reason: ByteArray);
     fn contribute(ref self: TContractState, amount: u256);
     fn get_contributions(self: @TContractState) -> Array<(ContractAddress, u256)>;
-    fn get_description(self: @TContractState) -> ByteArray;
-    fn get_title(self: @TContractState) -> ByteArray;
-    fn get_target(self: @TContractState) -> u256;
-    fn get_end_time(self: @TContractState) -> u64;
+    fn get_details(self: @TContractState) -> Details;
     fn upgrade(ref self: TContractState, impl_hash: ClassHash) -> Result<(), Array<felt252>>;
     fn withdraw(ref self: TContractState);
 }
@@ -28,6 +43,7 @@ pub mod Campaign {
     };
     use components::ownable::ownable_component;
     use super::contributions::contributable_component;
+    use super::{Details, Status};
 
     component!(path: ownable_component, storage: ownable, event: OwnableEvent);
     component!(path: contributable_component, storage: contributions, event: ContributableEvent);
@@ -54,13 +70,6 @@ pub mod Campaign {
         status: Status
     }
 
-    #[derive(Drop, PartialEq, starknet::Store)]
-    pub enum Status {
-        ACTIVE,
-        SUCCESSFUL,
-        UNSUCCESSFUL,
-        CLOSED
-    }
 
     #[event]
     #[derive(Drop, starknet::Event)]
@@ -207,20 +216,15 @@ pub mod Campaign {
             self.contributions.get_contributions_as_arr()
         }
 
-        fn get_title(self: @ContractState) -> ByteArray {
-            self.title.read()
-        }
-
-        fn get_description(self: @ContractState) -> ByteArray {
-            self.description.read()
-        }
-
-        fn get_target(self: @ContractState) -> u256 {
-            self.target.read()
-        }
-
-        fn get_end_time(self: @ContractState) -> u64 {
-            self.end_time.read()
+        fn get_details(self: @ContractState) -> Details {
+            Details {
+                title: self.title.read(),
+                description: self.description.read(),
+                target: self.target.read(),
+                end_time: self.end_time.read(),
+                status: self.status.read(),
+                token: self.token.read().contract_address
+            }
         }
 
         fn upgrade(ref self: ContractState, impl_hash: ClassHash) -> Result<(), Array<felt252>> {

@@ -14,6 +14,7 @@ use snforge_std::{
 
 // Define a target contract to deploy
 use advanced_factory::campaign::{Campaign, ICampaignDispatcher, ICampaignDispatcherTrait};
+use advanced_factory::campaign::Status;
 use components::ownable::{IOwnableDispatcher, IOwnableDispatcherTrait};
 
 
@@ -68,10 +69,13 @@ fn test_deploy_campaign() {
         .create_campaign(title.clone(), description.clone(), target, duration, token);
     let campaign = ICampaignDispatcher { contract_address: campaign_address };
 
-    assert_eq!(campaign.get_title(), title);
-    assert_eq!(campaign.get_description(), description);
-    assert_eq!(campaign.get_target(), target);
-    assert_eq!(campaign.get_end_time(), get_block_timestamp() + duration);
+    let details = campaign.get_details();
+    assert_eq!(details.title, title);
+    assert_eq!(details.description, description);
+    assert_eq!(details.target, target);
+    assert_eq!(details.end_time, get_block_timestamp() + duration);
+    assert_eq!(details.status, Status::ACTIVE);
+    assert_eq!(details.token, token);
 
     let campaign_ownable = IOwnableDispatcher { contract_address: campaign_address };
     assert_eq!(campaign_ownable.owner(), campaign_owner);
