@@ -1,3 +1,5 @@
+mod contributions;
+
 // ANCHOR: contract
 use starknet::ClassHash;
 
@@ -23,18 +25,23 @@ pub mod Campaign {
         get_caller_address, get_contract_address
     };
     use components::ownable::ownable_component;
+    use super::contributions::contributable_component;
 
     component!(path: ownable_component, storage: ownable, event: OwnableEvent);
+    component!(path: contributable_component, storage: contributions, event: ContributableEvent);
 
     #[abi(embed_v0)]
     pub impl OwnableImpl = ownable_component::Ownable<ContractState>;
     impl OwnableInternalImpl = ownable_component::OwnableInternalImpl<ContractState>;
+    #[abi(embed_v0)]
+    impl ContributableImpl = contributable_component::Contributable<ContractState>;
 
     #[storage]
     struct Storage {
         #[substorage(v0)]
         ownable: ownable_component::Storage,
-        contributions: LegacyMap<ContractAddress, u256>,
+        #[substorage(v0)]
+        contributions: contributable_component::Storage,
         end_time: u64,
         eth_token: IERC20Dispatcher,
         factory: ContractAddress,
@@ -49,6 +56,7 @@ pub mod Campaign {
     pub enum Event {
         #[flat]
         OwnableEvent: ownable_component::Event,
+        ContributableEvent: contributable_component::Event,
         ContributionMade: ContributionMade,
         Claimed: Claimed,
         Upgraded: Upgraded,
@@ -157,7 +165,7 @@ pub mod Campaign {
             let success = self.eth_token.read().transfer_from(contributor, this, amount.into());
             assert(success, Errors::TRANSFER_FAILED);
 
-            self.contributions.write(contributor, self.contributions.read(contributor) + amount);
+            self.contributions.add(contributor, amount);
             self.total_contributions.write(self.total_contributions.read() + amount);
 
             self.emit(Event::ContributionMade(ContributionMade { contributor, amount }));
@@ -191,11 +199,12 @@ pub mod Campaign {
         fn withdraw(ref self: ContractState) {
             assert(!self._is_active(), Errors::STILL_ACTIVE);
             assert(!self._is_target_reached(), Errors::TARGET_ALREADY_REACHED);
-            assert(self.contributions.read(get_caller_address()) != 0, Errors::NOTHING_TO_WITHDRAW);
+            assert(self.contributions.get(get_caller_address()) != 0, Errors::NOTHING_TO_WITHDRAW);
 
             let caller = get_caller_address();
-            let amount = self.contributions.read(caller);
-            self.contributions.write(caller, 0);
+            let amount = self.contributions.get(caller);
+
+            self.contributions.withhold(caller);
 
             // no need to set total_contributions to 0, as the campaign has ended
             // and the field can be used as a testament to how much was raised
