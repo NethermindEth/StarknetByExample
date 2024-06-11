@@ -4,7 +4,7 @@ use starknet::ContractAddress;
 pub trait IContributable<TContractState> {
     fn add(ref self: TContractState, contributor: ContractAddress, amount: u256);
     fn get(self: @TContractState, contributor: ContractAddress) -> u256;
-    fn get_contributors_as_arr(self: @TContractState) -> Array<ContractAddress>;
+    fn get_contributions_as_arr(self: @TContractState) -> Array<(ContractAddress, u256)>;
     fn withhold(ref self: TContractState, contributor: ContractAddress) -> u256;
 }
 
@@ -53,15 +53,21 @@ pub mod contributable_component {
             }
         }
 
-        fn get_contributors_as_arr(
+        fn get_contributions_as_arr(
             self: @ComponentState<TContractState>
-        ) -> Array<ContractAddress> {
+        ) -> Array<(ContractAddress, u256)> {
             let mut result = array![];
 
             let mut index = self.total_contributors.read();
             while index != 0 {
                 index -= 1;
-                result.append(self.idx_to_contributor.read(index));
+                let contr = self.idx_to_contributor.read(index);
+                let amt_idx_opt: Option<(u256, u32)> = self.contributor_to_amt_idx.read(contr);
+                let amount = match amt_idx_opt {
+                    Option::Some((amt, _)) => amt,
+                    Option::None => 0
+                };
+                result.append((contr, amount));
             };
 
             result
