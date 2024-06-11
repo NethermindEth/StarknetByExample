@@ -47,12 +47,19 @@ pub mod CampaignFactory {
         #[flat]
         OwnableEvent: ownable_component::Event,
         ClassHashUpdated: ClassHashUpdated,
+        ClassHashUpdateFailed: ClassHashUpdateFailed,
         CampaignCreated: CampaignCreated,
     }
 
     #[derive(Drop, starknet::Event)]
     pub struct ClassHashUpdated {
         pub new_class_hash: ClassHash,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    pub struct ClassHashUpdateFailed {
+        pub campaign: ContractAddress,
+        pub errors: Array<felt252>
     }
 
     #[derive(Drop, starknet::Event)]
@@ -84,12 +91,10 @@ pub mod CampaignFactory {
             duration: u64
         ) -> ContractAddress {
             let caller = get_caller_address();
-            let this = get_contract_address();
 
             // Create contructor arguments
             let mut constructor_calldata: Array::<felt252> = array![];
-            ((caller, title, description, target), duration, this)
-                .serialize(ref constructor_calldata);
+            ((caller, title, description, target), duration).serialize(ref constructor_calldata);
 
             // Contract deployment
             let (contract_address, _) = deploy_syscall(
@@ -123,7 +128,16 @@ pub mod CampaignFactory {
             while let Option::Some(campaign) = campaigns
                 .get(i)
                 .unwrap_syscall() {
-                    campaign.upgrade(new_class_hash);
+                    if let Result::Err(errors) = campaign.upgrade(new_class_hash) {
+                        self
+                            .emit(
+                                Event::ClassHashUpdateFailed(
+                                    ClassHashUpdateFailed {
+                                        campaign: campaign.contract_address, errors
+                                    }
+                                )
+                            )
+                    }
                     i += 1;
                 };
 

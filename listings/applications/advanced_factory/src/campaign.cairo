@@ -12,7 +12,7 @@ pub trait ICampaign<TContractState> {
     fn get_title(self: @TContractState) -> ByteArray;
     fn get_target(self: @TContractState) -> u256;
     fn get_end_time(self: @TContractState) -> u64;
-    fn upgrade(ref self: TContractState, impl_hash: ClassHash);
+    fn upgrade(ref self: TContractState, impl_hash: ClassHash) -> Result<(), Array<felt252>>;
     fn withdraw(ref self: TContractState);
 }
 
@@ -109,15 +109,13 @@ pub mod Campaign {
     #[constructor]
     fn constructor(
         ref self: ContractState,
-        creator: ContractAddress,
+        owner: ContractAddress,
         title: ByteArray,
         description: ByteArray,
         target: u256,
         duration: u64,
-        factory: ContractAddress
     ) {
-        assert(factory.is_non_zero(), Errors::FACTORY_ZERO);
-        assert(creator.is_non_zero(), Errors::CREATOR_ZERO);
+        assert(owner.is_non_zero(), Errors::CREATOR_ZERO);
         assert(title.len() > 0, Errors::TITLE_EMPTY);
         assert(target > 0, Errors::ZERO_TARGET);
         assert(duration > 0, Errors::ZERO_DURATION);
@@ -131,8 +129,8 @@ pub mod Campaign {
         self.target.write(target);
         self.description.write(description);
         self.end_time.write(get_block_timestamp() + duration);
-        self.factory.write(factory);
-        self.ownable._init(creator);
+        self.factory.write(get_caller_address());
+        self.ownable._init(owner);
     }
 
     #[abi(embed_v0)]
@@ -192,13 +190,19 @@ pub mod Campaign {
             self.end_time.read()
         }
 
-        fn upgrade(ref self: ContractState, impl_hash: ClassHash) {
-            assert(get_caller_address() == self.factory.read(), Errors::NOT_FACTORY);
-            assert(impl_hash.is_non_zero(), Errors::CLASS_HASH_ZERO);
+        fn upgrade(ref self: ContractState, impl_hash: ClassHash) -> Result<(), Array<felt252>> {
+            if get_caller_address() != self.factory.read() {
+                return Result::Err(array![Errors::NOT_FACTORY]);
+            }
+            if impl_hash.is_zero() {
+                return Result::Err(array![Errors::CLASS_HASH_ZERO]);
+            }
 
-            starknet::syscalls::replace_class_syscall(impl_hash).unwrap_syscall();
+            starknet::syscalls::replace_class_syscall(impl_hash)?;
 
             self.emit(Event::Upgraded(Upgraded { implementation: impl_hash }));
+
+            Result::Ok(())
         }
 
         fn withdraw(ref self: ContractState) {
