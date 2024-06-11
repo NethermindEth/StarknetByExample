@@ -5,7 +5,7 @@ pub trait IContributable<TContractState> {
     fn add(ref self: TContractState, contributor: ContractAddress, amount: u256);
     fn get(self: @TContractState, contributor: ContractAddress) -> u256;
     fn get_all(self: @TContractState) -> Array<ContractAddress>;
-    fn withhold(ref self: TContractState, contributor: ContractAddress);
+    fn withhold(ref self: TContractState, contributor: ContractAddress) -> u256;
 }
 
 #[starknet::component]
@@ -14,16 +14,10 @@ pub mod contributable_component {
     use starknet::{ContractAddress};
     use core::num::traits::Zero;
 
-    #[derive(Drop, Serde, starknet::Store)]
-    struct Contribution {
-        contributor: ContractAddress,
-        amount: u256,
-    }
-
     #[storage]
     struct Storage {
-        index_to_contribution: LegacyMap<u32, Contribution>,
-        contributor_to_index: LegacyMap<ContractAddress, Option<u32>>,
+        idx_to_contributor: LegacyMap<u32, ContractAddress>,
+        contributor_to_amt_idx: LegacyMap<ContractAddress, Option<(u256, u32)>>,
         total_contributors: u32,
     }
 
@@ -38,26 +32,23 @@ pub mod contributable_component {
         fn add(
             ref self: ComponentState<TContractState>, contributor: ContractAddress, amount: u256
         ) {
-            let i_opt: Option<u32> = self.contributor_to_index.read(contributor);
-            if let Option::Some(index) = i_opt {
-                let old_contr: Contribution = self.index_to_contribution.read(index);
-                let new_contr = Contribution { contributor, amount: old_contr.amount + amount };
-                self.index_to_contribution.write(index, new_contr);
+            let amt_idx_opt: Option<(u256, u32)> = self.contributor_to_amt_idx.read(contributor);
+            if let Option::Some((old_amount, idx)) = amt_idx_opt {
+                self
+                    .contributor_to_amt_idx
+                    .write(contributor, Option::Some((old_amount + amount, idx)));
             } else {
-                let index = self.total_contributors.read();
-                self.contributor_to_index.write(contributor, Option::Some(index));
-                self.index_to_contribution.write(index, Contribution { contributor, amount });
-                self.total_contributors.write(index + 1);
+                let idx = self.total_contributors.read();
+                self.idx_to_contributor.write(idx, contributor);
+                self.contributor_to_amt_idx.write(contributor, Option::Some((amount, idx)));
+                self.total_contributors.write(idx + 1);
             }
         }
 
         fn get(self: @ComponentState<TContractState>, contributor: ContractAddress) -> u256 {
-            let val: Option<u32> = self.contributor_to_index.read(contributor);
+            let val: Option<(u256, u32)> = self.contributor_to_amt_idx.read(contributor);
             match val {
-                Option::Some(index) => {
-                    let contr: Contribution = self.index_to_contribution.read(index);
-                    contr.amount
-                },
+                Option::Some((amt, _)) => amt,
                 Option::None => 0,
             }
         }
@@ -68,29 +59,40 @@ pub mod contributable_component {
             let mut index = self.total_contributors.read();
             while index != 0 {
                 index -= 1;
-                let contr: Contribution = self.index_to_contribution.read(index);
-                result.append(contr.contributor);
+                result.append(self.idx_to_contributor.read(index));
             };
 
             result
         }
 
-        fn withhold(ref self: ComponentState<TContractState>, contributor: ContractAddress) {
-            let i_opt: Option<u32> = self.contributor_to_index.read(contributor);
-            if let Option::Some(index) = i_opt {
-                self.contributor_to_index.write(contributor, Option::None);
-                self.total_contributors.write(self.total_contributors.read() - 1);
-                if self.total_contributors.read() != 0 {
-                    let last_contr: Contribution = self
-                        .index_to_contribution
-                        .read(self.total_contributors.read());
-                    self.contributor_to_index.write(last_contr.contributor, Option::Some(index));
-                    self.index_to_contribution.write(index, last_contr);
-                } else {
+        fn withhold(
+            ref self: ComponentState<TContractState>, contributor: ContractAddress
+        ) -> u256 {
+            let amt_idx_opt: Option<(u256, u32)> = self.contributor_to_amt_idx.read(contributor);
+            if let Option::Some((amt, idx)) = amt_idx_opt {
+                self.contributor_to_amt_idx.write(contributor, Option::None);
+                let total_contributors = self.total_contributors.read() - 1;
+                self.total_contributors.write(total_contributors);
+                if total_contributors != 0 {
+                    let last_contributor = self.idx_to_contributor.read(total_contributors);
+                    let last_amt_idx: Option<(u256, u32)> = self
+                        .contributor_to_amt_idx
+                        .read(last_contributor);
+                    let last_amt = match last_amt_idx {
+                        Option::Some((l_a, _)) => l_a,
+                        Option::None => 0
+                    };
                     self
-                        .index_to_contribution
-                        .write(index, Contribution { contributor: Zero::zero(), amount: 0 });
+                        .contributor_to_amt_idx
+                        .write(last_contributor, Option::Some((last_amt, idx)));
+                    self.idx_to_contributor.write(idx, last_contributor);
                 }
+
+                self.idx_to_contributor.write(total_contributors, Zero::zero());
+
+                amt
+            } else {
+                0
             }
         }
     }

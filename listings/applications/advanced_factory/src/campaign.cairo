@@ -201,17 +201,15 @@ pub mod Campaign {
             assert(!self._is_target_reached(), Errors::TARGET_ALREADY_REACHED);
             assert(self.contributions.get(get_caller_address()) != 0, Errors::NOTHING_TO_WITHDRAW);
 
-            let caller = get_caller_address();
-            let amount = self.contributions.get(caller);
-
-            self.contributions.withhold(caller);
+            let contributor = get_caller_address();
+            let amount = self.contributions.withhold(contributor);
 
             // no need to set total_contributions to 0, as the campaign has ended
             // and the field can be used as a testament to how much was raised
 
-            self.eth_token.read().transfer(caller, amount);
+            self.eth_token.read().transfer(contributor, amount);
 
-            self.emit(Event::Withdrawn(Withdrawn { contributor: caller, amount }));
+            self.emit(Event::Withdrawn(Withdrawn { contributor, amount }));
         }
     }
 
