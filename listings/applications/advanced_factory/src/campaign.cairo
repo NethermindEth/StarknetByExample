@@ -1,12 +1,13 @@
 mod contributions;
 
 // ANCHOR: contract
-use starknet::ClassHash;
+use starknet::{ClassHash, ContractAddress};
 
 #[starknet::interface]
 pub trait ICampaign<TContractState> {
     fn claim(ref self: TContractState);
     fn contribute(ref self: TContractState, amount: u256);
+    fn get_contributors(self: @TContractState) -> Array<ContractAddress>;
     fn get_description(self: @TContractState) -> ByteArray;
     fn get_title(self: @TContractState) -> ByteArray;
     fn get_target(self: @TContractState) -> u256;
@@ -169,6 +170,10 @@ pub mod Campaign {
             self.total_contributions.write(self.total_contributions.read() + amount);
 
             self.emit(Event::ContributionMade(ContributionMade { contributor, amount }));
+        }
+
+        fn get_contributors(self: @ContractState) -> Array<ContractAddress> {
+            self.contributions.get_contributors_as_arr()
         }
 
         fn get_title(self: @ContractState) -> ByteArray {
