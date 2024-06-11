@@ -76,6 +76,7 @@ fn test_deploy_campaign() {
     assert_eq!(details.end_time, get_block_timestamp() + duration);
     assert_eq!(details.status, Status::ACTIVE);
     assert_eq!(details.token, token);
+    assert_eq!(details.total_contributions, 0);
 
     let campaign_ownable = IOwnableDispatcher { contract_address: campaign_address };
     assert_eq!(campaign_ownable.owner(), campaign_owner);

@@ -19,6 +19,7 @@ pub struct Details {
     pub description: ByteArray,
     pub status: Status,
     pub token: ContractAddress,
+    pub total_contributions: u256,
 }
 
 #[starknet::interface]
@@ -223,7 +224,8 @@ pub mod Campaign {
                 target: self.target.read(),
                 end_time: self.end_time.read(),
                 status: self.status.read(),
-                token: self.token.read().contract_address
+                token: self.token.read().contract_address,
+                total_contributions: self.total_contributions.read(),
             }
         }
 
