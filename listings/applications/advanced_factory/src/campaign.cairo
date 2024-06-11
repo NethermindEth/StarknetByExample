@@ -50,6 +50,15 @@ pub mod Campaign {
         title: ByteArray,
         description: ByteArray,
         total_contributions: u256,
+        status: Status
+    }
+
+    #[derive(Drop, PartialEq)]
+    pub enum Status {
+        ACTIVE,
+        SUCCESSFUL,
+        UNSUCCESSFUL,
+        CLOSED
     }
 
     #[event]
@@ -131,13 +140,14 @@ pub mod Campaign {
         self.end_time.write(get_block_timestamp() + duration);
         self.factory.write(get_caller_address());
         self.ownable._init(owner);
+        self.status.write(Status::ACTIVE)
     }
 
     #[abi(embed_v0)]
     impl Campaign of super::ICampaign<ContractState> {
         fn claim(ref self: ContractState) {
             self.ownable._assert_only_owner();
-            assert(!self._is_active(), Errors::STILL_ACTIVE);
+            assert(self._is_active(), Errors::ENDED);
             assert(self._is_target_reached(), Errors::TARGET_NOT_REACHED);
 
             let this = get_contract_address();
@@ -145,6 +155,8 @@ pub mod Campaign {
 
             let amount = eth_token.balance_of(this);
             assert(amount > 0, Errors::ZERO_FUNDS);
+
+            self.status.write(Status::SUCCESSFUL);
 
             // no need to set total_contributions to 0, as the campaign has ended
             // and the field can be used as a testament to how much was raised
@@ -154,6 +166,7 @@ pub mod Campaign {
 
             self.emit(Event::Claimed(Claimed { amount }));
         }
+
 
         fn contribute(ref self: ContractState, amount: u256) {
             assert(self._is_active(), Errors::ENDED);
@@ -206,8 +219,13 @@ pub mod Campaign {
         }
 
         fn withdraw(ref self: ContractState) {
-            assert(!self._is_active(), Errors::STILL_ACTIVE);
-            assert(!self._is_target_reached(), Errors::TARGET_ALREADY_REACHED);
+            if self._is_expired() && !self._is_target_reached() && self._is_active() {
+                self.status.write(Status::UNSUCCESSFUL);
+            }
+            assert(
+                self.status.read() == Status::UNSUCCESSFUL || self.status.read() == Status::CLOSED,
+                Errors::STILL_ACTIVE
+            );
             assert(self.contributions.get(get_caller_address()) != 0, Errors::NOTHING_TO_WITHDRAW);
 
             let contributor = get_caller_address();
@@ -224,8 +242,12 @@ pub mod Campaign {
 
     #[generate_trait]
     impl CampaignInternalImpl of CampaignInternalTrait {
-        fn _is_active(self: @ContractState) -> bool {
+        fn _is_expired(self: @ContractState) -> bool {
             get_block_timestamp() < self.end_time.read()
+        }
+
+        fn _is_active(self: @ContractState) -> bool {
+            self.status.read() == Status::ACTIVE
         }
 
         fn _is_target_reached(self: @ContractState) -> bool {
