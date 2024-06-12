@@ -29,6 +29,7 @@ pub trait ICampaign<TContractState> {
     fn claim(ref self: TContractState);
     fn close(ref self: TContractState, reason: ByteArray);
     fn contribute(ref self: TContractState, amount: u256);
+    fn get_contribution(self: @TContractState, contributor: ContractAddress) -> u256;
     fn get_contributions(self: @TContractState) -> Array<(ContractAddress, u256)>;
     fn get_details(self: @TContractState) -> Details;
     fn start(ref self: TContractState);
@@ -215,6 +216,10 @@ pub mod Campaign {
             self.total_contributions.write(self.total_contributions.read() + amount);
 
             self.emit(Event::ContributionMade(ContributionMade { contributor, amount }));
+        }
+
+        fn get_contribution(self: @ContractState, contributor: ContractAddress) -> u256 {
+            self.contributions.get(contributor)
         }
 
         fn get_contributions(self: @ContractState) -> Array<(ContractAddress, u256)> {
