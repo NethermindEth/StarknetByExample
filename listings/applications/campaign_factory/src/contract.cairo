@@ -23,7 +23,7 @@ pub mod CampaignFactory {
         get_caller_address, get_contract_address
     };
     use alexandria_storage::list::{List, ListTrait};
-    use advanced_factory::campaign::{ICampaignDispatcher, ICampaignDispatcherTrait};
+    use campaign::campaign::{ICampaignDispatcher, ICampaignDispatcherTrait};
     use components::ownable::ownable_component;
 
     component!(path: ownable_component, storage: ownable, event: OwnableEvent);

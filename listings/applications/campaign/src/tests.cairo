@@ -2,15 +2,15 @@ use core::traits::TryInto;
 use core::clone::Clone;
 use core::result::ResultTrait;
 use starknet::{
-    ContractAddress, ClassHash, get_block_timestamp, contract_address_const, get_caller_address
+    ContractAddress, ClassHash, get_block_timestamp, contract_address_const, get_caller_address,
 };
 use snforge_std::{
     declare, ContractClass, ContractClassTrait, start_cheat_caller_address,
     stop_cheat_caller_address, spy_events, SpyOn, EventSpy, EventAssertions, get_class_hash
 };
 
-use advanced_factory::campaign::{Campaign, ICampaignDispatcher, ICampaignDispatcherTrait};
-use advanced_factory::campaign::Status;
+use campaign::campaign::{Campaign, ICampaignDispatcher, ICampaignDispatcherTrait};
+use campaign::campaign::Status;
 use components::ownable::{IOwnableDispatcher, IOwnableDispatcherTrait};
 
 /// Deploy a campaign contract with the provided data
@@ -62,7 +62,7 @@ fn test_upgrade_class_hash() {
 
     let mut spy = spy_events(SpyOn::One(campaign.contract_address));
 
-    let new_class_hash = declare("Campaign_Updated").unwrap().class_hash;
+    let new_class_hash = declare("MockContract").unwrap().class_hash;
 
     let factory = contract_address_const::<'factory'>();
     start_cheat_caller_address(campaign.contract_address, factory);
@@ -89,7 +89,7 @@ fn test_upgrade_class_hash() {
 fn test_upgrade_class_hash_fail() {
     let campaign = deploy();
 
-    let new_class_hash = declare("Campaign_Updated").unwrap().class_hash;
+    let new_class_hash = declare("MockContract").unwrap().class_hash;
 
     let owner = contract_address_const::<'owner'>();
     start_cheat_caller_address(campaign.contract_address, owner);

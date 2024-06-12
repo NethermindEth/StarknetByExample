@@ -2,16 +2,6 @@
 version = 1
 
 [[package]]
-name = "advanced_factory"
-version = "0.1.0"
-dependencies = [
- "alexandria_storage",
- "components",
- "openzeppelin",
- "snforge_std",
-]
-
-[[package]]
 name = "alexandria_storage"
 version = "0.3.0"
 source = "git+https://github.com/keep-starknet-strange/alexandria.git#3041887b95cf10f9d3cd8d75326c754b331f9573"
@@ -27,6 +17,25 @@ version = "0.1.0"
 [[package]]
 name = "calling_other_contracts"
 version = "0.1.0"
+
+[[package]]
+name = "campaign"
+version = "0.1.0"
+dependencies = [
+ "components",
+ "openzeppelin",
+ "snforge_std",
+]
+
+[[package]]
+name = "campaign_factory"
+version = "0.1.0"
+dependencies = [
+ "alexandria_storage",
+ "campaign",
+ "components",
+ "snforge_std",
+]
 
 [[package]]
 name = "components"

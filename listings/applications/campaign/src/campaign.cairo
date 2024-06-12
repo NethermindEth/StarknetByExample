@@ -1,4 +1,4 @@
-mod contributions;
+pub mod contributions;
 
 // ANCHOR: contract
 use starknet::{ClassHash, ContractAddress};

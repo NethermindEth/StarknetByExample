@@ -3,5 +3,5 @@
 This is the CampaignFactory contract that creates new Campaign contract instances.
 
 ```rust
-{{#include ../../../listings/applications/advanced_factory/src/factory.cairo:contract}}
+{{#include ../../../listings/applications/campaign_factory/src/contract.cairo:contract}}
 ```

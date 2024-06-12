@@ -1,7 +1,7 @@
 use core::traits::TryInto;
 use core::clone::Clone;
 use core::result::ResultTrait;
-use advanced_factory::factory::{
+use campaign_factory::contract::{
     CampaignFactory, ICampaignFactoryDispatcher, ICampaignFactoryDispatcherTrait
 };
 use starknet::{
@@ -13,8 +13,8 @@ use snforge_std::{
 };
 
 // Define a target contract to deploy
-use advanced_factory::campaign::{Campaign, ICampaignDispatcher, ICampaignDispatcherTrait};
-use advanced_factory::campaign::Status;
+use campaign::campaign::{Campaign, ICampaignDispatcher, ICampaignDispatcherTrait};
+use campaign::campaign::Status;
 use components::ownable::{IOwnableDispatcher, IOwnableDispatcherTrait};
 
 
@@ -112,7 +112,7 @@ fn test_update_campaign_class_hash() {
         SpyOn::Multiple(array![campaign_address_1, campaign_address_2])
     );
 
-    let new_class_hash = declare("Campaign_Updated").unwrap().class_hash;
+    let new_class_hash = declare("MockContract").unwrap().class_hash;
     factory.update_campaign_class_hash(new_class_hash);
 
     assert_eq!(factory.get_campaign_class_hash(), new_class_hash);
@@ -145,4 +145,3 @@ fn test_update_campaign_class_hash() {
             ]
         );
 }
-

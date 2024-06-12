@@ -1,0 +1,18 @@
+[package]
+name = "campaign_factory"
+version.workspace = true
+edition = "2023_11"
+
+[dependencies]
+starknet.workspace = true
+components.workspace = true
+alexandria_storage.workspace = true
+snforge_std.workspace = true
+campaign = { path = "../campaign" }
+
+[scripts]
+test.workspace = true
+
+[[target.starknet-contract]]
+casm = true
+build-external-contracts = ["campaign::campaign::Campaign"]

@@ -3,5 +3,5 @@
 This is the Campaign contract.
 
 ```rust
-{{#include ../../../listings/applications/advanced_factory/src/campaign.cairo:contract}}
+{{#include ../../../listings/applications/campaign/src/contract.cairo:contract}}
 ```

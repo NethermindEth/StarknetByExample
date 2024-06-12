@@ -1,13 +1,14 @@
 [package]
-name = "advanced_factory"
+name = "campaign"
 version.workspace = true
 edition = "2023_11"
+
+[lib]
 
 [dependencies]
 starknet.workspace = true
 openzeppelin.workspace = true
 components.workspace = true
-alexandria_storage.workspace = true
 snforge_std.workspace = true
 
 [scripts]
