@@ -9,8 +9,8 @@ use snforge_std::{
     stop_cheat_caller_address, spy_events, SpyOn, EventSpy, EventAssertions, get_class_hash
 };
 
-use campaign::campaign::{Campaign, ICampaignDispatcher, ICampaignDispatcherTrait};
-use campaign::campaign::Status;
+use crowdfunding::campaign::{Campaign, ICampaignDispatcher, ICampaignDispatcherTrait};
+use crowdfunding::campaign::Status;
 use components::ownable::{IOwnableDispatcher, IOwnableDispatcherTrait};
 
 /// Deploy a campaign contract with the provided data

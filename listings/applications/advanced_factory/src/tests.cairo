@@ -1,7 +1,7 @@
 use core::traits::TryInto;
 use core::clone::Clone;
 use core::result::ResultTrait;
-use campaign_factory::contract::{
+use advanced_factory::contract::{
     CampaignFactory, ICampaignFactoryDispatcher, ICampaignFactoryDispatcherTrait
 };
 use starknet::{
@@ -13,8 +13,8 @@ use snforge_std::{
 };
 
 // Define a target contract to deploy
-use campaign::campaign::{Campaign, ICampaignDispatcher, ICampaignDispatcherTrait};
-use campaign::campaign::Status;
+use crowdfunding::campaign::{Campaign, ICampaignDispatcher, ICampaignDispatcherTrait};
+use crowdfunding::campaign::Status;
 use components::ownable::{IOwnableDispatcher, IOwnableDispatcherTrait};
 
 

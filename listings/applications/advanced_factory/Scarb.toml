@@ -1,18 +1,18 @@
 [package]
-name = "campaign"
+name = "advanced_factory"
 version.workspace = true
 edition = "2023_11"
 
-[lib]
-
 [dependencies]
 starknet.workspace = true
-openzeppelin.workspace = true
 components.workspace = true
+alexandria_storage.workspace = true
 snforge_std.workspace = true
+crowdfunding = { path = "../crowdfunding" }
 
 [scripts]
 test.workspace = true
 
 [[target.starknet-contract]]
 casm = true
+build-external-contracts = ["crowdfunding::campaign::Campaign"]
