@@ -1,5 +1,5 @@
 mod contract;
-mod campaign_upgrade;
+mod mock_upgrade;
 
 #[cfg(test)]
 mod tests;
