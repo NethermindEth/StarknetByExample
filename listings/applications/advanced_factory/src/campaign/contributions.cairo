@@ -16,8 +16,8 @@ pub mod contributable_component {
 
     #[storage]
     struct Storage {
-        idx_to_contributor: LegacyMap<u32, ContractAddress>,
-        contributor_to_amt_idx: LegacyMap<ContractAddress, Option<(u256, u32)>>,
+        index_to_contributor: LegacyMap<u32, ContractAddress>,
+        contributor_to_amount_index: LegacyMap<ContractAddress, Option<(u256, u32)>>,
         contributor_count: u32,
     }
 
@@ -32,23 +32,25 @@ pub mod contributable_component {
         fn add(
             ref self: ComponentState<TContractState>, contributor: ContractAddress, amount: u256
         ) {
-            let amt_idx_opt: Option<(u256, u32)> = self.contributor_to_amt_idx.read(contributor);
-            if let Option::Some((old_amount, idx)) = amt_idx_opt {
+            let amount_index_option: Option<(u256, u32)> = self
+                .contributor_to_amount_index
+                .read(contributor);
+            if let Option::Some((old_amount, index)) = amount_index_option {
                 self
-                    .contributor_to_amt_idx
-                    .write(contributor, Option::Some((old_amount + amount, idx)));
+                    .contributor_to_amount_index
+                    .write(contributor, Option::Some((old_amount + amount, index)));
             } else {
-                let idx = self.contributor_count.read();
-                self.idx_to_contributor.write(idx, contributor);
-                self.contributor_to_amt_idx.write(contributor, Option::Some((amount, idx)));
-                self.contributor_count.write(idx + 1);
+                let index = self.contributor_count.read();
+                self.index_to_contributor.write(index, contributor);
+                self.contributor_to_amount_index.write(contributor, Option::Some((amount, index)));
+                self.contributor_count.write(index + 1);
             }
         }
 
         fn get(self: @ComponentState<TContractState>, contributor: ContractAddress) -> u256 {
-            let val: Option<(u256, u32)> = self.contributor_to_amt_idx.read(contributor);
+            let val: Option<(u256, u32)> = self.contributor_to_amount_index.read(contributor);
             match val {
-                Option::Some((amt, _)) => amt,
+                Option::Some((amount, _)) => amount,
                 Option::None => 0,
             }
         }
@@ -61,42 +63,46 @@ pub mod contributable_component {
             let mut index = self.contributor_count.read();
             while index != 0 {
                 index -= 1;
-                let contr = self.idx_to_contributor.read(index);
-                let amt_idx_opt: Option<(u256, u32)> = self.contributor_to_amt_idx.read(contr);
-                let amount = match amt_idx_opt {
-                    Option::Some((amt, _)) => amt,
+                let contributor = self.index_to_contributor.read(index);
+                let amount_index_option: Option<(u256, u32)> = self
+                    .contributor_to_amount_index
+                    .read(contributor);
+                let amount = match amount_index_option {
+                    Option::Some((amount, _)) => amount,
                     Option::None => 0
                 };
-                result.append((contr, amount));
+                result.append((contributor, amount));
             };
 
             result
         }
 
         fn remove(ref self: ComponentState<TContractState>, contributor: ContractAddress) -> u256 {
-            let amt_idx_opt: Option<(u256, u32)> = self.contributor_to_amt_idx.read(contributor);
-            if let Option::Some((amt, idx)) = amt_idx_opt {
-                self.contributor_to_amt_idx.write(contributor, Option::None);
+            let amount_index_option: Option<(u256, u32)> = self
+                .contributor_to_amount_index
+                .read(contributor);
+            if let Option::Some((amount, index)) = amount_index_option {
+                self.contributor_to_amount_index.write(contributor, Option::None);
                 let contributor_count = self.contributor_count.read() - 1;
                 self.contributor_count.write(contributor_count);
                 if contributor_count != 0 {
-                    let last_contributor = self.idx_to_contributor.read(contributor_count);
-                    let last_amt_idx: Option<(u256, u32)> = self
-                        .contributor_to_amt_idx
+                    let last_contributor = self.index_to_contributor.read(contributor_count);
+                    let last_amount_index: Option<(u256, u32)> = self
+                        .contributor_to_amount_index
                         .read(last_contributor);
-                    let last_amt = match last_amt_idx {
-                        Option::Some((l_a, _)) => l_a,
+                    let last_amount = match last_amount_index {
+                        Option::Some((last_amount, _)) => last_amount,
                         Option::None => 0
                     };
                     self
-                        .contributor_to_amt_idx
-                        .write(last_contributor, Option::Some((last_amt, idx)));
-                    self.idx_to_contributor.write(idx, last_contributor);
+                        .contributor_to_amount_index
+                        .write(last_contributor, Option::Some((last_amount, index)));
+                    self.index_to_contributor.write(index, last_contributor);
                 }
 
-                self.idx_to_contributor.write(contributor_count, Zero::zero());
+                self.index_to_contributor.write(contributor_count, Zero::zero());
 
-                amt
+                amount
             } else {
                 0
             }
