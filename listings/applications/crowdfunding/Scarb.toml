@@ -3,7 +3,7 @@ name = "crowdfunding"
 version.workspace = true
 edition = "2023_11"
 
-[lib]
+# [lib]
 
 [dependencies]
 starknet.workspace = true
@@ -16,3 +16,4 @@ test.workspace = true
 
 [[target.starknet-contract]]
 casm = true
+build-external-contracts = ["openzeppelin::presets::erc20::ERC20"]

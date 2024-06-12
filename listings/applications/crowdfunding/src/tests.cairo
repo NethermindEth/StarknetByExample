@@ -12,6 +12,9 @@ use snforge_std::{
 use crowdfunding::campaign::{Campaign, ICampaignDispatcher, ICampaignDispatcherTrait};
 use crowdfunding::campaign::Status;
 use components::ownable::{IOwnableDispatcher, IOwnableDispatcherTrait};
+use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+
+const ERC20_SUPPLY: u256 = 10000;
 
 /// Deploy a campaign contract with the provided data
 fn deploy_with(
@@ -38,6 +41,54 @@ fn deploy() -> ICampaignDispatcher {
     deploy_with("title 1", "description 1", 10000, 60, contract_address_const::<'token'>())
 }
 
+fn deploy_with_token() -> ICampaignDispatcher {
+    // define ERC20 data
+    let erc20_name: ByteArray = "My Token";
+    let erc20_symbol: ByteArray = "MTKN";
+    let erc20_supply: u256 = 100000;
+    let erc20_owner = contract_address_const::<'erc20_owner'>();
+
+    // deploy ERC20 token
+    let erc20 = declare("ERC20").unwrap();
+    let mut erc20_constructor_calldata = array![];
+    (erc20_name, erc20_symbol, erc20_supply, erc20_owner).serialize(ref erc20_constructor_calldata);
+    let (erc20_address, _) = erc20.deploy(@erc20_constructor_calldata).unwrap();
+
+    // transfer amounts to some contributors
+    let contributor_1 = contract_address_const::<'contributor_1'>();
+    let contributor_2 = contract_address_const::<'contributor_2'>();
+    let contributor_3 = contract_address_const::<'contributor_3'>();
+
+    start_cheat_caller_address(erc20_address, erc20_owner);
+    let erc20_dispatcher = IERC20Dispatcher { contract_address: erc20_address };
+    erc20_dispatcher.transfer(contributor_1, 10000);
+    erc20_dispatcher.transfer(contributor_2, 10000);
+    erc20_dispatcher.transfer(contributor_3, 10000);
+
+    // deploy the actual Campaign contract
+    let campaign_dispatcher = deploy_with("title 1", "description 1", 10000, 60, erc20_address);
+
+    // approve the contributions for each contributor
+    start_cheat_caller_address(erc20_address, contributor_1);
+    erc20_dispatcher.approve(campaign_dispatcher.contract_address, 10000);
+    start_cheat_caller_address(erc20_address, contributor_2);
+    erc20_dispatcher.approve(campaign_dispatcher.contract_address, 10000);
+    start_cheat_caller_address(erc20_address, contributor_3);
+    erc20_dispatcher.approve(campaign_dispatcher.contract_address, 10000);
+
+    // NOTE: don't forget to stop the caller address cheat on the ERC20 contract!!
+    // Otherwise, any call to this contract from any source will have the cheated
+    // address as the caller
+    stop_cheat_caller_address(erc20_address);
+
+    campaign_dispatcher
+}
+
+fn _get_token_dispatcher(campaign: ICampaignDispatcher) -> IERC20Dispatcher {
+    let token_address = campaign.get_details().token;
+    IERC20Dispatcher { contract_address: token_address }
+}
+
 #[test]
 fn test_deploy() {
     let campaign = deploy();
@@ -55,6 +106,48 @@ fn test_deploy() {
     let owner: ContractAddress = contract_address_const::<'owner'>();
     let campaign_ownable = IOwnableDispatcher { contract_address: campaign.contract_address };
     assert_eq!(campaign_ownable.owner(), owner);
+}
+
+#[test]
+fn test_successful_campaign() {
+    let campaign = deploy_with_token();
+    let token = _get_token_dispatcher(campaign);
+
+    let creator = contract_address_const::<'creator'>();
+    let contributor_1 = contract_address_const::<'contributor_1'>();
+    let contributor_2 = contract_address_const::<'contributor_2'>();
+    let contributor_3 = contract_address_const::<'contributor_3'>();
+
+    start_cheat_caller_address(campaign.contract_address, creator);
+    campaign.start();
+    assert_eq!(campaign.get_details().status, Status::ACTIVE);
+
+    start_cheat_caller_address(campaign.contract_address, contributor_1);
+    let mut prev_balance = token.balance_of(contributor_1);
+    campaign.contribute(3000);
+    assert_eq!(campaign.get_details().total_contributions, 3000);
+    assert_eq!(campaign.get_contribution(contributor_1), 3000);
+    assert_eq!(token.balance_of(contributor_1), prev_balance - 3000);
+
+    start_cheat_caller_address(campaign.contract_address, contributor_2);
+    prev_balance = token.balance_of(contributor_2);
+    campaign.contribute(500);
+    assert_eq!(campaign.get_details().total_contributions, 3500);
+    assert_eq!(campaign.get_contribution(contributor_2), 500);
+    assert_eq!(token.balance_of(contributor_2), prev_balance - 500);
+
+    start_cheat_caller_address(campaign.contract_address, contributor_3);
+    prev_balance = token.balance_of(contributor_3);
+    campaign.contribute(7000);
+    assert_eq!(campaign.get_details().total_contributions, 10500);
+    assert_eq!(campaign.get_contribution(contributor_3), 7000);
+    assert_eq!(token.balance_of(contributor_3), prev_balance - 7000);
+
+    start_cheat_caller_address(campaign.contract_address, creator);
+    prev_balance = token.balance_of(creator);
+    campaign.claim();
+    assert_eq!(token.balance_of(creator), prev_balance + 10500);
+    assert_eq!(campaign.get_details().status, Status::SUCCESSFUL);
 }
 
 #[test]

@@ -209,7 +209,7 @@ pub mod Campaign {
 
             let contributor = get_caller_address();
             let this = get_contract_address();
-            let success = self.token.read().transfer_from(contributor, this, amount.into());
+            let success = self.token.read().transfer_from(contributor, this, amount);
             assert(success, Errors::TRANSFER_FAILED);
 
             self.contributions.add(contributor, amount);
@@ -248,6 +248,25 @@ pub mod Campaign {
             self.emit(Event::Activated(Activated {}));
         }
 
+        /// There are currently 3 possibilities for performing contract upgrades:
+        ///  1. Trust the campaign factory owner -> this is suboptimal, as factory owners have no responsibility to either creators or contributors,
+        ///     and there's nothing stopping them from implementing a malicious upgrade.
+        ///  2. Trust the campaign creator -> the contributors already trust the campaign creator that they'll do what they promised in the campaign.
+        ///     It's not a stretch to trust them with verifying that the contract upgrade is necessary. 
+        ///  3. Trust no one, contract upgrades are forbidden -> could be a problem if a vulnerability is discovered and campaign funds are in danger.
+        /// 
+        /// This function implements the 2nd option, as it seems to be the most optimal solution, especially from the point of view of what to do if
+        /// any of the upgrades fail for whatever reason - campaign creator is solely responsible for upgrading their contracts. 
+        /// 
+        /// To improve contributor trust, contract upgrades refund all of contributor funds, so that on the off chance that the creator is in cahoots
+        /// with factory owners to implement a malicious upgrade, the contributor funds would be returned.
+        /// There are some problems with this though:
+        ///  - contributors wouldn't have even been donating if they weren't trusting the creator - since the funds end up with them in the end, they
+        ///    have to trust that creators would use the campaign funds as they promised when creating the campaign.
+        ///  - since the funds end up with the creators, they have no incentive to implement a malicious upgrade - they'll have the funds either way.
+        ///  - each time there's an upgrade, the campaign gets reset, which introduces new problems:
+        ///     - What if the Campaign was close to ending? We just took all of their contributions away, and there might not be enough time to get them back.
+        ///       We solve this by letting the creators prolong the duration of the campaign.
         fn upgrade(ref self: ContractState, impl_hash: ClassHash) -> Result<(), Array<felt252>> {
             if get_caller_address() != self.ownable.owner() {
                 return Result::Err(array![components::ownable::Errors::UNAUTHORIZED]);
