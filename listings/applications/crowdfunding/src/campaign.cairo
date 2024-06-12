@@ -65,7 +65,7 @@ pub mod Campaign {
         contributions: contributable_component::Storage,
         end_time: u64,
         token: IERC20Dispatcher,
-        factory: ContractAddress,
+        creator: ContractAddress,
         target: u256,
         title: ByteArray,
         description: ByteArray,
@@ -159,7 +159,7 @@ pub mod Campaign {
         self.target.write(target);
         self.description.write(description);
         self.end_time.write(get_block_timestamp() + duration);
-        self.factory.write(get_caller_address());
+        self.creator.write(get_caller_address());
         self.ownable._init(owner);
         self.status.write(Status::PENDING)
     }
@@ -246,7 +246,7 @@ pub mod Campaign {
         }
 
         fn upgrade(ref self: ContractState, impl_hash: ClassHash) -> Result<(), Array<felt252>> {
-            if get_caller_address() != self.factory.read() {
+            if get_caller_address() != self.creator.read() {
                 return Result::Err(array![Errors::NOT_FACTORY]);
             }
             if impl_hash.is_zero() {
