@@ -183,7 +183,8 @@ pub mod Campaign {
             // no need to set total_contributions to 0, as the campaign has ended
             // and the field can be used as a testament to how much was raised
 
-            let success = token.transfer(get_caller_address(), amount);
+            let owner = get_caller_address();
+            let success = token.transfer(owner, amount);
             assert(success, Errors::TRANSFER_FAILED);
 
             self.emit(Event::Claimed(Claimed { amount }));
@@ -195,12 +196,7 @@ pub mod Campaign {
 
             self.status.write(Status::CLOSED);
 
-            let mut contributions = self.get_contributions();
-            while let Option::Some((contributor, amt)) = contributions
-                .pop_front() {
-                    self.contributions.remove(contributor);
-                    self.token.read().transfer(contributor, amt);
-                };
+            self._refund_all();
 
             self.emit(Event::Closed(Closed { reason }));
         }
@@ -253,6 +249,8 @@ pub mod Campaign {
                 return Result::Err(array![Errors::CLASS_HASH_ZERO]);
             }
 
+            self._refund_all();
+
             starknet::syscalls::replace_class_syscall(impl_hash)?;
 
             self.emit(Event::Upgraded(Upgraded { implementation: impl_hash }));
@@ -294,6 +292,15 @@ pub mod Campaign {
 
         fn _is_target_reached(self: @ContractState) -> bool {
             self.total_contributions.read() >= self.target.read()
+        }
+
+        fn _refund_all(ref self: ContractState) {
+            let mut contributions = self.contributions.get_contributions_as_arr();
+            while let Option::Some((contributor, amt)) = contributions
+                .pop_front() {
+                    self.contributions.remove(contributor);
+                    self.token.read().transfer(contributor, amt);
+                };
         }
     }
 }
