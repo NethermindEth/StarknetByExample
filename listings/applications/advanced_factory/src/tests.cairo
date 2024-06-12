@@ -74,7 +74,7 @@ fn test_deploy_campaign() {
     assert_eq!(details.description, description);
     assert_eq!(details.target, target);
     assert_eq!(details.end_time, get_block_timestamp() + duration);
-    assert_eq!(details.status, Status::ACTIVE);
+    assert_eq!(details.status, Status::PENDING);
     assert_eq!(details.token, token);
     assert_eq!(details.total_contributions, 0);
 

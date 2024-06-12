@@ -6,9 +6,10 @@ use starknet::{ClassHash, ContractAddress};
 #[derive(Drop, Debug, Serde, PartialEq, starknet::Store)]
 pub enum Status {
     ACTIVE,
+    CLOSED,
+    PENDING,
     SUCCESSFUL,
     UNSUCCESSFUL,
-    CLOSED
 }
 
 #[derive(Drop, Serde)]
@@ -29,6 +30,7 @@ pub trait ICampaign<TContractState> {
     fn contribute(ref self: TContractState, amount: u256);
     fn get_contributions(self: @TContractState) -> Array<(ContractAddress, u256)>;
     fn get_details(self: @TContractState) -> Details;
+    fn start(ref self: TContractState);
     fn upgrade(ref self: TContractState, impl_hash: ClassHash) -> Result<(), Array<felt252>>;
     fn withdraw(ref self: TContractState);
 }
@@ -71,12 +73,12 @@ pub mod Campaign {
         status: Status
     }
 
-
     #[event]
     #[derive(Drop, starknet::Event)]
     pub enum Event {
         #[flat]
         OwnableEvent: ownable_component::Event,
+        Activated: Activated,
         ContributableEvent: contributable_component::Event,
         ContributionMade: ContributionMade,
         Claimed: Claimed,
@@ -98,6 +100,9 @@ pub mod Campaign {
     }
 
     #[derive(Drop, starknet::Event)]
+    pub struct Activated {}
+
+    #[derive(Drop, starknet::Event)]
     pub struct Closed {
         pub reason: ByteArray,
     }
@@ -117,6 +122,7 @@ pub mod Campaign {
     pub mod Errors {
         pub const NOT_FACTORY: felt252 = 'Caller not factory';
         pub const ENDED: felt252 = 'Campaign already ended';
+        pub const NOT_PENDING: felt252 = 'Campaign not pending';
         pub const STILL_ACTIVE: felt252 = 'Campaign not ended';
         pub const ZERO_DONATION: felt252 = 'Donation must be > 0';
         pub const ZERO_TARGET: felt252 = 'Target must be > 0';
@@ -155,7 +161,7 @@ pub mod Campaign {
         self.end_time.write(get_block_timestamp() + duration);
         self.factory.write(get_caller_address());
         self.ownable._init(owner);
-        self.status.write(Status::ACTIVE)
+        self.status.write(Status::PENDING)
     }
 
     #[abi(embed_v0)]
@@ -164,6 +170,7 @@ pub mod Campaign {
             self.ownable._assert_only_owner();
             assert(self._is_active(), Errors::ENDED);
             assert(self._is_target_reached(), Errors::TARGET_NOT_REACHED);
+            // no need to check end_time, as the owner can prematurely end the campaign
 
             let this = get_contract_address();
             let token = self.token.read();
@@ -227,6 +234,15 @@ pub mod Campaign {
                 token: self.token.read().contract_address,
                 total_contributions: self.total_contributions.read(),
             }
+        }
+
+        fn start(ref self: ContractState) {
+            self.ownable._assert_only_owner();
+            assert(self.status.read() == Status::PENDING, Errors::NOT_PENDING);
+
+            self.status.write(Status::ACTIVE);
+
+            self.emit(Event::Activated(Activated {}));
         }
 
         fn upgrade(ref self: ContractState, impl_hash: ClassHash) -> Result<(), Array<felt252>> {

@@ -47,7 +47,7 @@ fn test_deploy() {
     assert_eq!(details.description, "description 1");
     assert_eq!(details.target, 10000);
     assert_eq!(details.end_time, get_block_timestamp() + 60);
-    assert_eq!(details.status, Status::ACTIVE);
+    assert_eq!(details.status, Status::PENDING);
     assert_eq!(details.token, contract_address_const::<'token'>());
     assert_eq!(details.total_contributions, 0);
 
