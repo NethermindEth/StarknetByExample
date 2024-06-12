@@ -17,14 +17,14 @@ use components::ownable::{IOwnableDispatcher, IOwnableDispatcherTrait};
 fn deploy_with(
     title: ByteArray, description: ByteArray, target: u256, duration: u64, token: ContractAddress
 ) -> ICampaignDispatcher {
-    let owner = contract_address_const::<'owner'>();
+    let creator = contract_address_const::<'creator'>();
     let mut calldata: Array::<felt252> = array![];
-    ((owner, title, description, target), duration, token).serialize(ref calldata);
+    ((creator, title, description, target), duration, token).serialize(ref calldata);
 
     let contract = declare("Campaign").unwrap();
     let contract_address = contract.precalculate_address(@calldata);
-    let factory = contract_address_const::<'factory'>();
-    start_cheat_caller_address(contract_address, factory);
+    let owner = contract_address_const::<'owner'>();
+    start_cheat_caller_address(contract_address, owner);
 
     contract.deploy(@calldata).unwrap();
 
@@ -50,6 +50,7 @@ fn test_deploy() {
     assert_eq!(details.status, Status::PENDING);
     assert_eq!(details.token, contract_address_const::<'token'>());
     assert_eq!(details.total_contributions, 0);
+    assert_eq!(details.creator, contract_address_const::<'creator'>());
 
     let owner: ContractAddress = contract_address_const::<'owner'>();
     let campaign_ownable = IOwnableDispatcher { contract_address: campaign.contract_address };
@@ -64,8 +65,8 @@ fn test_upgrade_class_hash() {
 
     let new_class_hash = declare("MockContract").unwrap().class_hash;
 
-    let factory = contract_address_const::<'factory'>();
-    start_cheat_caller_address(campaign.contract_address, factory);
+    let owner = contract_address_const::<'owner'>();
+    start_cheat_caller_address(campaign.contract_address, owner);
 
     if let Result::Err(errs) = campaign.upgrade(new_class_hash) {
         panic(errs)
@@ -85,14 +86,14 @@ fn test_upgrade_class_hash() {
 }
 
 #[test]
-#[should_panic(expected: 'Caller not factory')]
+#[should_panic(expected: 'Not owner')]
 fn test_upgrade_class_hash_fail() {
     let campaign = deploy();
 
     let new_class_hash = declare("MockContract").unwrap().class_hash;
 
-    let owner = contract_address_const::<'owner'>();
-    start_cheat_caller_address(campaign.contract_address, owner);
+    let random_address = contract_address_const::<'random_address'>();
+    start_cheat_caller_address(campaign.contract_address, random_address);
 
     if let Result::Err(errs) = campaign.upgrade(new_class_hash) {
         panic(errs)

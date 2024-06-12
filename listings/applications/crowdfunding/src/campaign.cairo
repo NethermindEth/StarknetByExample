@@ -14,6 +14,7 @@ pub enum Status {
 
 #[derive(Drop, Serde)]
 pub struct Details {
+    pub creator: ContractAddress,
     pub target: u256,
     pub title: ByteArray,
     pub end_time: u64,
@@ -42,7 +43,7 @@ pub mod Campaign {
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
     use starknet::{
         ClassHash, ContractAddress, SyscallResultTrait, get_block_timestamp, contract_address_const,
-        get_caller_address, get_contract_address
+        get_caller_address, get_contract_address, class_hash::class_hash_const
     };
     use components::ownable::ownable_component;
     use super::contributions::contributable_component;
@@ -120,7 +121,7 @@ pub mod Campaign {
     }
 
     pub mod Errors {
-        pub const NOT_FACTORY: felt252 = 'Caller not factory';
+        pub const NOT_CREATOR: felt252 = 'Not creator';
         pub const ENDED: felt252 = 'Campaign already ended';
         pub const NOT_PENDING: felt252 = 'Campaign not pending';
         pub const STILL_ACTIVE: felt252 = 'Campaign not ended';
@@ -131,7 +132,7 @@ pub mod Campaign {
         pub const TRANSFER_FAILED: felt252 = 'Transfer failed';
         pub const TITLE_EMPTY: felt252 = 'Title empty';
         pub const CLASS_HASH_ZERO: felt252 = 'Class hash cannot be zero';
-        pub const FACTORY_ZERO: felt252 = 'Factory address cannot be zero';
+        pub const ZERO_ADDRESS_CALLER: felt252 = 'Caller cannot be zero';
         pub const CREATOR_ZERO: felt252 = 'Creator address cannot be zero';
         pub const TARGET_NOT_REACHED: felt252 = 'Target not reached';
         pub const TARGET_ALREADY_REACHED: felt252 = 'Target already reached';
@@ -141,14 +142,14 @@ pub mod Campaign {
     #[constructor]
     fn constructor(
         ref self: ContractState,
-        owner: ContractAddress,
+        creator: ContractAddress,
         title: ByteArray,
         description: ByteArray,
         target: u256,
         duration: u64,
         token_address: ContractAddress
     ) {
-        assert(owner.is_non_zero(), Errors::CREATOR_ZERO);
+        assert(creator.is_non_zero(), Errors::CREATOR_ZERO);
         assert(title.len() > 0, Errors::TITLE_EMPTY);
         assert(target > 0, Errors::ZERO_TARGET);
         assert(duration > 0, Errors::ZERO_DURATION);
@@ -159,15 +160,15 @@ pub mod Campaign {
         self.target.write(target);
         self.description.write(description);
         self.end_time.write(get_block_timestamp() + duration);
-        self.creator.write(get_caller_address());
-        self.ownable._init(owner);
+        self.creator.write(creator);
+        self.ownable._init(get_caller_address());
         self.status.write(Status::PENDING)
     }
 
     #[abi(embed_v0)]
     impl Campaign of super::ICampaign<ContractState> {
         fn claim(ref self: ContractState) {
-            self.ownable._assert_only_owner();
+            self._assert_only_creator();
             assert(self._is_active(), Errors::ENDED);
             assert(self._is_target_reached(), Errors::TARGET_NOT_REACHED);
             // no need to check end_time, as the owner can prematurely end the campaign
@@ -191,7 +192,7 @@ pub mod Campaign {
         }
 
         fn close(ref self: ContractState, reason: ByteArray) {
-            self.ownable._assert_only_owner();
+            self._assert_only_creator();
             assert(self._is_active(), Errors::ENDED);
 
             self.status.write(Status::CLOSED);
@@ -222,6 +223,7 @@ pub mod Campaign {
 
         fn get_details(self: @ContractState) -> Details {
             Details {
+                creator: self.creator.read(),
                 title: self.title.read(),
                 description: self.description.read(),
                 target: self.target.read(),
@@ -233,7 +235,7 @@ pub mod Campaign {
         }
 
         fn start(ref self: ContractState) {
-            self.ownable._assert_only_owner();
+            self._assert_only_creator();
             assert(self.status.read() == Status::PENDING, Errors::NOT_PENDING);
 
             self.status.write(Status::ACTIVE);
@@ -242,8 +244,8 @@ pub mod Campaign {
         }
 
         fn upgrade(ref self: ContractState, impl_hash: ClassHash) -> Result<(), Array<felt252>> {
-            if get_caller_address() != self.creator.read() {
-                return Result::Err(array![Errors::NOT_FACTORY]);
+            if get_caller_address() != self.ownable.owner() {
+                return Result::Err(array![components::ownable::Errors::UNAUTHORIZED]);
             }
             if impl_hash.is_zero() {
                 return Result::Err(array![Errors::CLASS_HASH_ZERO]);
@@ -282,6 +284,12 @@ pub mod Campaign {
 
     #[generate_trait]
     impl CampaignInternalImpl of CampaignInternalTrait {
+        fn _assert_only_creator(self: @ContractState) {
+            let caller = get_caller_address();
+            assert(caller.is_non_zero(), Errors::ZERO_ADDRESS_CALLER);
+            assert(caller == self.creator.read(), Errors::NOT_CREATOR);
+        }
+
         fn _is_expired(self: @ContractState) -> bool {
             get_block_timestamp() < self.end_time.read()
         }

@@ -56,8 +56,8 @@ fn test_deploy_campaign() {
 
     let mut spy = spy_events(SpyOn::One(factory.contract_address));
 
-    let campaign_owner: ContractAddress = contract_address_const::<'campaign_owner'>();
-    start_cheat_caller_address(factory.contract_address, campaign_owner);
+    let campaign_creator: ContractAddress = contract_address_const::<'campaign_creator'>();
+    start_cheat_caller_address(factory.contract_address, campaign_creator);
 
     let title: ByteArray = "New campaign";
     let description: ByteArray = "Some description";
@@ -77,9 +77,10 @@ fn test_deploy_campaign() {
     assert_eq!(details.status, Status::PENDING);
     assert_eq!(details.token, token);
     assert_eq!(details.total_contributions, 0);
+    assert_eq!(details.creator, campaign_creator);
 
     let campaign_ownable = IOwnableDispatcher { contract_address: campaign_address };
-    assert_eq!(campaign_ownable.owner(), campaign_owner);
+    assert_eq!(campaign_ownable.owner(), factory.contract_address);
 
     spy
         .assert_emitted(
@@ -88,7 +89,7 @@ fn test_deploy_campaign() {
                     factory.contract_address,
                     CampaignFactory::Event::CampaignCreated(
                         CampaignFactory::CampaignCreated {
-                            caller: campaign_owner, contract_address: campaign_address
+                            caller: campaign_creator, contract_address: campaign_address
                         }
                     )
                 )
