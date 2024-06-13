@@ -32,7 +32,7 @@ pub trait ICampaign<TContractState> {
     fn get_contribution(self: @TContractState, contributor: ContractAddress) -> u256;
     fn get_contributions(self: @TContractState) -> Array<(ContractAddress, u256)>;
     fn get_details(self: @TContractState) -> Details;
-    fn start(ref self: TContractState);
+    fn start(ref self: TContractState, duration: u64);
     fn upgrade(ref self: TContractState, impl_hash: ClassHash) -> Result<(), Array<felt252>>;
     fn withdraw(ref self: TContractState);
 }
@@ -150,20 +150,17 @@ pub mod Campaign {
         title: ByteArray,
         description: ByteArray,
         target: u256,
-        duration: u64,
         token_address: ContractAddress
     ) {
         assert(creator.is_non_zero(), Errors::CREATOR_ZERO);
         assert(title.len() > 0, Errors::TITLE_EMPTY);
         assert(target > 0, Errors::ZERO_TARGET);
-        assert(duration > 0, Errors::ZERO_DURATION);
 
         self.token.write(IERC20Dispatcher { contract_address: token_address });
 
         self.title.write(title);
         self.target.write(target);
         self.description.write(description);
-        self.end_time.write(get_block_timestamp() + duration);
         self.creator.write(creator);
         self.ownable._init(get_caller_address());
         self.status.write(Status::PENDING)
@@ -210,11 +207,8 @@ pub mod Campaign {
         }
 
         fn contribute(ref self: ContractState, amount: u256) {
-            let status = self.status.read();
-            assert(status != Status::PENDING, Errors::STILL_PENDING);
-            assert(status != Status::CLOSED, Errors::CLOSED);
-            assert(status != Status::FAILED, Errors::FAILED);
-            assert(status != Status::SUCCESSFUL, Errors::ENDED);
+            assert(self.status.read() != Status::PENDING, Errors::STILL_PENDING);
+            assert(self._is_active() && !self._is_expired(), Errors::ENDED);
             assert(amount > 0, Errors::ZERO_DONATION);
 
             let contributor = get_caller_address();
@@ -249,11 +243,12 @@ pub mod Campaign {
             }
         }
 
-        fn start(ref self: ContractState) {
+        fn start(ref self: ContractState, duration: u64) {
             self._assert_only_creator();
             assert(self.status.read() == Status::PENDING, Errors::NOT_PENDING);
+            assert(duration > 0, Errors::ZERO_DURATION);
 
-            // TODO: calculate end_time here
+            self.end_time.write(get_block_timestamp() + duration);
             self.status.write(Status::ACTIVE);
 
             self.emit(Event::Activated(Activated {}));
