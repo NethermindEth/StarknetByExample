@@ -140,6 +140,7 @@ pub mod Campaign {
         pub const ZERO_TARGET: felt252 = 'Target must be > 0';
         pub const ZERO_DURATION: felt252 = 'Duration must be > 0';
         pub const ZERO_FUNDS: felt252 = 'No funds to claim';
+        pub const ZERO_ADDRESS_CONTRIBUTOR: felt252 = 'Contributor cannot be zero';
         pub const TRANSFER_FAILED: felt252 = 'Transfer failed';
         pub const TITLE_EMPTY: felt252 = 'Title empty';
         pub const ZERO_ADDRESS_CALLER: felt252 = 'Caller cannot be zero';
@@ -147,6 +148,7 @@ pub mod Campaign {
         pub const TARGET_NOT_REACHED: felt252 = 'Target not reached';
         pub const TARGET_ALREADY_REACHED: felt252 = 'Target already reached';
         pub const NOTHING_TO_WITHDRAW: felt252 = 'Nothing to withdraw';
+        pub const NOTHING_TO_REFUND: felt252 = 'Nothing to refund';
     }
 
     #[constructor]
@@ -157,7 +159,7 @@ pub mod Campaign {
         description: ByteArray,
         target: u256,
         token_address: ContractAddress,
-    // TODO: add recepient address
+    // TODO: add recepient address?
     ) {
         assert(creator.is_non_zero(), Errors::CREATOR_ZERO);
         assert(title.len() > 0, Errors::TITLE_EMPTY);
@@ -261,6 +263,7 @@ pub mod Campaign {
             self.emit(Event::Activated(Activated {}));
         }
 
+
         /// There are currently 3 possibilities for performing contract upgrades:
         ///  1. Trust the campaign factory owner -> this is suboptimal, as factory owners have no responsibility to either creators or contributors,
         ///     and there's nothing stopping them from implementing a malicious upgrade.
@@ -315,8 +318,11 @@ pub mod Campaign {
             let contributor = get_caller_address();
             let amount = self.contributions.remove(contributor);
 
-            // no need to set total_contributions to 0, as the campaign has ended
-            // and the field can be used as a testament to how much was raised
+            // if the campaign is "failed", then there's no need to set total_contributions to 0, as
+            // the campaign has ended and the field can be used as a testament to how much was raised
+            if self._is_active() {
+                self.total_contributions.write(self.total_contributions.read() - amount);
+            }
 
             let success = self.token.read().transfer(contributor, amount);
             assert(success, Errors::TRANSFER_FAILED);
