@@ -191,7 +191,9 @@ pub mod Campaign {
     impl Campaign of super::ICampaign<ContractState> {
         fn claim(ref self: ContractState) {
             self._assert_only_creator();
-            assert(self._is_active() && self._is_expired(), Errors::STILL_ACTIVE);
+            assert(
+                self.status.read() == Status::ACTIVE && self._is_expired(), Errors::STILL_ACTIVE
+            );
             assert(self._is_target_reached(), Errors::TARGET_NOT_REACHED);
 
             let this = get_contract_address();
@@ -214,7 +216,7 @@ pub mod Campaign {
 
         fn close(ref self: ContractState, reason: ByteArray) {
             self._assert_only_creator();
-            assert(self._is_active(), Errors::ENDED);
+            assert(self.status.read() == Status::ACTIVE, Errors::ENDED);
 
             if !self._is_target_reached() && self._is_expired() {
                 self.status.write(Status::FAILED);
@@ -230,7 +232,7 @@ pub mod Campaign {
 
         fn contribute(ref self: ContractState, amount: u256) {
             assert(self.status.read() != Status::DRAFT, Errors::STILL_DRAFT);
-            assert(self._is_active() && !self._is_expired(), Errors::ENDED);
+            assert(self.status.read() == Status::ACTIVE && !self._is_expired(), Errors::ENDED);
             assert(amount > 0, Errors::ZERO_DONATION);
 
             let contributor = get_caller_address();
@@ -280,7 +282,7 @@ pub mod Campaign {
             self._assert_only_creator();
             assert(contributor.is_non_zero(), Errors::ZERO_ADDRESS_CONTRIBUTOR);
             assert(self.status.read() != Status::DRAFT, Errors::STILL_DRAFT);
-            assert(self._is_active(), Errors::ENDED);
+            assert(self.status.read() == Status::ACTIVE, Errors::ENDED);
             assert(self.contributions.get(contributor) != 0, Errors::NOTHING_TO_REFUND);
 
             let amount = self._refund(contributor);
@@ -288,25 +290,6 @@ pub mod Campaign {
             self.emit(Event::Refunded(Refunded { contributor, amount, reason }))
         }
 
-        /// There are currently 3 possibilities for performing contract upgrades:
-        ///  1. Trust the campaign factory owner -> this is suboptimal, as factory owners have no responsibility to either creators or contributors,
-        ///     and there's nothing stopping them from implementing a malicious upgrade.
-        ///  2. Trust the campaign creator -> the contributors already trust the campaign creator that they'll do what they promised in the campaign.
-        ///     It's not a stretch to trust them with verifying that the contract upgrade is necessary. 
-        ///  3. Trust no one, contract upgrades are forbidden -> could be a problem if a vulnerability is discovered and campaign funds are in danger.
-        /// 
-        /// This function implements the 2nd option, as it seems to be the most optimal solution, especially from the point of view of what to do if
-        /// any of the upgrades fail for whatever reason - campaign creator is solely responsible for upgrading their contracts. 
-        /// 
-        /// To improve contributor trust, contract upgrades refund all of contributor funds, so that on the off chance that the creator is in cahoots
-        /// with factory owners to implement a malicious upgrade, the contributor funds would be returned.
-        /// There are some problems with this though:
-        ///  - contributors wouldn't have even been donating if they weren't trusting the creator - since the funds end up with them in the end, they
-        ///    have to trust that creators would use the campaign funds as they promised when creating the campaign.
-        ///  - since the funds end up with the creators, they have no incentive to implement a malicious upgrade - they'll have the funds either way.
-        ///  - each time there's an upgrade, the campaign gets reset, which introduces a new problem - what if the Campaign was close to ending?
-        ///    We just took all of their contributions away, and there might not be enough time to get them back. We solve this by letting the creators
-        ///    prolong the duration of the campaign.
         fn upgrade(ref self: ContractState, impl_hash: ClassHash, new_duration: Option<u64>) {
             self.ownable._assert_only_owner();
             assert(impl_hash.is_non_zero(), Errors::CLASS_HASH_ZERO);
@@ -317,13 +300,11 @@ pub mod Campaign {
 
             // only active campaigns have funds to refund and duration to update
             if self.status.read() == Status::ACTIVE {
-                let duration = match new_duration {
-                    Option::Some(val) => val,
-                    Option::None => 0,
+                if let Option::Some(duration) = new_duration {
+                    assert(duration > 0, Errors::ZERO_DURATION);
+                    self.end_time.write(get_block_timestamp() + duration);
                 };
-                assert(duration > 0, Errors::ZERO_DURATION);
                 self._refund_all("contract upgraded");
-                self.end_time.write(get_block_timestamp() + duration);
             }
 
             starknet::syscalls::replace_class_syscall(impl_hash).unwrap_syscall();
@@ -355,10 +336,6 @@ pub mod Campaign {
 
         fn _is_expired(self: @ContractState) -> bool {
             get_block_timestamp() >= self.end_time.read()
-        }
-
-        fn _is_active(self: @ContractState) -> bool {
-            self.status.read() == Status::ACTIVE
         }
 
         fn _is_target_reached(self: @ContractState) -> bool {
