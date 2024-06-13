@@ -94,6 +94,7 @@ pub mod Campaign {
         #[key]
         pub contributor: ContractAddress,
         pub amount: u256,
+        pub status: Status,
     }
 
     #[derive(Drop, starknet::Event)]
@@ -128,6 +129,7 @@ pub mod Campaign {
         pub const STILL_ACTIVE: felt252 = 'Campaign not ended';
         pub const STILL_PENDING: felt252 = 'Campaign not yet active';
         pub const CLOSED: felt252 = 'Campaign closed';
+        pub const UNSUCCESSFUL: felt252 = 'Campaign unsuccessful';
         pub const CLASS_HASH_ZERO: felt252 = 'Class hash cannot be zero';
         pub const ZERO_DONATION: felt252 = 'Donation must be > 0';
         pub const ZERO_TARGET: felt252 = 'Target must be > 0';
@@ -172,8 +174,8 @@ pub mod Campaign {
     impl Campaign of super::ICampaign<ContractState> {
         fn claim(ref self: ContractState) {
             self._assert_only_creator();
-            assert(self._is_active(), Errors::ENDED);
-            assert(self._is_target_reached(), Errors::TARGET_NOT_REACHED);
+            assert(self.status.read() == Status::SUCCESSFUL, Errors::TARGET_NOT_REACHED);
+            assert(self._is_expired(), Errors::STILL_ACTIVE);
             // no need to check end_time, as the owner can prematurely end the campaign
 
             let this = get_contract_address();
@@ -181,8 +183,6 @@ pub mod Campaign {
 
             let amount = token.balance_of(this);
             assert(amount > 0, Errors::ZERO_FUNDS);
-
-            self.status.write(Status::SUCCESSFUL);
 
             // no need to set total_contributions to 0, as the campaign has ended
             // and the field can be used as a testament to how much was raised
@@ -206,7 +206,9 @@ pub mod Campaign {
         }
 
         fn contribute(ref self: ContractState, amount: u256) {
-            assert(self._is_active(), Errors::ENDED);
+            assert(self.status.read() != Status::PENDING, Errors::STILL_PENDING);
+            assert(self.status.read() != Status::CLOSED, Errors::CLOSED);
+            assert(!self._is_expired(), Errors::ENDED);
             assert(amount > 0, Errors::ZERO_DONATION);
 
             let contributor = get_caller_address();
@@ -217,7 +219,13 @@ pub mod Campaign {
             self.contributions.add(contributor, amount);
             self.total_contributions.write(self.total_contributions.read() + amount);
 
-            self.emit(Event::ContributionMade(ContributionMade { contributor, amount }));
+            if self._is_target_reached() {
+                self.status.write(Status::SUCCESSFUL);
+            }
+
+            let status = self.status.read();
+
+            self.emit(Event::ContributionMade(ContributionMade { contributor, amount, status }));
         }
 
         fn get_contribution(self: @ContractState, contributor: ContractAddress) -> u256 {
