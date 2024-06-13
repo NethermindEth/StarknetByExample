@@ -264,9 +264,9 @@ pub mod Campaign {
         ///  - contributors wouldn't have even been donating if they weren't trusting the creator - since the funds end up with them in the end, they
         ///    have to trust that creators would use the campaign funds as they promised when creating the campaign.
         ///  - since the funds end up with the creators, they have no incentive to implement a malicious upgrade - they'll have the funds either way.
-        ///  - each time there's an upgrade, the campaign gets reset, which introduces new problems:
-        ///     - What if the Campaign was close to ending? We just took all of their contributions away, and there might not be enough time to get them back.
-        ///       We solve this by letting the creators prolong the duration of the campaign.
+        ///  - each time there's an upgrade, the campaign gets reset, which introduces a new problem - what if the Campaign was close to ending?
+        ///    We just took all of their contributions away, and there might not be enough time to get them back. We solve this by letting the creators
+        ///    prolong the duration of the campaign.
         fn upgrade(ref self: ContractState, impl_hash: ClassHash) -> Result<(), Array<felt252>> {
             if get_caller_address() != self.ownable.owner() {
                 return Result::Err(array![components::ownable::Errors::UNAUTHORIZED]);
