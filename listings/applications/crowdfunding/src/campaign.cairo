@@ -110,6 +110,7 @@ pub mod Campaign {
     #[derive(Drop, starknet::Event)]
     pub struct Closed {
         pub reason: ByteArray,
+        pub status: Status,
     }
 
     #[derive(Drop, starknet::Event)]
@@ -221,8 +222,9 @@ pub mod Campaign {
             }
 
             self._refund_all(reason.clone());
+            let status = self.status.read();
 
-            self.emit(Event::Closed(Closed { reason }));
+            self.emit(Event::Closed(Closed { reason, status }));
         }
 
         fn contribute(ref self: ContractState, amount: u256) {

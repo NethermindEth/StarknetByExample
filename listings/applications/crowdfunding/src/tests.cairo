@@ -285,3 +285,105 @@ fn test_upgrade_class_hash() {
         );
 }
 
+#[test]
+fn test_close() {
+    let contract_class = declare("Campaign").unwrap();
+    let token_class = declare("ERC20").unwrap();
+    let duration: u64 = 60;
+
+    // test closed campaign
+    let (campaign, token) = deploy_with_token(contract_class, token_class);
+    let mut spy = spy_events(SpyOn::One(campaign.contract_address));
+    let creator = contract_address_const::<'creator'>();
+    let contributor_1 = contract_address_const::<'contributor_1'>();
+    let contributor_2 = contract_address_const::<'contributor_2'>();
+    let contributor_3 = contract_address_const::<'contributor_3'>();
+    let prev_balance_contributor_1 = token.balance_of(contributor_1);
+    let prev_balance_contributor_2 = token.balance_of(contributor_2);
+    let prev_balance_contributor_3 = token.balance_of(contributor_3);
+
+    start_cheat_caller_address(campaign.contract_address, creator);
+    campaign.start(duration);
+    start_cheat_caller_address(campaign.contract_address, contributor_1);
+    campaign.contribute(3000);
+    start_cheat_caller_address(campaign.contract_address, contributor_2);
+    campaign.contribute(1000);
+    start_cheat_caller_address(campaign.contract_address, contributor_3);
+    campaign.contribute(2000);
+    let total_contributions = campaign.get_details().total_contributions;
+
+    start_cheat_caller_address(campaign.contract_address, creator);
+    campaign.close("testing");
+    stop_cheat_caller_address(campaign.contract_address);
+
+    assert_eq!(prev_balance_contributor_1, token.balance_of(contributor_1));
+    assert_eq!(prev_balance_contributor_2, token.balance_of(contributor_2));
+    assert_eq!(prev_balance_contributor_3, token.balance_of(contributor_3));
+    assert_eq!(campaign.get_details().total_contributions, total_contributions);
+    assert_eq!(campaign.get_details().status, Status::CLOSED);
+
+    spy
+        .assert_emitted(
+            @array![
+                (
+                    campaign.contract_address,
+                    Campaign::Event::RefundedAll(Campaign::RefundedAll { reason: "testing" })
+                ),
+                (
+                    campaign.contract_address,
+                    Campaign::Event::Closed(
+                        Campaign::Closed { reason: "testing", status: Status::CLOSED }
+                    )
+                )
+            ]
+        );
+
+    // test failed campaign
+    let (campaign, token) = deploy_with_token(contract_class, token_class);
+    let mut spy = spy_events(SpyOn::One(campaign.contract_address));
+    let creator = contract_address_const::<'creator'>();
+    let contributor_1 = contract_address_const::<'contributor_1'>();
+    let contributor_2 = contract_address_const::<'contributor_2'>();
+    let contributor_3 = contract_address_const::<'contributor_3'>();
+    let prev_balance_contributor_1 = token.balance_of(contributor_1);
+    let prev_balance_contributor_2 = token.balance_of(contributor_2);
+    let prev_balance_contributor_3 = token.balance_of(contributor_3);
+
+    start_cheat_caller_address(campaign.contract_address, creator);
+    campaign.start(duration);
+    start_cheat_caller_address(campaign.contract_address, contributor_1);
+    campaign.contribute(3000);
+    start_cheat_caller_address(campaign.contract_address, contributor_2);
+    campaign.contribute(1000);
+    start_cheat_caller_address(campaign.contract_address, contributor_3);
+    campaign.contribute(2000);
+    let total_contributions = campaign.get_details().total_contributions;
+
+    cheat_block_timestamp_global(duration);
+
+    start_cheat_caller_address(campaign.contract_address, creator);
+    campaign.close("testing");
+    stop_cheat_caller_address(campaign.contract_address);
+
+    assert_eq!(prev_balance_contributor_1, token.balance_of(contributor_1));
+    assert_eq!(prev_balance_contributor_2, token.balance_of(contributor_2));
+    assert_eq!(prev_balance_contributor_3, token.balance_of(contributor_3));
+    assert_eq!(campaign.get_details().total_contributions, total_contributions);
+    assert_eq!(campaign.get_details().status, Status::FAILED);
+
+    spy
+        .assert_emitted(
+            @array![
+                (
+                    campaign.contract_address,
+                    Campaign::Event::RefundedAll(Campaign::RefundedAll { reason: "testing" })
+                ),
+                (
+                    campaign.contract_address,
+                    Campaign::Event::Closed(
+                        Campaign::Closed { reason: "testing", status: Status::FAILED }
+                    )
+                )
+            ]
+        );
+}
