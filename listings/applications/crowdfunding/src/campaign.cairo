@@ -7,7 +7,7 @@ use starknet::{ClassHash, ContractAddress};
 pub enum Status {
     ACTIVE,
     CLOSED,
-    PENDING,
+    DRAFT,
     SUCCESSFUL,
     FAILED,
 }
@@ -140,9 +140,9 @@ pub mod Campaign {
     pub mod Errors {
         pub const NOT_CREATOR: felt252 = 'Not creator';
         pub const ENDED: felt252 = 'Campaign already ended';
-        pub const NOT_PENDING: felt252 = 'Campaign not pending';
+        pub const NOT_DRAFT: felt252 = 'Campaign not draft';
         pub const STILL_ACTIVE: felt252 = 'Campaign not ended';
-        pub const STILL_PENDING: felt252 = 'Campaign not yet active';
+        pub const STILL_DRAFT: felt252 = 'Campaign not yet active';
         pub const CLOSED: felt252 = 'Campaign closed';
         pub const FAILED: felt252 = 'Campaign failed';
         pub const CLASS_HASH_ZERO: felt252 = 'Class hash cannot be zero';
@@ -182,7 +182,7 @@ pub mod Campaign {
         self.description.write(description);
         self.creator.write(creator);
         self.ownable._init(get_caller_address());
-        self.status.write(Status::PENDING)
+        self.status.write(Status::DRAFT)
     }
 
     #[abi(embed_v0)]
@@ -226,7 +226,7 @@ pub mod Campaign {
         }
 
         fn contribute(ref self: ContractState, amount: u256) {
-            assert(self.status.read() != Status::PENDING, Errors::STILL_PENDING);
+            assert(self.status.read() != Status::DRAFT, Errors::STILL_DRAFT);
             assert(self._is_active() && !self._is_expired(), Errors::ENDED);
             assert(amount > 0, Errors::ZERO_DONATION);
 
@@ -264,7 +264,7 @@ pub mod Campaign {
 
         fn start(ref self: ContractState, duration: u64) {
             self._assert_only_creator();
-            assert(self.status.read() == Status::PENDING, Errors::NOT_PENDING);
+            assert(self.status.read() == Status::DRAFT, Errors::NOT_DRAFT);
             assert(duration > 0, Errors::ZERO_DURATION);
 
             self.end_time.write(get_block_timestamp() + duration);
@@ -276,7 +276,7 @@ pub mod Campaign {
         fn refund(ref self: ContractState, contributor: ContractAddress, reason: ByteArray) {
             self._assert_only_creator();
             assert(contributor.is_non_zero(), Errors::ZERO_ADDRESS_CONTRIBUTOR);
-            assert(self.status.read() != Status::PENDING, Errors::STILL_PENDING);
+            assert(self.status.read() != Status::DRAFT, Errors::STILL_DRAFT);
             assert(self._is_active(), Errors::ENDED);
             assert(self.contributions.get(contributor) != 0, Errors::NOTHING_TO_REFUND);
 
@@ -284,7 +284,6 @@ pub mod Campaign {
 
             self.emit(Event::Refunded(Refunded { contributor, amount, reason }))
         }
-
 
         /// There are currently 3 possibilities for performing contract upgrades:
         ///  1. Trust the campaign factory owner -> this is suboptimal, as factory owners have no responsibility to either creators or contributors,
@@ -309,7 +308,7 @@ pub mod Campaign {
             self.ownable._assert_only_owner();
             assert(impl_hash.is_non_zero(), Errors::CLASS_HASH_ZERO);
             assert(
-                self.status.read() == Status::ACTIVE || self.status.read() == Status::PENDING,
+                self.status.read() == Status::ACTIVE || self.status.read() == Status::DRAFT,
                 Errors::ENDED
             );
 
@@ -330,7 +329,7 @@ pub mod Campaign {
         }
 
         fn withdraw(ref self: ContractState) {
-            assert(self.status.read() != Status::PENDING, Errors::STILL_PENDING);
+            assert(self.status.read() != Status::DRAFT, Errors::STILL_DRAFT);
             assert(self.status.read() != Status::SUCCESSFUL, Errors::ENDED);
             assert(self.status.read() != Status::CLOSED, Errors::CLOSED);
             assert(!self._is_target_reached(), Errors::TARGET_ALREADY_REACHED);
