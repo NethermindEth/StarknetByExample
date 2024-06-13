@@ -89,7 +89,7 @@ pub mod Campaign {
         Refunded: Refunded,
         Upgraded: Upgraded,
         Withdrawn: Withdrawn,
-        WithdrawnAll: WithdrawnAll,
+        RefundedAll: RefundedAll,
     }
 
     #[derive(Drop, starknet::Event)]
@@ -121,6 +121,11 @@ pub mod Campaign {
     }
 
     #[derive(Drop, starknet::Event)]
+    pub struct RefundedAll {
+        pub reason: ByteArray,
+    }
+
+    #[derive(Drop, starknet::Event)]
     pub struct Upgraded {
         pub implementation: ClassHash
     }
@@ -130,11 +135,6 @@ pub mod Campaign {
         #[key]
         pub contributor: ContractAddress,
         pub amount: u256,
-    }
-
-    #[derive(Drop, starknet::Event)]
-    pub struct WithdrawnAll {
-        pub reason: ByteArray,
     }
 
     pub mod Errors {
@@ -220,7 +220,7 @@ pub mod Campaign {
                 self.status.write(Status::CLOSED);
             }
 
-            self._withdraw_all(reason.clone());
+            self._refund_all(reason.clone());
 
             self.emit(Event::Closed(Closed { reason }));
         }
@@ -320,8 +320,7 @@ pub mod Campaign {
                     Option::None => 0,
                 };
                 assert(duration > 0, Errors::ZERO_DURATION);
-                self._withdraw_all("contract upgraded");
-                self.total_contributions.write(0);
+                self._refund_all("contract upgraded");
                 self.end_time.write(get_block_timestamp() + duration);
             }
 
@@ -379,16 +378,13 @@ pub mod Campaign {
             amount
         }
 
-        fn _withdraw_all(ref self: ContractState, reason: ByteArray) {
+        fn _refund_all(ref self: ContractState, reason: ByteArray) {
             let mut contributions = self.contributions.get_contributions_as_arr();
-            while let Option::Some((contributor, amt)) = contributions
+            while let Option::Some((contributor, _)) = contributions
                 .pop_front() {
-                    self.contributions.remove(contributor);
-                    let success = self.token.read().transfer(contributor, amt);
-                    assert(success, Errors::TRANSFER_FAILED);
+                    self._refund(contributor);
                 };
-
-            self.emit(Event::WithdrawnAll(WithdrawnAll { reason }));
+            self.emit(Event::RefundedAll(RefundedAll { reason }));
         }
     }
 }
