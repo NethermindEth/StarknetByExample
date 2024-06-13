@@ -33,6 +33,7 @@ pub trait ICampaign<TContractState> {
     fn get_contributions(self: @TContractState) -> Array<(ContractAddress, u256)>;
     fn get_details(self: @TContractState) -> Details;
     fn start(ref self: TContractState, duration: u64);
+    fn refund(ref self: TContractState, contributor: ContractAddress, reason: ByteArray);
     fn upgrade(ref self: TContractState, impl_hash: ClassHash, new_duration: Option<u64>);
     fn withdraw(ref self: TContractState);
 }
@@ -81,14 +82,18 @@ pub mod Campaign {
         #[flat]
         OwnableEvent: ownable_component::Event,
         Activated: Activated,
-        ContributableEvent: contributable_component::Event,
-        ContributionMade: ContributionMade,
         Claimed: Claimed,
         Closed: Closed,
+        ContributableEvent: contributable_component::Event,
+        ContributionMade: ContributionMade,
+        Refunded: Refunded,
         Upgraded: Upgraded,
         Withdrawn: Withdrawn,
         WithdrawnAll: WithdrawnAll,
     }
+
+    #[derive(Drop, starknet::Event)]
+    pub struct Activated {}
 
     #[derive(Drop, starknet::Event)]
     pub struct ContributionMade {
@@ -103,10 +108,15 @@ pub mod Campaign {
     }
 
     #[derive(Drop, starknet::Event)]
-    pub struct Activated {}
+    pub struct Closed {
+        pub reason: ByteArray,
+    }
 
     #[derive(Drop, starknet::Event)]
-    pub struct Closed {
+    pub struct Refunded {
+        #[key]
+        pub contributor: ContractAddress,
+        pub amount: u256,
         pub reason: ByteArray,
     }
 
@@ -263,6 +273,18 @@ pub mod Campaign {
             self.emit(Event::Activated(Activated {}));
         }
 
+        fn refund(ref self: ContractState, contributor: ContractAddress, reason: ByteArray) {
+            self._assert_only_creator();
+            assert(contributor.is_non_zero(), Errors::ZERO_ADDRESS_CONTRIBUTOR);
+            assert(self.status.read() != Status::PENDING, Errors::STILL_PENDING);
+            assert(self._is_active(), Errors::ENDED);
+            assert(self.contributions.get(contributor) != 0, Errors::NOTHING_TO_REFUND);
+
+            let amount = self._refund(contributor);
+
+            self.emit(Event::Refunded(Refunded { contributor, amount, reason }))
+        }
+
 
         /// There are currently 3 possibilities for performing contract upgrades:
         ///  1. Trust the campaign factory owner -> this is suboptimal, as factory owners have no responsibility to either creators or contributors,
@@ -316,16 +338,7 @@ pub mod Campaign {
             assert(self.contributions.get(get_caller_address()) != 0, Errors::NOTHING_TO_WITHDRAW);
 
             let contributor = get_caller_address();
-            let amount = self.contributions.remove(contributor);
-
-            // if the campaign is "failed", then there's no need to set total_contributions to 0, as
-            // the campaign has ended and the field can be used as a testament to how much was raised
-            if self._is_active() {
-                self.total_contributions.write(self.total_contributions.read() - amount);
-            }
-
-            let success = self.token.read().transfer(contributor, amount);
-            assert(success, Errors::TRANSFER_FAILED);
+            let amount = self._refund(contributor);
 
             self.emit(Event::Withdrawn(Withdrawn { contributor, amount }));
         }
@@ -349,6 +362,21 @@ pub mod Campaign {
 
         fn _is_target_reached(self: @ContractState) -> bool {
             self.total_contributions.read() >= self.target.read()
+        }
+
+        fn _refund(ref self: ContractState, contributor: ContractAddress) -> u256 {
+            let amount = self.contributions.remove(contributor);
+
+            // if the campaign is "failed", then there's no need to set total_contributions to 0, as
+            // the campaign has ended and the field can be used as a testament to how much was raised
+            if self.status.read() == Status::ACTIVE {
+                self.total_contributions.write(self.total_contributions.read() - amount);
+            }
+
+            let success = self.token.read().transfer(contributor, amount);
+            assert(success, Errors::TRANSFER_FAILED);
+
+            amount
         }
 
         fn _withdraw_all(ref self: ContractState, reason: ByteArray) {
