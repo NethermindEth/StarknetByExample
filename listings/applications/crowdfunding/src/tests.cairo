@@ -387,3 +387,86 @@ fn test_close() {
             ]
         );
 }
+
+#[test]
+fn test_refund() {
+    // setup
+    let duration: u64 = 60;
+    let (campaign, token) = deploy_with_token(
+        declare("Campaign").unwrap(), declare("ERC20").unwrap()
+    );
+    let mut spy = spy_events(SpyOn::One(campaign.contract_address));
+    let creator = contract_address_const::<'creator'>();
+    let contributor = contract_address_const::<'contributor_1'>();
+    let amount: u256 = 3000;
+    let prev_balance = token.balance_of(contributor);
+
+    // donate
+    start_cheat_caller_address(campaign.contract_address, creator);
+    campaign.start(duration);
+    start_cheat_caller_address(campaign.contract_address, contributor);
+    campaign.contribute(amount);
+    assert_eq!(campaign.get_details().total_contributions, amount);
+    assert_eq!(campaign.get_contribution(contributor), amount);
+    assert_eq!(token.balance_of(contributor), prev_balance - amount);
+
+    // refund
+    start_cheat_caller_address(campaign.contract_address, creator);
+    campaign.refund(contributor, "testing");
+    assert_eq!(campaign.get_details().total_contributions, 0);
+    assert_eq!(campaign.get_contribution(contributor), 0);
+    assert_eq!(token.balance_of(contributor), prev_balance);
+
+    spy
+        .assert_emitted(
+            @array![
+                (
+                    campaign.contract_address,
+                    Campaign::Event::Refunded(
+                        Campaign::Refunded { contributor, amount, reason: "testing" }
+                    )
+                )
+            ]
+        );
+}
+
+#[test]
+fn test_withdraw() {
+    // setup
+    let duration: u64 = 60;
+    let (campaign, token) = deploy_with_token(
+        declare("Campaign").unwrap(), declare("ERC20").unwrap()
+    );
+    let mut spy = spy_events(SpyOn::One(campaign.contract_address));
+    let creator = contract_address_const::<'creator'>();
+    let contributor = contract_address_const::<'contributor_1'>();
+    let amount: u256 = 3000;
+    let prev_balance = token.balance_of(contributor);
+    start_cheat_caller_address(campaign.contract_address, creator);
+    campaign.start(duration);
+
+    // donate
+    start_cheat_caller_address(campaign.contract_address, contributor);
+    campaign.contribute(amount);
+    assert_eq!(campaign.get_details().total_contributions, amount);
+    assert_eq!(campaign.get_contribution(contributor), amount);
+    assert_eq!(token.balance_of(contributor), prev_balance - amount);
+
+    // withdraw
+    campaign.withdraw("testing");
+    assert_eq!(campaign.get_details().total_contributions, 0);
+    assert_eq!(campaign.get_contribution(contributor), 0);
+    assert_eq!(token.balance_of(contributor), prev_balance);
+
+    spy
+        .assert_emitted(
+            @array![
+                (
+                    campaign.contract_address,
+                    Campaign::Event::Withdrawn(
+                        Campaign::Withdrawn { contributor, amount, reason: "testing" }
+                    )
+                )
+            ]
+        );
+}

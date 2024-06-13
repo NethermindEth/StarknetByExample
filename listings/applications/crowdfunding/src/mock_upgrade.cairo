@@ -36,6 +36,7 @@ pub mod MockUpgrade {
         status: Status
     }
 
+
     #[event]
     #[derive(Drop, starknet::Event)]
     pub enum Event {
@@ -70,6 +71,7 @@ pub mod MockUpgrade {
     #[derive(Drop, starknet::Event)]
     pub struct Closed {
         pub reason: ByteArray,
+        pub status: Status,
     }
 
     #[derive(Drop, starknet::Event)]
@@ -95,6 +97,7 @@ pub mod MockUpgrade {
         #[key]
         pub contributor: ContractAddress,
         pub amount: u256,
+        pub reason: ByteArray,
     }
 
     #[constructor]
@@ -157,8 +160,9 @@ pub mod MockUpgrade {
             }
 
             self._refund_all(reason.clone());
+            let status = self.status.read();
 
-            self.emit(Event::Closed(Closed { reason }));
+            self.emit(Event::Closed(Closed { reason, status }));
         }
 
         fn contribute(ref self: ContractState, amount: u256) {
@@ -265,7 +269,7 @@ pub mod MockUpgrade {
             self.emit(Event::Upgraded(Upgraded { implementation: impl_hash }));
         }
 
-        fn withdraw(ref self: ContractState) {
+        fn withdraw(ref self: ContractState, reason: ByteArray) {
             assert(self.status.read() != Status::DRAFT, Errors::STILL_DRAFT);
             assert(self.status.read() != Status::SUCCESSFUL, Errors::ENDED);
             assert(self.status.read() != Status::CLOSED, Errors::CLOSED);
@@ -281,7 +285,7 @@ pub mod MockUpgrade {
             let success = self.token.read().transfer(contributor, amount);
             assert(success, Errors::TRANSFER_FAILED);
 
-            self.emit(Event::Withdrawn(Withdrawn { contributor, amount }));
+            self.emit(Event::Withdrawn(Withdrawn { contributor, amount, reason }));
         }
     }
 

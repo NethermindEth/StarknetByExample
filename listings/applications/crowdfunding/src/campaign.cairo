@@ -35,7 +35,7 @@ pub trait ICampaign<TContractState> {
     fn start(ref self: TContractState, duration: u64);
     fn refund(ref self: TContractState, contributor: ContractAddress, reason: ByteArray);
     fn upgrade(ref self: TContractState, impl_hash: ClassHash, new_duration: Option<u64>);
-    fn withdraw(ref self: TContractState);
+    fn withdraw(ref self: TContractState, reason: ByteArray);
 }
 
 #[starknet::contract]
@@ -136,6 +136,7 @@ pub mod Campaign {
         #[key]
         pub contributor: ContractAddress,
         pub amount: u256,
+        pub reason: ByteArray,
     }
 
     pub mod Errors {
@@ -330,7 +331,7 @@ pub mod Campaign {
             self.emit(Event::Upgraded(Upgraded { implementation: impl_hash }));
         }
 
-        fn withdraw(ref self: ContractState) {
+        fn withdraw(ref self: ContractState, reason: ByteArray) {
             assert(self.status.read() != Status::DRAFT, Errors::STILL_DRAFT);
             assert(self.status.read() != Status::SUCCESSFUL, Errors::ENDED);
             assert(self.status.read() != Status::CLOSED, Errors::CLOSED);
@@ -340,7 +341,7 @@ pub mod Campaign {
             let contributor = get_caller_address();
             let amount = self._refund(contributor);
 
-            self.emit(Event::Withdrawn(Withdrawn { contributor, amount }));
+            self.emit(Event::Withdrawn(Withdrawn { contributor, amount, reason }));
         }
     }
 
