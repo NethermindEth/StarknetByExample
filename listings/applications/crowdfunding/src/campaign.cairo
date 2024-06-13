@@ -126,13 +126,15 @@ pub mod Campaign {
         pub const ENDED: felt252 = 'Campaign already ended';
         pub const NOT_PENDING: felt252 = 'Campaign not pending';
         pub const STILL_ACTIVE: felt252 = 'Campaign not ended';
+        pub const STILL_PENDING: felt252 = 'Campaign not yet active';
+        pub const CLOSED: felt252 = 'Campaign closed';
+        pub const CLASS_HASH_ZERO: felt252 = 'Class hash cannot be zero';
         pub const ZERO_DONATION: felt252 = 'Donation must be > 0';
         pub const ZERO_TARGET: felt252 = 'Target must be > 0';
         pub const ZERO_DURATION: felt252 = 'Duration must be > 0';
         pub const ZERO_FUNDS: felt252 = 'No funds to claim';
         pub const TRANSFER_FAILED: felt252 = 'Transfer failed';
         pub const TITLE_EMPTY: felt252 = 'Title empty';
-        pub const CLASS_HASH_ZERO: felt252 = 'Class hash cannot be zero';
         pub const ZERO_ADDRESS_CALLER: felt252 = 'Caller cannot be zero';
         pub const CREATOR_ZERO: felt252 = 'Creator address cannot be zero';
         pub const TARGET_NOT_REACHED: felt252 = 'Target not reached';
@@ -288,10 +290,10 @@ pub mod Campaign {
             if self._is_expired() && !self._is_target_reached() && self._is_active() {
                 self.status.write(Status::UNSUCCESSFUL);
             }
-            assert(
-                self.status.read() == Status::UNSUCCESSFUL || self.status.read() == Status::CLOSED,
-                Errors::STILL_ACTIVE
-            );
+            assert(self.status.read() != Status::PENDING, Errors::STILL_PENDING);
+            assert(self.status.read() != Status::SUCCESSFUL, Errors::TARGET_ALREADY_REACHED);
+            assert(self.status.read() != Status::CLOSED, Errors::CLOSED);
+            assert(!self._is_target_reached(), Errors::TARGET_ALREADY_REACHED);
             assert(self.contributions.get(get_caller_address()) != 0, Errors::NOTHING_TO_WITHDRAW);
 
             let contributor = get_caller_address();
