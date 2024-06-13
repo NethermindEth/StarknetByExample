@@ -87,6 +87,7 @@ pub mod Campaign {
         Closed: Closed,
         Upgraded: Upgraded,
         Withdrawn: Withdrawn,
+        WithdrawnAll: WithdrawnAll,
     }
 
     #[derive(Drop, starknet::Event)]
@@ -121,6 +122,11 @@ pub mod Campaign {
         pub amount: u256,
     }
 
+    #[derive(Drop, starknet::Event)]
+    pub struct WithdrawnAll {
+        pub reason: ByteArray,
+    }
+
     pub mod Errors {
         pub const NOT_CREATOR: felt252 = 'Not creator';
         pub const ENDED: felt252 = 'Campaign already ended';
@@ -150,7 +156,8 @@ pub mod Campaign {
         title: ByteArray,
         description: ByteArray,
         target: u256,
-        token_address: ContractAddress
+        token_address: ContractAddress,
+    // TODO: add recepient address
     ) {
         assert(creator.is_non_zero(), Errors::CREATOR_ZERO);
         assert(title.len() > 0, Errors::TITLE_EMPTY);
@@ -201,7 +208,7 @@ pub mod Campaign {
                 self.status.write(Status::CLOSED);
             }
 
-            self._withdraw_all();
+            self._withdraw_all(reason.clone());
 
             self.emit(Event::Closed(Closed { reason }));
         }
@@ -288,7 +295,7 @@ pub mod Campaign {
                     Option::None => 0,
                 };
                 assert(duration > 0, Errors::ZERO_DURATION);
-                self._withdraw_all();
+                self._withdraw_all("contract upgraded");
                 self.total_contributions.write(0);
                 self.end_time.write(get_block_timestamp() + duration);
             }
@@ -327,7 +334,7 @@ pub mod Campaign {
         }
 
         fn _is_expired(self: @ContractState) -> bool {
-            get_block_timestamp() < self.end_time.read()
+            get_block_timestamp() >= self.end_time.read()
         }
 
         fn _is_active(self: @ContractState) -> bool {
@@ -338,7 +345,7 @@ pub mod Campaign {
             self.total_contributions.read() >= self.target.read()
         }
 
-        fn _withdraw_all(ref self: ContractState) {
+        fn _withdraw_all(ref self: ContractState, reason: ByteArray) {
             let mut contributions = self.contributions.get_contributions_as_arr();
             while let Option::Some((contributor, amt)) = contributions
                 .pop_front() {
@@ -346,6 +353,8 @@ pub mod Campaign {
                     let success = self.token.read().transfer(contributor, amt);
                     assert(success, Errors::TRANSFER_FAILED);
                 };
+
+            self.emit(Event::WithdrawnAll(WithdrawnAll { reason }));
         }
     }
 }
