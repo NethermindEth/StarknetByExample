@@ -94,7 +94,6 @@ pub mod Campaign {
         #[key]
         pub contributor: ContractAddress,
         pub amount: u256,
-        pub status: Status,
     }
 
     #[derive(Drop, starknet::Event)]
@@ -174,9 +173,8 @@ pub mod Campaign {
     impl Campaign of super::ICampaign<ContractState> {
         fn claim(ref self: ContractState) {
             self._assert_only_creator();
-            assert(self.status.read() == Status::SUCCESSFUL, Errors::TARGET_NOT_REACHED);
-            assert(self._is_expired(), Errors::STILL_ACTIVE);
-            // no need to check end_time, as the owner can prematurely end the campaign
+            assert(self._is_active() && self._is_expired(), Errors::STILL_ACTIVE);
+            assert(self._is_target_reached(), Errors::TARGET_NOT_REACHED);
 
             let this = get_contract_address();
             let token = self.token.read();
@@ -184,8 +182,10 @@ pub mod Campaign {
             let amount = token.balance_of(this);
             assert(amount > 0, Errors::ZERO_FUNDS);
 
-            // no need to set total_contributions to 0, as the campaign has ended
-            // and the field can be used as a testament to how much was raised
+            self.status.write(Status::SUCCESSFUL);
+
+            // no need to reset the contributions, as the campaign has ended
+            // and the data can be used as a testament to how much was raised
 
             let owner = get_caller_address();
             let success = token.transfer(owner, amount);
@@ -198,7 +198,11 @@ pub mod Campaign {
             self._assert_only_creator();
             assert(self._is_active(), Errors::ENDED);
 
-            self.status.write(Status::CLOSED);
+            if !self._is_target_reached() && self._is_expired() {
+                self.status.write(Status::UNSUCCESSFUL);
+            } else {
+                self.status.write(Status::CLOSED);
+            }
 
             self._withdraw_all();
 
@@ -206,9 +210,11 @@ pub mod Campaign {
         }
 
         fn contribute(ref self: ContractState, amount: u256) {
-            assert(self.status.read() != Status::PENDING, Errors::STILL_PENDING);
-            assert(self.status.read() != Status::CLOSED, Errors::CLOSED);
-            assert(!self._is_expired(), Errors::ENDED);
+            let status = self.status.read();
+            assert(status != Status::PENDING, Errors::STILL_PENDING);
+            assert(status != Status::CLOSED, Errors::CLOSED);
+            assert(status != Status::UNSUCCESSFUL, Errors::UNSUCCESSFUL);
+            assert(status != Status::SUCCESSFUL, Errors::ENDED);
             assert(amount > 0, Errors::ZERO_DONATION);
 
             let contributor = get_caller_address();
@@ -219,13 +225,7 @@ pub mod Campaign {
             self.contributions.add(contributor, amount);
             self.total_contributions.write(self.total_contributions.read() + amount);
 
-            if self._is_target_reached() {
-                self.status.write(Status::SUCCESSFUL);
-            }
-
-            let status = self.status.read();
-
-            self.emit(Event::ContributionMade(ContributionMade { contributor, amount, status }));
+            self.emit(Event::ContributionMade(ContributionMade { contributor, amount }));
         }
 
         fn get_contribution(self: @ContractState, contributor: ContractAddress) -> u256 {
@@ -253,6 +253,7 @@ pub mod Campaign {
             self._assert_only_creator();
             assert(self.status.read() == Status::PENDING, Errors::NOT_PENDING);
 
+            // TODO: calculate end_time here
             self.status.write(Status::ACTIVE);
 
             self.emit(Event::Activated(Activated {}));
@@ -284,8 +285,15 @@ pub mod Campaign {
             if impl_hash.is_zero() {
                 return Result::Err(array![Errors::CLASS_HASH_ZERO]);
             }
+            if self.status.read() != Status::ACTIVE && self.status.read() != Status::PENDING {
+                return Result::Err(array![Errors::ENDED]);
+            }
 
-            self._withdraw_all();
+            // only active campaigns have no funds to refund
+            if self.status.read() == Status::ACTIVE {
+                self._withdraw_all();
+                self.total_contributions.write(0);
+            }
 
             starknet::syscalls::replace_class_syscall(impl_hash)?;
 
@@ -295,11 +303,8 @@ pub mod Campaign {
         }
 
         fn withdraw(ref self: ContractState) {
-            if self._is_expired() && !self._is_target_reached() && self._is_active() {
-                self.status.write(Status::UNSUCCESSFUL);
-            }
             assert(self.status.read() != Status::PENDING, Errors::STILL_PENDING);
-            assert(self.status.read() != Status::SUCCESSFUL, Errors::TARGET_ALREADY_REACHED);
+            assert(self.status.read() != Status::SUCCESSFUL, Errors::ENDED);
             assert(self.status.read() != Status::CLOSED, Errors::CLOSED);
             assert(!self._is_target_reached(), Errors::TARGET_ALREADY_REACHED);
             assert(self.contributions.get(get_caller_address()) != 0, Errors::NOTHING_TO_WITHDRAW);
@@ -310,7 +315,8 @@ pub mod Campaign {
             // no need to set total_contributions to 0, as the campaign has ended
             // and the field can be used as a testament to how much was raised
 
-            self.token.read().transfer(contributor, amount);
+            let success = self.token.read().transfer(contributor, amount);
+            assert(success, Errors::TRANSFER_FAILED);
 
             self.emit(Event::Withdrawn(Withdrawn { contributor, amount }));
         }
@@ -341,7 +347,8 @@ pub mod Campaign {
             while let Option::Some((contributor, amt)) = contributions
                 .pop_front() {
                     self.contributions.remove(contributor);
-                    self.token.read().transfer(contributor, amt);
+                    let success = self.token.read().transfer(contributor, amt);
+                    assert(success, Errors::TRANSFER_FAILED);
                 };
         }
     }
