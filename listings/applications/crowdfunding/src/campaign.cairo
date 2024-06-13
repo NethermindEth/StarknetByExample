@@ -277,7 +277,7 @@ pub mod Campaign {
             self.ownable._assert_only_owner();
             assert(impl_hash.is_non_zero(), Errors::CLASS_HASH_ZERO);
             assert(
-                self.status.read() == Status::ACTIVE && self.status.read() == Status::PENDING,
+                self.status.read() == Status::ACTIVE || self.status.read() == Status::PENDING,
                 Errors::ENDED
             );
 

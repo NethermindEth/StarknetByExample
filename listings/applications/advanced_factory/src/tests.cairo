@@ -8,8 +8,8 @@ use starknet::{
     ContractAddress, ClassHash, get_block_timestamp, contract_address_const, get_caller_address
 };
 use snforge_std::{
-    declare, ContractClass, ContractClassTrait, start_cheat_caller_address, spy_events, SpyOn,
-    EventSpy, EventAssertions, get_class_hash
+    declare, ContractClass, ContractClassTrait, start_cheat_caller_address,
+    stop_cheat_caller_address, spy_events, SpyOn, EventSpy, EventAssertions, get_class_hash
 };
 
 // Define a target contract to deploy
@@ -28,6 +28,8 @@ fn deploy_factory_with(campaign_class_hash: ClassHash) -> ICampaignFactoryDispat
     start_cheat_caller_address(contract_address, factory_owner);
 
     contract.deploy(constructor_calldata).unwrap();
+
+    stop_cheat_caller_address(contract_address);
 
     ICampaignFactoryDispatcher { contract_address }
 }
@@ -51,7 +53,7 @@ fn test_deploy_factory() {
 }
 
 #[test]
-fn test_deploy_campaign() {
+fn test_create_campaign() {
     let factory = deploy_factory();
 
     let mut spy = spy_events(SpyOn::One(factory.contract_address));
@@ -62,18 +64,17 @@ fn test_deploy_campaign() {
     let title: ByteArray = "New campaign";
     let description: ByteArray = "Some description";
     let target: u256 = 10000;
-    let duration: u64 = 60;
     let token = contract_address_const::<'token'>();
 
     let campaign_address = factory
-        .create_campaign(title.clone(), description.clone(), target, duration, token);
+        .create_campaign(title.clone(), description.clone(), target, token);
     let campaign = ICampaignDispatcher { contract_address: campaign_address };
 
     let details = campaign.get_details();
     assert_eq!(details.title, title);
     assert_eq!(details.description, description);
     assert_eq!(details.target, target);
-    assert_eq!(details.end_time, get_block_timestamp() + duration);
+    assert_eq!(details.end_time, 0);
     assert_eq!(details.status, Status::PENDING);
     assert_eq!(details.token, token);
     assert_eq!(details.total_contributions, 0);
@@ -89,7 +90,7 @@ fn test_deploy_campaign() {
                     factory.contract_address,
                     CampaignFactory::Event::CampaignCreated(
                         CampaignFactory::CampaignCreated {
-                            caller: campaign_creator, contract_address: campaign_address
+                            creator: campaign_creator, contract_address: campaign_address
                         }
                     )
                 )
@@ -98,29 +99,46 @@ fn test_deploy_campaign() {
 }
 
 #[test]
-fn test_update_campaign_class_hash() {
+fn test_uprade_campaign_class_hash() {
     let factory = deploy_factory();
+    let old_class_hash = factory.get_campaign_class_hash();
+    let new_class_hash = declare("MockContract").unwrap().class_hash;
 
     let token = contract_address_const::<'token'>();
-    let campaign_address_1 = factory.create_campaign("title 1", "description 1", 10000, 60, token);
-    let campaign_address_2 = factory.create_campaign("title 2", "description 2", 20000, 120, token);
 
-    assert_eq!(factory.get_campaign_class_hash(), get_class_hash(campaign_address_1));
-    assert_eq!(factory.get_campaign_class_hash(), get_class_hash(campaign_address_2));
+    // deploy a pending campaign with the old class hash
+    let pending_campaign_creator = contract_address_const::<'pending_campaign_creator'>();
+    start_cheat_caller_address(factory.contract_address, pending_campaign_creator);
+    let pending_campaign = factory.create_campaign("title 1", "description 1", 10000, token);
 
-    let mut spy_factory = spy_events(SpyOn::One(factory.contract_address));
-    let mut spy_campaigns = spy_events(
-        SpyOn::Multiple(array![campaign_address_1, campaign_address_2])
+    assert_eq!(old_class_hash, get_class_hash(pending_campaign));
+
+    // deploy an active campaign with the old class hash
+    let active_campaign_creator = contract_address_const::<'active_campaign_creator'>();
+    start_cheat_caller_address(factory.contract_address, active_campaign_creator);
+    let active_campaign = factory.create_campaign("title 2", "description 2", 20000, token);
+    stop_cheat_caller_address(factory.contract_address);
+
+    start_cheat_caller_address(active_campaign, active_campaign_creator);
+    ICampaignDispatcher { contract_address: active_campaign }.start(60);
+    stop_cheat_caller_address(active_campaign);
+
+    assert_eq!(old_class_hash, get_class_hash(active_campaign));
+
+    // update the factory's campaign class hash value
+    let mut spy = spy_events(
+        SpyOn::Multiple(array![factory.contract_address, pending_campaign, active_campaign])
     );
 
-    let new_class_hash = declare("MockContract").unwrap().class_hash;
+    let factory_owner = contract_address_const::<'factory_owner'>();
+    start_cheat_caller_address(factory.contract_address, factory_owner);
     factory.update_campaign_class_hash(new_class_hash);
 
     assert_eq!(factory.get_campaign_class_hash(), new_class_hash);
-    assert_eq!(get_class_hash(campaign_address_1), new_class_hash);
-    assert_eq!(get_class_hash(campaign_address_2), new_class_hash);
+    assert_eq!(old_class_hash, get_class_hash(pending_campaign));
+    assert_eq!(old_class_hash, get_class_hash(active_campaign));
 
-    spy_factory
+    spy
         .assert_emitted(
             @array![
                 (
@@ -132,15 +150,35 @@ fn test_update_campaign_class_hash() {
             ]
         );
 
-    spy_campaigns
+    // upgrade pending campaign
+    start_cheat_caller_address(factory.contract_address, pending_campaign_creator);
+    factory.upgrade_campaign_implementation(pending_campaign, Option::None);
+
+    assert_eq!(get_class_hash(pending_campaign), new_class_hash);
+    assert_eq!(get_class_hash(active_campaign), old_class_hash);
+
+    spy
         .assert_emitted(
             @array![
                 (
-                    campaign_address_1,
+                    pending_campaign,
                     Campaign::Event::Upgraded(Campaign::Upgraded { implementation: new_class_hash })
-                ),
+                )
+            ]
+        );
+
+    // upgrade active campaign
+    start_cheat_caller_address(factory.contract_address, active_campaign_creator);
+    factory.upgrade_campaign_implementation(active_campaign, Option::Some(60));
+
+    assert_eq!(get_class_hash(pending_campaign), new_class_hash);
+    assert_eq!(get_class_hash(active_campaign), new_class_hash);
+
+    spy
+        .assert_emitted(
+            @array![
                 (
-                    campaign_address_2,
+                    active_campaign,
                     Campaign::Event::Upgraded(Campaign::Upgraded { implementation: new_class_hash })
                 )
             ]
