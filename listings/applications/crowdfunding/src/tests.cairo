@@ -96,7 +96,7 @@ fn test_deploy() {
     assert_eq!(details.description, "description 1");
     assert_eq!(details.target, 10000);
     assert_eq!(details.end_time, 0);
-    assert_eq!(details.status, Status::PENDING);
+    assert_eq!(details.status, Status::DRAFT);
     assert_eq!(details.token, contract_address_const::<'token'>());
     assert_eq!(details.total_contributions, 0);
     assert_eq!(details.creator, contract_address_const::<'creator'>());
@@ -277,8 +277,8 @@ fn test_upgrade_class_hash() {
                 ),
                 (
                     campaign.contract_address,
-                    Campaign::Event::WithdrawnAll(
-                        Campaign::WithdrawnAll { reason: "contract upgraded" }
+                    Campaign::Event::RefundedAll(
+                        Campaign::RefundedAll { reason: "contract upgraded" }
                     )
                 )
             ]

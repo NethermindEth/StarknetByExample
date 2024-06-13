@@ -9,7 +9,7 @@ pub mod MockUpgrade {
     };
     use components::ownable::ownable_component;
     use crowdfunding::campaign::contributions::contributable_component;
-    use crowdfunding::campaign::{ICampaign, Details, Status};
+    use crowdfunding::campaign::{ICampaign, Details, Status, Campaign::Errors};
 
     component!(path: ownable_component, storage: ownable, event: OwnableEvent);
     component!(path: contributable_component, storage: contributions, event: ContributableEvent);
@@ -42,14 +42,18 @@ pub mod MockUpgrade {
         #[flat]
         OwnableEvent: ownable_component::Event,
         Activated: Activated,
-        ContributableEvent: contributable_component::Event,
-        ContributionMade: ContributionMade,
         Claimed: Claimed,
         Closed: Closed,
+        ContributableEvent: contributable_component::Event,
+        ContributionMade: ContributionMade,
+        Refunded: Refunded,
         Upgraded: Upgraded,
         Withdrawn: Withdrawn,
-        WithdrawnAll: WithdrawnAll,
+        RefundedAll: RefundedAll,
     }
+
+    #[derive(Drop, starknet::Event)]
+    pub struct Activated {}
 
     #[derive(Drop, starknet::Event)]
     pub struct ContributionMade {
@@ -64,10 +68,20 @@ pub mod MockUpgrade {
     }
 
     #[derive(Drop, starknet::Event)]
-    pub struct Activated {}
+    pub struct Closed {
+        pub reason: ByteArray,
+    }
 
     #[derive(Drop, starknet::Event)]
-    pub struct Closed {
+    pub struct Refunded {
+        #[key]
+        pub contributor: ContractAddress,
+        pub amount: u256,
+        pub reason: ByteArray,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    pub struct RefundedAll {
         pub reason: ByteArray,
     }
 
@@ -81,33 +95,6 @@ pub mod MockUpgrade {
         #[key]
         pub contributor: ContractAddress,
         pub amount: u256,
-    }
-
-    #[derive(Drop, starknet::Event)]
-    pub struct WithdrawnAll {
-        pub reason: ByteArray,
-    }
-
-    pub mod Errors {
-        pub const NOT_CREATOR: felt252 = 'Not creator';
-        pub const ENDED: felt252 = 'Campaign already ended';
-        pub const NOT_PENDING: felt252 = 'Campaign not pending';
-        pub const STILL_ACTIVE: felt252 = 'Campaign not ended';
-        pub const STILL_PENDING: felt252 = 'Campaign not yet active';
-        pub const CLOSED: felt252 = 'Campaign closed';
-        pub const FAILED: felt252 = 'Campaign failed';
-        pub const CLASS_HASH_ZERO: felt252 = 'Class hash cannot be zero';
-        pub const ZERO_DONATION: felt252 = 'Donation must be > 0';
-        pub const ZERO_TARGET: felt252 = 'Target must be > 0';
-        pub const ZERO_DURATION: felt252 = 'Duration must be > 0';
-        pub const ZERO_FUNDS: felt252 = 'No funds to claim';
-        pub const TRANSFER_FAILED: felt252 = 'Transfer failed';
-        pub const TITLE_EMPTY: felt252 = 'Title empty';
-        pub const ZERO_ADDRESS_CALLER: felt252 = 'Caller cannot be zero';
-        pub const CREATOR_ZERO: felt252 = 'Creator address cannot be zero';
-        pub const TARGET_NOT_REACHED: felt252 = 'Target not reached';
-        pub const TARGET_ALREADY_REACHED: felt252 = 'Target already reached';
-        pub const NOTHING_TO_WITHDRAW: felt252 = 'Nothing to withdraw';
     }
 
     #[constructor]
@@ -131,7 +118,7 @@ pub mod MockUpgrade {
         self.description.write(description);
         self.creator.write(creator);
         self.ownable._init(get_caller_address());
-        self.status.write(Status::PENDING)
+        self.status.write(Status::DRAFT)
     }
 
     #[abi(embed_v0)]
@@ -169,13 +156,13 @@ pub mod MockUpgrade {
                 self.status.write(Status::CLOSED);
             }
 
-            self._withdraw_all(reason.clone());
+            self._refund_all(reason.clone());
 
             self.emit(Event::Closed(Closed { reason }));
         }
 
         fn contribute(ref self: ContractState, amount: u256) {
-            assert(self.status.read() != Status::PENDING, Errors::STILL_PENDING);
+            assert(self.status.read() != Status::DRAFT, Errors::STILL_DRAFT);
             assert(self._is_active() && !self._is_expired(), Errors::ENDED);
             assert(amount > 0, Errors::ZERO_DONATION);
 
@@ -213,13 +200,25 @@ pub mod MockUpgrade {
 
         fn start(ref self: ContractState, duration: u64) {
             self._assert_only_creator();
-            assert(self.status.read() == Status::PENDING, Errors::NOT_PENDING);
+            assert(self.status.read() == Status::DRAFT, Errors::NOT_DRAFT);
             assert(duration > 0, Errors::ZERO_DURATION);
 
             self.end_time.write(get_block_timestamp() + duration);
             self.status.write(Status::ACTIVE);
 
             self.emit(Event::Activated(Activated {}));
+        }
+
+        fn refund(ref self: ContractState, contributor: ContractAddress, reason: ByteArray) {
+            self._assert_only_creator();
+            assert(contributor.is_non_zero(), Errors::ZERO_ADDRESS_CONTRIBUTOR);
+            assert(self.status.read() != Status::DRAFT, Errors::STILL_DRAFT);
+            assert(self._is_active(), Errors::ENDED);
+            assert(self.contributions.get(contributor) != 0, Errors::NOTHING_TO_REFUND);
+
+            let amount = self._refund(contributor);
+
+            self.emit(Event::Refunded(Refunded { contributor, amount, reason }))
         }
 
         /// There are currently 3 possibilities for performing contract upgrades:
@@ -245,7 +244,7 @@ pub mod MockUpgrade {
             self.ownable._assert_only_owner();
             assert(impl_hash.is_non_zero(), Errors::CLASS_HASH_ZERO);
             assert(
-                self.status.read() == Status::ACTIVE || self.status.read() == Status::PENDING,
+                self.status.read() == Status::ACTIVE || self.status.read() == Status::DRAFT,
                 Errors::ENDED
             );
 
@@ -256,7 +255,7 @@ pub mod MockUpgrade {
                     Option::None => 0,
                 };
                 assert(duration > 0, Errors::ZERO_DURATION);
-                self._withdraw_all("contract upgraded");
+                self._refund_all("contract upgraded");
                 self.total_contributions.write(0);
                 self.end_time.write(get_block_timestamp() + duration);
             }
@@ -267,7 +266,7 @@ pub mod MockUpgrade {
         }
 
         fn withdraw(ref self: ContractState) {
-            assert(self.status.read() != Status::PENDING, Errors::STILL_PENDING);
+            assert(self.status.read() != Status::DRAFT, Errors::STILL_DRAFT);
             assert(self.status.read() != Status::SUCCESSFUL, Errors::ENDED);
             assert(self.status.read() != Status::CLOSED, Errors::CLOSED);
             assert(!self._is_target_reached(), Errors::TARGET_ALREADY_REACHED);
@@ -306,16 +305,28 @@ pub mod MockUpgrade {
             self.total_contributions.read() >= self.target.read()
         }
 
-        fn _withdraw_all(ref self: ContractState, reason: ByteArray) {
-            let mut contributions = self.contributions.get_contributions_as_arr();
-            while let Option::Some((contributor, amt)) = contributions
-                .pop_front() {
-                    self.contributions.remove(contributor);
-                    let success = self.token.read().transfer(contributor, amt);
-                    assert(success, Errors::TRANSFER_FAILED);
-                };
+        fn _refund(ref self: ContractState, contributor: ContractAddress) -> u256 {
+            let amount = self.contributions.remove(contributor);
 
-            self.emit(Event::WithdrawnAll(WithdrawnAll { reason }));
+            // if the campaign is "failed", then there's no need to set total_contributions to 0, as
+            // the campaign has ended and the field can be used as a testament to how much was raised
+            if self.status.read() == Status::ACTIVE {
+                self.total_contributions.write(self.total_contributions.read() - amount);
+            }
+
+            let success = self.token.read().transfer(contributor, amount);
+            assert(success, Errors::TRANSFER_FAILED);
+
+            amount
+        }
+
+        fn _refund_all(ref self: ContractState, reason: ByteArray) {
+            let mut contributions = self.contributions.get_contributions_as_arr();
+            while let Option::Some((contributor, _)) = contributions
+                .pop_front() {
+                    self._refund(contributor);
+                };
+            self.emit(Event::RefundedAll(RefundedAll { reason }));
         }
     }
 }
