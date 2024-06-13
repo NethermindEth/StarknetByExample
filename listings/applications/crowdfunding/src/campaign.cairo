@@ -33,9 +33,7 @@ pub trait ICampaign<TContractState> {
     fn get_contributions(self: @TContractState) -> Array<(ContractAddress, u256)>;
     fn get_details(self: @TContractState) -> Details;
     fn start(ref self: TContractState, duration: u64);
-    fn upgrade(
-        ref self: TContractState, impl_hash: ClassHash, new_duration: u64
-    ) -> Result<(), Array<felt252>>;
+    fn upgrade(ref self: TContractState, impl_hash: ClassHash, new_duration: Option<u64>);
     fn withdraw(ref self: TContractState);
 }
 
@@ -275,34 +273,29 @@ pub mod Campaign {
         ///  - each time there's an upgrade, the campaign gets reset, which introduces a new problem - what if the Campaign was close to ending?
         ///    We just took all of their contributions away, and there might not be enough time to get them back. We solve this by letting the creators
         ///    prolong the duration of the campaign.
-        fn upgrade(
-            ref self: ContractState, impl_hash: ClassHash, new_duration: u64
-        ) -> Result<(), Array<felt252>> {
-            if get_caller_address() != self.ownable.owner() {
-                return Result::Err(array![components::ownable::Errors::UNAUTHORIZED]);
-            }
-            if impl_hash.is_zero() {
-                return Result::Err(array![Errors::CLASS_HASH_ZERO]);
-            }
-            if self.status.read() != Status::ACTIVE && self.status.read() != Status::PENDING {
-                return Result::Err(array![Errors::ENDED]);
-            }
-            if new_duration > 0 {
-                return Result::Err(array![Errors::ZERO_DURATION]);
-            }
+        fn upgrade(ref self: ContractState, impl_hash: ClassHash, new_duration: Option<u64>) {
+            self.ownable._assert_only_owner();
+            assert(impl_hash.is_non_zero(), Errors::CLASS_HASH_ZERO);
+            assert(
+                self.status.read() == Status::ACTIVE && self.status.read() == Status::PENDING,
+                Errors::ENDED
+            );
 
-            // only active campaigns have no funds to refund
+            // only active campaigns have funds to refund and duration to update
             if self.status.read() == Status::ACTIVE {
+                let duration = match new_duration {
+                    Option::Some(val) => val,
+                    Option::None => 0,
+                };
+                assert(duration > 0, Errors::ZERO_DURATION);
                 self._withdraw_all();
                 self.total_contributions.write(0);
-                self.end_time.write(get_block_timestamp() + new_duration);
+                self.end_time.write(get_block_timestamp() + duration);
             }
 
-            starknet::syscalls::replace_class_syscall(impl_hash)?;
+            starknet::syscalls::replace_class_syscall(impl_hash).unwrap_syscall();
 
             self.emit(Event::Upgraded(Upgraded { implementation: impl_hash }));
-
-            Result::Ok(())
         }
 
         fn withdraw(ref self: ContractState) {

@@ -8,11 +8,13 @@ pub trait ICampaignFactory<TContractState> {
         title: ByteArray,
         description: ByteArray,
         target: u256,
-        duration: u64,
         token_address: ContractAddress
     ) -> ContractAddress;
     fn get_campaign_class_hash(self: @TContractState) -> ClassHash;
     fn update_campaign_class_hash(ref self: TContractState, new_class_hash: ClassHash);
+    fn upgrade_campaign_implementation(
+        ref self: TContractState, campaign_address: ContractAddress, new_duration: Option<u64>
+    );
 }
 
 #[starknet::contract]
@@ -36,8 +38,8 @@ pub mod CampaignFactory {
     struct Storage {
         #[substorage(v0)]
         ownable: ownable_component::Storage,
-        /// Store all of the created campaign instances' addresses
-        campaigns: List<ICampaignDispatcher>,
+        /// Store all of the created campaign instances' addresses and thei class hashes
+        campaigns: LegacyMap<(ContractAddress, ContractAddress), ClassHash>,
         /// Store the class hash of the contract to deploy
         campaign_class_hash: ClassHash,
     }
@@ -47,9 +49,9 @@ pub mod CampaignFactory {
     pub enum Event {
         #[flat]
         OwnableEvent: ownable_component::Event,
-        ClassHashUpdated: ClassHashUpdated,
-        ClassHashUpdateFailed: ClassHashUpdateFailed,
+        CampaignClassHashUpgraded: CampaignClassHashUpgraded,
         CampaignCreated: CampaignCreated,
+        ClassHashUpdated: ClassHashUpdated,
     }
 
     #[derive(Drop, starknet::Event)]
@@ -58,19 +60,21 @@ pub mod CampaignFactory {
     }
 
     #[derive(Drop, starknet::Event)]
-    pub struct ClassHashUpdateFailed {
+    pub struct CampaignClassHashUpgraded {
         pub campaign: ContractAddress,
-        pub errors: Array<felt252>
     }
 
     #[derive(Drop, starknet::Event)]
     pub struct CampaignCreated {
-        pub caller: ContractAddress,
+        pub creator: ContractAddress,
         pub contract_address: ContractAddress
     }
 
     pub mod Errors {
         pub const CLASS_HASH_ZERO: felt252 = 'Class hash cannot be zero';
+        pub const ZERO_ADDRESS: felt252 = 'Zero address';
+        pub const SAME_IMPLEMENTATION: felt252 = 'Implementation is unchanged';
+        pub const CAMPAIGN_NOT_FOUND: felt252 = 'Campaign not found';
     }
 
     #[constructor]
@@ -89,14 +93,13 @@ pub mod CampaignFactory {
             title: ByteArray,
             description: ByteArray,
             target: u256,
-            duration: u64,
             token_address: ContractAddress,
         ) -> ContractAddress {
-            let caller = get_caller_address();
+            let creator = get_caller_address();
 
             // Create contructor arguments
             let mut constructor_calldata: Array::<felt252> = array![];
-            ((caller, title, description, target), duration, token_address)
+            ((creator, title, description, target), token_address)
                 .serialize(ref constructor_calldata);
 
             // Contract deployment
@@ -106,10 +109,9 @@ pub mod CampaignFactory {
                 .unwrap_syscall();
 
             // track new campaign instance
-            let mut campaigns = self.campaigns.read();
-            campaigns.append(ICampaignDispatcher { contract_address }).unwrap();
+            self.campaigns.write((creator, contract_address), self.campaign_class_hash.read());
 
-            self.emit(Event::CampaignCreated(CampaignCreated { caller, contract_address }));
+            self.emit(Event::CampaignCreated(CampaignCreated { creator, contract_address }));
 
             contract_address
         }
@@ -121,30 +123,26 @@ pub mod CampaignFactory {
 
         fn update_campaign_class_hash(ref self: ContractState, new_class_hash: ClassHash) {
             self.ownable._assert_only_owner();
+            assert(new_class_hash.is_non_zero(), Errors::CLASS_HASH_ZERO);
 
             // update own campaign class hash value
             self.campaign_class_hash.write(new_class_hash);
 
-            // upgrade each campaign with the new class hash
-            let campaigns = self.campaigns.read();
-            let mut i = 0;
-            while let Option::Some(campaign) = campaigns
-                .get(i)
-                .unwrap_syscall() {
-                    if let Result::Err(errors) = campaign.upgrade(new_class_hash) {
-                        self
-                            .emit(
-                                Event::ClassHashUpdateFailed(
-                                    ClassHashUpdateFailed {
-                                        campaign: campaign.contract_address, errors
-                                    }
-                                )
-                            )
-                    }
-                    i += 1;
-                };
-
             self.emit(Event::ClassHashUpdated(ClassHashUpdated { new_class_hash }));
+        }
+
+        fn upgrade_campaign_implementation(
+            ref self: ContractState, campaign_address: ContractAddress, new_duration: Option<u64>
+        ) {
+            assert(campaign_address.is_non_zero(), Errors::ZERO_ADDRESS);
+
+            let creator = get_caller_address();
+            let old_class_hash = self.campaigns.read((creator, campaign_address));
+            assert(old_class_hash.is_non_zero(), Errors::CAMPAIGN_NOT_FOUND);
+            assert(old_class_hash != self.campaign_class_hash.read(), Errors::SAME_IMPLEMENTATION);
+
+            let campaign = ICampaignDispatcher { contract_address: campaign_address };
+            campaign.upgrade(self.campaign_class_hash.read(), new_duration);
         }
     }
 }
