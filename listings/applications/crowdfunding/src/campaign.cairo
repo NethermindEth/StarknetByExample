@@ -33,7 +33,9 @@ pub trait ICampaign<TContractState> {
     fn get_contributions(self: @TContractState) -> Array<(ContractAddress, u256)>;
     fn get_details(self: @TContractState) -> Details;
     fn start(ref self: TContractState, duration: u64);
-    fn upgrade(ref self: TContractState, impl_hash: ClassHash) -> Result<(), Array<felt252>>;
+    fn upgrade(
+        ref self: TContractState, impl_hash: ClassHash, new_duration: u64
+    ) -> Result<(), Array<felt252>>;
     fn withdraw(ref self: TContractState);
 }
 
@@ -273,7 +275,9 @@ pub mod Campaign {
         ///  - each time there's an upgrade, the campaign gets reset, which introduces a new problem - what if the Campaign was close to ending?
         ///    We just took all of their contributions away, and there might not be enough time to get them back. We solve this by letting the creators
         ///    prolong the duration of the campaign.
-        fn upgrade(ref self: ContractState, impl_hash: ClassHash) -> Result<(), Array<felt252>> {
+        fn upgrade(
+            ref self: ContractState, impl_hash: ClassHash, new_duration: u64
+        ) -> Result<(), Array<felt252>> {
             if get_caller_address() != self.ownable.owner() {
                 return Result::Err(array![components::ownable::Errors::UNAUTHORIZED]);
             }
@@ -283,11 +287,15 @@ pub mod Campaign {
             if self.status.read() != Status::ACTIVE && self.status.read() != Status::PENDING {
                 return Result::Err(array![Errors::ENDED]);
             }
+            if new_duration > 0 {
+                return Result::Err(array![Errors::ZERO_DURATION]);
+            }
 
             // only active campaigns have no funds to refund
             if self.status.read() == Status::ACTIVE {
                 self._withdraw_all();
                 self.total_contributions.write(0);
+                self.end_time.write(get_block_timestamp() + new_duration);
             }
 
             starknet::syscalls::replace_class_syscall(impl_hash)?;
