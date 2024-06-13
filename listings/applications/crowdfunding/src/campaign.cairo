@@ -9,7 +9,7 @@ pub enum Status {
     CLOSED,
     PENDING,
     SUCCESSFUL,
-    UNSUCCESSFUL,
+    FAILED,
 }
 
 #[derive(Drop, Serde)]
@@ -128,7 +128,7 @@ pub mod Campaign {
         pub const STILL_ACTIVE: felt252 = 'Campaign not ended';
         pub const STILL_PENDING: felt252 = 'Campaign not yet active';
         pub const CLOSED: felt252 = 'Campaign closed';
-        pub const UNSUCCESSFUL: felt252 = 'Campaign unsuccessful';
+        pub const FAILED: felt252 = 'Campaign failed';
         pub const CLASS_HASH_ZERO: felt252 = 'Class hash cannot be zero';
         pub const ZERO_DONATION: felt252 = 'Donation must be > 0';
         pub const ZERO_TARGET: felt252 = 'Target must be > 0';
@@ -199,7 +199,7 @@ pub mod Campaign {
             assert(self._is_active(), Errors::ENDED);
 
             if !self._is_target_reached() && self._is_expired() {
-                self.status.write(Status::UNSUCCESSFUL);
+                self.status.write(Status::FAILED);
             } else {
                 self.status.write(Status::CLOSED);
             }
@@ -213,7 +213,7 @@ pub mod Campaign {
             let status = self.status.read();
             assert(status != Status::PENDING, Errors::STILL_PENDING);
             assert(status != Status::CLOSED, Errors::CLOSED);
-            assert(status != Status::UNSUCCESSFUL, Errors::UNSUCCESSFUL);
+            assert(status != Status::FAILED, Errors::FAILED);
             assert(status != Status::SUCCESSFUL, Errors::ENDED);
             assert(amount > 0, Errors::ZERO_DONATION);
 
