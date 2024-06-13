@@ -198,7 +198,7 @@ pub mod Campaign {
 
             self.status.write(Status::CLOSED);
 
-            self._refund_all();
+            self._withdraw_all();
 
             self.emit(Event::Closed(Closed { reason }));
         }
@@ -275,7 +275,7 @@ pub mod Campaign {
                 return Result::Err(array![Errors::CLASS_HASH_ZERO]);
             }
 
-            self._refund_all();
+            self._withdraw_all();
 
             starknet::syscalls::replace_class_syscall(impl_hash)?;
 
@@ -326,7 +326,7 @@ pub mod Campaign {
             self.total_contributions.read() >= self.target.read()
         }
 
-        fn _refund_all(ref self: ContractState) {
+        fn _withdraw_all(ref self: ContractState) {
             let mut contributions = self.contributions.get_contributions_as_arr();
             while let Option::Some((contributor, amt)) = contributions
                 .pop_front() {
