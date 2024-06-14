@@ -77,7 +77,7 @@ fn test_create_campaign() {
     assert_eq!(details.end_time, 0);
     assert_eq!(details.status, Status::DRAFT);
     assert_eq!(details.token, token);
-    assert_eq!(details.total_contributions, 0);
+    assert_eq!(details.total_pledges, 0);
     assert_eq!(details.creator, campaign_creator);
 
     let campaign_ownable = IOwnableDispatcher { contract_address: campaign_address };
@@ -120,7 +120,7 @@ fn test_uprade_campaign_class_hash() {
     stop_cheat_caller_address(factory.contract_address);
 
     start_cheat_caller_address(active_campaign, active_campaign_creator);
-    ICampaignDispatcher { contract_address: active_campaign }.start(60);
+    ICampaignDispatcher { contract_address: active_campaign }.launch(60);
     stop_cheat_caller_address(active_campaign);
 
     assert_eq!(old_class_hash, get_class_hash(active_campaign));

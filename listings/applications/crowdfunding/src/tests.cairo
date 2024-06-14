@@ -68,7 +68,7 @@ fn deploy_with_token(
     // deploy the actual Campaign contract
     let campaign_dispatcher = deploy(contract, "title 1", "description 1", 10000, token_address);
 
-    // approve the contributions for each contributor
+    // approve the pledges for each contributor
     start_cheat_caller_address(token_address, contributor_1);
     token_dispatcher.approve(campaign_dispatcher.contract_address, 10000);
     start_cheat_caller_address(token_address, contributor_2);
@@ -98,7 +98,7 @@ fn test_deploy() {
     assert_eq!(details.end_time, 0);
     assert_eq!(details.status, Status::DRAFT);
     assert_eq!(details.token, contract_address_const::<'token'>());
-    assert_eq!(details.total_contributions, 0);
+    assert_eq!(details.total_pledges, 0);
     assert_eq!(details.creator, contract_address_const::<'creator'>());
 
     let owner: ContractAddress = contract_address_const::<'owner'>();
@@ -122,21 +122,21 @@ fn test_successful_campaign() {
 
     // start campaign
     start_cheat_caller_address(campaign.contract_address, creator);
-    campaign.start(duration);
+    campaign.launch(duration);
     assert_eq!(campaign.get_details().status, Status::ACTIVE);
     assert_eq!(campaign.get_details().end_time, get_block_timestamp() + duration);
 
     spy
         .assert_emitted(
-            @array![(campaign.contract_address, Campaign::Event::Activated(Campaign::Activated {}))]
+            @array![(campaign.contract_address, Campaign::Event::Launched(Campaign::Launched {}))]
         );
 
     // 1st donation
     start_cheat_caller_address(campaign.contract_address, contributor_1);
     let mut prev_balance = token.balance_of(contributor_1);
-    campaign.contribute(3000);
-    assert_eq!(campaign.get_details().total_contributions, 3000);
-    assert_eq!(campaign.get_contribution(contributor_1), 3000);
+    campaign.pledge(3000);
+    assert_eq!(campaign.get_details().total_pledges, 3000);
+    assert_eq!(campaign.get_pledge(contributor_1), 3000);
     assert_eq!(token.balance_of(contributor_1), prev_balance - 3000);
 
     spy
@@ -144,8 +144,8 @@ fn test_successful_campaign() {
             @array![
                 (
                     campaign.contract_address,
-                    Campaign::Event::ContributionMade(
-                        Campaign::ContributionMade { contributor: contributor_1, amount: 3000 }
+                    Campaign::Event::PledgeMade(
+                        Campaign::PledgeMade { contributor: contributor_1, amount: 3000 }
                     )
                 )
             ]
@@ -154,9 +154,9 @@ fn test_successful_campaign() {
     // 2nd donation
     start_cheat_caller_address(campaign.contract_address, contributor_2);
     prev_balance = token.balance_of(contributor_2);
-    campaign.contribute(500);
-    assert_eq!(campaign.get_details().total_contributions, 3500);
-    assert_eq!(campaign.get_contribution(contributor_2), 500);
+    campaign.pledge(500);
+    assert_eq!(campaign.get_details().total_pledges, 3500);
+    assert_eq!(campaign.get_pledge(contributor_2), 500);
     assert_eq!(token.balance_of(contributor_2), prev_balance - 500);
 
     spy
@@ -164,8 +164,8 @@ fn test_successful_campaign() {
             @array![
                 (
                     campaign.contract_address,
-                    Campaign::Event::ContributionMade(
-                        Campaign::ContributionMade { contributor: contributor_2, amount: 500 }
+                    Campaign::Event::PledgeMade(
+                        Campaign::PledgeMade { contributor: contributor_2, amount: 500 }
                     )
                 )
             ]
@@ -174,9 +174,9 @@ fn test_successful_campaign() {
     // 3rd donation
     start_cheat_caller_address(campaign.contract_address, contributor_3);
     prev_balance = token.balance_of(contributor_3);
-    campaign.contribute(7000);
-    assert_eq!(campaign.get_details().total_contributions, 10500);
-    assert_eq!(campaign.get_contribution(contributor_3), 7000);
+    campaign.pledge(7000);
+    assert_eq!(campaign.get_details().total_pledges, 10500);
+    assert_eq!(campaign.get_pledge(contributor_3), 7000);
     assert_eq!(token.balance_of(contributor_3), prev_balance - 7000);
 
     spy
@@ -184,8 +184,8 @@ fn test_successful_campaign() {
             @array![
                 (
                     campaign.contract_address,
-                    Campaign::Event::ContributionMade(
-                        Campaign::ContributionMade { contributor: contributor_3, amount: 7000 }
+                    Campaign::Event::PledgeMade(
+                        Campaign::PledgeMade { contributor: contributor_3, amount: 7000 }
                     )
                 )
             ]
@@ -250,13 +250,13 @@ fn test_upgrade_class_hash() {
     let prev_balance_contributor_3 = token.balance_of(contributor_3);
 
     start_cheat_caller_address(campaign.contract_address, creator);
-    campaign.start(duration);
+    campaign.launch(duration);
     start_cheat_caller_address(campaign.contract_address, contributor_1);
-    campaign.contribute(3000);
+    campaign.pledge(3000);
     start_cheat_caller_address(campaign.contract_address, contributor_2);
-    campaign.contribute(1000);
+    campaign.pledge(1000);
     start_cheat_caller_address(campaign.contract_address, contributor_3);
-    campaign.contribute(2000);
+    campaign.pledge(2000);
 
     start_cheat_caller_address(campaign.contract_address, owner);
     campaign.upgrade(new_class_hash, Option::Some(duration));
@@ -265,7 +265,7 @@ fn test_upgrade_class_hash() {
     assert_eq!(prev_balance_contributor_1, token.balance_of(contributor_1));
     assert_eq!(prev_balance_contributor_2, token.balance_of(contributor_2));
     assert_eq!(prev_balance_contributor_3, token.balance_of(contributor_3));
-    assert_eq!(campaign.get_details().total_contributions, 0);
+    assert_eq!(campaign.get_details().total_pledges, 0);
     assert_eq!(campaign.get_details().end_time, get_block_timestamp() + duration);
 
     spy
@@ -303,14 +303,14 @@ fn test_close() {
     let prev_balance_contributor_3 = token.balance_of(contributor_3);
 
     start_cheat_caller_address(campaign.contract_address, creator);
-    campaign.start(duration);
+    campaign.launch(duration);
     start_cheat_caller_address(campaign.contract_address, contributor_1);
-    campaign.contribute(3000);
+    campaign.pledge(3000);
     start_cheat_caller_address(campaign.contract_address, contributor_2);
-    campaign.contribute(1000);
+    campaign.pledge(1000);
     start_cheat_caller_address(campaign.contract_address, contributor_3);
-    campaign.contribute(2000);
-    let total_contributions = campaign.get_details().total_contributions;
+    campaign.pledge(2000);
+    let total_pledges = campaign.get_details().total_pledges;
 
     start_cheat_caller_address(campaign.contract_address, creator);
     campaign.cancel("testing");
@@ -319,7 +319,7 @@ fn test_close() {
     assert_eq!(prev_balance_contributor_1, token.balance_of(contributor_1));
     assert_eq!(prev_balance_contributor_2, token.balance_of(contributor_2));
     assert_eq!(prev_balance_contributor_3, token.balance_of(contributor_3));
-    assert_eq!(campaign.get_details().total_contributions, total_contributions);
+    assert_eq!(campaign.get_details().total_pledges, total_pledges);
     assert_eq!(campaign.get_details().status, Status::CLOSED);
 
     spy
@@ -350,14 +350,14 @@ fn test_close() {
     let prev_balance_contributor_3 = token.balance_of(contributor_3);
 
     start_cheat_caller_address(campaign.contract_address, creator);
-    campaign.start(duration);
+    campaign.launch(duration);
     start_cheat_caller_address(campaign.contract_address, contributor_1);
-    campaign.contribute(3000);
+    campaign.pledge(3000);
     start_cheat_caller_address(campaign.contract_address, contributor_2);
-    campaign.contribute(1000);
+    campaign.pledge(1000);
     start_cheat_caller_address(campaign.contract_address, contributor_3);
-    campaign.contribute(2000);
-    let total_contributions = campaign.get_details().total_contributions;
+    campaign.pledge(2000);
+    let total_pledges = campaign.get_details().total_pledges;
 
     cheat_block_timestamp_global(duration);
 
@@ -368,7 +368,7 @@ fn test_close() {
     assert_eq!(prev_balance_contributor_1, token.balance_of(contributor_1));
     assert_eq!(prev_balance_contributor_2, token.balance_of(contributor_2));
     assert_eq!(prev_balance_contributor_3, token.balance_of(contributor_3));
-    assert_eq!(campaign.get_details().total_contributions, total_contributions);
+    assert_eq!(campaign.get_details().total_pledges, total_pledges);
     assert_eq!(campaign.get_details().status, Status::FAILED);
 
     spy
@@ -403,18 +403,18 @@ fn test_refund() {
 
     // donate
     start_cheat_caller_address(campaign.contract_address, creator);
-    campaign.start(duration);
+    campaign.launch(duration);
     start_cheat_caller_address(campaign.contract_address, contributor);
-    campaign.contribute(amount);
-    assert_eq!(campaign.get_details().total_contributions, amount);
-    assert_eq!(campaign.get_contribution(contributor), amount);
+    campaign.pledge(amount);
+    assert_eq!(campaign.get_details().total_pledges, amount);
+    assert_eq!(campaign.get_pledge(contributor), amount);
     assert_eq!(token.balance_of(contributor), prev_balance - amount);
 
     // refund
     start_cheat_caller_address(campaign.contract_address, creator);
     campaign.refund(contributor, "testing");
-    assert_eq!(campaign.get_details().total_contributions, 0);
-    assert_eq!(campaign.get_contribution(contributor), 0);
+    assert_eq!(campaign.get_details().total_pledges, 0);
+    assert_eq!(campaign.get_pledge(contributor), 0);
     assert_eq!(token.balance_of(contributor), prev_balance);
 
     spy
@@ -431,7 +431,7 @@ fn test_refund() {
 }
 
 #[test]
-fn test_withdraw() {
+fn test_unpledge() {
     // setup
     let duration: u64 = 60;
     let (campaign, token) = deploy_with_token(
@@ -443,19 +443,19 @@ fn test_withdraw() {
     let amount: u256 = 3000;
     let prev_balance = token.balance_of(contributor);
     start_cheat_caller_address(campaign.contract_address, creator);
-    campaign.start(duration);
+    campaign.launch(duration);
 
     // donate
     start_cheat_caller_address(campaign.contract_address, contributor);
-    campaign.contribute(amount);
-    assert_eq!(campaign.get_details().total_contributions, amount);
-    assert_eq!(campaign.get_contribution(contributor), amount);
+    campaign.pledge(amount);
+    assert_eq!(campaign.get_details().total_pledges, amount);
+    assert_eq!(campaign.get_pledge(contributor), amount);
     assert_eq!(token.balance_of(contributor), prev_balance - amount);
 
-    // withdraw
-    campaign.withdraw("testing");
-    assert_eq!(campaign.get_details().total_contributions, 0);
-    assert_eq!(campaign.get_contribution(contributor), 0);
+    // unpledge
+    campaign.unpledge("testing");
+    assert_eq!(campaign.get_details().total_pledges, 0);
+    assert_eq!(campaign.get_pledge(contributor), 0);
     assert_eq!(token.balance_of(contributor), prev_balance);
 
     spy
@@ -463,8 +463,8 @@ fn test_withdraw() {
             @array![
                 (
                     campaign.contract_address,
-                    Campaign::Event::Withdrawn(
-                        Campaign::Withdrawn { contributor, amount, reason: "testing" }
+                    Campaign::Event::Unpledged(
+                        Campaign::Unpledged { contributor, amount, reason: "testing" }
                     )
                 )
             ]

@@ -1,4 +1,4 @@
-pub mod contributions;
+pub mod pledges;
 
 // ANCHOR: contract
 use starknet::{ClassHash, ContractAddress};
@@ -21,21 +21,21 @@ pub struct Details {
     pub description: ByteArray,
     pub status: Status,
     pub token: ContractAddress,
-    pub total_contributions: u256,
+    pub total_pledges: u256,
 }
 
 #[starknet::interface]
 pub trait ICampaign<TContractState> {
     fn claim(ref self: TContractState);
     fn cancel(ref self: TContractState, reason: ByteArray);
-    fn contribute(ref self: TContractState, amount: u256);
-    fn get_contribution(self: @TContractState, contributor: ContractAddress) -> u256;
-    fn get_contributions(self: @TContractState) -> Array<(ContractAddress, u256)>;
+    fn pledge(ref self: TContractState, amount: u256);
+    fn get_pledge(self: @TContractState, contributor: ContractAddress) -> u256;
+    fn get_pledges(self: @TContractState) -> Array<(ContractAddress, u256)>;
     fn get_details(self: @TContractState) -> Details;
-    fn start(ref self: TContractState, duration: u64);
+    fn launch(ref self: TContractState, duration: u64);
     fn refund(ref self: TContractState, contributor: ContractAddress, reason: ByteArray);
     fn upgrade(ref self: TContractState, impl_hash: ClassHash, new_duration: Option<u64>);
-    fn withdraw(ref self: TContractState, reason: ByteArray);
+    fn unpledge(ref self: TContractState, reason: ByteArray);
 }
 
 #[starknet::contract]
@@ -48,31 +48,31 @@ pub mod Campaign {
         get_caller_address, get_contract_address, class_hash::class_hash_const
     };
     use components::ownable::ownable_component;
-    use super::contributions::contributable_component;
+    use super::pledges::pledgeable_component;
     use super::{Details, Status};
 
     component!(path: ownable_component, storage: ownable, event: OwnableEvent);
-    component!(path: contributable_component, storage: contributions, event: ContributableEvent);
+    component!(path: pledgeable_component, storage: pledges, event: PledgeableEvent);
 
     #[abi(embed_v0)]
     pub impl OwnableImpl = ownable_component::Ownable<ContractState>;
     impl OwnableInternalImpl = ownable_component::OwnableInternalImpl<ContractState>;
     #[abi(embed_v0)]
-    impl ContributableImpl = contributable_component::Contributable<ContractState>;
+    impl PledgeableImpl = pledgeable_component::Pledgeable<ContractState>;
 
     #[storage]
     struct Storage {
         #[substorage(v0)]
         ownable: ownable_component::Storage,
         #[substorage(v0)]
-        contributions: contributable_component::Storage,
+        pledges: pledgeable_component::Storage,
         end_time: u64,
         token: IERC20Dispatcher,
         creator: ContractAddress,
         target: u256,
         title: ByteArray,
         description: ByteArray,
-        total_contributions: u256,
+        total_pledges: u256,
         status: Status
     }
 
@@ -81,25 +81,21 @@ pub mod Campaign {
     pub enum Event {
         #[flat]
         OwnableEvent: ownable_component::Event,
-        Activated: Activated,
         Claimed: Claimed,
         Canceled: Canceled,
-        ContributableEvent: contributable_component::Event,
-        ContributionMade: ContributionMade,
+        Launched: Launched,
+        PledgeableEvent: pledgeable_component::Event,
+        PledgeMade: PledgeMade,
         Refunded: Refunded,
-        Upgraded: Upgraded,
-        Withdrawn: Withdrawn,
         RefundedAll: RefundedAll,
+        Unpledged: Unpledged,
+        Upgraded: Upgraded,
     }
 
     #[derive(Drop, starknet::Event)]
-    pub struct Activated {}
-
-    #[derive(Drop, starknet::Event)]
-    pub struct ContributionMade {
-        #[key]
-        pub contributor: ContractAddress,
-        pub amount: u256,
+    pub struct Canceled {
+        pub reason: ByteArray,
+        pub status: Status,
     }
 
     #[derive(Drop, starknet::Event)]
@@ -108,9 +104,13 @@ pub mod Campaign {
     }
 
     #[derive(Drop, starknet::Event)]
-    pub struct Canceled {
-        pub reason: ByteArray,
-        pub status: Status,
+    pub struct Launched {}
+
+    #[derive(Drop, starknet::Event)]
+    pub struct PledgeMade {
+        #[key]
+        pub contributor: ContractAddress,
+        pub amount: u256,
     }
 
     #[derive(Drop, starknet::Event)]
@@ -127,16 +127,16 @@ pub mod Campaign {
     }
 
     #[derive(Drop, starknet::Event)]
-    pub struct Upgraded {
-        pub implementation: ClassHash
-    }
-
-    #[derive(Drop, starknet::Event)]
-    pub struct Withdrawn {
+    pub struct Unpledged {
         #[key]
         pub contributor: ContractAddress,
         pub amount: u256,
         pub reason: ByteArray,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    pub struct Upgraded {
+        pub implementation: ClassHash
     }
 
     pub mod Errors {
@@ -159,7 +159,7 @@ pub mod Campaign {
         pub const CREATOR_ZERO: felt252 = 'Creator address cannot be zero';
         pub const TARGET_NOT_REACHED: felt252 = 'Target not reached';
         pub const TARGET_ALREADY_REACHED: felt252 = 'Target already reached';
-        pub const NOTHING_TO_WITHDRAW: felt252 = 'Nothing to withdraw';
+        pub const NOTHING_TO_WITHDRAW: felt252 = 'Nothing to unpledge';
         pub const NOTHING_TO_REFUND: felt252 = 'Nothing to refund';
     }
 
@@ -204,7 +204,7 @@ pub mod Campaign {
 
             self.status.write(Status::SUCCESSFUL);
 
-            // no need to reset the contributions, as the campaign has ended
+            // no need to reset the pledges, as the campaign has ended
             // and the data can be used as a testament to how much was raised
 
             let owner = get_caller_address();
@@ -230,7 +230,7 @@ pub mod Campaign {
             self.emit(Event::Canceled(Canceled { reason, status }));
         }
 
-        fn contribute(ref self: ContractState, amount: u256) {
+        fn pledge(ref self: ContractState, amount: u256) {
             assert(self.status.read() != Status::DRAFT, Errors::STILL_DRAFT);
             assert(self.status.read() == Status::ACTIVE && !self._is_expired(), Errors::ENDED);
             assert(amount > 0, Errors::ZERO_DONATION);
@@ -240,18 +240,18 @@ pub mod Campaign {
             let success = self.token.read().transfer_from(contributor, this, amount);
             assert(success, Errors::TRANSFER_FAILED);
 
-            self.contributions.add(contributor, amount);
-            self.total_contributions.write(self.total_contributions.read() + amount);
+            self.pledges.add(contributor, amount);
+            self.total_pledges.write(self.total_pledges.read() + amount);
 
-            self.emit(Event::ContributionMade(ContributionMade { contributor, amount }));
+            self.emit(Event::PledgeMade(PledgeMade { contributor, amount }));
         }
 
-        fn get_contribution(self: @ContractState, contributor: ContractAddress) -> u256 {
-            self.contributions.get(contributor)
+        fn get_pledge(self: @ContractState, contributor: ContractAddress) -> u256 {
+            self.pledges.get(contributor)
         }
 
-        fn get_contributions(self: @ContractState) -> Array<(ContractAddress, u256)> {
-            self.contributions.get_contributions_as_arr()
+        fn get_pledges(self: @ContractState) -> Array<(ContractAddress, u256)> {
+            self.pledges.get_pledges_as_arr()
         }
 
         fn get_details(self: @ContractState) -> Details {
@@ -263,11 +263,11 @@ pub mod Campaign {
                 end_time: self.end_time.read(),
                 status: self.status.read(),
                 token: self.token.read().contract_address,
-                total_contributions: self.total_contributions.read(),
+                total_pledges: self.total_pledges.read(),
             }
         }
 
-        fn start(ref self: ContractState, duration: u64) {
+        fn launch(ref self: ContractState, duration: u64) {
             self._assert_only_creator();
             assert(self.status.read() == Status::DRAFT, Errors::NOT_DRAFT);
             assert(duration > 0, Errors::ZERO_DURATION);
@@ -275,7 +275,7 @@ pub mod Campaign {
             self.end_time.write(get_block_timestamp() + duration);
             self.status.write(Status::ACTIVE);
 
-            self.emit(Event::Activated(Activated {}));
+            self.emit(Event::Launched(Launched {}));
         }
 
         fn refund(ref self: ContractState, contributor: ContractAddress, reason: ByteArray) {
@@ -283,7 +283,7 @@ pub mod Campaign {
             assert(contributor.is_non_zero(), Errors::ZERO_ADDRESS_CONTRIBUTOR);
             assert(self.status.read() != Status::DRAFT, Errors::STILL_DRAFT);
             assert(self.status.read() == Status::ACTIVE, Errors::ENDED);
-            assert(self.contributions.get(contributor) != 0, Errors::NOTHING_TO_REFUND);
+            assert(self.pledges.get(contributor) != 0, Errors::NOTHING_TO_REFUND);
 
             let amount = self._refund(contributor);
 
@@ -312,17 +312,17 @@ pub mod Campaign {
             self.emit(Event::Upgraded(Upgraded { implementation: impl_hash }));
         }
 
-        fn withdraw(ref self: ContractState, reason: ByteArray) {
+        fn unpledge(ref self: ContractState, reason: ByteArray) {
             assert(self.status.read() != Status::DRAFT, Errors::STILL_DRAFT);
             assert(self.status.read() != Status::SUCCESSFUL, Errors::ENDED);
             assert(self.status.read() != Status::CLOSED, Errors::CLOSED);
             assert(!self._is_target_reached(), Errors::TARGET_ALREADY_REACHED);
-            assert(self.contributions.get(get_caller_address()) != 0, Errors::NOTHING_TO_WITHDRAW);
+            assert(self.pledges.get(get_caller_address()) != 0, Errors::NOTHING_TO_WITHDRAW);
 
             let contributor = get_caller_address();
             let amount = self._refund(contributor);
 
-            self.emit(Event::Withdrawn(Withdrawn { contributor, amount, reason }));
+            self.emit(Event::Unpledged(Unpledged { contributor, amount, reason }));
         }
     }
 
@@ -339,16 +339,16 @@ pub mod Campaign {
         }
 
         fn _is_target_reached(self: @ContractState) -> bool {
-            self.total_contributions.read() >= self.target.read()
+            self.total_pledges.read() >= self.target.read()
         }
 
         fn _refund(ref self: ContractState, contributor: ContractAddress) -> u256 {
-            let amount = self.contributions.remove(contributor);
+            let amount = self.pledges.remove(contributor);
 
-            // if the campaign is "failed", then there's no need to set total_contributions to 0, as
+            // if the campaign is "failed", then there's no need to set total_pledges to 0, as
             // the campaign has ended and the field can be used as a testament to how much was raised
             if self.status.read() == Status::ACTIVE {
-                self.total_contributions.write(self.total_contributions.read() - amount);
+                self.total_pledges.write(self.total_pledges.read() - amount);
             }
 
             let success = self.token.read().transfer(contributor, amount);
@@ -358,8 +358,8 @@ pub mod Campaign {
         }
 
         fn _refund_all(ref self: ContractState, reason: ByteArray) {
-            let mut contributions = self.contributions.get_contributions_as_arr();
-            while let Option::Some((contributor, _)) = contributions
+            let mut pledges = self.pledges.get_pledges_as_arr();
+            while let Option::Some((contributor, _)) = pledges
                 .pop_front() {
                     self._refund(contributor);
                 };

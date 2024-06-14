@@ -1,15 +1,15 @@
 use starknet::ContractAddress;
 
 #[starknet::interface]
-pub trait IContributable<TContractState> {
+pub trait IPledgeable<TContractState> {
     fn add(ref self: TContractState, contributor: ContractAddress, amount: u256);
     fn get(self: @TContractState, contributor: ContractAddress) -> u256;
-    fn get_contributions_as_arr(self: @TContractState) -> Array<(ContractAddress, u256)>;
+    fn get_pledges_as_arr(self: @TContractState) -> Array<(ContractAddress, u256)>;
     fn remove(ref self: TContractState, contributor: ContractAddress) -> u256;
 }
 
 #[starknet::component]
-pub mod contributable_component {
+pub mod pledgeable_component {
     use core::array::ArrayTrait;
     use starknet::{ContractAddress};
     use core::num::traits::Zero;
@@ -25,10 +25,10 @@ pub mod contributable_component {
     #[derive(Drop, starknet::Event)]
     pub enum Event {}
 
-    #[embeddable_as(Contributable)]
-    pub impl ContributableImpl<
+    #[embeddable_as(Pledgeable)]
+    pub impl PledgeableImpl<
         TContractState, +HasComponent<TContractState>
-    > of super::IContributable<ComponentState<TContractState>> {
+    > of super::IPledgeable<ComponentState<TContractState>> {
         fn add(
             ref self: ComponentState<TContractState>, contributor: ContractAddress, amount: u256
         ) {
@@ -55,7 +55,7 @@ pub mod contributable_component {
             }
         }
 
-        fn get_contributions_as_arr(
+        fn get_pledges_as_arr(
             self: @ComponentState<TContractState>
         ) -> Array<(ContractAddress, u256)> {
             let mut result = array![];
