@@ -8,6 +8,7 @@ pub trait ICampaignFactory<TContractState> {
         title: ByteArray,
         description: ByteArray,
         goal: u256,
+        duration: u64,
         token_address: ContractAddress
     ) -> ContractAddress;
     fn get_campaign_class_hash(self: @TContractState) -> ClassHash;
@@ -93,13 +94,14 @@ pub mod CampaignFactory {
             title: ByteArray,
             description: ByteArray,
             goal: u256,
+            duration: u64,
             token_address: ContractAddress,
         ) -> ContractAddress {
             let creator = get_caller_address();
 
             // Create contructor arguments
             let mut constructor_calldata: Array::<felt252> = array![];
-            ((creator, title, description, goal), token_address)
+            ((creator, title, description, goal), duration, token_address)
                 .serialize(ref constructor_calldata);
 
             // Contract deployment

@@ -107,12 +107,13 @@ pub mod MockUpgrade {
         title: ByteArray,
         description: ByteArray,
         goal: u256,
+        duration: u64,
         token_address: ContractAddress,
-    // TODO: add recepient address
     ) {
         assert(creator.is_non_zero(), Errors::CREATOR_ZERO);
         assert(title.len() > 0, Errors::TITLE_EMPTY);
         assert(goal > 0, Errors::ZERO_TARGET);
+        assert(duration > 0, Errors::ZERO_DURATION);
 
         self.token.write(IERC20Dispatcher { contract_address: token_address });
 
@@ -121,7 +122,8 @@ pub mod MockUpgrade {
         self.description.write(description);
         self.creator.write(creator);
         self.ownable._init(get_caller_address());
-        self.status.write(Status::DRAFT)
+        self.end_time.write(get_block_timestamp() + duration);
+        self.status.write(Status::ACTIVE);
     }
 
     #[abi(embed_v0)]
@@ -166,7 +168,7 @@ pub mod MockUpgrade {
         }
 
         fn pledge(ref self: ContractState, amount: u256) {
-            assert(self.status.read() != Status::DRAFT, Errors::STILL_DRAFT);
+            // start time check
             assert(self._is_active() && !self._is_expired(), Errors::ENDED);
             assert(amount > 0, Errors::ZERO_DONATION);
 
@@ -202,21 +204,10 @@ pub mod MockUpgrade {
             }
         }
 
-        fn launch(ref self: ContractState, duration: u64) {
-            self._assert_only_creator();
-            assert(self.status.read() == Status::DRAFT, Errors::NOT_DRAFT);
-            assert(duration > 0, Errors::ZERO_DURATION);
-
-            self.end_time.write(get_block_timestamp() + duration);
-            self.status.write(Status::ACTIVE);
-
-            self.emit(Event::Launched(Launched {}));
-        }
-
         fn refund(ref self: ContractState, pledger: ContractAddress, reason: ByteArray) {
             self._assert_only_creator();
             assert(pledger.is_non_zero(), Errors::ZERO_ADDRESS_CONTRIBUTOR);
-            assert(self.status.read() != Status::DRAFT, Errors::STILL_DRAFT);
+            // start time check
             assert(self._is_active(), Errors::ENDED);
             assert(self.pledges.get(pledger) != 0, Errors::NOTHING_TO_REFUND);
 
@@ -247,10 +238,8 @@ pub mod MockUpgrade {
         fn upgrade(ref self: ContractState, impl_hash: ClassHash, new_duration: Option<u64>) {
             self.ownable._assert_only_owner();
             assert(impl_hash.is_non_zero(), Errors::CLASS_HASH_ZERO);
-            assert(
-                self.status.read() == Status::ACTIVE || self.status.read() == Status::DRAFT,
-                Errors::ENDED
-            );
+            // start time check
+            assert(self.status.read() == Status::ACTIVE, Errors::ENDED);
 
             // only active campaigns have funds to refund and duration to update
             if self.status.read() == Status::ACTIVE {
@@ -270,20 +259,13 @@ pub mod MockUpgrade {
         }
 
         fn unpledge(ref self: ContractState, reason: ByteArray) {
-            assert(self.status.read() != Status::DRAFT, Errors::STILL_DRAFT);
-            assert(self.status.read() != Status::SUCCESSFUL, Errors::ENDED);
-            assert(self.status.read() != Status::CANCELED, Errors::CANCELED);
+            // start time check
+            assert(self.status.read() == Status::ACTIVE, Errors::ENDED);
             assert(!self._is_goal_reached(), Errors::TARGET_ALREADY_REACHED);
             assert(self.pledges.get(get_caller_address()) != 0, Errors::NOTHING_TO_WITHDRAW);
 
             let pledger = get_caller_address();
-            let amount = self.pledges.remove(pledger);
-
-            // no need to set total_pledges to 0, as the campaign has ended
-            // and the field can be used as a testament to how much was raised
-
-            let success = self.token.read().transfer(pledger, amount);
-            assert(success, Errors::TRANSFER_FAILED);
+            let amount = self._refund(pledger);
 
             self.emit(Event::Unpledged(Unpledged { pledger, amount, reason }));
         }

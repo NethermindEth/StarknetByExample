@@ -7,7 +7,6 @@ use starknet::{ClassHash, ContractAddress};
 pub enum Status {
     ACTIVE,
     CANCELED,
-    DRAFT,
     SUCCESSFUL,
     FAILED,
 }
@@ -32,7 +31,6 @@ pub trait ICampaign<TContractState> {
     fn get_pledge(self: @TContractState, pledger: ContractAddress) -> u256;
     fn get_pledges(self: @TContractState) -> Array<(ContractAddress, u256)>;
     fn get_details(self: @TContractState) -> Details;
-    fn launch(ref self: TContractState, duration: u64);
     fn refund(ref self: TContractState, pledger: ContractAddress, reason: ByteArray);
     fn upgrade(ref self: TContractState, impl_hash: ClassHash, new_duration: Option<u64>);
     fn unpledge(ref self: TContractState, reason: ByteArray);
@@ -142,9 +140,7 @@ pub mod Campaign {
     pub mod Errors {
         pub const NOT_CREATOR: felt252 = 'Not creator';
         pub const ENDED: felt252 = 'Campaign already ended';
-        pub const NOT_DRAFT: felt252 = 'Campaign not draft';
         pub const STILL_ACTIVE: felt252 = 'Campaign not ended';
-        pub const STILL_DRAFT: felt252 = 'Campaign not yet active';
         pub const CANCELED: felt252 = 'Campaign canceled';
         pub const FAILED: felt252 = 'Campaign failed';
         pub const CLASS_HASH_ZERO: felt252 = 'Class hash cannot be zero';
@@ -170,11 +166,13 @@ pub mod Campaign {
         title: ByteArray,
         description: ByteArray,
         goal: u256,
+        duration: u64,
         token_address: ContractAddress,
     ) {
         assert(creator.is_non_zero(), Errors::CREATOR_ZERO);
         assert(title.len() > 0, Errors::TITLE_EMPTY);
         assert(goal > 0, Errors::ZERO_TARGET);
+        assert(duration > 0, Errors::ZERO_DURATION);
 
         self.token.write(IERC20Dispatcher { contract_address: token_address });
 
@@ -183,7 +181,8 @@ pub mod Campaign {
         self.description.write(description);
         self.creator.write(creator);
         self.ownable._init(get_caller_address());
-        self.status.write(Status::DRAFT)
+        self.status.write(Status::ACTIVE);
+        self.end_time.write(get_block_timestamp() + duration);
     }
 
     #[abi(embed_v0)]
@@ -230,7 +229,7 @@ pub mod Campaign {
         }
 
         fn pledge(ref self: ContractState, amount: u256) {
-            assert(self.status.read() != Status::DRAFT, Errors::STILL_DRAFT);
+            // start time check
             assert(self.status.read() == Status::ACTIVE && !self._is_expired(), Errors::ENDED);
             assert(amount > 0, Errors::ZERO_DONATION);
 
@@ -266,21 +265,10 @@ pub mod Campaign {
             }
         }
 
-        fn launch(ref self: ContractState, duration: u64) {
-            self._assert_only_creator();
-            assert(self.status.read() == Status::DRAFT, Errors::NOT_DRAFT);
-            assert(duration > 0, Errors::ZERO_DURATION);
-
-            self.end_time.write(get_block_timestamp() + duration);
-            self.status.write(Status::ACTIVE);
-
-            self.emit(Event::Launched(Launched {}));
-        }
-
         fn refund(ref self: ContractState, pledger: ContractAddress, reason: ByteArray) {
             self._assert_only_creator();
             assert(pledger.is_non_zero(), Errors::ZERO_ADDRESS_CONTRIBUTOR);
-            assert(self.status.read() != Status::DRAFT, Errors::STILL_DRAFT);
+            // start time check
             assert(self.status.read() == Status::ACTIVE, Errors::ENDED);
             assert(self.pledges.get(pledger) != 0, Errors::NOTHING_TO_REFUND);
 
@@ -292,10 +280,8 @@ pub mod Campaign {
         fn upgrade(ref self: ContractState, impl_hash: ClassHash, new_duration: Option<u64>) {
             self.ownable._assert_only_owner();
             assert(impl_hash.is_non_zero(), Errors::CLASS_HASH_ZERO);
-            assert(
-                self.status.read() == Status::ACTIVE || self.status.read() == Status::DRAFT,
-                Errors::ENDED
-            );
+            // start time check
+            assert(self.status.read() == Status::ACTIVE, Errors::ENDED);
 
             // only active campaigns have funds to refund and duration to update
             if self.status.read() == Status::ACTIVE {
@@ -312,7 +298,7 @@ pub mod Campaign {
         }
 
         fn unpledge(ref self: ContractState, reason: ByteArray) {
-            assert(self.status.read() != Status::DRAFT, Errors::STILL_DRAFT);
+            // start time check
             assert(self.status.read() == Status::ACTIVE, Errors::ENDED);
             assert(!self._is_goal_reached(), Errors::TARGET_ALREADY_REACHED);
             assert(self.pledges.get(get_caller_address()) != 0, Errors::NOTHING_TO_WITHDRAW);

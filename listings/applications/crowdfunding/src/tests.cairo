@@ -15,19 +15,18 @@ use crowdfunding::campaign::Status;
 use components::ownable::{IOwnableDispatcher, IOwnableDispatcherTrait};
 use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
 
-const ERC20_SUPPLY: u256 = 10000;
-
 /// Deploy a campaign contract with the provided data
 fn deploy(
     contract: ContractClass,
     title: ByteArray,
     description: ByteArray,
     goal: u256,
+    duration: u64,
     token: ContractAddress
 ) -> ICampaignDispatcher {
     let creator = contract_address_const::<'creator'>();
     let mut calldata: Array::<felt252> = array![];
-    ((creator, title, description, goal), token).serialize(ref calldata);
+    ((creator, title, description, goal), duration, token).serialize(ref calldata);
 
     let contract_address = contract.precalculate_address(@calldata);
     let owner = contract_address_const::<'owner'>();
@@ -66,7 +65,9 @@ fn deploy_with_token(
     token_dispatcher.transfer(pledger_3, 10000);
 
     // deploy the actual Campaign contract
-    let campaign_dispatcher = deploy(contract, "title 1", "description 1", 10000, token_address);
+    let campaign_dispatcher = deploy(
+        contract, "title 1", "description 1", 10000, 60, token_address
+    );
 
     // approve the pledges for each pledger
     start_cheat_caller_address(token_address, pledger_1);
@@ -88,15 +89,15 @@ fn deploy_with_token(
 fn test_deploy() {
     let contract = declare("Campaign").unwrap();
     let campaign = deploy(
-        contract, "title 1", "description 1", 10000, contract_address_const::<'token'>()
+        contract, "title 1", "description 1", 10000, 60, contract_address_const::<'token'>()
     );
 
     let details = campaign.get_details();
     assert_eq!(details.title, "title 1");
     assert_eq!(details.description, "description 1");
     assert_eq!(details.goal, 10000);
-    assert_eq!(details.end_time, 0);
-    assert_eq!(details.status, Status::DRAFT);
+    assert_eq!(details.end_time, get_block_timestamp() + 60);
+    assert_eq!(details.status, Status::ACTIVE);
     assert_eq!(details.token, contract_address_const::<'token'>());
     assert_eq!(details.total_pledges, 0);
     assert_eq!(details.creator, contract_address_const::<'creator'>());
@@ -111,7 +112,6 @@ fn test_successful_campaign() {
     let token_class = declare("ERC20").unwrap();
     let contract_class = declare("Campaign").unwrap();
     let (campaign, token) = deploy_with_token(contract_class, token_class);
-    let duration: u64 = 60;
 
     let creator = contract_address_const::<'creator'>();
     let pledger_1 = contract_address_const::<'pledger_1'>();
@@ -119,17 +119,6 @@ fn test_successful_campaign() {
     let pledger_3 = contract_address_const::<'pledger_3'>();
 
     let mut spy = spy_events(SpyOn::One(campaign.contract_address));
-
-    // start campaign
-    start_cheat_caller_address(campaign.contract_address, creator);
-    campaign.launch(duration);
-    assert_eq!(campaign.get_details().status, Status::ACTIVE);
-    assert_eq!(campaign.get_details().end_time, get_block_timestamp() + duration);
-
-    spy
-        .assert_emitted(
-            @array![(campaign.contract_address, Campaign::Event::Launched(Campaign::Launched {}))]
-        );
 
     // 1st donation
     start_cheat_caller_address(campaign.contract_address, pledger_1);
@@ -192,7 +181,7 @@ fn test_successful_campaign() {
         );
 
     // claim 
-    cheat_block_timestamp_global(get_block_timestamp() + duration);
+    cheat_block_timestamp_global(campaign.get_details().end_time);
     start_cheat_caller_address(campaign.contract_address, creator);
     prev_balance = token.balance_of(creator);
     campaign.claim();
@@ -241,7 +230,6 @@ fn test_upgrade_class_hash() {
     let (campaign, token) = deploy_with_token(contract_class, token_class);
     let mut spy = spy_events(SpyOn::One(campaign.contract_address));
     let duration: u64 = 60;
-    let creator = contract_address_const::<'creator'>();
     let pledger_1 = contract_address_const::<'pledger_1'>();
     let pledger_2 = contract_address_const::<'pledger_2'>();
     let pledger_3 = contract_address_const::<'pledger_3'>();
@@ -249,8 +237,6 @@ fn test_upgrade_class_hash() {
     let prev_balance_pledger_2 = token.balance_of(pledger_2);
     let prev_balance_pledger_3 = token.balance_of(pledger_3);
 
-    start_cheat_caller_address(campaign.contract_address, creator);
-    campaign.launch(duration);
     start_cheat_caller_address(campaign.contract_address, pledger_1);
     campaign.pledge(3000);
     start_cheat_caller_address(campaign.contract_address, pledger_2);
@@ -289,7 +275,6 @@ fn test_upgrade_class_hash() {
 fn test_cancel() {
     let contract_class = declare("Campaign").unwrap();
     let token_class = declare("ERC20").unwrap();
-    let duration: u64 = 60;
 
     // test canceled campaign
     let (campaign, token) = deploy_with_token(contract_class, token_class);
@@ -302,8 +287,6 @@ fn test_cancel() {
     let prev_balance_pledger_2 = token.balance_of(pledger_2);
     let prev_balance_pledger_3 = token.balance_of(pledger_3);
 
-    start_cheat_caller_address(campaign.contract_address, creator);
-    campaign.launch(duration);
     start_cheat_caller_address(campaign.contract_address, pledger_1);
     campaign.pledge(3000);
     start_cheat_caller_address(campaign.contract_address, pledger_2);
@@ -349,8 +332,6 @@ fn test_cancel() {
     let prev_balance_pledger_2 = token.balance_of(pledger_2);
     let prev_balance_pledger_3 = token.balance_of(pledger_3);
 
-    start_cheat_caller_address(campaign.contract_address, creator);
-    campaign.launch(duration);
     start_cheat_caller_address(campaign.contract_address, pledger_1);
     campaign.pledge(3000);
     start_cheat_caller_address(campaign.contract_address, pledger_2);
@@ -359,7 +340,7 @@ fn test_cancel() {
     campaign.pledge(2000);
     let total_pledges = campaign.get_details().total_pledges;
 
-    cheat_block_timestamp_global(duration);
+    cheat_block_timestamp_global(campaign.get_details().end_time);
 
     start_cheat_caller_address(campaign.contract_address, creator);
     campaign.cancel("testing");
@@ -391,7 +372,6 @@ fn test_cancel() {
 #[test]
 fn test_refund() {
     // setup
-    let duration: u64 = 60;
     let (campaign, token) = deploy_with_token(
         declare("Campaign").unwrap(), declare("ERC20").unwrap()
     );
@@ -402,8 +382,6 @@ fn test_refund() {
     let prev_balance = token.balance_of(pledger);
 
     // donate
-    start_cheat_caller_address(campaign.contract_address, creator);
-    campaign.launch(duration);
     start_cheat_caller_address(campaign.contract_address, pledger);
     campaign.pledge(amount);
     assert_eq!(campaign.get_details().total_pledges, amount);
@@ -433,17 +411,13 @@ fn test_refund() {
 #[test]
 fn test_unpledge() {
     // setup
-    let duration: u64 = 60;
     let (campaign, token) = deploy_with_token(
         declare("Campaign").unwrap(), declare("ERC20").unwrap()
     );
     let mut spy = spy_events(SpyOn::One(campaign.contract_address));
-    let creator = contract_address_const::<'creator'>();
     let pledger = contract_address_const::<'pledger_1'>();
     let amount: u256 = 3000;
     let prev_balance = token.balance_of(pledger);
-    start_cheat_caller_address(campaign.contract_address, creator);
-    campaign.launch(duration);
 
     // donate
     start_cheat_caller_address(campaign.contract_address, pledger);

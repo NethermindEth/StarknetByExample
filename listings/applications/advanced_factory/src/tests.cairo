@@ -64,17 +64,19 @@ fn test_create_campaign() {
     let title: ByteArray = "New campaign";
     let description: ByteArray = "Some description";
     let goal: u256 = 10000;
+    let duration: u64 = 60;
     let token = contract_address_const::<'token'>();
 
-    let campaign_address = factory.create_campaign(title.clone(), description.clone(), goal, token);
+    let campaign_address = factory
+        .create_campaign(title.clone(), description.clone(), goal, duration, token);
     let campaign = ICampaignDispatcher { contract_address: campaign_address };
 
     let details = campaign.get_details();
     assert_eq!(details.title, title);
     assert_eq!(details.description, description);
     assert_eq!(details.goal, goal);
-    assert_eq!(details.end_time, 0);
-    assert_eq!(details.status, Status::DRAFT);
+    assert_eq!(details.end_time, get_block_timestamp() + duration);
+    assert_eq!(details.status, Status::ACTIVE);
     assert_eq!(details.token, token);
     assert_eq!(details.total_pledges, 0);
     assert_eq!(details.creator, campaign_creator);
@@ -108,19 +110,14 @@ fn test_uprade_campaign_class_hash() {
     // deploy a pending campaign with the old class hash
     let pending_campaign_creator = contract_address_const::<'pending_campaign_creator'>();
     start_cheat_caller_address(factory.contract_address, pending_campaign_creator);
-    let pending_campaign = factory.create_campaign("title 1", "description 1", 10000, token);
+    let pending_campaign = factory.create_campaign("title 1", "description 1", 10000, 60, token);
 
     assert_eq!(old_class_hash, get_class_hash(pending_campaign));
 
     // deploy an active campaign with the old class hash
     let active_campaign_creator = contract_address_const::<'active_campaign_creator'>();
     start_cheat_caller_address(factory.contract_address, active_campaign_creator);
-    let active_campaign = factory.create_campaign("title 2", "description 2", 20000, token);
-    stop_cheat_caller_address(factory.contract_address);
-
-    start_cheat_caller_address(active_campaign, active_campaign_creator);
-    ICampaignDispatcher { contract_address: active_campaign }.launch(60);
-    stop_cheat_caller_address(active_campaign);
+    let active_campaign = factory.create_campaign("title 2", "description 2", 20000, 100, token);
 
     assert_eq!(old_class_hash, get_class_hash(active_campaign));
 
