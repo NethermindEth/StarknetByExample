@@ -328,6 +328,7 @@ pub mod Campaign {
         fn _is_ended(self: @ContractState) -> bool {
             get_block_timestamp() >= self.end_time.read()
         }
+
         fn _is_goal_reached(self: @ContractState) -> bool {
             self.total_pledges.read() >= self.goal.read()
         }
