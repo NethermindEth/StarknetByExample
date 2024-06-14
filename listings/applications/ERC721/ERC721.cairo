@@ -1,3 +1,38 @@
+#[starknet::interface]
+namespace IERC721 {
+    // Returns the name of the token collection
+    fn get_name(self: @ContractState) -> felt252;
+
+    // Returns the symbol of the token collection
+    fn get_symbol(self: @ContractState) -> felt252;
+
+    // Returns the metadata URI for a given token ID
+    fn get_token_uri(self: @ContractState, token_id: u128) -> felt252;
+
+    // Returns the number of tokens owned by a specific address
+    fn balance_of(self: @ContractState, account: ContractAddress) -> u256;
+
+    // Returns the owner of the specified token ID
+    fn owner_of(self: @ContractState, token_id: u128) -> ContractAddress;
+
+    // Returns the approved address for a specific token ID
+    fn get_approved(self: @ContractState, token_id: u128) -> ContractAddress;
+
+    // Checks if an operator is approved to manage all of the assets of an owner
+    fn is_approved_for_all(self: @ContractState, owner: ContractAddress, operator: ContractAddress) -> bool;
+
+    // Approves another address to transfer the given token ID
+    fn approve(self: @ContractState, to: ContractAddress, token_id: u128);
+
+    // Sets or unsets the approval of a given operator
+    fn set_approval_for_all(self: @ContractState, operator: ContractAddress, approved: bool);
+
+    // Transfers a specific token ID to another address
+    fn transfer_from(self: @ContractState, from: ContractAddress, to: ContractAddress, token_id: u128);
+}
+
+// ERC721Contract.cairo
+
 #[starknet::contract]
 mod ERC721Contract {
 
@@ -13,11 +48,11 @@ mod ERC721Contract {
     struct Storage {
         name: felt252,
         symbol: felt252,
-        owners: LegacyMap::<u256, ContractAddress>,
-        balances: LegacyMap::<ContractAddress, u256>,
-        token_approvals: LegacyMap::<u256, ContractAddress>,
+        owners: LegacyMap::<u128, ContractAddress>,
+        balances: LegacyMap::<ContractAddress, u128>,
+        token_approvals: LegacyMap::<u128, ContractAddress>,
         operator_approvals: LegacyMap::<(ContractAddress, ContractAddress), bool>,
-        token_uri: LegacyMap::<u256, felt252>,
+        token_uri: LegacyMap::<u128, felt252>,
     }
 
     #[event]
@@ -32,14 +67,14 @@ mod ERC721Contract {
     struct Approval {
         owner: ContractAddress,
         to: ContractAddress,
-        token_id: u256
+        token_id: u128
     }
 
     #[derive(Drop, starknet::Event)]
     struct Transfer {
         from: ContractAddress,
         to: ContractAddress,
-        token_id: u256
+        token_id: u128
     }
 
     #[derive(Drop, starknet::Event)]
@@ -69,7 +104,7 @@ mod ERC721Contract {
         }
 
         // Returns the metadata URI for a given token ID
-        fn get_token_uri(self: @ContractState, token_id: u256) -> felt252 {
+        fn get_token_uri(self: @ContractState, token_id: u128) -> felt252 {
             assert(self._exists(token_id), 'ERC721: invalid token ID');
             self.token_uri.read(token_id)
         }
@@ -81,14 +116,14 @@ mod ERC721Contract {
         }
 
         // Returns the owner of the specified token ID
-        fn owner_of(self: @ContractState, token_id: u256) -> ContractAddress {
+        fn owner_of(self: @ContractState, token_id: u128) -> ContractAddress {
             let owner = self.owners.read(token_id);
             assert(owner.is_non_zero(), 'ERC721: invalid token ID');
             owner
         }
 
         // Returns the approved address for a specific token ID
-        fn get_approved(self: @ContractState, token_id: u256) -> ContractAddress {
+        fn get_approved(self: @ContractState, token_id: u128) -> ContractAddress {
             assert(self._exists(token_id), 'ERC721: invalid token ID');
             self.token_approvals.read(token_id)
         }
@@ -99,7 +134,7 @@ mod ERC721Contract {
         }
 
         // Approves another address to transfer the given token ID
-        fn approve(ref self: ContractState, to: ContractAddress, token_id: u256) {
+        fn approve(ref self: ContractState, to: ContractAddress, token_id: u128) {
             let owner = self.owner_of(token_id);
             assert(to != owner, 'Approval to current owner');
             assert(get_caller_address() == owner || self.is_approved_for_all(owner, get_caller_address()), 'Not token owner');
@@ -120,7 +155,7 @@ mod ERC721Contract {
         }
 
         // Transfers a specific token ID to another address
-        fn transfer_from(ref self: ContractState, from: ContractAddress, to: ContractAddress, token_id: u256) {
+        fn transfer_from(ref self: ContractState, from: ContractAddress, to: ContractAddress, token_id: u128) {
             assert(self._is_approved_or_owner(get_caller_address(), token_id), 'neither owner nor approved');
             self._transfer(from, to, token_id);
         }
@@ -129,12 +164,12 @@ mod ERC721Contract {
     #[generate_trait]
     impl ERC721HelperImpl of ERC721HelperTrait {
         // Checks if a specific token ID exists
-        fn _exists(self: @ContractState, token_id: u256) -> bool {
+        fn _exists(self: @ContractState, token_id: u128) -> bool {
             self.owner_of(token_id).is_non_zero()
         }
 
         // Checks if a spender is the owner or an approved operator of a specific token ID
-        fn _is_approved_or_owner(self: @ContractState, spender: ContractAddress, token_id: u256) -> bool {
+        fn _is_approved_or_owner(self: @ContractState, spender: ContractAddress, token_id: u128) -> bool {
             let owner = self.owners.read(token_id);
             spender == owner
                 || self.is_approved_for_all(owner, spender) 
@@ -142,13 +177,13 @@ mod ERC721Contract {
         }
 
         // Sets the metadata URI for a specific token ID
-        fn _set_token_uri(ref self: ContractState, token_id: u256, token_uri: felt252) {
+        fn _set_token_uri(ref self: ContractState, token_id: u128, token_uri: felt252) {
             assert(self._exists(token_id), 'ERC721: invalid token ID');
             self.token_uri.write(token_id, token_uri)
         }
 
         // Transfers a specific token ID from one address to another
-        fn _transfer(ref self: ContractState, from: ContractAddress, to: ContractAddress, token_id: u256) {
+        fn _transfer(ref self: ContractState, from: ContractAddress, to: ContractAddress, token_id: u128) {
             assert(from == self.owner_of(token_id), 'ERC721: Caller is not owner');
             assert(to.is_non_zero(), 'ERC721: transfer to 0 address');
 
@@ -165,7 +200,7 @@ mod ERC721Contract {
         }
 
         // Mints a new token with a specific ID to a specified address
-        fn _mint(ref self: ContractState, to: ContractAddress, token_id: u256) {
+        fn _mint(ref self: ContractState, to: ContractAddress, token_id: u128) {
             assert(to.is_non_zero(), 'TO_IS_ZERO_ADDRESS');
             assert(!self.owner_of(token_id).is_non_zero(), 'ERC721: Token already minted');
 
@@ -180,7 +215,7 @@ mod ERC721Contract {
         }
 
         // Burns a specific token ID, removing it from existence
-        fn _burn(ref self: ContractState, token_id: u256) {
+        fn _burn(ref self: ContractState, token_id: u128) {
             let owner = self.owner_of(token_id);
 
             self.token_approvals.write(token_id, Zeroable::zero());
