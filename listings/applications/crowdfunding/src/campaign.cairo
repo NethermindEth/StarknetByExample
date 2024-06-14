@@ -5,14 +5,14 @@ use starknet::{ClassHash, ContractAddress};
 
 #[derive(Drop, Serde)]
 pub struct Details {
-    pub creator: ContractAddress,
-    pub goal: u256,
-    pub title: ByteArray,
-    pub start_time: u64,
-    pub end_time: u64,
-    pub description: ByteArray,
-    pub claimed: bool,
     pub canceled: bool,
+    pub claimed: bool,
+    pub creator: ContractAddress,
+    pub description: ByteArray,
+    pub end_time: u64,
+    pub goal: u256,
+    pub start_time: u64,
+    pub title: ByteArray,
     pub token: ContractAddress,
     pub total_pledges: u256,
 }
@@ -54,29 +54,29 @@ pub mod Campaign {
 
     #[storage]
     struct Storage {
+        canceled: bool,
+        claimed: bool,
+        creator: ContractAddress,
+        description: ByteArray,
+        end_time: u64,
+        goal: u256,
         #[substorage(v0)]
         ownable: ownable_component::Storage,
         #[substorage(v0)]
         pledges: pledgeable_component::Storage,
         start_time: u64,
-        end_time: u64,
-        token: IERC20Dispatcher,
-        creator: ContractAddress,
-        goal: u256,
         title: ByteArray,
-        description: ByteArray,
-        claimed: bool,
-        canceled: bool,
+        token: IERC20Dispatcher,
     }
 
     #[event]
     #[derive(Drop, starknet::Event)]
     pub enum Event {
-        #[flat]
-        OwnableEvent: ownable_component::Event,
         Claimed: Claimed,
         Canceled: Canceled,
         Launched: Launched,
+        #[flat]
+        OwnableEvent: ownable_component::Event,
         PledgeableEvent: pledgeable_component::Event,
         PledgeMade: PledgeMade,
         Refunded: Refunded,
@@ -132,30 +132,30 @@ pub mod Campaign {
     }
 
     pub mod Errors {
-        pub const NOT_CREATOR: felt252 = 'Not creator';
-        pub const ENDED: felt252 = 'Campaign already ended';
-        pub const CLAIMED: felt252 = 'Campaign already claimed';
-        pub const NOT_STARTED: felt252 = 'Campaign not started';
-        pub const STILL_ACTIVE: felt252 = 'Campaign not ended';
         pub const CANCELED: felt252 = 'Campaign canceled';
-        pub const FAILED: felt252 = 'Campaign failed';
-        pub const CLASS_HASH_ZERO: felt252 = 'Class hash cannot be zero';
-        pub const ZERO_DONATION: felt252 = 'Donation must be > 0';
-        pub const ZERO_TARGET: felt252 = 'Target must be > 0';
-        pub const START_TIME_IN_PAST: felt252 = 'Start time < now';
-        pub const END_BEFORE_START: felt252 = 'End time < start time';
+        pub const CLAIMED: felt252 = 'Campaign already claimed';
+        pub const CLASS_HASH_ZERO: felt252 = 'Class hash zero';
+        pub const CREATOR_ZERO: felt252 = 'Creator address zero';
+        pub const ENDED: felt252 = 'Campaign already ended';
         pub const END_BEFORE_NOW: felt252 = 'End time < now';
+        pub const END_BEFORE_START: felt252 = 'End time < start time';
         pub const END_BIGGER_THAN_MAX: felt252 = 'End time > max duration';
-        pub const ZERO_FUNDS: felt252 = 'No funds to claim';
-        pub const ZERO_ADDRESS_PLEDGER: felt252 = 'Contributor cannot be zero';
-        pub const TRANSFER_FAILED: felt252 = 'Transfer failed';
-        pub const TITLE_EMPTY: felt252 = 'Title empty';
-        pub const ZERO_ADDRESS_CALLER: felt252 = 'Caller cannot be zero';
-        pub const CREATOR_ZERO: felt252 = 'Creator address cannot be zero';
-        pub const TARGET_NOT_REACHED: felt252 = 'Target not reached';
-        pub const TARGET_ALREADY_REACHED: felt252 = 'Target already reached';
-        pub const NOTHING_TO_UNPLEDGE: felt252 = 'Nothing to unpledge';
         pub const NOTHING_TO_REFUND: felt252 = 'Nothing to refund';
+        pub const NOTHING_TO_UNPLEDGE: felt252 = 'Nothing to unpledge';
+        pub const NOT_CREATOR: felt252 = 'Not creator';
+        pub const NOT_STARTED: felt252 = 'Campaign not started';
+        pub const PLEDGES_LOCKED: felt252 = 'Goal reached, pledges locked';
+        pub const START_TIME_IN_PAST: felt252 = 'Start time < now';
+        pub const STILL_ACTIVE: felt252 = 'Campaign not ended';
+        pub const TARGET_NOT_REACHED: felt252 = 'Goal not reached';
+        pub const TITLE_EMPTY: felt252 = 'Title empty';
+        pub const TRANSFER_FAILED: felt252 = 'Transfer failed';
+        pub const ZERO_ADDRESS_CALLER: felt252 = 'Caller address zero';
+        pub const ZERO_ADDRESS_PLEDGER: felt252 = 'Pledger address zero';
+        pub const ZERO_ADDRESS_TOKEN: felt252 = 'Token address zerp';
+        pub const ZERO_DONATION: felt252 = 'Donation must be > 0';
+        pub const ZERO_GOAL: felt252 = 'Goal must be > 0';
+        pub const ZERO_PLEDGES: felt252 = 'No pledges to claim';
     }
 
     const NINETY_DAYS: u64 = consteval_int!(90 * 24 * 60 * 60);
@@ -173,19 +173,20 @@ pub mod Campaign {
     ) {
         assert(creator.is_non_zero(), Errors::CREATOR_ZERO);
         assert(title.len() > 0, Errors::TITLE_EMPTY);
-        assert(goal > 0, Errors::ZERO_TARGET);
+        assert(goal > 0, Errors::ZERO_GOAL);
         assert(start_time >= get_block_timestamp(), Errors::START_TIME_IN_PAST);
         assert(end_time >= start_time, Errors::END_BEFORE_START);
         assert(end_time <= get_block_timestamp() + NINETY_DAYS, Errors::END_BIGGER_THAN_MAX);
+        assert(token_address.is_non_zero(), Errors::ZERO_ADDRESS_TOKEN);
 
+        self.creator.write(creator);
         self.title.write(title);
         self.goal.write(goal);
         self.description.write(description);
-        self.creator.write(creator);
-        self.ownable._init(get_caller_address());
         self.start_time.write(start_time);
         self.end_time.write(end_time);
         self.token.write(IERC20Dispatcher { contract_address: token_address });
+        self.ownable._init(get_caller_address());
     }
 
     #[abi(embed_v0)]
@@ -212,7 +213,7 @@ pub mod Campaign {
             let this = get_contract_address();
             let token = self.token.read();
             let amount = token.balance_of(this);
-            assert(amount > 0, Errors::ZERO_FUNDS);
+            assert(amount > 0, Errors::ZERO_PLEDGES);
 
             self.claimed.write(true);
 
@@ -280,7 +281,7 @@ pub mod Campaign {
 
         fn unpledge(ref self: ContractState, reason: ByteArray) {
             assert(self._is_started(), Errors::NOT_STARTED);
-            assert(!self._is_goal_reached(), Errors::TARGET_ALREADY_REACHED);
+            assert(!self._is_goal_reached(), Errors::PLEDGES_LOCKED);
             assert(self.pledges.get(get_caller_address()) != 0, Errors::NOTHING_TO_UNPLEDGE);
 
             let pledger = get_caller_address();
@@ -319,16 +320,16 @@ pub mod Campaign {
             assert(caller == self.creator.read(), Errors::NOT_CREATOR);
         }
 
-        fn _is_started(self: @ContractState) -> bool {
-            get_block_timestamp() >= self.start_time.read()
-        }
-
         fn _is_ended(self: @ContractState) -> bool {
             get_block_timestamp() >= self.end_time.read()
         }
 
         fn _is_goal_reached(self: @ContractState) -> bool {
             self.pledges.get_total() >= self.goal.read()
+        }
+
+        fn _is_started(self: @ContractState) -> bool {
+            get_block_timestamp() >= self.start_time.read()
         }
 
         fn _refund(ref self: ContractState, pledger: ContractAddress) -> u256 {

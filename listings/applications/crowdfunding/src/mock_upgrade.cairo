@@ -114,7 +114,7 @@ pub mod MockUpgrade {
     ) {
         assert(creator.is_non_zero(), Errors::CREATOR_ZERO);
         assert(title.len() > 0, Errors::TITLE_EMPTY);
-        assert(goal > 0, Errors::ZERO_TARGET);
+        assert(goal > 0, Errors::ZERO_GOAL);
         assert(start_time >= get_block_timestamp(), Errors::START_TIME_IN_PAST);
         assert(end_time >= start_time, Errors::END_BEFORE_START);
         assert(end_time <= get_block_timestamp() + NINETY_DAYS, Errors::END_BIGGER_THAN_MAX);
@@ -153,7 +153,7 @@ pub mod MockUpgrade {
             let this = get_contract_address();
             let token = self.token.read();
             let amount = token.balance_of(this);
-            assert(amount > 0, Errors::ZERO_FUNDS);
+            assert(amount > 0, Errors::ZERO_PLEDGES);
 
             self.claimed.write(true);
 
@@ -221,7 +221,7 @@ pub mod MockUpgrade {
 
         fn unpledge(ref self: ContractState, reason: ByteArray) {
             assert(self._is_started(), Errors::NOT_STARTED);
-            assert(!self._is_goal_reached(), Errors::TARGET_ALREADY_REACHED);
+            assert(!self._is_goal_reached(), Errors::PLEDGES_LOCKED);
             assert(self.pledges.get(get_caller_address()) != 0, Errors::NOTHING_TO_UNPLEDGE);
 
             let pledger = get_caller_address();
