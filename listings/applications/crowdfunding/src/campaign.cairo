@@ -1,6 +1,6 @@
+// ANCHOR: contract
 pub mod pledges;
 
-// ANCHOR: contract
 use starknet::{ClassHash, ContractAddress};
 
 #[derive(Drop, Serde)]
@@ -74,7 +74,6 @@ pub mod Campaign {
     pub enum Event {
         Claimed: Claimed,
         Canceled: Canceled,
-        Launched: Launched,
         #[flat]
         OwnableEvent: ownable_component::Event,
         PledgeableEvent: pledgeable_component::Event,
@@ -94,9 +93,6 @@ pub mod Campaign {
     pub struct Claimed {
         pub amount: u256,
     }
-
-    #[derive(Drop, starknet::Event)]
-    pub struct Launched {}
 
     #[derive(Drop, starknet::Event)]
     pub struct PledgeMade {

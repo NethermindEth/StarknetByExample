@@ -22,29 +22,28 @@ pub mod MockUpgrade {
 
     #[storage]
     struct Storage {
+        canceled: bool,
+        claimed: bool,
+        creator: ContractAddress,
+        description: ByteArray,
+        end_time: u64,
+        goal: u256,
         #[substorage(v0)]
         ownable: ownable_component::Storage,
         #[substorage(v0)]
         pledges: pledgeable_component::Storage,
         start_time: u64,
-        end_time: u64,
-        token: IERC20Dispatcher,
-        creator: ContractAddress,
-        goal: u256,
         title: ByteArray,
-        description: ByteArray,
-        claimed: bool,
-        canceled: bool,
+        token: IERC20Dispatcher,
     }
 
     #[event]
     #[derive(Drop, starknet::Event)]
     pub enum Event {
-        #[flat]
-        OwnableEvent: ownable_component::Event,
         Claimed: Claimed,
         Canceled: Canceled,
-        Launched: Launched,
+        #[flat]
+        OwnableEvent: ownable_component::Event,
         PledgeableEvent: pledgeable_component::Event,
         PledgeMade: PledgeMade,
         Refunded: Refunded,
@@ -62,9 +61,6 @@ pub mod MockUpgrade {
     pub struct Claimed {
         pub amount: u256,
     }
-
-    #[derive(Drop, starknet::Event)]
-    pub struct Launched {}
 
     #[derive(Drop, starknet::Event)]
     pub struct PledgeMade {
@@ -118,15 +114,16 @@ pub mod MockUpgrade {
         assert(start_time >= get_block_timestamp(), Errors::START_TIME_IN_PAST);
         assert(end_time >= start_time, Errors::END_BEFORE_START);
         assert(end_time <= get_block_timestamp() + NINETY_DAYS, Errors::END_BIGGER_THAN_MAX);
+        assert(token_address.is_non_zero(), Errors::ZERO_ADDRESS_TOKEN);
 
+        self.creator.write(creator);
         self.title.write(title);
         self.goal.write(goal);
         self.description.write(description);
-        self.creator.write(creator);
-        self.ownable._init(get_caller_address());
         self.start_time.write(start_time);
         self.end_time.write(end_time);
         self.token.write(IERC20Dispatcher { contract_address: token_address });
+        self.ownable._init(get_caller_address());
     }
 
     #[abi(embed_v0)]
@@ -260,16 +257,16 @@ pub mod MockUpgrade {
             assert(caller == self.creator.read(), Errors::NOT_CREATOR);
         }
 
-        fn _is_started(self: @ContractState) -> bool {
-            get_block_timestamp() >= self.start_time.read()
-        }
-
         fn _is_ended(self: @ContractState) -> bool {
             get_block_timestamp() >= self.end_time.read()
         }
 
         fn _is_goal_reached(self: @ContractState) -> bool {
             self.pledges.get_total() >= self.goal.read()
+        }
+
+        fn _is_started(self: @ContractState) -> bool {
+            get_block_timestamp() >= self.start_time.read()
         }
 
         fn _refund(ref self: ContractState, pledger: ContractAddress) -> u256 {
