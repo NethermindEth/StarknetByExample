@@ -313,7 +313,7 @@ fn test_close() {
     let total_contributions = campaign.get_details().total_contributions;
 
     start_cheat_caller_address(campaign.contract_address, creator);
-    campaign.close("testing");
+    campaign.cancel("testing");
     stop_cheat_caller_address(campaign.contract_address);
 
     assert_eq!(prev_balance_contributor_1, token.balance_of(contributor_1));
@@ -331,8 +331,8 @@ fn test_close() {
                 ),
                 (
                     campaign.contract_address,
-                    Campaign::Event::Closed(
-                        Campaign::Closed { reason: "testing", status: Status::CLOSED }
+                    Campaign::Event::Canceled(
+                        Campaign::Canceled { reason: "testing", status: Status::CLOSED }
                     )
                 )
             ]
@@ -362,7 +362,7 @@ fn test_close() {
     cheat_block_timestamp_global(duration);
 
     start_cheat_caller_address(campaign.contract_address, creator);
-    campaign.close("testing");
+    campaign.cancel("testing");
     stop_cheat_caller_address(campaign.contract_address);
 
     assert_eq!(prev_balance_contributor_1, token.balance_of(contributor_1));
@@ -380,8 +380,8 @@ fn test_close() {
                 ),
                 (
                     campaign.contract_address,
-                    Campaign::Event::Closed(
-                        Campaign::Closed { reason: "testing", status: Status::FAILED }
+                    Campaign::Event::Canceled(
+                        Campaign::Canceled { reason: "testing", status: Status::FAILED }
                     )
                 )
             ]

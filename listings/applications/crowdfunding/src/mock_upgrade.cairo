@@ -44,7 +44,7 @@ pub mod MockUpgrade {
         OwnableEvent: ownable_component::Event,
         Activated: Activated,
         Claimed: Claimed,
-        Closed: Closed,
+        Canceled: Canceled,
         ContributableEvent: contributable_component::Event,
         ContributionMade: ContributionMade,
         Refunded: Refunded,
@@ -69,7 +69,7 @@ pub mod MockUpgrade {
     }
 
     #[derive(Drop, starknet::Event)]
-    pub struct Closed {
+    pub struct Canceled {
         pub reason: ByteArray,
         pub status: Status,
     }
@@ -149,7 +149,7 @@ pub mod MockUpgrade {
             self.emit(Event::Claimed(Claimed { amount }));
         }
 
-        fn close(ref self: ContractState, reason: ByteArray) {
+        fn cancel(ref self: ContractState, reason: ByteArray) {
             self._assert_only_creator();
             assert(self._is_active(), Errors::ENDED);
 
@@ -162,7 +162,7 @@ pub mod MockUpgrade {
             self._refund_all(reason.clone());
             let status = self.status.read();
 
-            self.emit(Event::Closed(Closed { reason, status }));
+            self.emit(Event::Canceled(Canceled { reason, status }));
         }
 
         fn contribute(ref self: ContractState, amount: u256) {

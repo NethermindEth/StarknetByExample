@@ -27,7 +27,7 @@ pub struct Details {
 #[starknet::interface]
 pub trait ICampaign<TContractState> {
     fn claim(ref self: TContractState);
-    fn close(ref self: TContractState, reason: ByteArray);
+    fn cancel(ref self: TContractState, reason: ByteArray);
     fn contribute(ref self: TContractState, amount: u256);
     fn get_contribution(self: @TContractState, contributor: ContractAddress) -> u256;
     fn get_contributions(self: @TContractState) -> Array<(ContractAddress, u256)>;
@@ -83,7 +83,7 @@ pub mod Campaign {
         OwnableEvent: ownable_component::Event,
         Activated: Activated,
         Claimed: Claimed,
-        Closed: Closed,
+        Canceled: Canceled,
         ContributableEvent: contributable_component::Event,
         ContributionMade: ContributionMade,
         Refunded: Refunded,
@@ -108,7 +108,7 @@ pub mod Campaign {
     }
 
     #[derive(Drop, starknet::Event)]
-    pub struct Closed {
+    pub struct Canceled {
         pub reason: ByteArray,
         pub status: Status,
     }
@@ -214,7 +214,7 @@ pub mod Campaign {
             self.emit(Event::Claimed(Claimed { amount }));
         }
 
-        fn close(ref self: ContractState, reason: ByteArray) {
+        fn cancel(ref self: ContractState, reason: ByteArray) {
             self._assert_only_creator();
             assert(self.status.read() == Status::ACTIVE, Errors::ENDED);
 
@@ -227,7 +227,7 @@ pub mod Campaign {
             self._refund_all(reason.clone());
             let status = self.status.read();
 
-            self.emit(Event::Closed(Closed { reason, status }));
+            self.emit(Event::Canceled(Canceled { reason, status }));
         }
 
         fn contribute(ref self: ContractState, amount: u256) {
