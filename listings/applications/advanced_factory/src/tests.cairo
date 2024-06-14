@@ -12,7 +12,7 @@ use snforge_std::{
     stop_cheat_caller_address, spy_events, SpyOn, EventSpy, EventAssertions, get_class_hash
 };
 
-// Define a target contract to deploy
+// Define a goal contract to deploy
 use crowdfunding::campaign::{Campaign, ICampaignDispatcher, ICampaignDispatcherTrait};
 use crowdfunding::campaign::Status;
 use components::ownable::{IOwnableDispatcher, IOwnableDispatcherTrait};
@@ -63,17 +63,16 @@ fn test_create_campaign() {
 
     let title: ByteArray = "New campaign";
     let description: ByteArray = "Some description";
-    let target: u256 = 10000;
+    let goal: u256 = 10000;
     let token = contract_address_const::<'token'>();
 
-    let campaign_address = factory
-        .create_campaign(title.clone(), description.clone(), target, token);
+    let campaign_address = factory.create_campaign(title.clone(), description.clone(), goal, token);
     let campaign = ICampaignDispatcher { contract_address: campaign_address };
 
     let details = campaign.get_details();
     assert_eq!(details.title, title);
     assert_eq!(details.description, description);
-    assert_eq!(details.target, target);
+    assert_eq!(details.goal, goal);
     assert_eq!(details.end_time, 0);
     assert_eq!(details.status, Status::DRAFT);
     assert_eq!(details.token, token);

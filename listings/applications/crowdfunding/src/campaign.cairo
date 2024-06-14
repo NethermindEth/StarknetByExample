@@ -15,7 +15,7 @@ pub enum Status {
 #[derive(Drop, Serde)]
 pub struct Details {
     pub creator: ContractAddress,
-    pub target: u256,
+    pub goal: u256,
     pub title: ByteArray,
     pub end_time: u64,
     pub description: ByteArray,
@@ -69,7 +69,7 @@ pub mod Campaign {
         end_time: u64,
         token: IERC20Dispatcher,
         creator: ContractAddress,
-        target: u256,
+        goal: u256,
         title: ByteArray,
         description: ByteArray,
         total_pledges: u256,
@@ -169,18 +169,18 @@ pub mod Campaign {
         creator: ContractAddress,
         title: ByteArray,
         description: ByteArray,
-        target: u256,
+        goal: u256,
         token_address: ContractAddress,
     // TODO: add recepient address?
     ) {
         assert(creator.is_non_zero(), Errors::CREATOR_ZERO);
         assert(title.len() > 0, Errors::TITLE_EMPTY);
-        assert(target > 0, Errors::ZERO_TARGET);
+        assert(goal > 0, Errors::ZERO_TARGET);
 
         self.token.write(IERC20Dispatcher { contract_address: token_address });
 
         self.title.write(title);
-        self.target.write(target);
+        self.goal.write(goal);
         self.description.write(description);
         self.creator.write(creator);
         self.ownable._init(get_caller_address());
@@ -194,7 +194,7 @@ pub mod Campaign {
             assert(
                 self.status.read() == Status::ACTIVE && self._is_expired(), Errors::STILL_ACTIVE
             );
-            assert(self._is_target_reached(), Errors::TARGET_NOT_REACHED);
+            assert(self._is_goal_reached(), Errors::TARGET_NOT_REACHED);
 
             let this = get_contract_address();
             let token = self.token.read();
@@ -218,7 +218,7 @@ pub mod Campaign {
             self._assert_only_creator();
             assert(self.status.read() == Status::ACTIVE, Errors::ENDED);
 
-            if !self._is_target_reached() && self._is_expired() {
+            if !self._is_goal_reached() && self._is_expired() {
                 self.status.write(Status::FAILED);
             } else {
                 self.status.write(Status::CLOSED);
@@ -259,7 +259,7 @@ pub mod Campaign {
                 creator: self.creator.read(),
                 title: self.title.read(),
                 description: self.description.read(),
-                target: self.target.read(),
+                goal: self.goal.read(),
                 end_time: self.end_time.read(),
                 status: self.status.read(),
                 token: self.token.read().contract_address,
@@ -316,7 +316,7 @@ pub mod Campaign {
             assert(self.status.read() != Status::DRAFT, Errors::STILL_DRAFT);
             assert(self.status.read() != Status::SUCCESSFUL, Errors::ENDED);
             assert(self.status.read() != Status::CLOSED, Errors::CLOSED);
-            assert(!self._is_target_reached(), Errors::TARGET_ALREADY_REACHED);
+            assert(!self._is_goal_reached(), Errors::TARGET_ALREADY_REACHED);
             assert(self.pledges.get(get_caller_address()) != 0, Errors::NOTHING_TO_WITHDRAW);
 
             let contributor = get_caller_address();
@@ -338,8 +338,8 @@ pub mod Campaign {
             get_block_timestamp() >= self.end_time.read()
         }
 
-        fn _is_target_reached(self: @ContractState) -> bool {
-            self.total_pledges.read() >= self.target.read()
+        fn _is_goal_reached(self: @ContractState) -> bool {
+            self.total_pledges.read() >= self.goal.read()
         }
 
         fn _refund(ref self: ContractState, contributor: ContractAddress) -> u256 {

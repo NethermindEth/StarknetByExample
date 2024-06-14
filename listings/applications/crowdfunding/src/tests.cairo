@@ -22,12 +22,12 @@ fn deploy(
     contract: ContractClass,
     title: ByteArray,
     description: ByteArray,
-    target: u256,
+    goal: u256,
     token: ContractAddress
 ) -> ICampaignDispatcher {
     let creator = contract_address_const::<'creator'>();
     let mut calldata: Array::<felt252> = array![];
-    ((creator, title, description, target), token).serialize(ref calldata);
+    ((creator, title, description, goal), token).serialize(ref calldata);
 
     let contract_address = contract.precalculate_address(@calldata);
     let owner = contract_address_const::<'owner'>();
@@ -94,7 +94,7 @@ fn test_deploy() {
     let details = campaign.get_details();
     assert_eq!(details.title, "title 1");
     assert_eq!(details.description, "description 1");
-    assert_eq!(details.target, 10000);
+    assert_eq!(details.goal, 10000);
     assert_eq!(details.end_time, 0);
     assert_eq!(details.status, Status::DRAFT);
     assert_eq!(details.token, contract_address_const::<'token'>());
