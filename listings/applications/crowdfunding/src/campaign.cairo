@@ -203,8 +203,9 @@ pub mod Campaign {
             self._assert_only_creator();
             assert(self._is_started(), Errors::NOT_STARTED);
             assert(self._is_ended(), Errors::STILL_ACTIVE);
-            assert(self._is_goal_reached(), Errors::GOAL_NOT_REACHED);
             assert(!self.claimed.read(), Errors::CLAIMED);
+            assert(self._is_goal_reached(), Errors::GOAL_NOT_REACHED);
+            // no need to check if canceled; if it was, then the goal wouldn't have been reached
 
             let this = get_contract_address();
             let token = self.token.read();
@@ -225,14 +226,14 @@ pub mod Campaign {
 
         fn get_details(self: @ContractState) -> Details {
             Details {
+                canceled: self.canceled.read(),
+                claimed: self.claimed.read(),
                 creator: self.creator.read(),
-                title: self.title.read(),
                 description: self.description.read(),
+                end_time: self.end_time.read(),
                 goal: self.goal.read(),
                 start_time: self.start_time.read(),
-                end_time: self.end_time.read(),
-                claimed: self.claimed.read(),
-                canceled: self.canceled.read(),
+                title: self.title.read(),
                 token: self.token.read().contract_address,
                 total_pledges: self.pledges.get_total(),
             }
