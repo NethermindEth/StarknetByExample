@@ -144,7 +144,7 @@ pub mod MockUpgrade {
             self._assert_only_creator();
             assert(self._is_started(), Errors::NOT_STARTED);
             assert(self._is_ended(), Errors::STILL_ACTIVE);
-            assert(self._is_goal_reached(), Errors::TARGET_NOT_REACHED);
+            assert(self._is_goal_reached(), Errors::GOAL_NOT_REACHED);
             assert(!self.claimed.read(), Errors::CLAIMED);
 
             let this = get_contract_address();

@@ -143,7 +143,7 @@ pub mod Campaign {
         pub const PLEDGES_LOCKED: felt252 = 'Goal reached, pledges locked';
         pub const START_TIME_IN_PAST: felt252 = 'Start time < now';
         pub const STILL_ACTIVE: felt252 = 'Campaign not ended';
-        pub const TARGET_NOT_REACHED: felt252 = 'Goal not reached';
+        pub const GOAL_NOT_REACHED: felt252 = 'Goal not reached';
         pub const TITLE_EMPTY: felt252 = 'Title empty';
         pub const TRANSFER_FAILED: felt252 = 'Transfer failed';
         pub const ZERO_ADDRESS_CALLER: felt252 = 'Caller address zero';
@@ -203,7 +203,7 @@ pub mod Campaign {
             self._assert_only_creator();
             assert(self._is_started(), Errors::NOT_STARTED);
             assert(self._is_ended(), Errors::STILL_ACTIVE);
-            assert(self._is_goal_reached(), Errors::TARGET_NOT_REACHED);
+            assert(self._is_goal_reached(), Errors::GOAL_NOT_REACHED);
             assert(!self.claimed.read(), Errors::CLAIMED);
 
             let this = get_contract_address();
