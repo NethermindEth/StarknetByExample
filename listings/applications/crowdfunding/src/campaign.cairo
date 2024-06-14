@@ -329,6 +329,7 @@ pub mod Campaign {
             get_block_timestamp() >= self.start_time.read()
         }
 
+        #[inline(always)]
         fn _refund(ref self: ContractState, pledger: ContractAddress) -> u256 {
             let amount = self.pledges.remove(pledger);
 
