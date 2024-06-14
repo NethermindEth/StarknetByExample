@@ -5,6 +5,7 @@ pub trait IPledgeable<TContractState> {
     fn add(ref self: TContractState, pledger: ContractAddress, amount: u256);
     fn get(self: @TContractState, pledger: ContractAddress) -> u256;
     fn get_pledges_as_arr(self: @TContractState) -> Array<(ContractAddress, u256)>;
+    fn get_total(self: @TContractState) -> u256;
     fn remove(ref self: TContractState, pledger: ContractAddress) -> u256;
 }
 
@@ -19,6 +20,7 @@ pub mod pledgeable_component {
         index_to_pledger: LegacyMap<u32, ContractAddress>,
         pledger_to_amount_index: LegacyMap<ContractAddress, Option<(u256, u32)>>,
         pledger_count: u32,
+        total_amount: u256,
     }
 
     #[event]
@@ -43,6 +45,7 @@ pub mod pledgeable_component {
                 self.pledger_to_amount_index.write(pledger, Option::Some((amount, index)));
                 self.pledger_count.write(index + 1);
             }
+            self.total_amount.write(self.total_amount.read() + amount);
         }
 
         fn get(self: @ComponentState<TContractState>, pledger: ContractAddress) -> u256 {
@@ -75,16 +78,21 @@ pub mod pledgeable_component {
             result
         }
 
+        fn get_total(self: @ComponentState<TContractState>) -> u256 {
+            self.total_amount.read()
+        }
+
         fn remove(ref self: ComponentState<TContractState>, pledger: ContractAddress) -> u256 {
             let amount_index_option: Option<(u256, u32)> = self
                 .pledger_to_amount_index
                 .read(pledger);
-            if let Option::Some((amount, index)) = amount_index_option {
+
+            let amount = if let Option::Some((amount, index)) = amount_index_option {
                 self.pledger_to_amount_index.write(pledger, Option::None);
-                let pledger_count = self.pledger_count.read() - 1;
-                self.pledger_count.write(pledger_count);
-                if pledger_count != 0 {
-                    let last_pledger = self.index_to_pledger.read(pledger_count);
+                let new_pledger_count = self.pledger_count.read() - 1;
+                self.pledger_count.write(new_pledger_count);
+                if new_pledger_count != 0 {
+                    let last_pledger = self.index_to_pledger.read(new_pledger_count);
                     let last_amount_index: Option<(u256, u32)> = self
                         .pledger_to_amount_index
                         .read(last_pledger);
@@ -98,12 +106,16 @@ pub mod pledgeable_component {
                     self.index_to_pledger.write(index, last_pledger);
                 }
 
-                self.index_to_pledger.write(pledger_count, Zero::zero());
+                self.index_to_pledger.write(new_pledger_count, Zero::zero());
 
                 amount
             } else {
                 0
-            }
+            };
+
+            self.total_amount.write(self.total_amount.read() - amount);
+
+            amount
         }
     }
 }

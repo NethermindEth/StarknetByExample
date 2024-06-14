@@ -65,7 +65,6 @@ pub mod Campaign {
         goal: u256,
         title: ByteArray,
         description: ByteArray,
-        total_pledges: u256,
         claimed: bool,
         canceled: bool,
     }
@@ -238,7 +237,7 @@ pub mod Campaign {
                 claimed: self.claimed.read(),
                 canceled: self.canceled.read(),
                 token: self.token.read().contract_address,
-                total_pledges: self.total_pledges.read(),
+                total_pledges: self.pledges.get_total(),
             }
         }
 
@@ -262,7 +261,6 @@ pub mod Campaign {
             assert(success, Errors::TRANSFER_FAILED);
 
             self.pledges.add(pledger, amount);
-            self.total_pledges.write(self.total_pledges.read() + amount);
 
             self.emit(Event::PledgeMade(PledgeMade { pledger, amount }));
         }
@@ -330,13 +328,11 @@ pub mod Campaign {
         }
 
         fn _is_goal_reached(self: @ContractState) -> bool {
-            self.total_pledges.read() >= self.goal.read()
+            self.pledges.get_total() >= self.goal.read()
         }
 
         fn _refund(ref self: ContractState, pledger: ContractAddress) -> u256 {
             let amount = self.pledges.remove(pledger);
-
-            self.total_pledges.write(self.total_pledges.read() - amount);
 
             let success = self.token.read().transfer(pledger, amount);
             assert(success, Errors::TRANSFER_FAILED);
