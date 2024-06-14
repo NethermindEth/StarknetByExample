@@ -171,7 +171,6 @@ pub mod Campaign {
         description: ByteArray,
         goal: u256,
         token_address: ContractAddress,
-    // TODO: add recepient address?
     ) {
         assert(creator.is_non_zero(), Errors::CREATOR_ZERO);
         assert(title.len() > 0, Errors::TITLE_EMPTY);
