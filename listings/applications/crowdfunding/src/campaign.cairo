@@ -3,14 +3,6 @@ pub mod pledges;
 // ANCHOR: contract
 use starknet::{ClassHash, ContractAddress};
 
-#[derive(Drop, Debug, Serde, PartialEq, starknet::Store)]
-pub enum Status {
-    ACTIVE,
-    CANCELED,
-    SUCCESSFUL,
-    FAILED,
-}
-
 #[derive(Drop, Serde)]
 pub struct Details {
     pub creator: ContractAddress,
@@ -19,7 +11,8 @@ pub struct Details {
     pub start_time: u64,
     pub end_time: u64,
     pub description: ByteArray,
-    pub status: Status,
+    pub claimed: bool,
+    pub canceled: bool,
     pub token: ContractAddress,
     pub total_pledges: u256,
 }
@@ -48,7 +41,7 @@ pub mod Campaign {
     };
     use components::ownable::ownable_component;
     use super::pledges::pledgeable_component;
-    use super::{Details, Status};
+    use super::{Details};
 
     component!(path: ownable_component, storage: ownable, event: OwnableEvent);
     component!(path: pledgeable_component, storage: pledges, event: PledgeableEvent);
@@ -73,7 +66,8 @@ pub mod Campaign {
         title: ByteArray,
         description: ByteArray,
         total_pledges: u256,
-        status: Status
+        claimed: bool,
+        canceled: bool,
     }
 
     #[event]
@@ -95,7 +89,6 @@ pub mod Campaign {
     #[derive(Drop, starknet::Event)]
     pub struct Canceled {
         pub reason: ByteArray,
-        pub status: Status,
     }
 
     #[derive(Drop, starknet::Event)]
@@ -142,6 +135,7 @@ pub mod Campaign {
     pub mod Errors {
         pub const NOT_CREATOR: felt252 = 'Not creator';
         pub const ENDED: felt252 = 'Campaign already ended';
+        pub const CLAIMED: felt252 = 'Campaign already claimed';
         pub const NOT_STARTED: felt252 = 'Campaign not started';
         pub const STILL_ACTIVE: felt252 = 'Campaign not ended';
         pub const CANCELED: felt252 = 'Campaign canceled';
@@ -190,7 +184,6 @@ pub mod Campaign {
         self.description.write(description);
         self.creator.write(creator);
         self.ownable._init(get_caller_address());
-        self.status.write(Status::ACTIVE);
         self.start_time.write(start_time);
         self.end_time.write(end_time);
         self.token.write(IERC20Dispatcher { contract_address: token_address });
@@ -200,33 +193,29 @@ pub mod Campaign {
     impl Campaign of super::ICampaign<ContractState> {
         fn cancel(ref self: ContractState, reason: ByteArray) {
             self._assert_only_creator();
-            assert(self.status.read() == Status::ACTIVE, Errors::ENDED);
+            assert(!self.canceled.read(), Errors::CANCELED);
+            assert(!self.claimed.read(), Errors::CLAIMED);
 
-            if !self._is_goal_reached() && self._is_expired() {
-                self.status.write(Status::FAILED);
-            } else {
-                self.status.write(Status::CANCELED);
-            }
+            self.canceled.write(true);
 
             self._refund_all(reason.clone());
-            let status = self.status.read();
 
-            self.emit(Event::Canceled(Canceled { reason, status }));
+            self.emit(Event::Canceled(Canceled { reason }));
         }
 
         fn claim(ref self: ContractState) {
             self._assert_only_creator();
-            self._assert_active();
-            assert(self._is_expired(), Errors::STILL_ACTIVE);
+            assert(self._is_started(), Errors::NOT_STARTED);
+            assert(self._is_ended(), Errors::STILL_ACTIVE);
             assert(self._is_goal_reached(), Errors::TARGET_NOT_REACHED);
+            assert(!self.claimed.read(), Errors::CLAIMED);
 
             let this = get_contract_address();
             let token = self.token.read();
-
             let amount = token.balance_of(this);
             assert(amount > 0, Errors::ZERO_FUNDS);
 
-            self.status.write(Status::SUCCESSFUL);
+            self.claimed.write(true);
 
             // no need to reset the pledges, as the campaign has ended
             // and the data can be used as a testament to how much was raised
@@ -246,7 +235,8 @@ pub mod Campaign {
                 goal: self.goal.read(),
                 start_time: self.start_time.read(),
                 end_time: self.end_time.read(),
-                status: self.status.read(),
+                claimed: self.claimed.read(),
+                canceled: self.canceled.read(),
                 token: self.token.read().contract_address,
                 total_pledges: self.total_pledges.read(),
             }
@@ -261,8 +251,9 @@ pub mod Campaign {
         }
 
         fn pledge(ref self: ContractState, amount: u256) {
-            self._assert_active();
-            assert(!self._is_expired(), Errors::ENDED);
+            assert(self._is_started(), Errors::NOT_STARTED);
+            assert(!self._is_ended(), Errors::ENDED);
+            assert(!self.canceled.read(), Errors::CANCELED);
             assert(amount > 0, Errors::ZERO_DONATION);
 
             let pledger = get_caller_address();
@@ -278,7 +269,9 @@ pub mod Campaign {
 
         fn refund(ref self: ContractState, pledger: ContractAddress, reason: ByteArray) {
             self._assert_only_creator();
-            self._assert_active();
+            assert(self._is_started(), Errors::NOT_STARTED);
+            assert(!self.claimed.read(), Errors::CLAIMED);
+            assert(!self.canceled.read(), Errors::CANCELED);
             assert(pledger.is_non_zero(), Errors::ZERO_ADDRESS_PLEDGER);
             assert(self.pledges.get(pledger) != 0, Errors::NOTHING_TO_REFUND);
 
@@ -288,7 +281,7 @@ pub mod Campaign {
         }
 
         fn unpledge(ref self: ContractState, reason: ByteArray) {
-            self._assert_active();
+            assert(self._is_started(), Errors::NOT_STARTED);
             assert(!self._is_goal_reached(), Errors::TARGET_ALREADY_REACHED);
             assert(self.pledges.get(get_caller_address()) != 0, Errors::NOTHING_TO_UNPLEDGE);
 
@@ -302,8 +295,8 @@ pub mod Campaign {
             self.ownable._assert_only_owner();
             assert(impl_hash.is_non_zero(), Errors::CLASS_HASH_ZERO);
 
-            // only active campaigns have funds to refund and duration to update
-            if get_block_timestamp() >= self.start_time.read() {
+            // only active campaigns have funds to refund and an end time to update
+            if self._is_started() {
                 if let Option::Some(end_time) = new_end_time {
                     assert(end_time >= get_block_timestamp(), Errors::END_BEFORE_NOW);
                     assert(
@@ -328,15 +321,13 @@ pub mod Campaign {
             assert(caller == self.creator.read(), Errors::NOT_CREATOR);
         }
 
-        fn _assert_active(self: @ContractState) {
-            assert(get_block_timestamp() >= self.start_time.read(), Errors::NOT_STARTED);
-            assert(self.status.read() == Status::ACTIVE, Errors::ENDED);
+        fn _is_started(self: @ContractState) -> bool {
+            get_block_timestamp() >= self.start_time.read()
         }
 
-        fn _is_expired(self: @ContractState) -> bool {
+        fn _is_ended(self: @ContractState) -> bool {
             get_block_timestamp() >= self.end_time.read()
         }
-
         fn _is_goal_reached(self: @ContractState) -> bool {
             self.total_pledges.read() >= self.goal.read()
         }
@@ -344,11 +335,7 @@ pub mod Campaign {
         fn _refund(ref self: ContractState, pledger: ContractAddress) -> u256 {
             let amount = self.pledges.remove(pledger);
 
-            // if the campaign is "failed", then there's no need to set total_pledges to 0, as
-            // the campaign has ended and the field can be used as a testament to how much was raised
-            if self.status.read() == Status::ACTIVE {
-                self.total_pledges.write(self.total_pledges.read() - amount);
-            }
+            self.total_pledges.write(self.total_pledges.read() - amount);
 
             let success = self.token.read().transfer(pledger, amount);
             assert(success, Errors::TRANSFER_FAILED);

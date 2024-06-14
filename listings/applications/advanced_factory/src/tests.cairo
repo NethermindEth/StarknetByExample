@@ -14,7 +14,6 @@ use snforge_std::{
 
 // Define a goal contract to deploy
 use crowdfunding::campaign::{Campaign, ICampaignDispatcher, ICampaignDispatcherTrait};
-use crowdfunding::campaign::Status;
 use components::ownable::{IOwnableDispatcher, IOwnableDispatcherTrait};
 
 
@@ -78,7 +77,8 @@ fn test_create_campaign() {
     assert_eq!(details.goal, goal);
     assert_eq!(details.start_time, start_time);
     assert_eq!(details.end_time, end_time);
-    assert_eq!(details.status, Status::ACTIVE);
+    assert_eq!(details.claimed, false);
+    assert_eq!(details.canceled, false);
     assert_eq!(details.token, token);
     assert_eq!(details.total_pledges, 0);
     assert_eq!(details.creator, campaign_creator);

@@ -11,7 +11,6 @@ use snforge_std::{
 };
 
 use crowdfunding::campaign::{Campaign, ICampaignDispatcher, ICampaignDispatcherTrait};
-use crowdfunding::campaign::Status;
 use components::ownable::{IOwnableDispatcher, IOwnableDispatcherTrait};
 use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
 
@@ -109,7 +108,8 @@ fn test_deploy() {
     assert_eq!(details.goal, 10000);
     assert_eq!(details.start_time, start_time);
     assert_eq!(details.end_time, end_time);
-    assert_eq!(details.status, Status::ACTIVE);
+    assert_eq!(details.claimed, false);
+    assert_eq!(details.canceled, false);
     assert_eq!(details.token, contract_address_const::<'token'>());
     assert_eq!(details.total_pledges, 0);
     assert_eq!(details.creator, contract_address_const::<'creator'>());
@@ -198,7 +198,7 @@ fn test_successful_campaign() {
     prev_balance = token.balance_of(creator);
     campaign.claim();
     assert_eq!(token.balance_of(creator), prev_balance + 10500);
-    assert_eq!(campaign.get_details().status, Status::SUCCESSFUL);
+    assert!(campaign.get_details().claimed);
 
     spy
         .assert_emitted(
@@ -295,17 +295,23 @@ fn test_cancel() {
     let pledger_1 = contract_address_const::<'pledger_1'>();
     let pledger_2 = contract_address_const::<'pledger_2'>();
     let pledger_3 = contract_address_const::<'pledger_3'>();
+    let pledge_1: u256 = 3000;
+    let pledge_2: u256 = 3000;
+    let pledge_3: u256 = 3000;
     let prev_balance_pledger_1 = token.balance_of(pledger_1);
     let prev_balance_pledger_2 = token.balance_of(pledger_2);
     let prev_balance_pledger_3 = token.balance_of(pledger_3);
 
     start_cheat_caller_address(campaign.contract_address, pledger_1);
-    campaign.pledge(3000);
+    campaign.pledge(pledge_1);
     start_cheat_caller_address(campaign.contract_address, pledger_2);
-    campaign.pledge(1000);
+    campaign.pledge(pledge_2);
     start_cheat_caller_address(campaign.contract_address, pledger_3);
-    campaign.pledge(2000);
-    let total_pledges = campaign.get_details().total_pledges;
+    campaign.pledge(pledge_3);
+    assert_eq!(campaign.get_details().total_pledges, pledge_1 + pledge_2 + pledge_3);
+    assert_eq!(token.balance_of(pledger_1), prev_balance_pledger_1 - pledge_1);
+    assert_eq!(token.balance_of(pledger_2), prev_balance_pledger_2 - pledge_2);
+    assert_eq!(token.balance_of(pledger_3), prev_balance_pledger_3 - pledge_3);
 
     start_cheat_caller_address(campaign.contract_address, creator);
     campaign.cancel("testing");
@@ -314,8 +320,8 @@ fn test_cancel() {
     assert_eq!(prev_balance_pledger_1, token.balance_of(pledger_1));
     assert_eq!(prev_balance_pledger_2, token.balance_of(pledger_2));
     assert_eq!(prev_balance_pledger_3, token.balance_of(pledger_3));
-    assert_eq!(campaign.get_details().total_pledges, total_pledges);
-    assert_eq!(campaign.get_details().status, Status::CANCELED);
+    assert_eq!(campaign.get_details().total_pledges, 0);
+    assert!(campaign.get_details().canceled);
 
     spy
         .assert_emitted(
@@ -326,9 +332,7 @@ fn test_cancel() {
                 ),
                 (
                     campaign.contract_address,
-                    Campaign::Event::Canceled(
-                        Campaign::Canceled { reason: "testing", status: Status::CANCELED }
-                    )
+                    Campaign::Event::Canceled(Campaign::Canceled { reason: "testing" })
                 )
             ]
         );
@@ -340,17 +344,23 @@ fn test_cancel() {
     let pledger_1 = contract_address_const::<'pledger_1'>();
     let pledger_2 = contract_address_const::<'pledger_2'>();
     let pledger_3 = contract_address_const::<'pledger_3'>();
+    let pledge_1: u256 = 3000;
+    let pledge_2: u256 = 3000;
+    let pledge_3: u256 = 3000;
     let prev_balance_pledger_1 = token.balance_of(pledger_1);
     let prev_balance_pledger_2 = token.balance_of(pledger_2);
     let prev_balance_pledger_3 = token.balance_of(pledger_3);
 
     start_cheat_caller_address(campaign.contract_address, pledger_1);
-    campaign.pledge(3000);
+    campaign.pledge(pledge_1);
     start_cheat_caller_address(campaign.contract_address, pledger_2);
-    campaign.pledge(1000);
+    campaign.pledge(pledge_2);
     start_cheat_caller_address(campaign.contract_address, pledger_3);
-    campaign.pledge(2000);
-    let total_pledges = campaign.get_details().total_pledges;
+    campaign.pledge(pledge_3);
+    assert_eq!(campaign.get_details().total_pledges, pledge_1 + pledge_2 + pledge_3);
+    assert_eq!(token.balance_of(pledger_1), prev_balance_pledger_1 - pledge_1);
+    assert_eq!(token.balance_of(pledger_2), prev_balance_pledger_2 - pledge_2);
+    assert_eq!(token.balance_of(pledger_3), prev_balance_pledger_3 - pledge_3);
 
     cheat_block_timestamp_global(campaign.get_details().end_time);
 
@@ -361,8 +371,8 @@ fn test_cancel() {
     assert_eq!(prev_balance_pledger_1, token.balance_of(pledger_1));
     assert_eq!(prev_balance_pledger_2, token.balance_of(pledger_2));
     assert_eq!(prev_balance_pledger_3, token.balance_of(pledger_3));
-    assert_eq!(campaign.get_details().total_pledges, total_pledges);
-    assert_eq!(campaign.get_details().status, Status::FAILED);
+    assert_eq!(campaign.get_details().total_pledges, 0);
+    assert!(campaign.get_details().canceled);
 
     spy
         .assert_emitted(
@@ -373,9 +383,7 @@ fn test_cancel() {
                 ),
                 (
                     campaign.contract_address,
-                    Campaign::Event::Canceled(
-                        Campaign::Canceled { reason: "testing", status: Status::FAILED }
-                    )
+                    Campaign::Event::Canceled(Campaign::Canceled { reason: "testing" })
                 )
             ]
         );
@@ -389,23 +397,33 @@ fn test_refund() {
     );
     let mut spy = spy_events(SpyOn::One(campaign.contract_address));
     let creator = contract_address_const::<'creator'>();
-    let pledger = contract_address_const::<'pledger_1'>();
-    let amount: u256 = 3000;
-    let prev_balance = token.balance_of(pledger);
+    let pledger_1 = contract_address_const::<'pledger_1'>();
+    let pledger_2 = contract_address_const::<'pledger_2'>();
+    let amount_1: u256 = 3000;
+    let amount_2: u256 = 1500;
+    let prev_balance_1 = token.balance_of(pledger_1);
+    let prev_balance_2 = token.balance_of(pledger_2);
 
     // donate
-    start_cheat_caller_address(campaign.contract_address, pledger);
-    campaign.pledge(amount);
-    assert_eq!(campaign.get_details().total_pledges, amount);
-    assert_eq!(campaign.get_pledge(pledger), amount);
-    assert_eq!(token.balance_of(pledger), prev_balance - amount);
+    start_cheat_caller_address(campaign.contract_address, pledger_1);
+    campaign.pledge(amount_1);
+    assert_eq!(campaign.get_details().total_pledges, amount_1);
+    assert_eq!(campaign.get_pledge(pledger_1), amount_1);
+    assert_eq!(token.balance_of(pledger_1), prev_balance_1 - amount_1);
+
+    start_cheat_caller_address(campaign.contract_address, pledger_2);
+    campaign.pledge(amount_2);
+    assert_eq!(campaign.get_details().total_pledges, amount_1 + amount_2);
+    assert_eq!(campaign.get_pledge(pledger_2), amount_2);
+    assert_eq!(token.balance_of(pledger_2), prev_balance_2 - amount_2);
 
     // refund
     start_cheat_caller_address(campaign.contract_address, creator);
-    campaign.refund(pledger, "testing");
-    assert_eq!(campaign.get_details().total_pledges, 0);
-    assert_eq!(campaign.get_pledge(pledger), 0);
-    assert_eq!(token.balance_of(pledger), prev_balance);
+    campaign.refund(pledger_1, "testing");
+    assert_eq!(campaign.get_details().total_pledges, amount_2);
+    assert_eq!(campaign.get_pledge(pledger_2), amount_2);
+    assert_eq!(token.balance_of(pledger_2), prev_balance_2 - amount_2);
+    assert_eq!(token.balance_of(pledger_1), prev_balance_1);
 
     spy
         .assert_emitted(
@@ -413,7 +431,9 @@ fn test_refund() {
                 (
                     campaign.contract_address,
                     Campaign::Event::Refunded(
-                        Campaign::Refunded { pledger, amount, reason: "testing" }
+                        Campaign::Refunded {
+                            pledger: pledger_1, amount: amount_1, reason: "testing"
+                        }
                     )
                 )
             ]
