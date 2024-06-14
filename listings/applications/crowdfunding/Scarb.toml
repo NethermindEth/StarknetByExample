@@ -3,7 +3,7 @@ name = "crowdfunding"
 version.workspace = true
 edition = "2023_11"
 
-[lib]
+# [lib]
 
 [dependencies]
 starknet.workspace = true

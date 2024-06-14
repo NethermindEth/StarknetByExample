@@ -8,7 +8,7 @@ pub mod MockUpgrade {
         get_caller_address, get_contract_address, class_hash::class_hash_const
     };
     use components::ownable::ownable_component;
-    use crowdfunding::campaign::pledges::pledgeable_component;
+    use crowdfunding::campaign::pledgeable::pledgeable_component;
     use crowdfunding::campaign::{ICampaign, Details, Campaign::Errors};
 
     component!(path: ownable_component, storage: ownable, event: OwnableEvent);

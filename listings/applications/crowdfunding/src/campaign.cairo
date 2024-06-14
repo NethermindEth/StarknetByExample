@@ -1,6 +1,6 @@
-// ANCHOR: contract
-pub mod pledges;
+pub mod pledgeable;
 
+// ANCHOR: contract
 use starknet::{ClassHash, ContractAddress};
 
 #[derive(Drop, Serde)]
@@ -40,7 +40,7 @@ pub mod Campaign {
         get_caller_address, get_contract_address, class_hash::class_hash_const
     };
     use components::ownable::ownable_component;
-    use super::pledges::pledgeable_component;
+    use super::pledgeable::pledgeable_component;
     use super::{Details};
 
     component!(path: ownable_component, storage: ownable, event: OwnableEvent);
