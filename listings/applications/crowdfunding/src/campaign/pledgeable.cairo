@@ -5,6 +5,7 @@ use starknet::ContractAddress;
 pub trait IPledgeable<TContractState> {
     fn add(ref self: TContractState, pledger: ContractAddress, amount: u256);
     fn get(self: @TContractState, pledger: ContractAddress) -> u256;
+    fn get_pledger_count(self: @TContractState) -> u32;
     fn get_pledges_as_arr(self: @TContractState) -> Array<(ContractAddress, u256)>;
     fn get_total(self: @TContractState) -> u256;
     fn remove(ref self: TContractState, pledger: ContractAddress) -> u256;
@@ -55,6 +56,10 @@ pub mod pledgeable_component {
                 Option::Some((amount, _)) => amount,
                 Option::None => 0,
             }
+        }
+
+        fn get_pledger_count(self: @ComponentState<TContractState>) -> u32 {
+            self.pledger_count.read()
         }
 
         fn get_pledges_as_arr(
@@ -147,7 +152,7 @@ mod tests {
     }
 
     use super::{pledgeable_component, IPledgeableDispatcher, IPledgeableDispatcherTrait};
-    use super::pledgeable_component::PledgeableImpl;
+    use super::pledgeable_component::{PledgeableImpl};
     use starknet::{contract_address_const};
 
     type TestingState = pledgeable_component::ComponentState<MockContract::ContractState>;
@@ -165,24 +170,31 @@ mod tests {
         let pledger_1 = contract_address_const::<'pledger_1'>();
         let pledger_2 = contract_address_const::<'pledger_2'>();
 
+        assert_eq!(pledgeable.get_pledger_count(), 0);
         assert_eq!(pledgeable.get_total(), 0);
         assert_eq!(pledgeable.get(pledger_1), 0);
         assert_eq!(pledgeable.get(pledger_2), 0);
 
+        // 1st pledge
         pledgeable.add(pledger_1, 1000);
 
+        assert_eq!(pledgeable.get_pledger_count(), 1);
         assert_eq!(pledgeable.get_total(), 1000);
         assert_eq!(pledgeable.get(pledger_1), 1000);
         assert_eq!(pledgeable.get(pledger_2), 0);
 
+        // 2nd pledge should be added onto 1st
         pledgeable.add(pledger_1, 1000);
 
+        assert_eq!(pledgeable.get_pledger_count(), 1);
         assert_eq!(pledgeable.get_total(), 2000);
         assert_eq!(pledgeable.get(pledger_1), 2000);
         assert_eq!(pledgeable.get(pledger_2), 0);
 
+        // different pledger stored separately
         pledgeable.add(pledger_2, 500);
 
+        assert_eq!(pledgeable.get_pledger_count(), 2);
         assert_eq!(pledgeable.get_total(), 2500);
         assert_eq!(pledgeable.get(pledger_1), 2000);
         assert_eq!(pledgeable.get(pledger_2), 500);
@@ -199,6 +211,7 @@ mod tests {
         pledgeable.add(pledger_2, 3000);
         // pledger_3 not added
 
+        assert_eq!(pledgeable.get_pledger_count(), 2);
         assert_eq!(pledgeable.get_total(), 5000);
         assert_eq!(pledgeable.get(pledger_1), 2000);
         assert_eq!(pledgeable.get(pledger_2), 3000);
@@ -207,6 +220,7 @@ mod tests {
         let amount = pledgeable.remove(pledger_1);
 
         assert_eq!(amount, 2000);
+        assert_eq!(pledgeable.get_pledger_count(), 1);
         assert_eq!(pledgeable.get_total(), 3000);
         assert_eq!(pledgeable.get(pledger_1), 0);
         assert_eq!(pledgeable.get(pledger_2), 3000);
@@ -215,18 +229,57 @@ mod tests {
         let amount = pledgeable.remove(pledger_2);
 
         assert_eq!(amount, 3000);
+        assert_eq!(pledgeable.get_pledger_count(), 0);
         assert_eq!(pledgeable.get_total(), 0);
         assert_eq!(pledgeable.get(pledger_1), 0);
         assert_eq!(pledgeable.get(pledger_2), 0);
         assert_eq!(pledgeable.get(pledger_3), 0);
 
-        // should do nothing and return 0
+        // pledger_3 not added, so this should do nothing and return 0
         let amount = pledgeable.remove(pledger_3);
 
         assert_eq!(amount, 0);
+        assert_eq!(pledgeable.get_pledger_count(), 0);
         assert_eq!(pledgeable.get_total(), 0);
         assert_eq!(pledgeable.get(pledger_1), 0);
         assert_eq!(pledgeable.get(pledger_2), 0);
+        assert_eq!(pledgeable.get(pledger_3), 0);
+    }
+
+    #[test]
+    fn test_get_pledges_as_arr() {
+        let mut pledgeable: TestingState = Default::default();
+        let pledger_1 = contract_address_const::<'pledger_1'>();
+        let pledger_2 = contract_address_const::<'pledger_2'>();
+        let pledger_3 = contract_address_const::<'pledger_3'>();
+
+        pledgeable.add(pledger_1, 1000);
+        pledgeable.add(pledger_2, 500);
+        pledgeable.add(pledger_3, 2500);
+        // 2nd pledge by pledger_2 *should not* increase the pledge count
+        pledgeable.add(pledger_2, 1500);
+
+        let pledges_arr = pledgeable.get_pledges_as_arr();
+
+        assert_eq!(pledges_arr.len(), 3);
+        assert_eq!((pledger_1, 1000), *pledges_arr[2]);
+        assert_eq!((pledger_2, 2000), *pledges_arr[1]);
+        assert_eq!((pledger_3, 2500), *pledges_arr[0]);
+    }
+
+    #[test]
+    fn test_get() {
+        let mut pledgeable: TestingState = Default::default();
+        let pledger_1 = contract_address_const::<'pledger_1'>();
+        let pledger_2 = contract_address_const::<'pledger_2'>();
+        let pledger_3 = contract_address_const::<'pledger_3'>();
+
+        pledgeable.add(pledger_1, 1000);
+        pledgeable.add(pledger_2, 500);
+        // pledger_3 not added
+
+        assert_eq!(pledgeable.get(pledger_1), 1000);
+        assert_eq!(pledgeable.get(pledger_2), 500);
         assert_eq!(pledgeable.get(pledger_3), 0);
     }
 }
