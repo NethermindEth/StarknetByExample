@@ -156,7 +156,7 @@ pub mod MockUpgrade {
             if !self._is_goal_reached() && self._is_expired() {
                 self.status.write(Status::FAILED);
             } else {
-                self.status.write(Status::CLOSED);
+                self.status.write(Status::CANCELED);
             }
 
             self._refund_all(reason.clone());
@@ -241,7 +241,7 @@ pub mod MockUpgrade {
         ///  - contributors wouldn't have even been donating if they weren't trusting the creator - since the funds end up with them in the end, they
         ///    have to trust that creators would use the campaign funds as they promised when creating the campaign.
         ///  - since the funds end up with the creators, they have no incentive to implement a malicious upgrade - they'll have the funds either way.
-        ///  - each time there's an upgrade, the campaign gets reset, which introduces a new problem - what if the Campaign was close to ending?
+        ///  - each time there's an upgrade, the campaign gets reset, which introduces a new problem - what if the Campaign was cancel to ending?
         ///    We just took all of their pledges away, and there might not be enough time to get them back. We solve this by letting the creators
         ///    prolong the duration of the campaign.
         fn upgrade(ref self: ContractState, impl_hash: ClassHash, new_duration: Option<u64>) {
@@ -272,7 +272,7 @@ pub mod MockUpgrade {
         fn unpledge(ref self: ContractState, reason: ByteArray) {
             assert(self.status.read() != Status::DRAFT, Errors::STILL_DRAFT);
             assert(self.status.read() != Status::SUCCESSFUL, Errors::ENDED);
-            assert(self.status.read() != Status::CLOSED, Errors::CLOSED);
+            assert(self.status.read() != Status::CANCELED, Errors::CANCELED);
             assert(!self._is_goal_reached(), Errors::TARGET_ALREADY_REACHED);
             assert(self.pledges.get(get_caller_address()) != 0, Errors::NOTHING_TO_WITHDRAW);
 

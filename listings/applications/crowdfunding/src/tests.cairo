@@ -286,12 +286,12 @@ fn test_upgrade_class_hash() {
 }
 
 #[test]
-fn test_close() {
+fn test_cancel() {
     let contract_class = declare("Campaign").unwrap();
     let token_class = declare("ERC20").unwrap();
     let duration: u64 = 60;
 
-    // test closed campaign
+    // test canceled campaign
     let (campaign, token) = deploy_with_token(contract_class, token_class);
     let mut spy = spy_events(SpyOn::One(campaign.contract_address));
     let creator = contract_address_const::<'creator'>();
@@ -320,7 +320,7 @@ fn test_close() {
     assert_eq!(prev_balance_contributor_2, token.balance_of(contributor_2));
     assert_eq!(prev_balance_contributor_3, token.balance_of(contributor_3));
     assert_eq!(campaign.get_details().total_pledges, total_pledges);
-    assert_eq!(campaign.get_details().status, Status::CLOSED);
+    assert_eq!(campaign.get_details().status, Status::CANCELED);
 
     spy
         .assert_emitted(
@@ -332,7 +332,7 @@ fn test_close() {
                 (
                     campaign.contract_address,
                     Campaign::Event::Canceled(
-                        Campaign::Canceled { reason: "testing", status: Status::CLOSED }
+                        Campaign::Canceled { reason: "testing", status: Status::CANCELED }
                     )
                 )
             ]

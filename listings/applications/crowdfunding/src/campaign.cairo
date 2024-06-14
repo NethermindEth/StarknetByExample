@@ -6,7 +6,7 @@ use starknet::{ClassHash, ContractAddress};
 #[derive(Drop, Debug, Serde, PartialEq, starknet::Store)]
 pub enum Status {
     ACTIVE,
-    CLOSED,
+    CANCELED,
     DRAFT,
     SUCCESSFUL,
     FAILED,
@@ -145,7 +145,7 @@ pub mod Campaign {
         pub const NOT_DRAFT: felt252 = 'Campaign not draft';
         pub const STILL_ACTIVE: felt252 = 'Campaign not ended';
         pub const STILL_DRAFT: felt252 = 'Campaign not yet active';
-        pub const CLOSED: felt252 = 'Campaign closed';
+        pub const CANCELED: felt252 = 'Campaign canceled';
         pub const FAILED: felt252 = 'Campaign failed';
         pub const CLASS_HASH_ZERO: felt252 = 'Class hash cannot be zero';
         pub const ZERO_DONATION: felt252 = 'Donation must be > 0';
@@ -220,7 +220,7 @@ pub mod Campaign {
             if !self._is_goal_reached() && self._is_expired() {
                 self.status.write(Status::FAILED);
             } else {
-                self.status.write(Status::CLOSED);
+                self.status.write(Status::CANCELED);
             }
 
             self._refund_all(reason.clone());
@@ -313,8 +313,7 @@ pub mod Campaign {
 
         fn unpledge(ref self: ContractState, reason: ByteArray) {
             assert(self.status.read() != Status::DRAFT, Errors::STILL_DRAFT);
-            assert(self.status.read() != Status::SUCCESSFUL, Errors::ENDED);
-            assert(self.status.read() != Status::CLOSED, Errors::CLOSED);
+            assert(self.status.read() == Status::ACTIVE, Errors::ENDED);
             assert(!self._is_goal_reached(), Errors::TARGET_ALREADY_REACHED);
             assert(self.pledges.get(get_caller_address()) != 0, Errors::NOTHING_TO_WITHDRAW);
 
