@@ -29,11 +29,11 @@ pub trait ICampaign<TContractState> {
     fn claim(ref self: TContractState);
     fn cancel(ref self: TContractState, reason: ByteArray);
     fn pledge(ref self: TContractState, amount: u256);
-    fn get_pledge(self: @TContractState, contributor: ContractAddress) -> u256;
+    fn get_pledge(self: @TContractState, pledger: ContractAddress) -> u256;
     fn get_pledges(self: @TContractState) -> Array<(ContractAddress, u256)>;
     fn get_details(self: @TContractState) -> Details;
     fn launch(ref self: TContractState, duration: u64);
-    fn refund(ref self: TContractState, contributor: ContractAddress, reason: ByteArray);
+    fn refund(ref self: TContractState, pledger: ContractAddress, reason: ByteArray);
     fn upgrade(ref self: TContractState, impl_hash: ClassHash, new_duration: Option<u64>);
     fn unpledge(ref self: TContractState, reason: ByteArray);
 }
@@ -109,14 +109,14 @@ pub mod Campaign {
     #[derive(Drop, starknet::Event)]
     pub struct PledgeMade {
         #[key]
-        pub contributor: ContractAddress,
+        pub pledger: ContractAddress,
         pub amount: u256,
     }
 
     #[derive(Drop, starknet::Event)]
     pub struct Refunded {
         #[key]
-        pub contributor: ContractAddress,
+        pub pledger: ContractAddress,
         pub amount: u256,
         pub reason: ByteArray,
     }
@@ -129,7 +129,7 @@ pub mod Campaign {
     #[derive(Drop, starknet::Event)]
     pub struct Unpledged {
         #[key]
-        pub contributor: ContractAddress,
+        pub pledger: ContractAddress,
         pub amount: u256,
         pub reason: ByteArray,
     }
@@ -234,19 +234,19 @@ pub mod Campaign {
             assert(self.status.read() == Status::ACTIVE && !self._is_expired(), Errors::ENDED);
             assert(amount > 0, Errors::ZERO_DONATION);
 
-            let contributor = get_caller_address();
+            let pledger = get_caller_address();
             let this = get_contract_address();
-            let success = self.token.read().transfer_from(contributor, this, amount);
+            let success = self.token.read().transfer_from(pledger, this, amount);
             assert(success, Errors::TRANSFER_FAILED);
 
-            self.pledges.add(contributor, amount);
+            self.pledges.add(pledger, amount);
             self.total_pledges.write(self.total_pledges.read() + amount);
 
-            self.emit(Event::PledgeMade(PledgeMade { contributor, amount }));
+            self.emit(Event::PledgeMade(PledgeMade { pledger, amount }));
         }
 
-        fn get_pledge(self: @ContractState, contributor: ContractAddress) -> u256 {
-            self.pledges.get(contributor)
+        fn get_pledge(self: @ContractState, pledger: ContractAddress) -> u256 {
+            self.pledges.get(pledger)
         }
 
         fn get_pledges(self: @ContractState) -> Array<(ContractAddress, u256)> {
@@ -277,16 +277,16 @@ pub mod Campaign {
             self.emit(Event::Launched(Launched {}));
         }
 
-        fn refund(ref self: ContractState, contributor: ContractAddress, reason: ByteArray) {
+        fn refund(ref self: ContractState, pledger: ContractAddress, reason: ByteArray) {
             self._assert_only_creator();
-            assert(contributor.is_non_zero(), Errors::ZERO_ADDRESS_CONTRIBUTOR);
+            assert(pledger.is_non_zero(), Errors::ZERO_ADDRESS_CONTRIBUTOR);
             assert(self.status.read() != Status::DRAFT, Errors::STILL_DRAFT);
             assert(self.status.read() == Status::ACTIVE, Errors::ENDED);
-            assert(self.pledges.get(contributor) != 0, Errors::NOTHING_TO_REFUND);
+            assert(self.pledges.get(pledger) != 0, Errors::NOTHING_TO_REFUND);
 
-            let amount = self._refund(contributor);
+            let amount = self._refund(pledger);
 
-            self.emit(Event::Refunded(Refunded { contributor, amount, reason }))
+            self.emit(Event::Refunded(Refunded { pledger, amount, reason }))
         }
 
         fn upgrade(ref self: ContractState, impl_hash: ClassHash, new_duration: Option<u64>) {
@@ -317,10 +317,10 @@ pub mod Campaign {
             assert(!self._is_goal_reached(), Errors::TARGET_ALREADY_REACHED);
             assert(self.pledges.get(get_caller_address()) != 0, Errors::NOTHING_TO_WITHDRAW);
 
-            let contributor = get_caller_address();
-            let amount = self._refund(contributor);
+            let pledger = get_caller_address();
+            let amount = self._refund(pledger);
 
-            self.emit(Event::Unpledged(Unpledged { contributor, amount, reason }));
+            self.emit(Event::Unpledged(Unpledged { pledger, amount, reason }));
         }
     }
 
@@ -340,8 +340,8 @@ pub mod Campaign {
             self.total_pledges.read() >= self.goal.read()
         }
 
-        fn _refund(ref self: ContractState, contributor: ContractAddress) -> u256 {
-            let amount = self.pledges.remove(contributor);
+        fn _refund(ref self: ContractState, pledger: ContractAddress) -> u256 {
+            let amount = self.pledges.remove(pledger);
 
             // if the campaign is "failed", then there's no need to set total_pledges to 0, as
             // the campaign has ended and the field can be used as a testament to how much was raised
@@ -349,7 +349,7 @@ pub mod Campaign {
                 self.total_pledges.write(self.total_pledges.read() - amount);
             }
 
-            let success = self.token.read().transfer(contributor, amount);
+            let success = self.token.read().transfer(pledger, amount);
             assert(success, Errors::TRANSFER_FAILED);
 
             amount
@@ -357,10 +357,9 @@ pub mod Campaign {
 
         fn _refund_all(ref self: ContractState, reason: ByteArray) {
             let mut pledges = self.pledges.get_pledges_as_arr();
-            while let Option::Some((contributor, _)) = pledges
-                .pop_front() {
-                    self._refund(contributor);
-                };
+            while let Option::Some((pledger, _)) = pledges.pop_front() {
+                self._refund(pledger);
+            };
             self.emit(Event::RefundedAll(RefundedAll { reason }));
         }
     }

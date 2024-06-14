@@ -59,7 +59,7 @@ pub mod MockUpgrade {
     #[derive(Drop, starknet::Event)]
     pub struct PledgeMade {
         #[key]
-        pub contributor: ContractAddress,
+        pub pledger: ContractAddress,
         pub amount: u256,
     }
 
@@ -77,7 +77,7 @@ pub mod MockUpgrade {
     #[derive(Drop, starknet::Event)]
     pub struct Refunded {
         #[key]
-        pub contributor: ContractAddress,
+        pub pledger: ContractAddress,
         pub amount: u256,
         pub reason: ByteArray,
     }
@@ -95,7 +95,7 @@ pub mod MockUpgrade {
     #[derive(Drop, starknet::Event)]
     pub struct Unpledged {
         #[key]
-        pub contributor: ContractAddress,
+        pub pledger: ContractAddress,
         pub amount: u256,
         pub reason: ByteArray,
     }
@@ -170,19 +170,19 @@ pub mod MockUpgrade {
             assert(self._is_active() && !self._is_expired(), Errors::ENDED);
             assert(amount > 0, Errors::ZERO_DONATION);
 
-            let contributor = get_caller_address();
+            let pledger = get_caller_address();
             let this = get_contract_address();
-            let success = self.token.read().transfer_from(contributor, this, amount);
+            let success = self.token.read().transfer_from(pledger, this, amount);
             assert(success, Errors::TRANSFER_FAILED);
 
-            self.pledges.add(contributor, amount);
+            self.pledges.add(pledger, amount);
             self.total_pledges.write(self.total_pledges.read() + amount);
 
-            self.emit(Event::PledgeMade(PledgeMade { contributor, amount }));
+            self.emit(Event::PledgeMade(PledgeMade { pledger, amount }));
         }
 
-        fn get_pledge(self: @ContractState, contributor: ContractAddress) -> u256 {
-            self.pledges.get(contributor)
+        fn get_pledge(self: @ContractState, pledger: ContractAddress) -> u256 {
+            self.pledges.get(pledger)
         }
 
         fn get_pledges(self: @ContractState) -> Array<(ContractAddress, u256)> {
@@ -213,32 +213,32 @@ pub mod MockUpgrade {
             self.emit(Event::Launched(Launched {}));
         }
 
-        fn refund(ref self: ContractState, contributor: ContractAddress, reason: ByteArray) {
+        fn refund(ref self: ContractState, pledger: ContractAddress, reason: ByteArray) {
             self._assert_only_creator();
-            assert(contributor.is_non_zero(), Errors::ZERO_ADDRESS_CONTRIBUTOR);
+            assert(pledger.is_non_zero(), Errors::ZERO_ADDRESS_CONTRIBUTOR);
             assert(self.status.read() != Status::DRAFT, Errors::STILL_DRAFT);
             assert(self._is_active(), Errors::ENDED);
-            assert(self.pledges.get(contributor) != 0, Errors::NOTHING_TO_REFUND);
+            assert(self.pledges.get(pledger) != 0, Errors::NOTHING_TO_REFUND);
 
-            let amount = self._refund(contributor);
+            let amount = self._refund(pledger);
 
-            self.emit(Event::Refunded(Refunded { contributor, amount, reason }))
+            self.emit(Event::Refunded(Refunded { pledger, amount, reason }))
         }
 
         /// There are currently 3 possibilities for performing contract upgrades:
-        ///  1. Trust the campaign factory owner -> this is suboptimal, as factory owners have no responsibility to either creators or contributors,
+        ///  1. Trust the campaign factory owner -> this is suboptimal, as factory owners have no responsibility to either creators or pledgers,
         ///     and there's nothing stopping them from implementing a malicious upgrade.
-        ///  2. Trust the campaign creator -> the contributors already trust the campaign creator that they'll do what they promised in the campaign.
+        ///  2. Trust the campaign creator -> the pledgers already trust the campaign creator that they'll do what they promised in the campaign.
         ///     It's not a stretch to trust them with verifying that the contract upgrade is necessary. 
         ///  3. Trust no one, contract upgrades are forbidden -> could be a problem if a vulnerability is discovered and campaign funds are in danger.
         /// 
         /// This function implements the 2nd option, as it seems to be the most optimal solution, especially from the point of view of what to do if
         /// any of the upgrades fail for whatever reason - campaign creator is solely responsible for upgrading their contracts. 
         /// 
-        /// To improve contributor trust, contract upgrades refund all of contributor funds, so that on the off chance that the creator is in cahoots
-        /// with factory owners to implement a malicious upgrade, the contributor funds would be returned.
+        /// To improve pledger trust, contract upgrades refund all of pledger funds, so that on the off chance that the creator is in cahoots
+        /// with factory owners to implement a malicious upgrade, the pledger funds would be returned.
         /// There are some problems with this though:
-        ///  - contributors wouldn't have even been donating if they weren't trusting the creator - since the funds end up with them in the end, they
+        ///  - pledgers wouldn't have even been donating if they weren't trusting the creator - since the funds end up with them in the end, they
         ///    have to trust that creators would use the campaign funds as they promised when creating the campaign.
         ///  - since the funds end up with the creators, they have no incentive to implement a malicious upgrade - they'll have the funds either way.
         ///  - each time there's an upgrade, the campaign gets reset, which introduces a new problem - what if the Campaign was cancel to ending?
@@ -276,16 +276,16 @@ pub mod MockUpgrade {
             assert(!self._is_goal_reached(), Errors::TARGET_ALREADY_REACHED);
             assert(self.pledges.get(get_caller_address()) != 0, Errors::NOTHING_TO_WITHDRAW);
 
-            let contributor = get_caller_address();
-            let amount = self.pledges.remove(contributor);
+            let pledger = get_caller_address();
+            let amount = self.pledges.remove(pledger);
 
             // no need to set total_pledges to 0, as the campaign has ended
             // and the field can be used as a testament to how much was raised
 
-            let success = self.token.read().transfer(contributor, amount);
+            let success = self.token.read().transfer(pledger, amount);
             assert(success, Errors::TRANSFER_FAILED);
 
-            self.emit(Event::Unpledged(Unpledged { contributor, amount, reason }));
+            self.emit(Event::Unpledged(Unpledged { pledger, amount, reason }));
         }
     }
 
@@ -309,8 +309,8 @@ pub mod MockUpgrade {
             self.total_pledges.read() >= self.goal.read()
         }
 
-        fn _refund(ref self: ContractState, contributor: ContractAddress) -> u256 {
-            let amount = self.pledges.remove(contributor);
+        fn _refund(ref self: ContractState, pledger: ContractAddress) -> u256 {
+            let amount = self.pledges.remove(pledger);
 
             // if the campaign is "failed", then there's no need to set total_pledges to 0, as
             // the campaign has ended and the field can be used as a testament to how much was raised
@@ -318,7 +318,7 @@ pub mod MockUpgrade {
                 self.total_pledges.write(self.total_pledges.read() - amount);
             }
 
-            let success = self.token.read().transfer(contributor, amount);
+            let success = self.token.read().transfer(pledger, amount);
             assert(success, Errors::TRANSFER_FAILED);
 
             amount
@@ -326,10 +326,9 @@ pub mod MockUpgrade {
 
         fn _refund_all(ref self: ContractState, reason: ByteArray) {
             let mut pledges = self.pledges.get_pledges_as_arr();
-            while let Option::Some((contributor, _)) = pledges
-                .pop_front() {
-                    self._refund(contributor);
-                };
+            while let Option::Some((pledger, _)) = pledges.pop_front() {
+                self._refund(pledger);
+            };
             self.emit(Event::RefundedAll(RefundedAll { reason }));
         }
     }
