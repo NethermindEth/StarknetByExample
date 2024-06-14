@@ -8,13 +8,14 @@ pub trait ICampaignFactory<TContractState> {
         title: ByteArray,
         description: ByteArray,
         goal: u256,
-        duration: u64,
+        start_time: u64,
+        end_time: u64,
         token_address: ContractAddress
     ) -> ContractAddress;
     fn get_campaign_class_hash(self: @TContractState) -> ClassHash;
     fn update_campaign_class_hash(ref self: TContractState, new_class_hash: ClassHash);
     fn upgrade_campaign_implementation(
-        ref self: TContractState, campaign_address: ContractAddress, new_duration: Option<u64>
+        ref self: TContractState, campaign_address: ContractAddress, new_end_time: Option<u64>
     );
 }
 
@@ -94,14 +95,15 @@ pub mod CampaignFactory {
             title: ByteArray,
             description: ByteArray,
             goal: u256,
-            duration: u64,
+            start_time: u64,
+            end_time: u64,
             token_address: ContractAddress,
         ) -> ContractAddress {
             let creator = get_caller_address();
 
             // Create contructor arguments
             let mut constructor_calldata: Array::<felt252> = array![];
-            ((creator, title, description, goal), duration, token_address)
+            ((creator, title, description, goal), start_time, end_time, token_address)
                 .serialize(ref constructor_calldata);
 
             // Contract deployment
@@ -134,7 +136,7 @@ pub mod CampaignFactory {
         }
 
         fn upgrade_campaign_implementation(
-            ref self: ContractState, campaign_address: ContractAddress, new_duration: Option<u64>
+            ref self: ContractState, campaign_address: ContractAddress, new_end_time: Option<u64>
         ) {
             assert(campaign_address.is_non_zero(), Errors::ZERO_ADDRESS);
 
@@ -144,7 +146,7 @@ pub mod CampaignFactory {
             assert(old_class_hash != self.campaign_class_hash.read(), Errors::SAME_IMPLEMENTATION);
 
             let campaign = ICampaignDispatcher { contract_address: campaign_address };
-            campaign.upgrade(self.campaign_class_hash.read(), new_duration);
+            campaign.upgrade(self.campaign_class_hash.read(), new_end_time);
         }
     }
 }

@@ -21,12 +21,13 @@ fn deploy(
     title: ByteArray,
     description: ByteArray,
     goal: u256,
-    duration: u64,
+    start_time: u64,
+    end_time: u64,
     token: ContractAddress
 ) -> ICampaignDispatcher {
     let creator = contract_address_const::<'creator'>();
     let mut calldata: Array::<felt252> = array![];
-    ((creator, title, description, goal), duration, token).serialize(ref calldata);
+    ((creator, title, description, goal), start_time, end_time, token).serialize(ref calldata);
 
     let contract_address = contract.precalculate_address(@calldata);
     let owner = contract_address_const::<'owner'>();
@@ -65,8 +66,10 @@ fn deploy_with_token(
     token_dispatcher.transfer(pledger_3, 10000);
 
     // deploy the actual Campaign contract
+    let start_time = get_block_timestamp();
+    let end_time = start_time + 60;
     let campaign_dispatcher = deploy(
-        contract, "title 1", "description 1", 10000, 60, token_address
+        contract, "title 1", "description 1", 10000, start_time, end_time, token_address
     );
 
     // approve the pledges for each pledger
@@ -87,16 +90,25 @@ fn deploy_with_token(
 
 #[test]
 fn test_deploy() {
+    let start_time = get_block_timestamp();
+    let end_time = start_time + 60;
     let contract = declare("Campaign").unwrap();
     let campaign = deploy(
-        contract, "title 1", "description 1", 10000, 60, contract_address_const::<'token'>()
+        contract,
+        "title 1",
+        "description 1",
+        10000,
+        start_time,
+        end_time,
+        contract_address_const::<'token'>()
     );
 
     let details = campaign.get_details();
     assert_eq!(details.title, "title 1");
     assert_eq!(details.description, "description 1");
     assert_eq!(details.goal, 10000);
-    assert_eq!(details.end_time, get_block_timestamp() + 60);
+    assert_eq!(details.start_time, start_time);
+    assert_eq!(details.end_time, end_time);
     assert_eq!(details.status, Status::ACTIVE);
     assert_eq!(details.token, contract_address_const::<'token'>());
     assert_eq!(details.total_pledges, 0);

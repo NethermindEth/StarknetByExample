@@ -16,6 +16,7 @@ pub struct Details {
     pub creator: ContractAddress,
     pub goal: u256,
     pub title: ByteArray,
+    pub start_time: u64,
     pub end_time: u64,
     pub description: ByteArray,
     pub status: Status,
@@ -32,7 +33,7 @@ pub trait ICampaign<TContractState> {
     fn get_pledges(self: @TContractState) -> Array<(ContractAddress, u256)>;
     fn get_details(self: @TContractState) -> Details;
     fn refund(ref self: TContractState, pledger: ContractAddress, reason: ByteArray);
-    fn upgrade(ref self: TContractState, impl_hash: ClassHash, new_duration: Option<u64>);
+    fn upgrade(ref self: TContractState, impl_hash: ClassHash, new_end_time: Option<u64>);
     fn unpledge(ref self: TContractState, reason: ByteArray);
 }
 
@@ -64,6 +65,7 @@ pub mod Campaign {
         ownable: ownable_component::Storage,
         #[substorage(v0)]
         pledges: pledgeable_component::Storage,
+        start_time: u64,
         end_time: u64,
         token: IERC20Dispatcher,
         creator: ContractAddress,
@@ -140,24 +142,30 @@ pub mod Campaign {
     pub mod Errors {
         pub const NOT_CREATOR: felt252 = 'Not creator';
         pub const ENDED: felt252 = 'Campaign already ended';
+        pub const NOT_STARTED: felt252 = 'Campaign not started';
         pub const STILL_ACTIVE: felt252 = 'Campaign not ended';
         pub const CANCELED: felt252 = 'Campaign canceled';
         pub const FAILED: felt252 = 'Campaign failed';
         pub const CLASS_HASH_ZERO: felt252 = 'Class hash cannot be zero';
         pub const ZERO_DONATION: felt252 = 'Donation must be > 0';
         pub const ZERO_TARGET: felt252 = 'Target must be > 0';
-        pub const ZERO_DURATION: felt252 = 'Duration must be > 0';
+        pub const START_TIME_IN_PAST: felt252 = 'Start time < now';
+        pub const END_BEFORE_START: felt252 = 'End time < start time';
+        pub const END_BEFORE_NOW: felt252 = 'End time < now';
+        pub const END_BIGGER_THAN_MAX: felt252 = 'End time > max duration';
         pub const ZERO_FUNDS: felt252 = 'No funds to claim';
-        pub const ZERO_ADDRESS_CONTRIBUTOR: felt252 = 'Contributor cannot be zero';
+        pub const ZERO_ADDRESS_PLEDGER: felt252 = 'Contributor cannot be zero';
         pub const TRANSFER_FAILED: felt252 = 'Transfer failed';
         pub const TITLE_EMPTY: felt252 = 'Title empty';
         pub const ZERO_ADDRESS_CALLER: felt252 = 'Caller cannot be zero';
         pub const CREATOR_ZERO: felt252 = 'Creator address cannot be zero';
         pub const TARGET_NOT_REACHED: felt252 = 'Target not reached';
         pub const TARGET_ALREADY_REACHED: felt252 = 'Target already reached';
-        pub const NOTHING_TO_WITHDRAW: felt252 = 'Nothing to unpledge';
+        pub const NOTHING_TO_UNPLEDGE: felt252 = 'Nothing to unpledge';
         pub const NOTHING_TO_REFUND: felt252 = 'Nothing to refund';
     }
+
+    const NINETY_DAYS: u64 = consteval_int!(90 * 24 * 60 * 60);
 
     #[constructor]
     fn constructor(
@@ -166,15 +174,16 @@ pub mod Campaign {
         title: ByteArray,
         description: ByteArray,
         goal: u256,
-        duration: u64,
+        start_time: u64,
+        end_time: u64,
         token_address: ContractAddress,
     ) {
         assert(creator.is_non_zero(), Errors::CREATOR_ZERO);
         assert(title.len() > 0, Errors::TITLE_EMPTY);
         assert(goal > 0, Errors::ZERO_TARGET);
-        assert(duration > 0, Errors::ZERO_DURATION);
-
-        self.token.write(IERC20Dispatcher { contract_address: token_address });
+        assert(start_time >= get_block_timestamp(), Errors::START_TIME_IN_PAST);
+        assert(end_time >= start_time, Errors::END_BEFORE_START);
+        assert(end_time <= get_block_timestamp() + NINETY_DAYS, Errors::END_BIGGER_THAN_MAX);
 
         self.title.write(title);
         self.goal.write(goal);
@@ -182,16 +191,33 @@ pub mod Campaign {
         self.creator.write(creator);
         self.ownable._init(get_caller_address());
         self.status.write(Status::ACTIVE);
-        self.end_time.write(get_block_timestamp() + duration);
+        self.start_time.write(start_time);
+        self.end_time.write(end_time);
+        self.token.write(IERC20Dispatcher { contract_address: token_address });
     }
 
     #[abi(embed_v0)]
     impl Campaign of super::ICampaign<ContractState> {
+        fn cancel(ref self: ContractState, reason: ByteArray) {
+            self._assert_only_creator();
+            assert(self.status.read() == Status::ACTIVE, Errors::ENDED);
+
+            if !self._is_goal_reached() && self._is_expired() {
+                self.status.write(Status::FAILED);
+            } else {
+                self.status.write(Status::CANCELED);
+            }
+
+            self._refund_all(reason.clone());
+            let status = self.status.read();
+
+            self.emit(Event::Canceled(Canceled { reason, status }));
+        }
+
         fn claim(ref self: ContractState) {
             self._assert_only_creator();
-            assert(
-                self.status.read() == Status::ACTIVE && self._is_expired(), Errors::STILL_ACTIVE
-            );
+            self._assert_active();
+            assert(self._is_expired(), Errors::STILL_ACTIVE);
             assert(self._is_goal_reached(), Errors::TARGET_NOT_REACHED);
 
             let this = get_contract_address();
@@ -212,25 +238,31 @@ pub mod Campaign {
             self.emit(Event::Claimed(Claimed { amount }));
         }
 
-        fn cancel(ref self: ContractState, reason: ByteArray) {
-            self._assert_only_creator();
-            assert(self.status.read() == Status::ACTIVE, Errors::ENDED);
-
-            if !self._is_goal_reached() && self._is_expired() {
-                self.status.write(Status::FAILED);
-            } else {
-                self.status.write(Status::CANCELED);
+        fn get_details(self: @ContractState) -> Details {
+            Details {
+                creator: self.creator.read(),
+                title: self.title.read(),
+                description: self.description.read(),
+                goal: self.goal.read(),
+                start_time: self.start_time.read(),
+                end_time: self.end_time.read(),
+                status: self.status.read(),
+                token: self.token.read().contract_address,
+                total_pledges: self.total_pledges.read(),
             }
+        }
 
-            self._refund_all(reason.clone());
-            let status = self.status.read();
+        fn get_pledge(self: @ContractState, pledger: ContractAddress) -> u256 {
+            self.pledges.get(pledger)
+        }
 
-            self.emit(Event::Canceled(Canceled { reason, status }));
+        fn get_pledges(self: @ContractState) -> Array<(ContractAddress, u256)> {
+            self.pledges.get_pledges_as_arr()
         }
 
         fn pledge(ref self: ContractState, amount: u256) {
-            // start time check
-            assert(self.status.read() == Status::ACTIVE && !self._is_expired(), Errors::ENDED);
+            self._assert_active();
+            assert(!self._is_expired(), Errors::ENDED);
             assert(amount > 0, Errors::ZERO_DONATION);
 
             let pledger = get_caller_address();
@@ -244,32 +276,10 @@ pub mod Campaign {
             self.emit(Event::PledgeMade(PledgeMade { pledger, amount }));
         }
 
-        fn get_pledge(self: @ContractState, pledger: ContractAddress) -> u256 {
-            self.pledges.get(pledger)
-        }
-
-        fn get_pledges(self: @ContractState) -> Array<(ContractAddress, u256)> {
-            self.pledges.get_pledges_as_arr()
-        }
-
-        fn get_details(self: @ContractState) -> Details {
-            Details {
-                creator: self.creator.read(),
-                title: self.title.read(),
-                description: self.description.read(),
-                goal: self.goal.read(),
-                end_time: self.end_time.read(),
-                status: self.status.read(),
-                token: self.token.read().contract_address,
-                total_pledges: self.total_pledges.read(),
-            }
-        }
-
         fn refund(ref self: ContractState, pledger: ContractAddress, reason: ByteArray) {
             self._assert_only_creator();
-            assert(pledger.is_non_zero(), Errors::ZERO_ADDRESS_CONTRIBUTOR);
-            // start time check
-            assert(self.status.read() == Status::ACTIVE, Errors::ENDED);
+            self._assert_active();
+            assert(pledger.is_non_zero(), Errors::ZERO_ADDRESS_PLEDGER);
             assert(self.pledges.get(pledger) != 0, Errors::NOTHING_TO_REFUND);
 
             let amount = self._refund(pledger);
@@ -277,17 +287,29 @@ pub mod Campaign {
             self.emit(Event::Refunded(Refunded { pledger, amount, reason }))
         }
 
-        fn upgrade(ref self: ContractState, impl_hash: ClassHash, new_duration: Option<u64>) {
+        fn unpledge(ref self: ContractState, reason: ByteArray) {
+            self._assert_active();
+            assert(!self._is_goal_reached(), Errors::TARGET_ALREADY_REACHED);
+            assert(self.pledges.get(get_caller_address()) != 0, Errors::NOTHING_TO_UNPLEDGE);
+
+            let pledger = get_caller_address();
+            let amount = self._refund(pledger);
+
+            self.emit(Event::Unpledged(Unpledged { pledger, amount, reason }));
+        }
+
+        fn upgrade(ref self: ContractState, impl_hash: ClassHash, new_end_time: Option<u64>) {
             self.ownable._assert_only_owner();
             assert(impl_hash.is_non_zero(), Errors::CLASS_HASH_ZERO);
-            // start time check
-            assert(self.status.read() == Status::ACTIVE, Errors::ENDED);
 
             // only active campaigns have funds to refund and duration to update
-            if self.status.read() == Status::ACTIVE {
-                if let Option::Some(duration) = new_duration {
-                    assert(duration > 0, Errors::ZERO_DURATION);
-                    self.end_time.write(get_block_timestamp() + duration);
+            if get_block_timestamp() >= self.start_time.read() {
+                if let Option::Some(end_time) = new_end_time {
+                    assert(end_time >= get_block_timestamp(), Errors::END_BEFORE_NOW);
+                    assert(
+                        end_time <= get_block_timestamp() + NINETY_DAYS, Errors::END_BIGGER_THAN_MAX
+                    );
+                    self.end_time.write(end_time);
                 };
                 self._refund_all("contract upgraded");
             }
@@ -295,18 +317,6 @@ pub mod Campaign {
             starknet::syscalls::replace_class_syscall(impl_hash).unwrap_syscall();
 
             self.emit(Event::Upgraded(Upgraded { implementation: impl_hash }));
-        }
-
-        fn unpledge(ref self: ContractState, reason: ByteArray) {
-            // start time check
-            assert(self.status.read() == Status::ACTIVE, Errors::ENDED);
-            assert(!self._is_goal_reached(), Errors::TARGET_ALREADY_REACHED);
-            assert(self.pledges.get(get_caller_address()) != 0, Errors::NOTHING_TO_WITHDRAW);
-
-            let pledger = get_caller_address();
-            let amount = self._refund(pledger);
-
-            self.emit(Event::Unpledged(Unpledged { pledger, amount, reason }));
         }
     }
 
@@ -316,6 +326,11 @@ pub mod Campaign {
             let caller = get_caller_address();
             assert(caller.is_non_zero(), Errors::ZERO_ADDRESS_CALLER);
             assert(caller == self.creator.read(), Errors::NOT_CREATOR);
+        }
+
+        fn _assert_active(self: @ContractState) {
+            assert(get_block_timestamp() >= self.start_time.read(), Errors::NOT_STARTED);
+            assert(self.status.read() == Status::ACTIVE, Errors::ENDED);
         }
 
         fn _is_expired(self: @ContractState) -> bool {
