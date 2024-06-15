@@ -72,10 +72,12 @@ Summary
 - [Struct as mapping key](./advanced-concepts/struct-mapping-key.md)
 - [Hashing](./advanced-concepts/hashing.md)
   <!-- Hidden until #123 is solved -->
-  <!-- - [Hash Solidity Compatible](./advanced-concepts/hash-solidity-compatible.md) -->
+  <!-- - [Hash Solidity Compatible](./ch02/hash-solidity-compatible.md) -->
 - [Optimisations](./advanced-concepts/optimisations/optimisations.md)
   - [Storage Optimisations](./advanced-concepts/optimisations/store_using_packing.md)
+- [Account Abstraction](./advanced-concepts/account_abstraction/index.md)
+  - [Account Contract](./advanced-concepts/account_abstraction/account_contract.md)
 - [List](./advanced-concepts/list.md)
+- [Library Calls](./advanced-concepts/library_calls.md)
 - [Plugins](./advanced-concepts/plugins.md)
 - [Signature Verification](./advanced-concepts/signature_verification.md)
-- [Library Calls](./advanced-concepts/library_calls.md)
