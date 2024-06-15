@@ -20,7 +20,7 @@ pub mod pledgeable_component {
     #[storage]
     struct Storage {
         index_to_pledger: LegacyMap<u32, ContractAddress>,
-        pledger_to_amount_index: LegacyMap<ContractAddress, Option<(u256, u32)>>,
+        pledger_to_amount: LegacyMap<ContractAddress, u256>,
         pledger_count: u32,
         total_amount: u256,
     }
@@ -29,33 +29,29 @@ pub mod pledgeable_component {
     #[derive(Drop, starknet::Event)]
     pub enum Event {}
 
+    mod Errors {
+        pub const INCONSISTENT_STATE: felt252 = 'Non-indexed pledger found';
+    }
+
     #[embeddable_as(Pledgeable)]
     pub impl PledgeableImpl<
         TContractState, +HasComponent<TContractState>
     > of super::IPledgeable<ComponentState<TContractState>> {
         fn add(ref self: ComponentState<TContractState>, pledger: ContractAddress, amount: u256) {
-            let amount_index_option: Option<(u256, u32)> = self
-                .pledger_to_amount_index
-                .read(pledger);
-            if let Option::Some((old_amount, index)) = amount_index_option {
-                self
-                    .pledger_to_amount_index
-                    .write(pledger, Option::Some((old_amount + amount, index)));
-            } else {
+            let old_amount: u256 = self.pledger_to_amount.read(pledger);
+
+            if old_amount == 0 {
                 let index = self.pledger_count.read();
                 self.index_to_pledger.write(index, pledger);
-                self.pledger_to_amount_index.write(pledger, Option::Some((amount, index)));
                 self.pledger_count.write(index + 1);
             }
+
+            self.pledger_to_amount.write(pledger, old_amount + amount);
             self.total_amount.write(self.total_amount.read() + amount);
         }
 
         fn get(self: @ComponentState<TContractState>, pledger: ContractAddress) -> u256 {
-            let val: Option<(u256, u32)> = self.pledger_to_amount_index.read(pledger);
-            match val {
-                Option::Some((amount, _)) => amount,
-                Option::None => 0,
-            }
+            self.pledger_to_amount.read(pledger)
         }
 
         fn get_pledger_count(self: @ComponentState<TContractState>) -> u32 {
@@ -71,13 +67,7 @@ pub mod pledgeable_component {
             while index != 0 {
                 index -= 1;
                 let pledger = self.index_to_pledger.read(index);
-                let amount_index_option: Option<(u256, u32)> = self
-                    .pledger_to_amount_index
-                    .read(pledger);
-                let amount = match amount_index_option {
-                    Option::Some((amount, _)) => amount,
-                    Option::None => 0
-                };
+                let amount: u256 = self.pledger_to_amount.read(pledger);
                 result.append((pledger, amount));
             };
 
@@ -89,35 +79,33 @@ pub mod pledgeable_component {
         }
 
         fn remove(ref self: ComponentState<TContractState>, pledger: ContractAddress) -> u256 {
-            let amount_index_option: Option<(u256, u32)> = self
-                .pledger_to_amount_index
-                .read(pledger);
+            let amount: u256 = self.pledger_to_amount.read(pledger);
 
-            let amount = if let Option::Some((amount, index)) = amount_index_option {
-                self.pledger_to_amount_index.write(pledger, Option::None);
-                let new_pledger_count = self.pledger_count.read() - 1;
-                self.pledger_count.write(new_pledger_count);
-                if new_pledger_count != 0 {
-                    let last_pledger = self.index_to_pledger.read(new_pledger_count);
-                    let last_amount_index: Option<(u256, u32)> = self
-                        .pledger_to_amount_index
-                        .read(last_pledger);
-                    let last_amount = match last_amount_index {
-                        Option::Some((last_amount, _)) => last_amount,
-                        Option::None => 0
-                    };
-                    self
-                        .pledger_to_amount_index
-                        .write(last_pledger, Option::Some((last_amount, index)));
-                    self.index_to_pledger.write(index, last_pledger);
-                }
+            // check if the pledge even exists
+            if amount == 0 {
+                return 0;
+            }
 
-                self.index_to_pledger.write(new_pledger_count, Zero::zero());
+            let last_index = self.pledger_count.read() - 1;
 
-                amount
-            } else {
-                0
-            };
+            // if there are other pledgers, we need to update our indices
+            if last_index != 0 {
+                let mut pledger_index = last_index;
+                loop {
+                    if self.index_to_pledger.read(pledger_index) == pledger {
+                        break;
+                    }
+                    assert(pledger_index > 0, Errors::INCONSISTENT_STATE);
+                    pledger_index -= 1;
+                };
+
+                self.index_to_pledger.write(pledger_index, self.index_to_pledger.read(last_index));
+            }
+
+            // last_index == new pledger count
+            self.pledger_count.write(last_index);
+            self.pledger_to_amount.write(pledger, 0);
+            self.index_to_pledger.write(last_index, Zero::zero());
 
             self.total_amount.write(self.total_amount.read() - amount);
 
