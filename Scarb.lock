@@ -125,7 +125,7 @@ name = "scarb"
 version = "0.1.0"
 
 [[package]]
-name = "simple_storage"
+name = "simple_account"
 version = "0.1.0"
 
 [[package]]
