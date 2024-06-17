@@ -23,7 +23,7 @@ pub trait ICampaign<TContractState> {
     fn cancel(ref self: TContractState, reason: ByteArray);
     fn pledge(ref self: TContractState, amount: u256);
     fn get_pledge(self: @TContractState, pledger: ContractAddress) -> u256;
-    fn get_pledges(self: @TContractState) -> Array<(ContractAddress, u256)>;
+    fn get_pledgers(self: @TContractState) -> Array<ContractAddress>;
     fn get_details(self: @TContractState) -> Details;
     fn refund(ref self: TContractState, pledger: ContractAddress, reason: ByteArray);
     fn upgrade(ref self: TContractState, impl_hash: ClassHash, new_end_time: Option<u64>);
@@ -243,8 +243,8 @@ pub mod Campaign {
             self.pledges.get(pledger)
         }
 
-        fn get_pledges(self: @ContractState) -> Array<(ContractAddress, u256)> {
-            self.pledges.get_pledges_as_arr()
+        fn get_pledgers(self: @ContractState) -> Array<ContractAddress> {
+            self.pledges.get_pledgers_as_arr()
         }
 
         fn pledge(ref self: ContractState, amount: u256) {
@@ -340,8 +340,8 @@ pub mod Campaign {
         }
 
         fn _refund_all(ref self: ContractState, reason: ByteArray) {
-            let mut pledges = self.pledges.get_pledges_as_arr();
-            while let Option::Some((pledger, _)) = pledges.pop_front() {
+            let mut pledges = self.pledges.get_pledgers_as_arr();
+            while let Option::Some(pledger) = pledges.pop_front() {
                 self._refund(pledger);
             };
             self.emit(Event::RefundedAll(RefundedAll { reason }));

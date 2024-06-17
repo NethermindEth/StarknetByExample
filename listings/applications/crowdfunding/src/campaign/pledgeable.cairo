@@ -6,7 +6,7 @@ pub trait IPledgeable<TContractState> {
     fn add(ref self: TContractState, pledger: ContractAddress, amount: u256);
     fn get(self: @TContractState, pledger: ContractAddress) -> u256;
     fn get_pledger_count(self: @TContractState) -> u32;
-    fn get_pledges_as_arr(self: @TContractState) -> Array<(ContractAddress, u256)>;
+    fn get_pledgers_as_arr(self: @TContractState) -> Array<ContractAddress>;
     fn get_total(self: @TContractState) -> u256;
     fn remove(ref self: TContractState, pledger: ContractAddress) -> u256;
 }
@@ -58,17 +58,14 @@ pub mod pledgeable_component {
             self.pledger_count.read()
         }
 
-        fn get_pledges_as_arr(
-            self: @ComponentState<TContractState>
-        ) -> Array<(ContractAddress, u256)> {
+        fn get_pledgers_as_arr(self: @ComponentState<TContractState>) -> Array<ContractAddress> {
             let mut result = array![];
 
             let mut index = self.pledger_count.read();
             while index != 0 {
                 index -= 1;
                 let pledger = self.index_to_pledger.read(index);
-                let amount: u256 = self.pledger_to_amount.read(pledger);
-                result.append((pledger, amount));
+                result.append(pledger);
             };
 
             result
@@ -141,7 +138,8 @@ mod tests {
 
     use super::{pledgeable_component, IPledgeableDispatcher, IPledgeableDispatcherTrait};
     use super::pledgeable_component::{PledgeableImpl};
-    use starknet::{contract_address_const};
+    use starknet::{ContractAddress, contract_address_const};
+    use core::num::traits::Zero;
 
     type TestingState = pledgeable_component::ComponentState<MockContract::ContractState>;
 
@@ -186,6 +184,30 @@ mod tests {
         assert_eq!(pledgeable.get_total(), 2500);
         assert_eq!(pledgeable.get(pledger_1), 2000);
         assert_eq!(pledgeable.get(pledger_2), 500);
+    }
+
+    #[test]
+    fn test_add_1000_pledgers() {
+        let mut pledgeable: TestingState = Default::default();
+
+        // set up 1000 pledgers
+        let mut pledgers: Array::<(ContractAddress, u256)> = array![];
+        let mut i: felt252 = 1000;
+        while i != 0 {
+            let pledger: ContractAddress = i.try_into().unwrap();
+            let amount: u256 = i.into() * 100;
+            pledgeable.add(pledger, amount);
+            pledgers.append((pledger, amount));
+            i -= 1;
+        };
+
+        assert_eq!(pledgers.len(), pledgeable.get_pledger_count());
+
+        while let Option::Some((pledger, expected_amount)) = pledgers
+            .pop_front() {
+                let amount = pledgeable.get(pledger);
+                assert_eq!(amount, expected_amount);
+            }
     }
 
     #[test]
@@ -235,7 +257,123 @@ mod tests {
     }
 
     #[test]
-    fn test_get_pledges_as_arr() {
+    fn test_remove_first_of_1000_pledgers() {
+        let mut pledgeable: TestingState = Default::default();
+
+        // set up 1000 pledgers
+        let expected_pledger_count: u32 = 1000;
+        let mut expected_total: u256 = 0; // actual value set up in the while loop
+
+        let mut i: felt252 = expected_pledger_count.into();
+        let first_pledger: ContractAddress = i.try_into().unwrap();
+        let first_amount = 100000;
+        pledgeable.add(first_pledger, first_amount);
+        expected_total += first_amount;
+        i -= 1;
+
+        while i != 0 {
+            let pledger: ContractAddress = i.try_into().unwrap();
+            let amount: u256 = i.into() * 100;
+            pledgeable.add(pledger, amount);
+            expected_total += amount;
+            i -= 1;
+        };
+
+        assert_eq!(pledgeable.get_total(), expected_total);
+        assert_eq!(pledgeable.get_pledger_count(), expected_pledger_count);
+        assert_eq!(pledgeable.get(first_pledger), first_amount);
+
+        let removed_amount = pledgeable.remove(first_pledger);
+
+        expected_total -= first_amount;
+
+        assert_eq!(removed_amount, first_amount);
+        assert_eq!(pledgeable.get_total(), expected_total);
+        assert_eq!(pledgeable.get_pledger_count(), expected_pledger_count - 1);
+        assert_eq!(pledgeable.get(first_pledger), 0);
+    }
+
+    #[test]
+    fn test_remove_middle_of_1000_pledgers() {
+        let mut pledgeable: TestingState = Default::default();
+
+        // set up 1000 pledgers
+        let expected_pledger_count: u32 = 1000;
+        let mut expected_total: u256 = 0; // actual value set up in the while loop
+
+        let mut middle_pledger: ContractAddress = Zero::zero();
+        let mut middle_amount = 0;
+
+        let mut i: felt252 = expected_pledger_count.into();
+        while i != 0 {
+            let pledger: ContractAddress = i.try_into().unwrap();
+            let amount: u256 = i.into() * 100;
+            pledgeable.add(pledger, amount);
+            expected_total += amount;
+
+            if i == 500 {
+                middle_pledger = pledger;
+                middle_amount = amount;
+            }
+
+            i -= 1;
+        };
+
+        assert_eq!(pledgeable.get_total(), expected_total);
+        assert_eq!(pledgeable.get_pledger_count(), expected_pledger_count);
+        assert_eq!(pledgeable.get(middle_pledger), middle_amount);
+
+        let removed_amount = pledgeable.remove(middle_pledger);
+
+        expected_total -= middle_amount;
+
+        assert_eq!(removed_amount, middle_amount);
+        assert_eq!(pledgeable.get_total(), expected_total);
+        assert_eq!(pledgeable.get_pledger_count(), expected_pledger_count - 1);
+        assert_eq!(pledgeable.get(middle_pledger), 0);
+    }
+
+    #[test]
+    fn test_remove_last_of_1000_pledgers() {
+        let mut pledgeable: TestingState = Default::default();
+
+        // set up 1000 pledgers
+        let expected_pledger_count: u32 = 1000;
+        let mut expected_total: u256 = 0; // actual value set up in the while loop
+
+        let mut i: felt252 = expected_pledger_count.into();
+        let last_pledger: ContractAddress = i.try_into().unwrap();
+        let last_amount = 100000;
+        i -= 1; // leave place for the last pledger
+
+        while i != 0 {
+            let pledger: ContractAddress = i.try_into().unwrap();
+            let amount: u256 = i.into() * 100;
+            pledgeable.add(pledger, amount);
+            expected_total += amount;
+            i -= 1;
+        };
+
+        // add last pledger        
+        pledgeable.add(last_pledger, last_amount);
+        expected_total += last_amount;
+
+        assert_eq!(pledgeable.get_total(), expected_total);
+        assert_eq!(pledgeable.get_pledger_count(), expected_pledger_count);
+        assert_eq!(pledgeable.get(last_pledger), last_amount);
+
+        let removed_amount = pledgeable.remove(last_pledger);
+
+        expected_total -= last_amount;
+
+        assert_eq!(removed_amount, last_amount);
+        assert_eq!(pledgeable.get_total(), expected_total);
+        assert_eq!(pledgeable.get_pledger_count(), expected_pledger_count - 1);
+        assert_eq!(pledgeable.get(last_pledger), 0);
+    }
+
+    #[test]
+    fn test_get_pledgers_as_arr() {
         let mut pledgeable: TestingState = Default::default();
         let pledger_1 = contract_address_const::<'pledger_1'>();
         let pledger_2 = contract_address_const::<'pledger_2'>();
@@ -247,12 +385,43 @@ mod tests {
         // 2nd pledge by pledger_2 *should not* increase the pledge count
         pledgeable.add(pledger_2, 1500);
 
-        let pledges_arr = pledgeable.get_pledges_as_arr();
+        let pledgers_arr = pledgeable.get_pledgers_as_arr();
 
-        assert_eq!(pledges_arr.len(), 3);
-        assert_eq!((pledger_1, 1000), *pledges_arr[2]);
-        assert_eq!((pledger_2, 2000), *pledges_arr[1]);
-        assert_eq!((pledger_3, 2500), *pledges_arr[0]);
+        assert_eq!(pledgers_arr.len(), 3);
+        assert_eq!(pledger_3, *pledgers_arr[0]);
+        assert_eq!(2500, pledgeable.get(*pledgers_arr[0]));
+        assert_eq!(pledger_2, *pledgers_arr[1]);
+        assert_eq!(2000, pledgeable.get(*pledgers_arr[1]));
+        assert_eq!(pledger_1, *pledgers_arr[2]);
+        assert_eq!(1000, pledgeable.get(*pledgers_arr[2]));
+    }
+
+    #[test]
+    fn test_get_pledgers_as_arr_1000_pledgers() {
+        let mut pledgeable: TestingState = Default::default();
+
+        // set up 1000 pledgers
+        let mut pledgers: Array::<ContractAddress> = array![];
+        let mut i: felt252 = 1000;
+        while i != 0 {
+            let pledger: ContractAddress = i.try_into().unwrap();
+            let amount: u256 = i.into() * 100;
+            pledgeable.add(pledger, amount);
+            pledgers.append(pledger);
+            i -= 1;
+        };
+
+        let pledgers_arr: Array::<ContractAddress> = pledgeable.get_pledgers_as_arr();
+
+        assert_eq!(pledgers_arr.len(), pledgers.len());
+
+        let mut i = 1000;
+        while let Option::Some(expected_pledger) = pledgers.pop_front() {
+            i -= 1;
+            // pledgers are fetched in reversed order
+            let actual_pledger: ContractAddress = *pledgers_arr.at(i); 
+            assert_eq!(expected_pledger, actual_pledger);
+        }
     }
 
     #[test]
