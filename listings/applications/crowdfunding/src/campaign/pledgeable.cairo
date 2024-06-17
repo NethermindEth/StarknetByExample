@@ -6,7 +6,7 @@ pub trait IPledgeable<TContractState> {
     fn add(ref self: TContractState, pledger: ContractAddress, amount: u256);
     fn get(self: @TContractState, pledger: ContractAddress) -> u256;
     fn get_pledger_count(self: @TContractState) -> u32;
-    fn get_pledgers_as_arr(self: @TContractState) -> Array<ContractAddress>;
+    fn array(self: @TContractState) -> Array<ContractAddress>;
     fn get_total(self: @TContractState) -> u256;
     fn remove(ref self: TContractState, pledger: ContractAddress) -> u256;
 }
@@ -58,7 +58,7 @@ pub mod pledgeable_component {
             self.pledger_count.read()
         }
 
-        fn get_pledgers_as_arr(self: @ComponentState<TContractState>) -> Array<ContractAddress> {
+        fn array(self: @ComponentState<TContractState>) -> Array<ContractAddress> {
             let mut result = array![];
 
             let mut index = self.pledger_count.read();
@@ -485,7 +485,7 @@ mod tests {
     }
 
     #[test]
-    fn test_get_pledgers_as_arr() {
+    fn test_array() {
         let mut pledgeable: TestingState = Default::default();
         let pledger_1 = contract_address_const::<'pledger_1'>();
         let pledger_2 = contract_address_const::<'pledger_2'>();
@@ -497,7 +497,7 @@ mod tests {
         // 2nd pledge by pledger_2 *should not* increase the pledge count
         pledgeable.add(pledger_2, 1500);
 
-        let pledgers_arr = pledgeable.get_pledgers_as_arr();
+        let pledgers_arr = pledgeable.array();
 
         assert_eq!(pledgers_arr.len(), 3);
         assert_eq!(pledger_3, *pledgers_arr[0]);
@@ -509,7 +509,7 @@ mod tests {
     }
 
     #[test]
-    fn test_get_pledgers_as_arr_1000_pledgers() {
+    fn test_array_1000_pledgers() {
         let mut pledgeable: TestingState = Default::default();
 
         // set up 1000 pledgers
@@ -523,7 +523,7 @@ mod tests {
             i -= 1;
         };
 
-        let pledgers_arr: Array::<ContractAddress> = pledgeable.get_pledgers_as_arr();
+        let pledgers_arr: Array::<ContractAddress> = pledgeable.array();
 
         assert_eq!(pledgers_arr.len(), pledgers.len());
 
