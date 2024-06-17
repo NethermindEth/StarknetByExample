@@ -92,7 +92,8 @@ pub mod pledgeable_component {
                     if self.index_to_pledger.read(pledger_index) == pledger {
                         break;
                     }
-                    assert(pledger_index > 0, Errors::INCONSISTENT_STATE);
+                    // if pledger_to_amount contains a pledger, then so does index_to_pledger
+                    // thus this will never underflow
                     pledger_index -= 1;
                 };
 

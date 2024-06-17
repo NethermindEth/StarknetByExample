@@ -160,7 +160,7 @@ fn test_uprade_campaign_class_hash() {
 
     // upgrade pending campaign
     start_cheat_caller_address(factory.contract_address, pending_campaign_creator);
-    factory.upgrade_campaign_implementation(pending_campaign, Option::None);
+    factory.upgrade_campaign(pending_campaign, Option::None);
 
     assert_eq!(get_class_hash(pending_campaign), new_class_hash);
     assert_eq!(get_class_hash(active_campaign), old_class_hash);
@@ -177,7 +177,7 @@ fn test_uprade_campaign_class_hash() {
 
     // upgrade active campaign
     start_cheat_caller_address(factory.contract_address, active_campaign_creator);
-    factory.upgrade_campaign_implementation(active_campaign, Option::None);
+    factory.upgrade_campaign(active_campaign, Option::None);
 
     assert_eq!(get_class_hash(pending_campaign), new_class_hash);
     assert_eq!(get_class_hash(active_campaign), new_class_hash);

@@ -14,7 +14,7 @@ pub trait ICampaignFactory<TContractState> {
     ) -> ContractAddress;
     fn get_campaign_class_hash(self: @TContractState) -> ClassHash;
     fn update_campaign_class_hash(ref self: TContractState, new_class_hash: ClassHash);
-    fn upgrade_campaign_implementation(
+    fn upgrade_campaign(
         ref self: TContractState, campaign_address: ContractAddress, new_end_time: Option<u64>
     );
 }
@@ -89,7 +89,6 @@ pub mod CampaignFactory {
 
     #[abi(embed_v0)]
     impl CampaignFactory of super::ICampaignFactory<ContractState> {
-        // ANCHOR: deploy
         fn create_campaign(
             ref self: ContractState,
             title: ByteArray,
@@ -119,7 +118,6 @@ pub mod CampaignFactory {
 
             contract_address
         }
-        // ANCHOR_END: deploy
 
         fn get_campaign_class_hash(self: @ContractState) -> ClassHash {
             self.campaign_class_hash.read()
@@ -129,13 +127,12 @@ pub mod CampaignFactory {
             self.ownable._assert_only_owner();
             assert(new_class_hash.is_non_zero(), Errors::CLASS_HASH_ZERO);
 
-            // update own campaign class hash value
             self.campaign_class_hash.write(new_class_hash);
 
             self.emit(Event::ClassHashUpdated(ClassHashUpdated { new_class_hash }));
         }
 
-        fn upgrade_campaign_implementation(
+        fn upgrade_campaign(
             ref self: ContractState, campaign_address: ContractAddress, new_end_time: Option<u64>
         ) {
             assert(campaign_address.is_non_zero(), Errors::ZERO_ADDRESS);

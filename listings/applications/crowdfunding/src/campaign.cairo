@@ -41,7 +41,7 @@ pub mod Campaign {
     };
     use components::ownable::ownable_component;
     use super::pledgeable::pledgeable_component;
-    use super::{Details};
+    use super::Details;
 
     component!(path: ownable_component, storage: ownable, event: OwnableEvent);
     component!(path: pledgeable_component, storage: pledges, event: PledgeableEvent);
@@ -199,6 +199,8 @@ pub mod Campaign {
             self.emit(Event::Canceled(Canceled { reason }));
         }
 
+        /// Sends the funds to the campaign creator.
+        /// It leaves the pledge data intact as a testament to campaign success
         fn claim(ref self: ContractState) {
             self._assert_only_creator();
             assert(self._is_started(), Errors::NOT_STARTED);
@@ -213,9 +215,6 @@ pub mod Campaign {
             assert(amount > 0, Errors::ZERO_PLEDGES);
 
             self.claimed.write(true);
-
-            // no need to reset the pledges, as the campaign has ended
-            // and the data can be used as a testament to how much was raised
 
             let owner = get_caller_address();
             let success = token.transfer(owner, amount);
@@ -291,7 +290,7 @@ pub mod Campaign {
             self.ownable._assert_only_owner();
             assert(impl_hash.is_non_zero(), Errors::CLASS_HASH_ZERO);
 
-            // only active campaigns have funds to refund and an end time to update
+            // only active campaigns have pledges to refund and an end time to update
             if self._is_started() {
                 if let Option::Some(end_time) = new_end_time {
                     assert(end_time >= get_block_timestamp(), Errors::END_BEFORE_NOW);
