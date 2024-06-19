@@ -14,11 +14,11 @@ pub mod switchable_component {
         switchable_value: bool,
     }
 
-    #[derive(Drop, starknet::Event)]
-    struct SwitchEvent {}
+    #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
+    pub struct SwitchEvent {}
 
     #[event]
-    #[derive(Drop, starknet::Event)]
+    #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
     pub enum Event {
         SwitchEvent: SwitchEvent,
     }
@@ -48,6 +48,7 @@ pub mod switchable_component {
 }
 // ANCHOR_END: component
 
+// ANCHOR: MockContract
 #[starknet::contract]
 mod MockContract {
     use super::switchable_component;
@@ -69,12 +70,13 @@ mod MockContract {
     #[abi(embed_v0)]
     impl SwitchableImpl = switchable_component::Switchable<ContractState>;
 }
-
+// ANCHOR_END: MockContract
 #[cfg(test)]
 mod test {
     use super::MockContract;
+    use super::switchable_component::{Event, SwitchEvent};
     use components::switchable::{ISwitchableDispatcher, ISwitchableDispatcherTrait};
-    use starknet::syscalls::deploy_syscall;
+    use starknet::{syscalls::deploy_syscall, contract_address_const};
     use starknet::SyscallResultTrait;
 
     fn deploy_switchable() -> ISwitchableDispatcher {
@@ -116,5 +118,16 @@ mod test {
         assert_eq!(switchable.is_on(), false);
         switchable.switch();
         assert_eq!(switchable.is_on(), true);
+    }
+
+    #[test]
+    fn test_switch_event() {
+        let contract_address = contract_address_const::<'address'>();
+        let switchable = deploy_switchable();
+        switchable.switch();
+        assert_eq!(
+            starknet::testing::pop_log(contract_address),
+            Option::Some(Event::SwitchEvent(SwitchEvent { }))
+        );
     }
 }

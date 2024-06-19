@@ -1,9 +1,12 @@
+// ANCHOR: interface
 #[starknet::interface]
 pub trait ICountable<TContractState> {
     fn get(self: @TContractState) -> u32;
     fn increment(ref self: TContractState);
 }
+// ANCHOR_END: interface
 
+// ANCHOR: countable_component
 #[starknet::component]
 pub mod countable_component {
     #[storage]
@@ -24,8 +27,9 @@ pub mod countable_component {
         }
     }
 }
+// ANCHOR_END: countable_component
 
-
+// ANCHOR: MockContract
 #[starknet::contract]
 mod MockContract {
     use super::countable_component;
@@ -47,6 +51,7 @@ mod MockContract {
     #[abi(embed_v0)]
     impl CountableImpl = countable_component::Countable<ContractState>;
 }
+// ANCHOR_END: MockContract
 
 #[cfg(test)]
 mod test {
