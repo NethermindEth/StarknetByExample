@@ -3,7 +3,7 @@ import fs from 'fs';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-const provider = new RpcProvider({ nodeUrl: 'https://starknet-sepolia.public.blastapi.io' });
+const provider = new RpcProvider({ nodeUrl: 'https://free-rpc.nethermind.io/sepolia-juno' });
 const accountAddress = '0x067981c7F9f55BCbdD4e0d0a9C5BBCeA77dAcB42cccbf13554A847d6353F728e';
 const privateKey = process.env.PRIVATE_KEY;
 

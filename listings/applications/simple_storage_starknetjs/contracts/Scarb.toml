@@ -1,11 +1,14 @@
 [package]
 name = "simple_storage"
-version = "0.1.0"
+version.workspace = true
 edition = "2023_11"
 
-# See more keys and their definitions at https://docs.swmansion.com/scarb/docs/reference/manifest.html
+[lib]
 
 [dependencies]
-starknet=">=2.4.1"
+starknet.workspace = true
+
+[scripts]
+test.workspace = true
 
 [[target.starknet-contract]]
