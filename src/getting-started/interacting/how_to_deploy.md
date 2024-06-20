@@ -1,5 +1,5 @@
-## Declaring and Deploying the SimpleStorage contract
-We will utilize Starkli in order to deploy and declare our smart contracts on Starknet. Make sure that Starkli is installed in your device. You can follow [this](https://medium.com/starknet-edu/starkli-the-new-starknet-cli-86ea914a2933) guide for Starkli or check out their documentation given above. 
+## Declaring and Deploying Your Contract
+We will utilize Starkli in order to deploy and declare our smart contracts on Starknet. Make sure that Starkli is installed in your device. You can follow [this](https://github.com/xJonathanLEI/starkli) repository for Starkli or check out their [docs](https://book.starkli.rs/). 
 
 For this tutorial, we will create a new account. If you already have an account, you can skip this step and move to the part where we declare our contract.
 

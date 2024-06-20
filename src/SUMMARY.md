@@ -58,6 +58,7 @@ Summary
 - [Constant Product AMM](./applications/constant-product-amm.md)
 - [TimeLock](./applications/timelock.md)
 - [Staking](./applications/staking.md)
+- [Simple Storage with Starknet-js](./applications/simple_storage_starknetjs.md)
 
 <!-- advanced-concepts -->
 

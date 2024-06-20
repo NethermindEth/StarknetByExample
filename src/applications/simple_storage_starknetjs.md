@@ -5,7 +5,7 @@ In this tutorial, you will write and deploy a SimpleStorage Cairo contract on St
 ## Writing SimpleStorage contract in Cairo
 The SimpleStorage contract has only one purpose: storing a number. We want the users to interact with the stored number by **writing** to the currently stored number and **reading** the number in the contract.
 
-We will use the following SimpleStorage contract. In this [link](https://book.cairo-lang.org/ch13-02-anatomy-of-a-simple-contract.html) from the Cairo book, you can find very detailed explanations for each component of the contract:
+We will use the following SimpleStorage contract. In the [Storage Variables](../getting-started/basics/variables.md) page, you can find explanations for each component of the contract:
 
 
 ```rs
@@ -99,7 +99,7 @@ This command wants you to fund the address (given in the instructions below the 
 
 ### Declaring & Deploying the SimpleStorage Contract
 
-Please refer to **How To Deploy** in the Getting Started part. Note down the address of your contract, you will need it in Starknet-js in the following part.
+Please refer to our [How To Deploy](../getting-started/interacting/how_to_deploy.md) page. Note down the address of your contract, you will need it in Starknet-js in the following part.
 
 ## Interacting with SimpleStorage contract
 We will interact with the SimpleStorage contract using Starknet-js. Firstly, create a new folder and inside the directory of the new folder, initialize the npm package (click Enter several items, you can skip adding the package info):
