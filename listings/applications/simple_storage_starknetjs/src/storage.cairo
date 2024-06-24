@@ -1,3 +1,4 @@
+// ANCHOR: contract
 #[starknet::interface]
 trait ISimpleStorage<T> {
     fn set(ref self: T, x: u128);
@@ -22,3 +23,6 @@ mod SimpleStorage {
         }
     }
 }
+// ANCHOR_END: contract
+
+
