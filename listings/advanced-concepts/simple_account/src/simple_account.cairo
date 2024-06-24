@@ -21,6 +21,7 @@ mod simpleAccount {
     use starknet::account::Call;
     use core::num::traits::Zero;
     use core::ecdsa::check_ecdsa_signature;
+    use starknet::crypto::hash::starknet_keccak;
 
     #[storage]
     struct Storage {
@@ -74,6 +75,28 @@ mod simpleAccount {
             )
         }
     }
-// TODO: Implement SRC5
+    
+    #[abi(embed_v0)]
+    impl SRC5 of ISRC5<ContractState> {
+        fn supports_interface(self: @ContractState, interface_id: felt252) -> bool {
+            // Calculate interface IDs for ISRC5 and ISRC6
+            let isrc5_id = starknet_keccak("supports_interface(felt252)->E((),())");
+            let isrc6_id_1 = starknet_keccak("__execute__(Array<(ContractAddress,felt252,Array<felt252>)>)->Array<(@Array<felt252>)>");
+            let isrc6_id_2 = starknet_keccak("__validate__(Array<(ContractAddress,felt252,Array<felt252>)>)->felt252");
+            let isrc6_id_3 = starknet_keccak("is_valid_signature(felt252,Array<felt252>)->felt252");
+
+            let isrc6_id = isrc6_id_1 ^ isrc6_id_2 ^ isrc6_id_3;
+
+            let supported_interfaces = array![isrc5_id, isrc6_id];
+
+            for id in supported_interfaces.iter() {
+                if *id == interface_id {
+                    return true;
+                }
+            }
+            false
+        }
+    }
 }
+
 
