@@ -60,7 +60,7 @@ Summary
 - [TimeLock](./applications/timelock.md)
 - [Staking](./applications/staking.md)
 - [Simple Storage with Starknet-js](./applications/simple_storage_starknetjs.md)
-
+- [Crowdfunding Contract with Starknet-js](./applications/crowdfunding_starknetjs.md)
 <!-- advanced-concepts -->
 
 # Advanced concepts
