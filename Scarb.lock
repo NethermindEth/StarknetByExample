@@ -102,8 +102,8 @@ dependencies = [
 
 [[package]]
 name = "openzeppelin"
-version = "0.11.0"
-source = "git+https://github.com/OpenZeppelin/cairo-contracts.git?tag=v0.11.0#a83f36b23f1af6e160288962be4a2701c3ecbcda"
+version = "0.14.0"
+source = "git+https://github.com/OpenZeppelin/cairo-contracts.git?tag=v0.14.0#f091c4f51ddeb10297db984acae965328c5a4e5b"
 
 [[package]]
 name = "scarb"
@@ -119,8 +119,8 @@ version = "0.1.0"
 
 [[package]]
 name = "snforge_std"
-version = "0.24.0"
-source = "git+https://github.com/foundry-rs/starknet-foundry.git?tag=v0.24.0#95e9fb09cb91b3c05295915179ee1b55bf923653"
+version = "0.25.0"
+source = "git+https://github.com/foundry-rs/starknet-foundry.git?tag=v0.25.0#5b366e24821e530fea97f11b211d220e8493fbea"
 
 [[package]]
 name = "staking"

@@ -1,16 +1,13 @@
 #[starknet::contract]
 pub mod ERC20Token {
-    use openzeppelin::token::erc20::ERC20Component;
+    use openzeppelin::token::erc20::{ERC20Component, ERC20HooksEmptyImpl};
     use starknet::ContractAddress;
 
     component!(path: ERC20Component, storage: erc20, event: ERC20Event);
 
+    // ERC20 Mixin
     #[abi(embed_v0)]
-    impl ERC20Impl = ERC20Component::ERC20Impl<ContractState>;
-    #[abi(embed_v0)]
-    impl ERC20MetadataImpl = ERC20Component::ERC20MetadataImpl<ContractState>;
-    #[abi(embed_v0)]
-    impl ERC20CamelOnlyImpl = ERC20Component::ERC20CamelOnlyImpl<ContractState>;
+    impl ERC20MixinImpl = ERC20Component::ERC20MixinImpl<ContractState>;
     impl ERC20InternalImpl = ERC20Component::InternalImpl<ContractState>;
 
     #[storage]
@@ -35,7 +32,7 @@ pub mod ERC20Token {
         symbol: ByteArray
     ) {
         self.erc20.initializer(name, symbol);
-        self.erc20._mint(recipient, initial_supply);
+        self.erc20.mint(recipient, initial_supply);
     }
 }
 // Wait for OZ #953 fix
