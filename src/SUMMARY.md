@@ -23,6 +23,7 @@ Summary
   - [Custom types in entrypoints](./getting-started/basics/custom-types-in-entrypoints.md)
   - [Documentation](./getting-started/basics/documentation.md)
 - [Deploy and interact with contracts](./getting-started/interacting/interacting.md)
+  - [How to deploy](./getting-started/interacting/how_to_deploy.md)
   - [Contract interfaces and Traits generation](./getting-started/interacting/interfaces-traits.md)
   - [Calling other contracts](./getting-started/interacting/calling_other_contracts.md)
   - [Factory pattern](./getting-started/interacting/factory.md)
@@ -58,6 +59,7 @@ Summary
 - [Constant Product AMM](./applications/constant-product-amm.md)
 - [TimeLock](./applications/timelock.md)
 - [Staking](./applications/staking.md)
+- [Simple Storage with Starknet-js](./applications/simple_storage_starknetjs.md)
 
 <!-- advanced-concepts -->
 
