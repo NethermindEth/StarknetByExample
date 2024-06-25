@@ -1,0 +1,14 @@
+[package]
+name = "simple_storage"
+version.workspace = true
+edition = "2023_11"
+
+[lib]
+
+[dependencies]
+starknet.workspace = true
+
+[scripts]
+test.workspace = true
+
+[[target.starknet-contract]]
