@@ -1,0 +1,48 @@
+# Merkle Tree contract
+
+A Merkle tree, also known as a hash tree, is a data structure used in cryptography and computer science to verify data integrity and consistency. It is a binary tree where each leaf node represents the cryptographic hash of some data (a transaction for example), and each non-leaf node represents the cryptographic hash of its child nodes. This hierarchical structure allows efficient and secure verification of the data integrity.
+
+Here's a quick summary of how it operates and what functionalities it supports:
+
+### How it works:
+
+1. Leaves Creation:
+    - Some data is hashed to create a leaf node.
+2. Intermediate Nodes Creation:
+    - Pairwise hashes of the leaf nodes are combined and hashed again to create parent nodes.
+    - This process continues until only one hash remains, known as the Merkle root.
+3. Merkle Root:
+    - The final hash at the top of the tree, representing the entire dataset.
+    - Changing any single data block will change its corresponding leaf node, which will propagate up the tree, altering the Merkle root.
+
+### Key Features:
+
+1. Efficient Verification:
+    - Only a small subset of the tree (the Merkle proof) is needed to verify the inclusion of a particular data block, reducing the amount of data that must be processed.
+
+2. Data Integrity:
+    - The Merkle root ensures the integrity of all the underlying data blocks.
+    - Any alteration in the data will result in a different root hash.
+
+
+### Visual example
+
+![Diagram of the Merkle Tree](../assets/merkle_root.png)
+
+The above diagram represents a merkle tree.\
+Each leaf node is the hash of some data.\
+Each other node is the hash of the combination of both children nodes.
+
+If we were to `verify` the `hash 6`, the merkle proof would need to contain the `hash 5`, `hash 12`and `hash 13`:
+  1. The `hash 5` would be combined with the `hash 6` to re-compute the `hash 11`.
+  2. The newly computed `hash 11` in step 1 would be combined with `hash 12` to re-compute `hash 14`.
+  3. The newly computer `hash 14` in step 2 would be combined with `hash 13` to re-compute the merkle root.
+  4. We can then compare the computed resultant merkle root with the one provided to the `verify` function.
+
+### Code
+
+The following implementation is the Cairo adaptation of the [Solidity by Example - Merkle Tree contract](https://solidity-by-example.org/app/merkle-tree/).
+
+```rust
+{{#include ../../listings/applications/merkle_tree/src/contract.cairo}}
+```
