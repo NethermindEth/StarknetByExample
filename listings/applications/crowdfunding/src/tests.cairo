@@ -47,10 +47,12 @@ fn deploy_with_token(
     let token_symbol: ByteArray = "MTKN";
     let token_supply: u256 = 100000;
     let token_owner = contract_address_const::<'token_owner'>();
+    let token_recipient = token_owner;
 
     // deploy ERC20 token
     let mut token_constructor_calldata = array![];
-    (token_name, token_symbol, token_supply, token_owner).serialize(ref token_constructor_calldata);
+    ((token_name, token_symbol, token_supply, token_recipient), token_owner)
+        .serialize(ref token_constructor_calldata);
     let (token_address, _) = token.deploy(@token_constructor_calldata).unwrap();
 
     // transfer amounts to some pledgers
