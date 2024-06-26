@@ -121,7 +121,7 @@ fn test_deploy() {
 
 #[test]
 fn test_successful_campaign() {
-    let token_class = declare("ERC20").unwrap();
+    let token_class = declare("ERC20Upgradeable").unwrap();
     let contract_class = declare("Campaign").unwrap();
     let (campaign, token) = deploy_with_token(contract_class, token_class);
 
@@ -218,7 +218,7 @@ fn test_upgrade_class_hash() {
 
     // test pending campaign
     let contract_class = declare("Campaign").unwrap();
-    let token_class = declare("ERC20").unwrap();
+    let token_class = declare("ERC20Upgradeable").unwrap();
     let (campaign, _) = deploy_with_token(contract_class, token_class);
     let mut spy = spy_events(SpyOn::One(campaign.contract_address));
 
@@ -286,7 +286,7 @@ fn test_upgrade_class_hash() {
 #[test]
 fn test_cancel() {
     let contract_class = declare("Campaign").unwrap();
-    let token_class = declare("ERC20").unwrap();
+    let token_class = declare("ERC20Upgradeable").unwrap();
 
     // test canceled campaign
     let (campaign, token) = deploy_with_token(contract_class, token_class);
@@ -393,7 +393,7 @@ fn test_cancel() {
 fn test_refund() {
     // setup
     let (campaign, token) = deploy_with_token(
-        declare("Campaign").unwrap(), declare("ERC20").unwrap()
+        declare("Campaign").unwrap(), declare("ERC20Upgradeable").unwrap()
     );
     let mut spy = spy_events(SpyOn::One(campaign.contract_address));
     let creator = contract_address_const::<'creator'>();
@@ -444,7 +444,7 @@ fn test_refund() {
 fn test_unpledge() {
     // setup
     let (campaign, token) = deploy_with_token(
-        declare("Campaign").unwrap(), declare("ERC20").unwrap()
+        declare("Campaign").unwrap(), declare("ERC20Upgradeable").unwrap()
     );
     let mut spy = spy_events(SpyOn::One(campaign.contract_address));
     let pledger = contract_address_const::<'pledger_1'>();

@@ -16,4 +16,4 @@ test.workspace = true
 
 [[target.starknet-contract]]
 casm = true
-build-external-contracts = ["openzeppelin::presets::erc20::ERC20"]
+build-external-contracts = ["openzeppelin::presets::erc20::ERC20Upgradeable"]
