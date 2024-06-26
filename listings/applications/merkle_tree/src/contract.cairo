@@ -33,13 +33,17 @@ mod Errors {
 pub mod MerkleTree {
     use core::poseidon::PoseidonTrait;
     use core::hash::{HashStateTrait, HashStateExTrait};
+    use starknet::storage::{
+        Map, StorageMapReadAccess, StorageMapWriteAccess, StoragePointerWriteAccess,
+        StoragePointerReadAccess
+    };
     use super::ByteArrayHashTrait;
 
     #[storage]
     struct Storage {
         // cannot store Array, therefore use a LegacyMap to simulate an array
-        hashes: LegacyMap::<usize, felt252>,
-        hashes_length: usize
+        pub hashes: Map::<usize, felt252>,
+        pub hashes_length: usize
     }
 
     #[derive(Drop, Serde, Copy)]
@@ -58,12 +62,11 @@ pub mod MerkleTree {
 
             // first, hash every leaf
             let mut i = 0;
-            while let Option::Some(value) = data
-                .pop_front() {
-                    _hashes.append(value.hash());
+            while let Option::Some(value) = data.pop_front() {
+                _hashes.append(value.hash());
 
-                    i += 1;
-                };
+                i += 1;
+            };
 
             // then, hash all levels above leaves
             let mut current_nodes_lvl_len = data_len;
@@ -71,18 +74,15 @@ pub mod MerkleTree {
 
             while current_nodes_lvl_len > 0 {
                 let mut i = 0;
-                while i < current_nodes_lvl_len
-                    - 1 {
-                        let left_elem = *_hashes.at(hashes_offset + i);
-                        let right_elem = *_hashes.at(hashes_offset + i + 1);
+                while i < current_nodes_lvl_len - 1 {
+                    let left_elem = *_hashes.at(hashes_offset + i);
+                    let right_elem = *_hashes.at(hashes_offset + i + 1);
 
-                        let hash = PoseidonTrait::new()
-                            .update_with((left_elem, right_elem))
-                            .finalize();
-                        _hashes.append(hash);
+                    let hash = PoseidonTrait::new().update_with((left_elem, right_elem)).finalize();
+                    _hashes.append(hash);
 
-                        i += 2;
-                    };
+                    i += 2;
+                };
 
                 hashes_offset += current_nodes_lvl_len;
                 current_nodes_lvl_len /= 2;
@@ -116,17 +116,16 @@ pub mod MerkleTree {
         ) -> bool {
             let mut current_hash = leaf;
 
-            while let Option::Some(value) = proof
-                .pop_front() {
-                    current_hash =
-                        if index % 2 == 0 {
-                            PoseidonTrait::new().update_with((current_hash, value)).finalize()
-                        } else {
-                            PoseidonTrait::new().update_with((value, current_hash)).finalize()
-                        };
+            while let Option::Some(value) = proof.pop_front() {
+                current_hash =
+                    if index % 2 == 0 {
+                        PoseidonTrait::new().update_with((current_hash, value)).finalize()
+                    } else {
+                        PoseidonTrait::new().update_with((value, current_hash)).finalize()
+                    };
 
-                    index /= 2;
-                };
+                index /= 2;
+            };
 
             current_hash == root
         }

@@ -49,9 +49,9 @@ Here's a quick summary of how it operates and what functionalities it supports:
     - Off-chain data: a user's credentials.
     - On-chain data: the Merkle root representing the credentials.
 
-### Visual Example
+### Visual example
 
-![Diagram of a Merkle Tree](../assets/merkle_root.png)
+![Diagram of the Merkle Tree](../assets/merkle_root.png)
 
 The above diagram represents a merkle tree.\
 Each leaf node is the hash of some data.\
