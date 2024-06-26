@@ -1,48 +1,26 @@
+use starknet::ContractAddress;
+
 #[starknet::interface]
-pub trait {
-    // Returns the name of the token collection
-    fn get_name(self: @ContractState) -> felt252;
-
-    // Returns the symbol of the token collection
-    fn get_symbol(self: @ContractState) -> felt252;
-
-    // Returns the metadata URI for a given token ID
-    fn get_token_uri(self: @ContractState, token_id: u256) -> felt252;
-
-    // Returns the number of tokens owned by a specific address
-    fn balance_of(self: @ContractState, account: ContractAddress) -> u256;
-
-    // Returns the owner of the specified token ID
-    fn owner_of(self: @ContractState, token_id: u256) -> ContractAddress;
-
-    // Returns the approved address for a specific token ID
-    fn get_approved(self: @ContractState, token_id: u256) -> ContractAddress;
-
-    // Checks if an operator is approved to manage all of the assets of an owner
-    fn is_approved_for_all(self: @ContractState, owner: ContractAddress, operator: ContractAddress) -> bool;
-
-    // Approves another address to transfer the given token ID
-    fn approve(self: @ContractState, to: ContractAddress, token_id: u256);
-
-    // Sets or unsets the approval of a given operator
-    fn set_approval_for_all(self: @ContractState, operator: ContractAddress, approved: bool);
-
-    // Transfers a specific token ID to another address
-    fn transfer_from(self: @ContractState, from: ContractAddress, to: ContractAddress, token_id: u256);
+pub trait IERC721<TContractState> {
+    fn get_name(self: @TContractState) -> felt252;
+    fn get_symbol(self: @TContractState) -> felt252;
+    fn get_token_uri(self: @TContractState, token_id: u256) -> felt252;
+    fn balance_of(self: @TContractState, account: ContractAddress) -> u256;
+    fn owner_of(self: @TContractState, token_id: u256) -> ContractAddress;
+    fn get_approved(self: @TContractState, token_id: u256) -> ContractAddress;
+    fn is_approved_for_all(self: @TContractState, owner: ContractAddress, operator: ContractAddress) -> bool;
+    fn approve(self: @TContractState, to: ContractAddress, token_id: u256);
+    fn set_approval_for_all(self: @TContractState, operator: ContractAddress, approved: bool);
+    fn transfer_from(self: @TContractState, from: ContractAddress, to: ContractAddress, token_id: u256);
+    fn mint(ref self: TContractState, to: ContractAddress, token_id: u256);
 }
 
-// ERC721Contract.cairo
-
 #[starknet::contract]
-mod ERC721Contract {
+mod ERC721 {
 
     use starknet::ContractAddress;
     use starknet::get_caller_address;
-    use zeroable::Zeroable;
-    use starknet::contract_address_to_felt252;
-    use traits::Into;
-    use traits::TryInto;
-    use option::OptionTrait;
+    use core::num::traits::zero::Zero;
 
     #[storage]
     struct Storage {
@@ -90,7 +68,6 @@ mod ERC721Contract {
         self.symbol.write(_symbol);
     }
 
-    #[external(v0)]
     #[generate_trait]
     impl IERC721Impl of IERC721Trait {
         // Returns the name of the token collection
@@ -116,7 +93,7 @@ mod ERC721Contract {
         }
 
         // Returns the owner of the specified token ID
-        fn owner_of(self: @ContractState, token_id: u128) -> ContractAddress {
+        fn owner_of(self: @ContractState, token_id: u256) -> ContractAddress {
             let owner = self.owners.read(token_id);
             assert(owner.is_non_zero(), 'ERC721: invalid token ID');
             owner
@@ -187,7 +164,7 @@ mod ERC721Contract {
             assert(from == self.owner_of(token_id), 'ERC721: Caller is not owner');
             assert(to.is_non_zero(), 'ERC721: transfer to 0 address');
 
-            self.token_approvals.write(token_id, Zeroable::zero());
+            self.token_approvals.write(token_id, Zero::zero());
 
             self.balances.write(from, self.balances.read(from) - 1.into());
             self.balances.write(to, self.balances.read(to) + 1.into());
@@ -210,7 +187,7 @@ mod ERC721Contract {
             self.owners.write(token_id, to);
 
             self.emit(
-                Transfer{ from: Zeroable::zero(), to: to, token_id: token_id }
+                Transfer{ from: Zero::zero(), to: to, token_id: token_id }
             );
         }
 
@@ -218,17 +195,16 @@ mod ERC721Contract {
         fn _burn(ref self: ContractState, token_id: u256) {
             let owner = self.owner_of(token_id);
 
-            self.token_approvals.write(token_id, Zeroable::zero());
+            self.token_approvals.write(token_id, Zero::zero());
 
             let owner_balance = self.balances.read(owner);
             self.balances.write(owner, owner_balance - 1.into());
 
-            self.owners.write(token_id, Zeroable::zero());
+            self.owners.write(token_id, Zero::zero());
 
             self.emit(
-                Transfer{ from: owner, to: Zeroable::zero(), token_id: token_id }
+                Transfer{ from: owner, to: Zero::zero(), token_id: token_id }
             );
         }
     }
 }
-
