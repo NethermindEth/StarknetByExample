@@ -2,6 +2,16 @@
 version = 1
 
 [[package]]
+name = "advanced_factory"
+version = "0.1.0"
+dependencies = [
+ "alexandria_storage",
+ "components",
+ "crowdfunding",
+ "snforge_std",
+]
+
+[[package]]
 name = "alexandria_storage"
 version = "0.3.0"
 source = "git+https://github.com/keep-starknet-strange/alexandria.git?rev=800f5ad#800f5ad217847b5ded63c0302a444161766ee9d6"
@@ -47,6 +57,15 @@ version = "0.1.0"
 [[package]]
 name = "counter"
 version = "0.1.0"
+
+[[package]]
+name = "crowdfunding"
+version = "0.1.0"
+dependencies = [
+ "components",
+ "openzeppelin",
+ "snforge_std",
+]
 
 [[package]]
 name = "custom_type_serde"
