@@ -62,9 +62,8 @@ mod MockContract {
     }
 
     #[event]
-    #[derive(Drop, starknet::Event)]
-    enum Event {
-        #[flat]
+    #[derive(Drop, Debug, PartialEq, starknet::Event)] 
+    pub enum Event {
         SwitchableEvent: switchable_component::Event
     }
 
@@ -96,9 +95,13 @@ mod test {
 
     #[test]
     fn test_switch() {
-        let (switchable, _) = deploy_switchable();
+        let (switchable, contract_address) = deploy_switchable();
         switchable.switch();
         assert_eq!(switchable.is_on(), true);
+        assert_eq!(
+            starknet::testing::pop_log(contract_address),
+            Option::Some(MockContract::Event::SwitchableEvent(SwitchEvent { }.into())) 
+        );
     }
 
     #[test]
@@ -119,15 +122,5 @@ mod test {
         assert_eq!(switchable.is_on(), false);
         switchable.switch();
         assert_eq!(switchable.is_on(), true);
-    }
-
-    #[test]
-    fn test_switch_event() {
-        let (switchable, contract_address) = deploy_switchable();
-        switchable.switch();
-        assert_eq!(
-            starknet::testing::pop_log(contract_address),
-            Option::Some(Event::SwitchEvent(SwitchEvent { }))
-        );
     }
 }
