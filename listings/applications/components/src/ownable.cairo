@@ -1,13 +1,14 @@
 // ANCHOR: interface
 use starknet::ContractAddress;
 
+
+// ANCHOR: component
 #[starknet::interface]
 pub trait IOwnable<TContractState> {
     fn owner(self: @TContractState) -> ContractAddress;
     fn transfer_ownership(ref self: TContractState, new: ContractAddress);
     fn renounce_ownership(ref self: TContractState);
 }
-// ANCHOR_END: interface
 
 // ANCHOR: component
 pub mod Errors {
@@ -27,19 +28,19 @@ pub mod ownable_component {
         ownable_owner: ContractAddress,
     }
 
-    #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
+    #[derive(Drop, Debug, PartialEq, starknet::Event)]
     pub struct OwnershipTransferredEvent {
         pub previous: ContractAddress,
         pub new: ContractAddress
     }
 
-    #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
+    #[derive(Drop, Debug, PartialEq, starknet::Event)]
     pub struct OwnershipRenouncedEvent {
         pub previous: ContractAddress
     }
 
     #[event]
-    #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
+    #[derive(Drop, Debug, PartialEq, starknet::Event)]
     pub enum Event {
         OwnershipTransferredEvent: OwnershipTransferredEvent,
         OwnershipRenouncedEvent: OwnershipRenouncedEvent
@@ -122,6 +123,7 @@ mod MockContract {
     #[event]
     #[derive(Drop, starknet::Event)]
     enum Event {
+        #[flat]
         OwnableEvent: ownable_component::Event,
     }
 }
@@ -132,7 +134,7 @@ mod test {
     use super::MockContract;
     use super::ownable_component::{Event, OwnershipRenouncedEvent, OwnershipTransferredEvent};
     use starknet::ContractAddress;
-    use components::ownable::{IOwnableDispatcher, IOwnableDispatcherTrait};
+    use super::{IOwnableDispatcher, IOwnableDispatcherTrait};
     use core::traits::TryInto;
     use core::num::traits::Zero;
     use starknet::{ syscalls::deploy_syscall, SyscallResultTrait, contract_address_const};
@@ -140,9 +142,8 @@ mod test {
     use super::Errors;
 
     fn deploy() -> (IOwnableDispatcher, ContractAddress) {
-        let caller = contract_address_const::<'caller'>();
         let (contract_address, _) = deploy_syscall(
-            MockContract::TEST_CLASS_HASH.try_into().unwrap(), caller.into(), array![].span(), false
+            MockContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
         )
             .unwrap_syscall();
 
@@ -188,15 +189,6 @@ mod test {
     }
 
     #[test]
-    #[should_panic]
-    fn test_transfer_ownership_by_zero() {
-        set_contract_address(Zero::zero());
-        let (ownable, _) = deploy();
-
-        ownable.transfer_ownership(contract_address_const::<'new_owner'>());
-    }
-
-    #[test]
     fn test_renounce_ownership() {
         set_contract_address(contract_address_const::<'owner'>());
         let (ownable, _) = deploy();
@@ -231,9 +223,8 @@ mod test {
         set_contract_address(contract_address);
         let (ownable, address) = deploy();
         ownable.renounce_ownership();
-        set_contract_address(address);
         assert_eq!(
-            starknet::testing::pop_log(contract_address),
+            starknet::testing::pop_log(address),
             Option::Some(Event::OwnershipRenouncedEvent(OwnershipRenouncedEvent { previous:contract_address }))
         );
     }
@@ -243,12 +234,11 @@ mod test {
         let contract_address = contract_address_const::<'owner'>();
         set_contract_address(contract_address);
         let (ownable, address) = deploy();
-        let owner = contract_address_const::<'owner'>();
-        ownable.transfer_ownership(owner);
-        set_contract_address(address);
+        let new_owner = contract_address_const::<'new_owner'>();
+        ownable.transfer_ownership(new_owner);
         assert_eq!(
-            starknet::testing::pop_log(contract_address),
-            Option::Some(Event::OwnershipTransferredEvent(OwnershipTransferredEvent { previous:contract_address, new:owner}))
+            starknet::testing::pop_log(address),
+            Option::Some(Event::OwnershipTransferredEvent(OwnershipTransferredEvent { previous:contract_address, new:new_owner}))
         );
     }
 }

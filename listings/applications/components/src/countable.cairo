@@ -1,12 +1,11 @@
-// ANCHOR: interface
+// ANCHOR: component
 #[starknet::interface]
 pub trait ICountable<TContractState> {
     fn get(self: @TContractState) -> u32;
     fn increment(ref self: TContractState);
 }
-// ANCHOR_END: interface
 
-// ANCHOR: countable_component
+
 #[starknet::component]
 pub mod countable_component {
     #[storage]
@@ -27,14 +26,14 @@ pub mod countable_component {
         }
     }
 }
-// ANCHOR_END: countable_component
+// ANCHOR_END: component
 
-// ANCHOR: MockContract
+
 #[starknet::contract]
 mod MockContract {
     use super::countable_component;
 
-    component!(path: countable_component, storage: countable, event: countableEvent);
+    component!(path: countable_component, storage: countable, event: CountableEvent);
 
     #[storage]
     struct Storage {
@@ -45,18 +44,18 @@ mod MockContract {
     #[event]
     #[derive(Drop, starknet::Event)]
     enum Event {
-        countableEvent: countable_component::Event
+        CountableEvent: countable_component::Event
     }
 
     #[abi(embed_v0)]
     impl CountableImpl = countable_component::Countable<ContractState>;
 }
-// ANCHOR_END: MockContract
+
 
 #[cfg(test)]
 mod test {
     use super::MockContract;
-    use components::countable::{ICountableDispatcher, ICountableDispatcherTrait};
+    use super::{ICountableDispatcher, ICountableDispatcherTrait};
     use starknet::syscalls::deploy_syscall;
     use starknet::SyscallResultTrait;
 
@@ -82,7 +81,7 @@ mod test {
     }
 
     #[test]
-    fn test_multiply_increment() {
+    fn test_multiple_increment() {
         let counter = deploy_countable();
         let mut number = 5;
         while number != 0 {
