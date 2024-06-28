@@ -41,9 +41,14 @@ mod tests {
     fn deploy_erc20(
         class_hash: felt252, name: ByteArray, symbol: ByteArray
     ) -> (ContractAddress, IERC20Dispatcher) {
+        let supply: u256 = 1000000;
+        let recipient = contract_address_const::<'recipient'>();
+
         let mut call_data: Array<felt252> = ArrayTrait::new();
         Serde::serialize(@name, ref call_data);
         Serde::serialize(@symbol, ref call_data);
+        Serde::serialize(@supply, ref call_data);
+        Serde::serialize(@recipient, ref call_data);
 
         let address = deploy_util(class_hash, call_data);
         (address, IERC20Dispatcher { contract_address: address })
@@ -65,10 +70,10 @@ mod tests {
 
     fn setup() -> Deployment {
         let (staking_token_address, staking_token) = deploy_erc20(
-            StakingToken::TEST_CLASS_HASH, "StakingToken", "StakingTKN"
+            StakingToken::TEST_CLASS_HASH, "StakingToken", "StakingTKN",
         );
         let (reward_token_address, reward_token) = deploy_erc20(
-            RewardToken::TEST_CLASS_HASH, "RewardToken", "RewardTKN"
+            RewardToken::TEST_CLASS_HASH, "RewardToken", "RewardTKN",
         );
 
         let (_, staking_contract) = deploy_staking_contract(
@@ -85,7 +90,7 @@ mod tests {
         let mut state = StakingToken::contract_state_for_testing();
         // pretend as if we were in the deployed staking token contract
         set_contract_address(deploy.staking_token.contract_address);
-        state.erc20._mint(recipient, amount);
+        state.erc20.mint(recipient, amount);
 
         // approve staking contract to spend user's tokens
         set_contract_address(recipient);
@@ -99,7 +104,7 @@ mod tests {
         let mut state = RewardToken::contract_state_for_testing();
         // pretend as if we were in the deployed reward token contract
         set_contract_address(reward_token_address);
-        state.erc20._mint(deployed_contract, amount);
+        state.erc20.mint(deployed_contract, amount);
     }
 
     #[test]

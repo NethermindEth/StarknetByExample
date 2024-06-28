@@ -2,10 +2,10 @@
 pub mod ERC721 {
     use starknet::ContractAddress;
     use openzeppelin::introspection::src5::SRC5Component;
-    use openzeppelin::token::erc721::ERC721Component;
+    use openzeppelin::token::erc721::{ERC721Component, ERC721HooksEmptyImpl};
 
-    component!(path: SRC5Component, storage: src5, event: SRC5Event);
     component!(path: ERC721Component, storage: erc721, event: ERC721Event);
+    component!(path: SRC5Component, storage: src5, event: SRC5Event);
 
     // ERC20Mixin
     #[abi(embed_v0)]
@@ -39,6 +39,6 @@ pub mod ERC721 {
         token_id: u256
     ) {
         self.erc721.initializer(name, symbol, base_uri);
-        self.erc721._mint(recipient, token_id);
+        self.erc721.mint(recipient, token_id);
     }
 }
