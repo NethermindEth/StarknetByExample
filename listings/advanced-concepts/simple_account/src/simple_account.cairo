@@ -1,7 +1,4 @@
 use starknet::account::Call;
-use starknet::crypto::hash::starknet_keccak;
-use core::array::Array;
-use core::array::ArrayTrait;
 
 #[starknet::interface]
 trait ISRC6<TContractState> {
@@ -12,33 +9,40 @@ trait ISRC6<TContractState> {
     ) -> felt252;
 }
 
-#[starknet::interface]
-trait ISRC5<TContractState> {
-    fn supports_interface(self: @TContractState, interface_id: felt252) -> bool;
-}
-
 #[starknet::contract]
 mod simpleAccount {
-    use super::{ISRC5, ISRC6};
+    use super::ISRC6;
     use starknet::account::Call;
     use core::num::traits::Zero;
     use core::ecdsa::check_ecdsa_signature;
 
+    // Implement SRC5 with openzeppelin
+    use openzeppelin::account::interface;
+    use openzeppelin::introspection::src5::SRC5Component;
+    component!(path: SRC5Component, storage: src5, event: SRC5Event);
+
+    #[abi(embed_v0)]
+    impl SRC5Impl = SRC5Component::SRC5Impl<ContractState>;
+    impl SRC5InternalImpl = SRC5Component::InternalImpl<ContractState>;
+
     #[storage]
     struct Storage {
-        public_key: felt252,
+        #[substorage(v0)]
+        src5: SRC5Component::Storage,
+        public_key: felt252
     }
-
-    // Define interface IDs as constants
-    const ISRC5_ID: felt252 = starknet_keccak("supports_interface(felt252)->E((),())");
-    const ISRC6_ID_1: felt252 = starknet_keccak("execute_calls(Array<(ContractAddress,felt252,Array<felt252>)>)->Array<(@Array<felt252>)>");
-    const ISRC6_ID_2: felt252 = starknet_keccak("validate_calls(Array<(ContractAddress,felt252,Array<felt252>)>)->felt252");
-    const ISRC6_ID_3: felt252 = starknet_keccak("is_valid_signature(felt252,Array<felt252>)->felt252");
-    const ISRC6_ID: felt252 = ISRC6_ID_1 ^ ISRC6_ID_2 ^ ISRC6_ID_3;
 
     #[constructor]
     fn constructor(ref self: ContractState, public_key: felt252) {
+        self.src5.register_interface(interface::ISRC6_ID);
         self.public_key.write(public_key);
+    }
+
+    #[event]
+    #[derive(Drop, starknet::Event)]
+    enum Event {
+        #[flat]
+        SRC5Event: SRC5Component::Event
     }
 
     #[abi(embed_v0)]
@@ -81,20 +85,6 @@ mod simpleAccount {
             check_ecdsa_signature(
                 hash, self.public_key.read(), *signature.at(0_u32), *signature.at(1_u32)
             )
-        }
-    }
-
-    #[abi(embed_v0)]
-    impl SRC5 of ISRC5<ContractState> {
-        fn supports_interface(self: @ContractState, interface_id: felt252) -> bool {
-            let supported_interfaces = array![ISRC5_ID, ISRC6_ID];
-
-            for id in supported_interfaces {
-                if id == interface_id {
-                    return true;
-                }
-            }
-            false
         }
     }
 }

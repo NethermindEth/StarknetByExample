@@ -6,6 +6,7 @@ edition = '2023_11'
 
 [dependencies]
 starknet.workspace = true
+openzeppelin.workspace = true
 
 [scripts]
 test.workspace = true

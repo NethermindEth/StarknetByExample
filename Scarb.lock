@@ -127,6 +127,9 @@ version = "0.1.0"
 [[package]]
 name = "simple_account"
 version = "0.1.0"
+dependencies = [
+ "openzeppelin",
+]
 
 [[package]]
 name = "simple_vault"
