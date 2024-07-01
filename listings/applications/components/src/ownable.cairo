@@ -1,8 +1,6 @@
-// ANCHOR: interface
+// ANCHOR: component
 use starknet::ContractAddress;
 
-
-// ANCHOR: component
 #[starknet::interface]
 pub trait IOwnable<TContractState> {
     fn owner(self: @TContractState) -> ContractAddress;
@@ -10,7 +8,6 @@ pub trait IOwnable<TContractState> {
     fn renounce_ownership(ref self: TContractState);
 }
 
-// ANCHOR: component
 pub mod Errors {
     pub const UNAUTHORIZED: felt252 = 'Not owner';
     pub const ZERO_ADDRESS_OWNER: felt252 = 'Owner cannot be zero';
@@ -19,8 +16,8 @@ pub mod Errors {
 
 #[starknet::component]
 pub mod ownable_component {
-    use starknet::{ContractAddress, get_caller_address};
     use super::Errors;
+    use starknet::{ContractAddress, get_caller_address};
     use core::num::traits::Zero;
 
     #[storage]
@@ -101,7 +98,7 @@ pub mod ownable_component {
 
 // ANCHOR: contract
 #[starknet::contract]
-mod MockContract {
+pub mod OwnedContract {
     use super::{IOwnable, ownable_component, ownable_component::OwnableInternalTrait};
 
     component!(path: ownable_component, storage: ownable, event: OwnableEvent);
@@ -121,7 +118,7 @@ mod MockContract {
     }
 
     #[event]
-    #[derive(Drop, Debug, PartialEq,starknet::Event)]
+    #[derive(Drop, Debug, PartialEq, starknet::Event)]
     pub enum Event {
         OwnableEvent: ownable_component::Event,
     }
@@ -130,19 +127,19 @@ mod MockContract {
 
 #[cfg(test)]
 mod test {
-    use super::MockContract;
+    use super::OwnedContract;
     use super::ownable_component::{Event, OwnershipRenouncedEvent, OwnershipTransferredEvent};
-    use starknet::ContractAddress;
     use super::{IOwnableDispatcher, IOwnableDispatcherTrait};
+    use super::Errors;
+    use starknet::ContractAddress;
+    use starknet::{syscalls::deploy_syscall, SyscallResultTrait, contract_address_const};
+    use starknet::testing::{set_caller_address, set_contract_address};
     use core::traits::TryInto;
     use core::num::traits::Zero;
-    use starknet::{ syscalls::deploy_syscall, SyscallResultTrait, contract_address_const};
-    use starknet::testing::{set_caller_address, set_contract_address};
-    use super::Errors;
 
     fn deploy() -> (IOwnableDispatcher, ContractAddress) {
         let (contract_address, _) = deploy_syscall(
-            MockContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+            OwnedContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
         )
             .unwrap_syscall();
 
@@ -155,20 +152,25 @@ mod test {
         set_contract_address(owner);
         let (ownable, _) = deploy();
 
-        assert(ownable.owner() == owner, 'wrong_owner');
+        assert_eq!(ownable.owner(), owner);
     }
 
     #[test]
-    fn test_transfer_ownership_by_owner() {
+    fn test_transfer_ownership() {
         let contract_address = contract_address_const::<'owner'>();
         set_contract_address(contract_address);
         let (ownable, address) = deploy();
         let new_owner = contract_address_const::<'new_owner'>();
+
         ownable.transfer_ownership(new_owner);
-        assert(ownable.owner() == new_owner, 'wrong_owner');
+        assert_eq!(ownable.owner(), new_owner);
         assert_eq!(
             starknet::testing::pop_log(address),
-            Option::Some(MockContract::Event::OwnableEvent(OwnershipTransferredEvent { previous:contract_address, new:new_owner}.into()))
+            Option::Some(
+                OwnedContract::Event::OwnableEvent(
+                    OwnershipTransferredEvent { previous: contract_address, new: new_owner }.into()
+                )
+            )
         );
     }
 
@@ -184,7 +186,7 @@ mod test {
 
     #[test]
     #[should_panic]
-    fn test_transfer_ownership_account_zero() {
+    fn test_transfer_ownership_zero_error() {
         set_contract_address(contract_address_const::<'initial'>());
         let (ownable, _) = deploy();
 
@@ -196,22 +198,17 @@ mod test {
         let contract_address = contract_address_const::<'owner'>();
         set_contract_address(contract_address);
         let (ownable, address) = deploy();
+
         ownable.renounce_ownership();
-        assert(ownable.owner() == Zero::zero(), 'not_zero_owner');
+        assert_eq!(ownable.owner(), Zero::zero());
         assert_eq!(
             starknet::testing::pop_log(address),
-            Option::Some(MockContract::Event::OwnableEvent(OwnershipRenouncedEvent { previous:contract_address }.into()))
+            Option::Some(
+                OwnedContract::Event::OwnableEvent(
+                    OwnershipRenouncedEvent { previous: contract_address }.into()
+                )
+            )
         );
-    }
-
-    #[test]
-    #[should_panic]
-    fn test_renounce_ownership_previous_owner() {
-        set_contract_address(contract_address_const::<'owner'>());
-        let (ownable, _) = deploy();
-
-        ownable.renounce_ownership();
-        ownable.transfer_ownership(contract_address_const::<'new_owner'>());
     }
 
     #[test]
@@ -224,4 +221,13 @@ mod test {
         ownable.renounce_ownership();
     }
 
+    #[test]
+    #[should_panic]
+    fn test_renounce_ownership_previous_owner() {
+        set_contract_address(contract_address_const::<'owner'>());
+        let (ownable, _) = deploy();
+
+        ownable.renounce_ownership();
+        ownable.transfer_ownership(contract_address_const::<'new_owner'>());
+    }
 }

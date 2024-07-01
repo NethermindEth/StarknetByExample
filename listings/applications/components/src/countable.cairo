@@ -5,7 +5,6 @@ pub trait ICountable<TContractState> {
     fn increment(ref self: TContractState);
 }
 
-
 #[starknet::component]
 pub mod countable_component {
     #[storage]
@@ -28,9 +27,8 @@ pub mod countable_component {
 }
 // ANCHOR_END: component
 
-
 #[starknet::contract]
-mod MockContract {
+mod CountableContract {
     use super::countable_component;
 
     component!(path: countable_component, storage: countable, event: CountableEvent);
@@ -54,14 +52,14 @@ mod MockContract {
 
 #[cfg(test)]
 mod test {
-    use super::MockContract;
+    use super::CountableContract;
     use super::{ICountableDispatcher, ICountableDispatcherTrait};
     use starknet::syscalls::deploy_syscall;
     use starknet::SyscallResultTrait;
 
     fn deploy_countable() -> ICountableDispatcher {
         let (address, _) = deploy_syscall(
-            MockContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+            CountableContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
         )
             .unwrap_syscall();
         ICountableDispatcher { contract_address: address }
@@ -81,13 +79,11 @@ mod test {
     }
 
     #[test]
-    fn test_multiple_increment() {
+    fn test_multiple_increments() {
         let counter = deploy_countable();
-        let mut number = 5;
-        while number != 0 {
-            counter.increment();
-            number -= 1;
-        };
-        assert_eq!(counter.get(), 5);
+        counter.increment();
+        counter.increment();
+        counter.increment();
+        assert_eq!(counter.get(), 3);
     }
 }
