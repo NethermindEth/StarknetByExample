@@ -5,7 +5,7 @@ A component with a dependency on a trait `T` can be used in a contract as long a
 We will use a new `Countable` component as an example:
 
 ```rust
-{{#include ../../listings/applications/components/src/countable.cairo}}
+{{#rustdoc_include ../../listings/applications/components/src/countable.cairo:component}}
 ```
 
 We want to add a way to enable or disable the counter, in a way that calling `increment` on a disabled counter will not increment it.

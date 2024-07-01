@@ -42,7 +42,18 @@ Now that we have a component, we can use it in a contract.
 The following contract incorporates the `Switchable` component:
 
 ```rust
-{{#rustdoc_include ../../listings/applications/components/src/contracts/switch.cairo:contract}}
+{{#include ../../listings/applications/components/src/switchable.cairo:contract}}
+```
+
+## How to test a component
+
+In order to effectively test a component, you need to test it in the context of a contract.
+A common practice is to declare a `Mock` contract that has the only purpose of testing the component.
+
+To test the `Switchable` component, we can use the previous `SwitchableContract`:
+
+```rust
+{{#include ../../listings/applications/components/src/switchable.cairo:tests}}
 ```
 
 ## Deep dive into components
