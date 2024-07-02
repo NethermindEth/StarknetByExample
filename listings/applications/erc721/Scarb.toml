@@ -6,7 +6,6 @@ edition = "2023_11"
 # See more keys and their definitions at https://docs.swmansion.com/scarb/docs/reference/manifest.html
 
 [dependencies]
-erc20 = { path = "../erc20" }
 starknet.workspace = true
 
 [dev-dependencies]
