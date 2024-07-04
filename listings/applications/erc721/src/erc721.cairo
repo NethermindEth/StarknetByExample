@@ -70,6 +70,19 @@ mod ERC721 {
         approved: bool
     }
 
+    mod Errors {
+        // Error messages for each function
+        pub const ADDRESS_ZERO: felt252 = 'ERC721: invalid owner';
+        pub const INVALID_TOKEN_ID: felt252 = 'ERC721: invalid token ID';
+        pub const APPROVAL_TO_CURRENT_OWNER: felt252 = 'ERC721: approval to owner';
+        pub const NOT_TOKEN_OWNER: felt252 = 'ERC721:  not token owner';
+        pub const APPROVE_TO_CALLER: felt252 = 'ERC721: approve to caller';
+        pub const CALLER_NOT_OWNER_NOR_APPROVED: felt252 = 'ERC721: caller is not approved';
+        pub const CALLER_IS_NOT_OWNER: felt252 = 'ERC721: caller is not owner';
+        pub const TRANSFER_TO_ZERO_ADDRESS: felt252 = 'ERC721: to the zero address';
+        pub const TOKEN_ALREADY_MINTED: felt252 = 'ERC721: token already minted';
+    }
+
     #[constructor]
     fn constructor(ref self: ContractState, _name: felt252, _symbol: felt252) {
         self.name.write(_name);
@@ -78,78 +91,55 @@ mod ERC721 {
 
     #[generate_trait]
     impl IERC721Impl of IERC721Trait {
-        // Returns the name of the token collection
-        fn name(self: @ContractState) -> felt252 {
-            self.name.read()
-        }
-
-        // Returns the symbol of the token collection
-        fn symbol(self: @ContractState) -> felt252 {
-            self.symbol.read()
-        }
-
-        // Returns the metadata URI for a given token ID
-        fn token_uri(self: @ContractState, token_id: u256) -> felt252 {
-            assert(self._exists(token_id), 'ERC721: invalid token ID');
-            self.token_uri.read(token_id)
-        }
-
-        // Returns the number of tokens owned by a specific address
         fn balance_of(self: @ContractState, account: ContractAddress) -> u256 {
-            assert(account.is_non_zero(), 'ERC721: address zero');
+            assert(account.is_non_zero(), Errors::ADDRESS_ZERO);
             self.balances.read(account)
         }
 
-        // Returns the owner of the specified token ID
         fn owner_of(self: @ContractState, token_id: u256) -> ContractAddress {
             let owner = self.owners.read(token_id);
-            assert(owner.is_non_zero(), 'ERC721: invalid token ID');
+            assert(owner.is_non_zero(), Errors::INVALID_TOKEN_ID);
             owner
         }
 
-        // Returns the approved address for a specific token ID
         fn get_approved(self: @ContractState, token_id: u256) -> ContractAddress {
-            assert(self._exists(token_id), 'ERC721: invalid token ID');
+            assert(self._exists(token_id), Errors::INVALID_TOKEN_ID);
             self.token_approvals.read(token_id)
         }
 
-        // Checks if an operator is approved to manage all of the assets of an owner
         fn is_approved_for_all(
             self: @ContractState, owner: ContractAddress, operator: ContractAddress
         ) -> bool {
             self.operator_approvals.read((owner, operator))
         }
 
-        // Approves another address to transfer the given token ID
         fn approve(ref self: ContractState, to: ContractAddress, token_id: u256) {
             let owner = self.owner_of(token_id);
-            assert(to != owner, 'Approval to current owner');
+            assert(to != owner, Errors::APPROVAL_TO_CURRENT_OWNER);
             assert(
                 get_caller_address() == owner
                     || self.is_approved_for_all(owner, get_caller_address()),
-                'Not token owner'
+                Errors::NOT_TOKEN_OWNER
             );
             self.token_approvals.write(token_id, to);
             self.emit(Approval { owner: self.owner_of(token_id), to: to, token_id: token_id });
         }
 
-        // Sets or unsets the approval of a given operator
         fn set_approval_for_all(
             ref self: ContractState, operator: ContractAddress, approved: bool
         ) {
             let owner = get_caller_address();
-            assert(owner != operator, 'ERC721: approve to caller');
+            assert(owner != operator, Errors::APPROVE_TO_CALLER);
             self.operator_approvals.write((owner, operator), approved);
             self.emit(ApprovalForAll { owner: owner, operator: operator, approved: approved });
         }
 
-        // Transfers a specific token ID to another address
         fn transfer_from(
             ref self: ContractState, from: ContractAddress, to: ContractAddress, token_id: u256
         ) {
             assert(
                 self._is_approved_or_owner(get_caller_address(), token_id),
-                'neither owner nor approved'
+                Errors::CALLER_NOT_OWNER_NOR_APPROVED
             );
             self._transfer(from, to, token_id);
         }
@@ -157,12 +147,10 @@ mod ERC721 {
 
     #[generate_trait]
     impl ERC721HelperImpl of ERC721HelperTrait {
-        // Checks if a specific token ID exists
         fn _exists(self: @ContractState, token_id: u256) -> bool {
             self.owner_of(token_id).is_non_zero()
         }
 
-        // Checks if a spender is the owner or an approved operator of a specific token ID
         fn _is_approved_or_owner(
             self: @ContractState, spender: ContractAddress, token_id: u256
         ) -> bool {
@@ -172,18 +160,16 @@ mod ERC721 {
                 || self.get_approved(token_id) == spender
         }
 
-        // Sets the metadata URI for a specific token ID
         fn _set_token_uri(ref self: ContractState, token_id: u256, token_uri: felt252) {
-            assert(self._exists(token_id), 'ERC721: invalid token ID');
+            assert(self._exists(token_id), Errors::INVALID_TOKEN_ID);
             self.token_uri.write(token_id, token_uri)
         }
 
-        // Transfers a specific token ID from one address to another
         fn _transfer(
             ref self: ContractState, from: ContractAddress, to: ContractAddress, token_id: u256
         ) {
-            assert(from == self.owner_of(token_id), 'ERC721: Caller is not owner');
-            assert(to.is_non_zero(), 'ERC721: transfer to 0 address');
+            assert(from == self.owner_of(token_id), Errors::CALLER_IS_NOT_OWNER);
+            assert(to.is_non_zero(), Errors::TRANSFER_TO_ZERO_ADDRESS);
 
             self.token_approvals.write(token_id, Zero::zero());
 
@@ -195,10 +181,9 @@ mod ERC721 {
             self.emit(Transfer { from: from, to: to, token_id: token_id });
         }
 
-        // Mints a new token with a specific ID to a specified address
         fn _mint(ref self: ContractState, to: ContractAddress, token_id: u256) {
             assert(to.is_non_zero(), 'TO_IS_ZERO_ADDRESS');
-            assert(!self.owner_of(token_id).is_non_zero(), 'ERC721: Token already minted');
+            assert(!self.owner_of(token_id).is_non_zero(), Errors::TOKEN_ALREADY_MINTED);
 
             let receiver_balance = self.balances.read(to);
             self.balances.write(to, receiver_balance + 1.into());
@@ -208,7 +193,6 @@ mod ERC721 {
             self.emit(Transfer { from: Zero::zero(), to: to, token_id: token_id });
         }
 
-        // Burns a specific token ID, removing it from existence
         fn _burn(ref self: ContractState, token_id: u256) {
             let owner = self.owner_of(token_id);
 
