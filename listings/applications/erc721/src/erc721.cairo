@@ -17,11 +17,12 @@ pub trait IERC721<TContractState> {
 }
 
 
+
 #[starknet::interface]
 pub trait IERC721Metadata<TContractState> {
-    fn name(self: @TContractState) -> felt252;
-    fn symbol(self: @TContractState) -> felt252;
-    fn token_uri(self: @TContractState, token_id: u256) -> felt252;
+    fn name(self: @TContractState) -> ByteArray;
+    fn symbol(self: @TContractState) -> ByteArray;
+    fn token_uri(self: @TContractState, token_id: u256) -> ByteArray;
 }
 
 #[starknet::contract]
@@ -72,14 +73,15 @@ mod ERC721 {
 
     mod Errors {
         // Error messages for each function
-        pub const ADDRESS_ZERO: felt252 = 'ERC721: invalid owner';
+        pub const ADDRESS_ZERO: felt252 = 'ERC721: balance is zero';
+        pub const INVALID_OWNER: felt252 = 'ERC721: invalid owner';
         pub const INVALID_TOKEN_ID: felt252 = 'ERC721: invalid token ID';
         pub const APPROVAL_TO_CURRENT_OWNER: felt252 = 'ERC721: approval to owner';
         pub const NOT_TOKEN_OWNER: felt252 = 'ERC721:  not token owner';
         pub const APPROVE_TO_CALLER: felt252 = 'ERC721: approve to caller';
-        pub const CALLER_NOT_OWNER_NOR_APPROVED: felt252 = 'ERC721: caller is not approved';
+        pub const CALLER_NOT_APPROVED: felt252 = 'ERC721: caller is not approved';
         pub const CALLER_IS_NOT_OWNER: felt252 = 'ERC721: caller is not owner';
-        pub const TRANSFER_TO_ZERO_ADDRESS: felt252 = 'ERC721: to the zero address';
+        pub const TRANSFER_TO_ZERO_ADDRESS: felt252 = 'ERC721: invalid receiver';
         pub const TOKEN_ALREADY_MINTED: felt252 = 'ERC721: token already minted';
     }
 
@@ -98,7 +100,7 @@ mod ERC721 {
 
         fn owner_of(self: @ContractState, token_id: u256) -> ContractAddress {
             let owner = self.owners.read(token_id);
-            assert(owner.is_non_zero(), Errors::INVALID_TOKEN_ID);
+            assert(owner.is_non_zero(), Errors::INVALID_OWNER);
             owner
         }
 
@@ -116,20 +118,23 @@ mod ERC721 {
         fn approve(ref self: ContractState, to: ContractAddress, token_id: u256) {
             let owner = self.owner_of(token_id);
             assert(to != owner, Errors::APPROVAL_TO_CURRENT_OWNER);
+
+            // Split the combined assert into two separate asserts
+            assert(get_caller_address() == owner, Errors::NOT_TOKEN_OWNER);
             assert(
-                get_caller_address() == owner
-                    || self.is_approved_for_all(owner, get_caller_address()),
-                Errors::NOT_TOKEN_OWNER
+                self.is_approved_for_all(owner, get_caller_address()), Errors::CALLER_NOT_APPROVED
             );
+
             self.token_approvals.write(token_id, to);
             self.emit(Approval { owner: self.owner_of(token_id), to: to, token_id: token_id });
         }
+
 
         fn set_approval_for_all(
             ref self: ContractState, operator: ContractAddress, approved: bool
         ) {
             let owner = get_caller_address();
-            assert(owner != operator, Errors::APPROVE_TO_CALLER);
+            // assert(owner != operator, Errors::APPROVE_TO_CALLER);
             self.operator_approvals.write((owner, operator), approved);
             self.emit(ApprovalForAll { owner: owner, operator: operator, approved: approved });
         }
@@ -139,7 +144,7 @@ mod ERC721 {
         ) {
             assert(
                 self._is_approved_or_owner(get_caller_address(), token_id),
-                Errors::CALLER_NOT_OWNER_NOR_APPROVED
+                Errors::CALLER_NOT_APPROVED
             );
             self._transfer(from, to, token_id);
         }
@@ -158,11 +163,6 @@ mod ERC721 {
             spender == owner
                 || self.is_approved_for_all(owner, spender)
                 || self.get_approved(token_id) == spender
-        }
-
-        fn _set_token_uri(ref self: ContractState, token_id: u256, token_uri: felt252) {
-            assert(self._exists(token_id), Errors::INVALID_TOKEN_ID);
-            self.token_uri.write(token_id, token_uri)
         }
 
         fn _transfer(
