@@ -17,27 +17,27 @@ use super::tests_lib::{deploy_project};
 #[test]
 #[available_gas(2000000)]
 fn test_get_name() {
-    let (project_address, _) = deploy_project('ApeMonkey', 'APE');
+    let (project_address, _) = deploy_project('Foo', 'BAR');
     let contract = IERC721Dispatcher { contract_address: project_address };
 
     let name = contract.get_name();
-    assert(name == 'ApeMonkey', 'wrong name');
+    assert(name == 'Foo', 'wrong name');
 }
 
 #[test]
 #[available_gas(2000000)]
 fn test_get_symbol() {
-    let (project_address, _) = deploy_project('ApeMonkey', 'APE');
+    let (project_address, _) = deploy_project('Foo', 'BAR');
     let contract = IERC721Dispatcher { contract_address: project_address };
 
     let symbol = contract.get_symbol();
-    assert(symbol == 'APE', 'wrong symbol');
+    assert(symbol == 'BAR', 'wrong symbol');
 }
 
 #[test]
 #[available_gas(2000000)]
 fn test_balance_of() {
-    let (project_address, _) = deploy_project('ApeMonkey', 'APE');
+    let (project_address, _) = deploy_project('Foo', 'BAR');
     let contract = IERC721Dispatcher { contract_address: project_address };
     let OWNER: ContractAddress = contract_address_const::<'OWNER'>();
     start_prank(CheatTarget::One(project_address), OWNER);
@@ -55,7 +55,7 @@ fn test_balance_of() {
 #[test]
 #[available_gas(2000000)]
 fn test_owner_of() {
-    let (project_address, _) = deploy_project('ApeMonkey', 'APE');
+    let (project_address, _) = deploy_project('Foo', 'BAR');
     let contract = IERC721Dispatcher { contract_address: project_address };
     let OWNER: ContractAddress = contract_address_const::<'OWNER'>();
     start_prank(CheatTarget::One(project_address), OWNER);
@@ -70,7 +70,7 @@ fn test_owner_of() {
 #[test]
 #[available_gas(2000000)]
 fn test_get_approved() {
-    let (project_address, _) = deploy_project('ApeMonkey', 'APE');
+    let (project_address, _) = deploy_project('Foo', 'BAR');
     let contract = IERC721Dispatcher { contract_address: project_address };
     let OWNER: ContractAddress = contract_address_const::<'OWNER'>();
     start_prank(CheatTarget::One(project_address), OWNER);
@@ -91,7 +91,7 @@ fn test_get_approved() {
 #[test]
 #[available_gas(2000000)]
 fn test_is_approved_for_all() {
-    let (project_address, _) = deploy_project('ApeMonkey', 'APE');
+    let (project_address, _) = deploy_project('Foo', 'BAR');
     let contract = IERC721Dispatcher { contract_address: project_address };
 
     let OWNER: ContractAddress = contract_address_const::<'OWNER'>();
@@ -110,7 +110,7 @@ fn test_is_approved_for_all() {
 #[test]
 #[available_gas(2000000)]
 fn test_get_token_uri() {
-    let (project_address, _) = deploy_project('ApeMonkey', 'APE');
+    let (project_address, _) = deploy_project('Foo', 'BAR');
     let contract = IERC721Dispatcher { contract_address: project_address };
     let OWNER: ContractAddress = contract_address_const::<'OWNER'>();
     start_prank(CheatTarget::One(project_address), OWNER);
@@ -129,7 +129,7 @@ fn test_get_token_uri() {
 #[test]
 #[available_gas(2000000)]
 fn test_transfer_from() {
-    let (project_address, _) = deploy_project('ApeMonkey', 'APE');
+    let (project_address, _) = deploy_project('Foo','BAR');
     let contract = IERC721Dispatcher { contract_address: project_address };
 
     let OWNER: ContractAddress = contract_address_const::<'OWNER'>();
@@ -148,7 +148,7 @@ fn test_transfer_from() {
 #[test]
 #[available_gas(2000000)]
 fn test_transfer_from_approved() {
-    let (project_address, _) = deploy_project('ApeMonkey', 'APE');
+    let (project_address, _) = deploy_project('Foo', 'BAR');
     let contract = IERC721Dispatcher { contract_address: project_address };
     let OWNER: ContractAddress = contract_address_const::<'OWNER'>();
     start_prank(CheatTarget::One(project_address), OWNER);
@@ -168,7 +168,7 @@ fn test_transfer_from_approved() {
 #[test]
 #[available_gas(2000000)]
 fn test_transfer_from_approved_for_all() {
-    let (project_address, _) = deploy_project('ApeMonkey', 'APE');
+    let (project_address, _) = deploy_project('Foo', 'BAR');
     let contract = IERC721Dispatcher { contract_address: project_address };
 
     let OWNER: ContractAddress = contract_address_const::<'OWNER'>();
@@ -190,7 +190,7 @@ fn test_transfer_from_approved_for_all() {
 #[available_gas(2000000)]
 #[should_panic]
 fn test_transfer_from_not_approved() {
-    let (project_address, _) = deploy_project('ApeMonkey', 'APE');
+    let (project_address, _) = deploy_project('Foo', 'BAR');
     let contract = IERC721Dispatcher { contract_address: project_address };
 
     let OWNER: ContractAddress = contract_address_const::<'OWNER'>();
