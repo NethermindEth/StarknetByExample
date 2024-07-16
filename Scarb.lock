@@ -2,10 +2,6 @@
 version = 1
 
 [[package]]
-name = "account_abstraction"
-version = "0.1.0"
-
-[[package]]
 name = "advanced_factory"
 version = "0.1.0"
 dependencies = [
@@ -66,6 +62,10 @@ dependencies = [
  "openzeppelin",
  "snforge_std",
 ]
+
+[[package]]
+name = "custom_signature_validation"
+version = "0.1.0"
 
 [[package]]
 name = "custom_type_serde"
