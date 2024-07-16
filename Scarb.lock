@@ -136,6 +136,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "simple_storage"
+version = "0.1.0"
+
+[[package]]
 name = "simple_vault"
 version = "0.1.0"
 
