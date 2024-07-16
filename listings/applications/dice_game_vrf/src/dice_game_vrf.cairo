@@ -1,4 +1,3 @@
-// ANCHOR: DiceGameInterfaces
 use starknet::ContractAddress;
 
 // In order to generate a verifiable random number on chain we need to use a VRF (Verifiable Random Function) Oracle.
@@ -32,9 +31,7 @@ pub trait IDiceGame<TContractState> {
     fn get_game_window(self: @TContractState) -> bool;
     fn process_game_winners(ref self: TContractState);
 }
-// ANCHOR_END: DiceGameInterfaces 
 
-// ANCHOR: DiceGameContract 
 #[starknet::contract]
 mod DiceGame {
     use starknet::{
@@ -226,5 +223,4 @@ mod DiceGame {
         }
     }
 }
-// ANCHOR_END: DiceGameContract 
 
