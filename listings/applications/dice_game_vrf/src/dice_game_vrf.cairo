@@ -1,11 +1,9 @@
 use starknet::ContractAddress;
 
-// In order to generate a verifiable random number on chain we need to use a VRF (Verifiable Random Function) Oracle.
-// We are using the Pragma Oracle VRF in this example.
 #[starknet::interface]
 pub trait IPragmaVRF<TContractState> {
     fn get_last_random_number(self: @TContractState) -> felt252;
-    fn request_randomness_from_pragma(
+    fn request_randomness(
         ref self: TContractState,
         seed: u64,
         callback_address: ContractAddress,
@@ -73,6 +71,10 @@ mod DiceGame {
         caller: ContractAddress,
         guess: u8,
         random_number: u256
+    }
+
+    mod Errors {
+        pub const GAME_INACTIVE: felt252 = 'Game inactive';
     }
 
     #[constructor]
@@ -143,14 +145,13 @@ mod DiceGame {
     }
 
     #[abi(embed_v0)]
-    // ANCHOR: PragmaVRFOracle
     impl PragmaVRFOracle of super::IPragmaVRF<ContractState> {
         fn get_last_random_number(self: @ContractState) -> felt252 {
             let last_random = self.last_random_number.read();
             last_random
         }
 
-        fn request_randomness_from_pragma(
+        fn request_randomness(
             ref self: ContractState,
             seed: u64,
             callback_address: ContractAddress,
