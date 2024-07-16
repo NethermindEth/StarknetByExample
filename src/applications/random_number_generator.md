@@ -14,9 +14,9 @@ However, achieving true randomness on a decentralized platform poses significant
 
 ### Sources of Entropy
 
-#### 1. Block Properties (e.g., Block Hash)
+#### 1. Block Properties
 
-- **Description:** Using properties of the blockchain itself, like the hash of a block, as a source of randomness.
+- **Description:** Using properties of the blockchain itself, like the hash of a block, or a block timestamp, as a source of randomness.
 - **Example:** A common approach is to use the hash of a recent block as a seed for random number generation.
 - **Risks:**
     - **Predictability:** Miners can influence future block hashes by controlling the nonce they use during mining.
@@ -57,7 +57,7 @@ However, achieving true randomness on a decentralized platform poses significant
 
 ## Dice Game using Pragma VRF
 
-This code provides an implementation of a Dice Game contract that utilizes a [Pragma Verifiable Random Function (VRF)](https://docs.pragma.build/Resources/Cairo%201/randomness/randomness) to generate random numbers on-chain.
+Below is an implementation of a Dice Game contract that utilizes a [Pragma Verifiable Random Function (VRF)](https://docs.pragma.build/Resources/Cairo%201/randomness/randomness) to generate random numbers on-chain.
 
 ```rust
 {{#include ../../listings/applications/dice_game_vrf/src/dice_game_vrf.cairo}}
