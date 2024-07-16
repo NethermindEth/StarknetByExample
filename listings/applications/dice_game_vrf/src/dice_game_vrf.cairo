@@ -228,4 +228,3 @@ mod DiceGame {
 }
 // ANCHOR_END: DiceGameContract 
 
-
