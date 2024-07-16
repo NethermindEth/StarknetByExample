@@ -16,17 +16,17 @@ Here's an example of a collision on the `switchable_value` storage variable of t
 Interface:
 
 ```rust
-{{#include ../../listings/applications/components/src/contracts/switch_collision.cairo:interface}}
+{{#include ../../listings/applications/components/src/others/switch_collision.cairo:interface}}
 ```
 
-Here's the storage of the contract (you can expand the code snippet to see the full contract):
+Here's the storage of the contract (you can expand the code snippet to see the full contract and tests):
 
 ```rust
-{{#rustdoc_include ../../listings/applications/components/src/contracts/switch_collision.cairo:storage}}
+{{#rustdoc_include ../../listings/applications/components/src/others/switch_collision.cairo:storage}}
 ```
 
 Both the contract and the component have a `switchable_value` storage variable, so they collide:
 
 ```rust
-{{#rustdoc_include ../../listings/applications/components/src/contracts/tests/switch_collision_tests.cairo:collision}}
+{{#include ../../listings/applications/components/src/others/switch_collision.cairo:collision}}
 ```

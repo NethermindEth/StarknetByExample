@@ -14,11 +14,11 @@ pub mod switchable_component {
         switchable_value: bool,
     }
 
-    #[derive(Drop, starknet::Event)]
-    struct SwitchEvent {}
+    #[derive(Drop, Debug, PartialEq, starknet::Event)]
+    pub struct SwitchEvent {}
 
     #[event]
-    #[derive(Drop, starknet::Event)]
+    #[derive(Drop, Debug, PartialEq, starknet::Event)]
     pub enum Event {
         SwitchEvent: SwitchEvent,
     }
@@ -47,5 +47,85 @@ pub mod switchable_component {
     }
 }
 // ANCHOR_END: component
+
+// ANCHOR: contract
+#[starknet::contract]
+pub mod SwitchContract {
+    use super::switchable_component;
+
+    component!(path: switchable_component, storage: switch, event: SwitchableEvent);
+
+    #[abi(embed_v0)]
+    impl SwitchableImpl = switchable_component::Switchable<ContractState>;
+
+    #[storage]
+    struct Storage {
+        #[substorage(v0)]
+        switch: switchable_component::Storage,
+    }
+
+    #[event]
+    #[derive(Drop, Debug, PartialEq, starknet::Event)]
+    pub enum Event {
+        SwitchableEvent: switchable_component::Event,
+    }
+
+    // You can optionally use the internal implementation of the component as well
+    impl SwitchableInternalImpl = switchable_component::SwitchableInternalImpl<ContractState>;
+
+    #[constructor]
+    fn constructor(ref self: ContractState) {
+        // Internal function call
+        self.switch._off();
+    }
+}
+// ANCHOR_END: contract
+
+// ANCHOR: tests
+#[cfg(test)]
+mod test {
+    use super::SwitchContract; // Used as a mock contract
+    use super::switchable_component::{Event, SwitchEvent};
+    use super::{ISwitchableDispatcher, ISwitchableDispatcherTrait};
+    use starknet::{syscalls::deploy_syscall, contract_address_const, ContractAddress};
+    use starknet::SyscallResultTrait;
+
+    fn deploy() -> (ISwitchableDispatcher, ContractAddress) {
+        let (address, _) = deploy_syscall(
+            SwitchContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+        )
+            .unwrap_syscall();
+        (ISwitchableDispatcher { contract_address: address }, address)
+    }
+
+    #[test]
+    fn test_constructor() {
+        let (switchable, _) = deploy();
+        assert_eq!(switchable.is_on(), false);
+    }
+
+    #[test]
+    fn test_switch() {
+        let (switchable, contract_address) = deploy();
+        switchable.switch();
+        assert_eq!(switchable.is_on(), true);
+        assert_eq!(
+            starknet::testing::pop_log(contract_address),
+            Option::Some(SwitchContract::Event::SwitchableEvent(SwitchEvent {}.into()))
+        );
+    }
+
+    #[test]
+    fn test_multiple_switches() {
+        let (switchable, _) = deploy();
+        switchable.switch();
+        assert_eq!(switchable.is_on(), true);
+        switchable.switch();
+        assert_eq!(switchable.is_on(), false);
+        switchable.switch();
+        assert_eq!(switchable.is_on(), true);
+    }
+}
+// ANCHOR_END: tests
 
 
