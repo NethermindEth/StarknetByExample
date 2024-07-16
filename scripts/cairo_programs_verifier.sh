@@ -97,7 +97,7 @@ else
   if [ -z "$modified_listings" ]; then
     echo -e "\n${GREEN}No new changes detected${NC}"
   else
-    echo -e "\n${GREEN}All $listings_count builds were completed successfully${NC}"
+    echo -e "\n${GREEN}All builds were completed successfully${NC}"
   fi
   rm "$error_file"
   exit 0
