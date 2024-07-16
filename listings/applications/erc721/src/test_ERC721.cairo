@@ -129,7 +129,7 @@ fn test_get_token_uri() {
 #[test]
 #[available_gas(2000000)]
 fn test_transfer_from() {
-    let (project_address, _) = deploy_project('Foo','BAR');
+    let (project_address, _) = deploy_project('Foo', 'BAR');
     let contract = IERC721Dispatcher { contract_address: project_address };
 
     let OWNER: ContractAddress = contract_address_const::<'OWNER'>();

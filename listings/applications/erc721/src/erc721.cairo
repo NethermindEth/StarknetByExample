@@ -17,7 +17,6 @@ pub trait IERC721<TContractState> {
 }
 
 
-
 #[starknet::interface]
 pub trait IERC721Metadata<TContractState> {
     fn name(self: @TContractState) -> ByteArray;
