@@ -9,3 +9,4 @@ mod struct_example;
 mod type_casting_example;
 mod while_let_example;
 mod if_let_example;
+mod dict_example;
