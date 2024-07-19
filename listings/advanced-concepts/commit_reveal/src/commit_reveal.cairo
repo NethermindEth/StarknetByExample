@@ -4,11 +4,10 @@
 
 #[starknet::interface]
 pub trait ICommitmentRevealTrait<T> {
-    fn commit(ref self: T,  commitment: felt252) -> felt252;
+    fn commit(ref self: T, commitment: felt252) -> felt252;
     fn reveal(self: @T, name: felt252, amount: felt252) -> bool;
 }
 
-// ANCHOR: hash
 #[starknet::contract]
 pub mod CommitmentRevealTraits {
     use core::hash::{HashStateTrait, HashStateExTrait};
@@ -25,7 +24,6 @@ pub mod CommitmentRevealTraits {
         name: felt252,
     }
 
-
     #[abi(embed_v0)]
     impl CommitmentRevealTrait of super::ICommitmentRevealTrait<ContractState> {
         fn commit(ref self: ContractState, commitment: felt252) -> felt252 {
@@ -33,21 +31,17 @@ pub mod CommitmentRevealTraits {
             commitment
         }
 
-        fn reveal(self: @ContractState,  name: felt252, amount: felt252) -> bool {
-            let auction = Auction { amount, name };
-            let hash = PedersenTrait::new(0).update_with(auction).finalize();
-            let pedersen_hash = self.commitment.read();
+        fn reveal(self: @ContractState, name: felt252, amount: felt252) -> bool {
+            // let auction = Auction { amount, name };
+            let mut pedersen = PedersenTrait::new(0);
+            let hash = pedersen.update_with(amount).update_with(name).finalize();
+            let stored_commitment = self.commitment.read();
 
-            if (pedersen_hash == hash) {
-                true
-            } else {
-                false
-            }
+            stored_commitment == hash
         }
     }
 }
 // ANCHOR_END: hash
-
 #[cfg(test)]
 mod tests {
     use starknet::SyscallResultTrait;
@@ -65,23 +59,27 @@ mod tests {
         let (address, _) = deploy_syscall(
             CommitmentRevealTraits::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
         )
-            .unwrap_syscall();
+        .unwrap_syscall();
         ICommitmentRevealTraitDispatcher { contract_address: address }
     }
 
-
     #[test]
     #[available_gas(20000000)]
-    fn commit() {
+    fn commit_and_reveal() {
         let mut contract = deploy();
 
-        let offchaincommitment = 1648331808534356693295380785762192048619682219128528825605359968612978851371;
-        let amount = 100;
-        let name = 'lamsy';
-        let test_hash = contract.commit(offchaincommitment);
-        let test_reveal = contract.reveal(name, amount);
-        println!("test reveal: {}", test_reveal);
-        println!("test hash: {}", test_hash);
-        assert(test_reveal == true, 'incorrect auction details');
+        // Off-chain, compute the commitment hash for (name, amount)
+        let name: felt252 = 'lamsy'.try_into().unwrap();
+        let amount: felt252 = 100.try_into().unwrap();
+        let mut pedersen = PedersenTrait::new(0);
+        let offchain_commitment = pedersen.update_with(amount).update_with(name).finalize();
+
+        // Commit on-chain
+        contract.commit(offchain_commitment);
+
+        // Reveal on-chain and assert the result
+        let reveal_result = contract.reveal(name, amount);
+        assert!(reveal_result, "Incorrect auction details");
     }
 }
+
