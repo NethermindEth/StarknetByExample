@@ -23,6 +23,7 @@ Summary
   - [Custom types in entrypoints](./getting-started/basics/custom-types-in-entrypoints.md)
   - [Documentation](./getting-started/basics/documentation.md)
 - [Deploy and interact with contracts](./getting-started/interacting/interacting.md)
+  - [How to deploy](./getting-started/interacting/how_to_deploy.md)
   - [Contract interfaces and Traits generation](./getting-started/interacting/interfaces-traits.md)
   - [Calling other contracts](./getting-started/interacting/calling_other_contracts.md)
   - [Factory pattern](./getting-started/interacting/factory.md)
@@ -59,6 +60,9 @@ Summary
 - [Constant Product AMM](./applications/constant-product-amm.md)
 - [TimeLock](./applications/timelock.md)
 - [Staking](./applications/staking.md)
+- [Simple Storage with Starknet-js](./applications/simple_storage_starknetjs.md)
+- [Crowdfunding Campaign](./applications/crowdfunding.md)
+- [AdvancedFactory: Crowdfunding](./applications/advanced_factory.md)
 
 <!-- advanced-concepts -->
 
@@ -69,10 +73,12 @@ Summary
 - [Struct as mapping key](./advanced-concepts/struct-mapping-key.md)
 - [Hashing](./advanced-concepts/hashing.md)
   <!-- Hidden until #123 is solved -->
-  <!-- - [Hash Solidity Compatible](./advanced-concepts/hash-solidity-compatible.md) -->
+  <!-- - [Hash Solidity Compatible](./ch02/hash-solidity-compatible.md) -->
 - [Optimisations](./advanced-concepts/optimisations/optimisations.md)
   - [Storage Optimisations](./advanced-concepts/optimisations/store_using_packing.md)
+- [Account Abstraction](./advanced-concepts/account_abstraction/index.md)
+  - [Account Contract](./advanced-concepts/account_abstraction/account_contract.md)
 - [List](./advanced-concepts/list.md)
+- [Library Calls](./advanced-concepts/library_calls.md)
 - [Plugins](./advanced-concepts/plugins.md)
 - [Signature Verification](./advanced-concepts/signature_verification.md)
-- [Library Calls](./advanced-concepts/library_calls.md)

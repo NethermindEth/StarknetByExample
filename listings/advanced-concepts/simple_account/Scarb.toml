@@ -1,11 +1,12 @@
 [package]
-name = "using_lists"
+name = "simple_account"
 version.workspace = true
 edition = '2023_11'
 
+
 [dependencies]
 starknet.workspace = true
-alexandria_storage.workspace = true
+openzeppelin.workspace = true
 
 [scripts]
 test.workspace = true
