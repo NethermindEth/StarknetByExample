@@ -1,3 +1,4 @@
+// ANCHOR: custom_signature_scheme
 use starknet::secp256_trait::{
     Secp256PointTrait, Signature as Secp256Signature, recover_public_key, is_signature_entry_valid
 };
@@ -131,3 +132,4 @@ impl U256TryIntoSignerType of TryInto<u256, SignerType> {
     }
 }
 
+// ANCHOR_END: custom_signature_scheme
