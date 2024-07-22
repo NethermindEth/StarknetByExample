@@ -1,6 +1,5 @@
+// ANCHOR: sheet
 fn dict() {
-    // ANCHOR: sheet
-
     let mut Auctions: Felt252Dict<u64> = Default::default();
 
     Auctions.insert('Bola', 30);
@@ -11,7 +10,7 @@ fn dict() {
 
     let maria_balance = Auctions.get('Maria');
     assert!(maria_balance == 40, "Maria balance should be 40");
-
+}
 // ANCHOR_END: sheet
 
-}
+
