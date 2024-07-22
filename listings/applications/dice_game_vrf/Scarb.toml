@@ -6,7 +6,7 @@ edition = "2023_11"
 [dependencies]
 starknet.workspace = true
 openzeppelin.workspace = true
-pragma_lib.workspace = true
+pragma_lib = { git = "https://github.com/astraly-labs/pragma-lib" }
 
 [scripts]
 test.workspace = true
