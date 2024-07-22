@@ -23,14 +23,14 @@ pub mod ListExample {
 
     #[storage]
     pub struct Storage {
-        amount: List<u128>,
+        amounts: List<u128>,
         tasks: List<Task>
     }
 
     #[abi(embed_v0)]
     impl ListExample of super::IListExample<ContractState> {
         fn add_in_amount(ref self: ContractState, number: u128) {
-            let mut current_amount_list = self.amount.read();
+            let mut current_amount_list = self.amounts.read();
             current_amount_list.append(number).unwrap();
         }
 
@@ -41,31 +41,31 @@ pub mod ListExample {
         }
 
         fn is_empty_list(self: @ContractState) -> bool {
-            let mut current_amount_list = self.amount.read();
+            let mut current_amount_list = self.amounts.read();
             current_amount_list.is_empty()
         }
 
         fn list_length(self: @ContractState) -> u32 {
-            let mut current_amount_list = self.amount.read();
+            let mut current_amount_list = self.amounts.read();
             current_amount_list.len()
         }
 
         fn get_from_index(self: @ContractState, index: u32) -> u128 {
-            self.amount.read()[index]
+            self.amounts.read()[index]
         }
 
         fn set_from_index(ref self: ContractState, index: u32, number: u128) {
-            let mut current_amount_list = self.amount.read();
+            let mut current_amount_list = self.amounts.read();
             current_amount_list.set(index, number).unwrap();
         }
 
         fn pop_front_list(ref self: ContractState) {
-            let mut current_amount_list = self.amount.read();
+            let mut current_amount_list = self.amounts.read();
             current_amount_list.pop_front().unwrap().unwrap();
         }
 
         fn array_conversion(self: @ContractState) -> Array<u128> {
-            let mut current_amount_list = self.amount.read();
+            let mut current_amount_list = self.amounts.read();
             current_amount_list.array().unwrap()
         }
     }

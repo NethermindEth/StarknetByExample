@@ -5,7 +5,7 @@ edition = '2023_11'
 
 [dependencies]
 starknet.workspace = true
-alexandria_storage = { git = "https://github.com/keep-starknet-strange/alexandria.git",  rev="800f5ad"}
+alexandria_storage.workspace = true
 
 [scripts]
 test.workspace = true

@@ -87,11 +87,11 @@ msgstr "Llamar a otros contratos"
 
 #: src/SUMMARY.md:26
 msgid "Factory pattern"
-msgstr "Patrón de la Factory"
+msgstr "Patrón Factory"
 
 #: src/SUMMARY.md:27
 msgid "Testing contracts"
-msgstr "Contratos de Testing"
+msgstr "Testing de Contratos"
 
 #: src/SUMMARY.md:28
 msgid "Cairo cheatsheet"
@@ -220,7 +220,7 @@ msgstr ""
 #: src/starknet-by-example.md:5
 msgid ""
 "Starknet is a permissionless Validity-Rollup that supports general "
-"computation. It is currently used as an Ethereum layer-2. Starknet use the "
+"computation. It is currently used as an Ethereum layer-2. Starknet uses the "
 "STARK cryptographic proof system to ensure high safety and scalability."
 msgstr ""
 "Starknet es un Validity-Rollup sin permiso que admite el cálculo general. "
@@ -234,26 +234,12 @@ msgid ""
 "Turing-complete programming language designed to write provable programs, "
 "abstracting the zk-STARK proof system away from the programmer."
 msgstr ""
-"Los smart contracts de Starknet están escritos en el idioma de Cairo. Cairo "
-"es un lenguaje de programación completo de Turing diseñado para escribir "
+"Los smart contracts de Starknet están escritos en el lenguaje Cairo. Cairo "
+"es un lenguaje de programación Turing completo diseñado para escribir "
 "programas demostrables, abstrayendo el sistema de prueba zk-STARK del "
 "programador."
 
 #: src/starknet-by-example.md:9
-msgid "The current version of this book use:"
-msgstr "La versión actual de este libro usa:"
-
-#: src/starknet-by-example.md:10
-msgid ""
-"```\n"
-"scarb 2.3.1\n"
-"```"
-msgstr ""
-"```\n"
-"scarb 2.3.1\n"
-"```"
-
-#: src/starknet-by-example.md:14
 msgid ""
 "> ⚠️ The examples have not been audited and are not intended for production "
 "use.\n"
@@ -265,11 +251,11 @@ msgstr ""
 "> Los autores no se hacen responsables de los daños causados por el uso del "
 "código proporcionado en este libro."
 
-#: src/starknet-by-example.md:17
+#: src/starknet-by-example.md:12
 msgid "## For whom is this for?"
-msgstr "## ¿Para quién es esto?"
+msgstr "## ¿A quién va dirigido?"
 
-#: src/starknet-by-example.md:19
+#: src/starknet-by-example.md:14
 msgid ""
 "Starknet By Example is for anyone who wants to quickly learn how to write "
 "smart contracts on Starknet using Cairo with some technical background in "
@@ -279,7 +265,7 @@ msgstr ""
 "escribir contratos inteligentes en Starknet usando Cairo con cierta "
 "experiencia técnica en programación y blockchain."
 
-#: src/starknet-by-example.md:21
+#: src/starknet-by-example.md:16
 msgid ""
 "The first chapters will give you a basic understanding of the Cairo "
 "programming language and how to write, deploy and use smart contracts on "
@@ -292,11 +278,41 @@ msgstr ""
 "inteligentes en Starknet. Los capítulos posteriores cubrirán temas más "
 "avanzados y le mostrarán cómo escribir contratos inteligentes más complejos."
 
-#: src/starknet-by-example.md:24
+#: src/starknet-by-example.md:19
+msgid "## How to use this book?"
+msgstr "## ¿Como usar este libro?"
+
+#: src/starknet-by-example.md:21
+msgid ""
+"Each chapter is a standalone example that demonstrates a specific feature "
+"or common use case of smart contracts on Starknet. If you are new to Starknet, "
+"it is recommended to read the chapters in order."
+msgstr ""
+"Cada capítulo en un ejemplo independiente que muestra una característica "
+"específica o un caso de uso común de un contrato inteligente en Starknet. "
+"Si eres nuevo en Starknet, es recomendable que leas los capítulos en orden."
+
+#: src/starknet-by-example.md:23
+msgid ""
+"Most examples contain interfaces and tests that are hidden by default. "
+"You can hover over the code blocks and click on the \"Show hidden lines\" "
+"(eyes icon) to see the hidden code.\n"
+msgstr ""
+"La mayoria de los ejemplos contienen interfaces y pruebas que están ocultas por defecto "
+"Puedes colocar el cursor sobre los bloques de codígo y darle click en \"Mostrar lineas ocultas\" "
+"(icono de ojos) para ver el codígo oculto"
+
+#: src/starknet-by-example.md:25
+msgid ""
+"You can run each example online by using the [Starknet Remix Plugin](https://remix.ethereum.org/?#activate=Starknet)."
+msgstr ""
+"Puedes ejecutar cada uno de los ejemplos en línea usando [El plugin de Starknet en Remix ](https://remix.ethereum.org/?#activate=Starknet)."
+
+#: src/starknet-by-example.md:27
 msgid "## Further reading"
 msgstr "## Otras lecturas"
 
-#: src/starknet-by-example.md:26
+#: src/starknet-by-example.md:29
 msgid ""
 "If you want to learn more about the Cairo programming language, you can read "
 "the [Cairo Book](https://book.cairo-lang.org).\n"
@@ -309,7 +325,7 @@ msgstr ""
 "más información sobre Starknet, puede leer la [Documentación de Starknet]"
 "(https://docs.starknet.io/) y el [Starknet Book](https://book.starknet.io)."
 
-#: src/starknet-by-example.md:29
+#: src/starknet-by-example.md:32
 msgid ""
 "For more resources, check [Awesome Starknet](https://github.com/keep-"
 "starknet-strange/awesome-starknet)."
@@ -317,30 +333,48 @@ msgstr ""
 "Para obtener más recursos, consulte [Awesome Starknet](https://github.com/"
 "keep-starknet-strange/awesome-starknet)."
 
-#: src/starknet-by-example.md:31 src/ch00/basics/storage.md:34
-#: src/ch00/basics/constructor.md:27 src/ch00/basics/variables.md:126
-#: src/ch00/basics/visibility-mutability.md:75 src/ch00/basics/counter.md:56
-#: src/ch00/basics/errors.md:139 src/ch00/basics/storing-custom-types.md:39
-#: src/ch00/basics/custom-types-in-entrypoints.md:39
-#: src/ch00/interacting/interfaces-traits.md:129
-#: src/ch00/interacting/calling_other_contracts.md:69
-#: src/ch00/cairo_cheatsheet/felt.md:15 src/ch00/cairo_cheatsheet/mapping.md:58
-#: src/ch00/cairo_cheatsheet/arrays.md:42 src/ch00/cairo_cheatsheet/loop.md:23
-#: src/ch00/cairo_cheatsheet/match.md:59 src/ch00/cairo_cheatsheet/tuples.md:18
-#: src/ch00/cairo_cheatsheet/struct.md:15
-#: src/ch00/cairo_cheatsheet/type_casting.md:33 src/ch01/simple_vault.md:114
-#: src/ch01/erc20.md:228 src/ch01/constant-product-amm.md:275
-#: src/ch02/write_to_any_slot.md:58 src/ch02/storing_arrays.md:105
-#: src/ch02/struct-mapping-key.md:46 src/ch02/hash-solidity-compatible.md:46
-#: src/ch02/optimisations/store_using_packing.md:90 src/ch02/list.md:139
+#: src/starknet-by-example.md:34
+msgid "## Versions"
+msgstr "## Versiones"
+
+#: src/starknet-by-example.md:36
+msgid "The current version of this book uses:"
+msgstr "La versión actual de este libro usa:"
+
+#: src/starknet-by-example.md:38
+msgid ""
+"```\n"
+"scarb 2.6.3\n"
+"```"
+msgstr ""
+"```\n"
+"edition = '2023_11'\n"
+"```"
+
+#: src/starknet-by-example.md:31 src/getting-started/basics/storage.md:34
+#: src/getting-started/basics/constructor.md:27 src/getting-started/basics/variables.md:126
+#: src/getting-started/basics/visibility-mutability.md:75 src/getting-started/basics/counter.md:56
+#: src/getting-started/basics/errors.md:139 src/getting-started/basics/storing-custom-types.md:39
+#: src/getting-started/basics/custom-types-in-entrypoints.md:39
+#: src/getting-started/interacting/interfaces-traits.md:129
+#: src/getting-started/interacting/calling_other_contracts.md:69
+#: src/getting-started/cairo_cheatsheet/felt.md:15 src/getting-started/cairo_cheatsheet/mapping.md:58
+#: src/getting-started/cairo_cheatsheet/arrays.md:42 src/getting-started/cairo_cheatsheet/loop.md:23
+#: src/getting-started/cairo_cheatsheet/match.md:59 src/getting-started/cairo_cheatsheet/tuples.md:18
+#: src/getting-started/cairo_cheatsheet/struct.md:15
+#: src/getting-started/cairo_cheatsheet/type_casting.md:33 src/applications/simple_vault.md:114
+#: src/applications/erc20.md:228 src/applications/constant-product-amm.md:275
+#: src/advanced-concepts/write_to_any_slot.md:58 src/advanced-concepts/storing_arrays.md:105
+#: src/advanced-concepts/struct-mapping-key.md:46 src/advanced-concepts/hash-solidity-compatible.md:46
+#: src/advanced-concepts/optimisations/store_using_packing.md:90 src/advanced-concepts/list.md:139
 msgid "<footer id=\"last-change\">Last change: 2023-12-07</footer>"
 msgstr "<footer id=\"last-change\">Último cambio: 2023-12-07</footer>"
 
-#: src/ch00/basics/introduction.md:1
+#: src/getting-started/basics/introduction.md:1
 msgid "# Basics of Smart Contracts in Cairo"
 msgstr "# Conceptos básicos de los Smart Contracts en Cairo"
 
-#: src/ch00/basics/introduction.md:3
+#: src/getting-started/basics/introduction.md:3
 msgid ""
 "The following chapters will introduce you to Starknet smart contracts and "
 "how to write them in Cairo."
@@ -348,19 +382,19 @@ msgstr ""
 "Los siguientes capítulos le presentarán los smart contracts de Starknet y "
 "cómo escribirlos en Cairo."
 
-#: src/ch00/basics/introduction.md:5 src/ch02/optimisations/optimisations.md:5
+#: src/getting-started/basics/introduction.md:5 src/advanced-concepts/optimisations/optimisations.md:5
 msgid "<footer id=\"last-change\">Last change: 2023-10-12</footer>"
 msgstr "<footer id=\"last-change\">Último cambio: 2023-10-12</footer>"
 
-#: src/ch00/basics/storage.md:1
+#: src/getting-started/basics/storage.md:1
 msgid "# Storage"
 msgstr "# Almacenamiento"
 
-#: src/ch00/basics/storage.md:3
+#: src/getting-started/basics/storage.md:3
 msgid "Here's the most minimal contract you can write in Cairo:"
 msgstr "Este es el contrato mínimo que puedes redactar en Cairo:"
 
-#: src/ch00/basics/storage.md:5
+#: src/getting-started/basics/storage.md:5
 msgid ""
 "```rust\n"
 "#[starknet::contract]\n"
@@ -378,7 +412,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/storage.md:13
+#: src/getting-started/basics/storage.md:13
 msgid ""
 "Storage is a struct annoted with `#[storage]`. Every contract must have one "
 "and only one storage.\n"
@@ -390,7 +424,7 @@ msgstr ""
 "cada key se asignará a una dirección de almacenamiento del espacio de "
 "almacenamiento del contrato."
 
-#: src/ch00/basics/storage.md:16
+#: src/getting-started/basics/storage.md:16
 msgid ""
 "You can define [storage variables](./variables.md#storage-variables) in your "
 "contract, and then use them to store and retrieve data."
@@ -398,7 +432,7 @@ msgstr ""
 "Puede definir [variables de storage](./variables.md#storage-variables) en su "
 "contrato y luego usarlas para almacenar y recuperar datos."
 
-#: src/ch00/basics/storage.md:17
+#: src/getting-started/basics/storage.md:17
 msgid ""
 "```rust\n"
 "#[starknet::contract]\n"
@@ -424,29 +458,29 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/storage.md:29
+#: src/getting-started/basics/storage.md:29
 msgid ""
-"> Actually these two contracts have the same underlying sierra program.\n"
+"> Actually these two contracts have the same underlying Sierra program.\n"
 "> From the compiler's perspective, the storage variables don't exist until "
 "they are used."
 msgstr ""
-"> En realidad estos dos contratos tienen el mismo programa sierra "
+"> En realidad estos dos contratos tienen el mismo programa Sierra "
 "subyacente.\n"
 "> Desde la perspectiva del compilador, las variables de almacenamiento no "
 "existen hasta que se utilizan."
 
-#: src/ch00/basics/storage.md:32
+#: src/getting-started/basics/storage.md:32
 msgid ""
 "You can also read about [storing custom types](./storing-custom-types.md)"
 msgstr ""
 "También puede leer sobre [almacenamiento de tipos personalizados](./storing-"
 "custom-types.md)"
 
-#: src/ch00/basics/constructor.md:1
+#: src/getting-started/basics/constructor.md:1
 msgid "# Constructor"
 msgstr "# Constructor"
 
-#: src/ch00/basics/constructor.md:3
+#: src/getting-started/basics/constructor.md:3
 msgid ""
 "Constructors are a special type of function that runs only once when "
 "deploying a contract, and can be used to initialize the state of the "
@@ -460,7 +494,7 @@ msgstr ""
 "constructora debe estar anotada con el atributo `#[constructor]`. Además, "
 "una buena práctica consiste en denominar a esa función `constructor`."
 
-#: src/ch00/basics/constructor.md:5
+#: src/getting-started/basics/constructor.md:5
 msgid ""
 "Here's a simple example that demonstrates how to initialize the state of a "
 "contract on deployment by defining logic inside a constructor."
@@ -469,7 +503,7 @@ msgstr ""
 "el estado de un contrato durante la implementación definiendo la lógica "
 "dentro de un constructor."
 
-#: src/ch00/basics/constructor.md:7
+#: src/getting-started/basics/constructor.md:7
 msgid ""
 "```rust\n"
 "#[starknet::contract]\n"
@@ -511,7 +545,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/constructor.md:25
+#: src/getting-started/basics/constructor.md:25
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x017fd6558e67451dA583d123D77F4e2651E91502D08F8F8432355293b11e1f8F) "
@@ -525,15 +559,15 @@ msgstr ""
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
 "blob/main/listings/getting-started/constructor/src/constructor.cairo)."
 
-#: src/ch00/basics/variables.md:1
+#: src/getting-started/basics/variables.md:1
 msgid "# Variables"
 msgstr "# Variables"
 
-#: src/ch00/basics/variables.md:3
+#: src/getting-started/basics/variables.md:3
 msgid "There are 3 types of variables in Cairo contracts:"
 msgstr "Hay 3 tipos de variables en los contratos de Cairo:"
 
-#: src/ch00/basics/variables.md:5
+#: src/getting-started/basics/variables.md:5
 msgid ""
 "- Local\n"
 "  - declared inside a function\n"
@@ -556,11 +590,11 @@ msgstr ""
 "   - Se accede desde cualquier lugar, incluso dentro de las funciones de la "
 "biblioteca"
 
-#: src/ch00/basics/variables.md:15
+#: src/getting-started/basics/variables.md:15
 msgid "## Local Variables"
 msgstr "## Variables Locales"
 
-#: src/ch00/basics/variables.md:17
+#: src/getting-started/basics/variables.md:17
 msgid ""
 "Local variables are used and accessed within the scope of a specific "
 "function or block of code. They are temporary and exist only for the "
@@ -570,7 +604,7 @@ msgstr ""
 "una función o bloque de código específico. Son temporales y existen solo "
 "mientras dure esa función en particular o la ejecución del bloque."
 
-#: src/ch00/basics/variables.md:19
+#: src/getting-started/basics/variables.md:19
 msgid ""
 "Local variables are stored in memory and are not stored on the blockchain. "
 "This means they cannot be accessed from one execution to another. Local "
@@ -584,11 +618,11 @@ msgstr ""
 "son relevantes sólo dentro de un contexto específico. También hacen que el "
 "código sea más legible al dar nombres a los valores intermedios."
 
-#: src/ch00/basics/variables.md:21
+#: src/getting-started/basics/variables.md:21
 msgid "Here's a simple example of a contract with only local variables:"
 msgstr "Aquí hay un ejemplo simple de un contrato con solo variables locales:"
 
-#: src/ch00/basics/variables.md:23
+#: src/getting-started/basics/variables.md:23
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -652,7 +686,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/variables.md:50
+#: src/getting-started/basics/variables.md:50
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x015B3a10F9689BeD741Ca3C210017BC097122CeF76f3cAA191A20ff8b9b56b96) "
@@ -664,13 +698,13 @@ msgstr ""
 "contract/0x015B3a10F9689BeD741Ca3C210017BC097122CeF76f3cAA191A20ff8b9b56b96) "
 "o juegue con él en [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/variables/src/local_variables.cairo)."
+"blob/main/listings/getting-started-getting-started/variables/src/local_variables.cairo)."
 
-#: src/ch00/basics/variables.md:52
+#: src/getting-started/basics/variables.md:52
 msgid "## Storage Variables"
 msgstr "## Variables de Storage"
 
-#: src/ch00/basics/variables.md:54
+#: src/getting-started/basics/variables.md:54
 msgid ""
 "Storage variables are persistent data stored on the blockchain. They can be "
 "accessed from one execution to another, allowing the contract to remember "
@@ -681,7 +715,7 @@ msgstr ""
 "permite que el contrato recuerde y actualice la información a lo largo del "
 "tiempo."
 
-#: src/ch00/basics/variables.md:56
+#: src/getting-started/basics/variables.md:56
 msgid ""
 "To write or update a storage variable, you need to interact with the "
 "contract through an external entrypoint by sending a transaction."
@@ -690,7 +724,7 @@ msgstr ""
 "contrato a través de un punto de entrada externo mediante el envío de una "
 "transacción."
 
-#: src/ch00/basics/variables.md:58
+#: src/getting-started/basics/variables.md:58
 msgid ""
 "On the other hand, you can read state variables, for free, without any "
 "transaction, simply by interacting with a node."
@@ -698,13 +732,13 @@ msgstr ""
 "Por otro lado, puedes leer variables de estado, de forma gratuita, sin "
 "ninguna transacción, simplemente interactuando con un nodo."
 
-#: src/ch00/basics/variables.md:60
+#: src/getting-started/basics/variables.md:60
 msgid "Here's a simple example of a contract with one storage variable:"
 msgstr ""
 "A continuación se muestra un ejemplo sencillo de un contrato con una "
 "variable de almacenamiento:"
 
-#: src/ch00/basics/variables.md:62
+#: src/getting-started/basics/variables.md:62
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -772,7 +806,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/variables.md:92
+#: src/getting-started/basics/variables.md:92
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x06eA827B32875483709b785A7F9e846a52776Cd8D42C3fE696218c2624b0DCCa) "
@@ -784,14 +818,14 @@ msgstr ""
 "contract/0x06eA827B32875483709b785A7F9e846a52776Cd8D42C3fE696218c2624b0DCCa) "
 "o juega con él en [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/variables/src/storage_variables."
+"blob/main/listings/getting-started-getting-started/variables/src/storage_variables."
 "cairo)."
 
-#: src/ch00/basics/variables.md:94
+#: src/getting-started/basics/variables.md:94
 msgid "## Global Variables"
 msgstr "## Variables Globales"
 
-#: src/ch00/basics/variables.md:96
+#: src/getting-started/basics/variables.md:96
 msgid ""
 "Global variables are predefined variables that provide information about the "
 "blockchain and the current execution environment. They can be accessed at "
@@ -801,7 +835,7 @@ msgstr ""
 "información sobre la blockchain y el entorno de ejecución actual. ¡Se puede "
 "acceder a ellos en cualquier momento y desde cualquier lugar!"
 
-#: src/ch00/basics/variables.md:98
+#: src/getting-started/basics/variables.md:98
 msgid ""
 "In Starknet, you can access global variables by using specific functions "
 "contained in the starknet core libraries."
@@ -809,7 +843,7 @@ msgstr ""
 "En Starknet, puede acceder a variables globales utilizando funciones "
 "específicas contenidas en las bibliotecas principales de Starknet."
 
-#: src/ch00/basics/variables.md:100
+#: src/getting-started/basics/variables.md:100
 msgid ""
 "For example, the `get_caller_address` function returns the address of the "
 "caller of the current transaction, and the `get_contract_address` function "
@@ -819,7 +853,7 @@ msgstr ""
 "persona que llama de la transacción actual, y la función "
 "`get_contract_address` devuelve la dirección del contrato actual."
 
-#: src/ch00/basics/variables.md:102
+#: src/getting-started/basics/variables.md:102
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -871,7 +905,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/variables.md:125
+#: src/getting-started/basics/variables.md:125
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x05bD2F3943bd4e030f85678b55b2EC2C1be939e32388530FB20ED967B3Be433F) "
@@ -885,19 +919,19 @@ msgstr ""
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
 "blob/main/listings/getting-started/variables/src/global_variables.cairo)."
 
-#: src/ch00/basics/visibility-mutability.md:1
+#: src/getting-started/basics/visibility-mutability.md:1
 msgid "# Visibility and Mutability"
 msgstr "# Visibilidad y Mutabilidad"
 
-#: src/ch00/basics/visibility-mutability.md:3
+#: src/getting-started/basics/visibility-mutability.md:3
 msgid "## Visibility"
 msgstr "## Visibilidad"
 
-#: src/ch00/basics/visibility-mutability.md:5
+#: src/getting-started/basics/visibility-mutability.md:5
 msgid "There are two types of functions in Starknet contracts:"
 msgstr "Hay dos tipos de funciones en los contratos Starknet:"
 
-#: src/ch00/basics/visibility-mutability.md:7
+#: src/getting-started/basics/visibility-mutability.md:7
 msgid ""
 "- Functions that are accessible externally and can be called by anyone.\n"
 "- Functions that are only accessible internally and can only be called by "
@@ -908,7 +942,7 @@ msgstr ""
 "- Funciones a las que solo se puede acceder internamente y que solo pueden "
 "ser invocadas por otras funciones del contrato."
 
-#: src/ch00/basics/visibility-mutability.md:10
+#: src/getting-started/basics/visibility-mutability.md:10
 msgid ""
 "These functions are also typically divided into two different "
 "implementations blocks. The first `impl` block for externally accessible "
@@ -927,11 +961,11 @@ msgstr ""
 "que significa que todas las funciones dentro de este bloque son privadas de "
 "forma predeterminada."
 
-#: src/ch00/basics/visibility-mutability.md:12
+#: src/getting-started/basics/visibility-mutability.md:12
 msgid "## State Mutability"
 msgstr "## Mutabilidad del Estado"
 
-#: src/ch00/basics/visibility-mutability.md:14
+#: src/getting-started/basics/visibility-mutability.md:14
 msgid ""
 "Regardless of whether a function is internal or external, it can either "
 "modify the contract's state or not. When we declare functions that interact "
@@ -947,7 +981,7 @@ msgstr ""
 "primer parámetro de la función. Esto se puede hacer de dos maneras "
 "diferentes:"
 
-#: src/ch00/basics/visibility-mutability.md:17
+#: src/getting-started/basics/visibility-mutability.md:17
 msgid ""
 "- If we want our function to be able to mutate the state of the contract, we "
 "pass it by reference like this: `ref self: ContractState`.\n"
@@ -959,7 +993,7 @@ msgstr ""
 "- Si queremos que nuestra función sea de solo lectura y no mute el estado "
 "del contrato, la pasamos por instantánea como esta: `self: @ContractState`."
 
-#: src/ch00/basics/visibility-mutability.md:20
+#: src/getting-started/basics/visibility-mutability.md:20
 msgid ""
 "Read-only functions, also called view functions, can be directly called "
 "without making a transaction. You can interact with them directly through a "
@@ -974,7 +1008,7 @@ msgstr ""
 "que modifican el estado del contrato, por otro lado, solo se pueden llamar "
 "realizando una transacción."
 
-#: src/ch00/basics/visibility-mutability.md:23
+#: src/getting-started/basics/visibility-mutability.md:23
 msgid ""
 "Internal functions can't be called externally, but the same principle "
 "applies regarding state mutability."
@@ -982,12 +1016,12 @@ msgstr ""
 "Las funciones internas no se pueden llamar externamente, pero se aplica el "
 "mismo principio con respecto a la mutabilidad de estado."
 
-#: src/ch00/basics/visibility-mutability.md:25
+#: src/getting-started/basics/visibility-mutability.md:25
 msgid "Let's take a look at a simple example contract to see these in action:"
 msgstr ""
 "Echemos un vistazo a un contrato de ejemplo simple para verlos en acción:"
 
-#: src/ch00/basics/visibility-mutability.md:27
+#: src/getting-started/basics/visibility-mutability.md:27
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -1004,14 +1038,14 @@ msgid ""
 "    }\n"
 "\n"
 "\n"
-"    // The `abi(embed_v0)` attribute indicates that all the functions in "
+"    // The `#[abi(embed_v0)]` attribute indicates that all the functions in "
 "this implementation can be called externally.\n"
 "    // Omitting this attribute would make all the functions in this "
 "implementation internal.\n"
 "    #[abi(embed_v0)]\n"
 "    impl ExampleContract of super::IExampleContract<ContractState> {\n"
 "        // The `set` function can be called externally because it is written "
-"inside an implementation marked as `#[external]`.\n"
+"inside an implementation marked as `#[abi(embed_v0)]`.\n"
 "        // It can modify the contract's state as it is passed as a "
 "reference.\n"
 "        fn set(ref self: ContractState, value: u32) {\n"
@@ -1019,8 +1053,8 @@ msgid ""
 "        }\n"
 "\n"
 "        // The `get` function can be called externally because it is written "
-"inside an implementation marked as `#[external]`.\n"
-"        // However, it can't modify the contract's state is passed as a "
+"inside an implementation marked as `#[abi(embed_v0)]`.\n"
+"        // However, it can't modify the contract's state, as it is passed as a "
 "snapshot: it is only a \"view\" function.\n"
 "        fn get(self: @ContractState) -> u32 {\n"
 "            // We can call an internal function from any functions within "
@@ -1038,7 +1072,7 @@ msgid ""
 "        // The `_read_value` function is outside the implementation that is "
 "marked as `#[abi(embed_v0)]`, so it's an _internal_ function\n"
 "        // and can only be called from within the contract.\n"
-"        // However, it can't modify the contract's state is passed as a "
+"        // However, it can't modify the contract's state, as it is passed as a "
 "snapshot: it is only a \"view\" function.\n"
 "        fn _read_value(self: @ContractState) -> u32 {\n"
 "            self.value.read()\n"
@@ -1062,14 +1096,14 @@ msgstr ""
 "    }\n"
 "\n"
 "\n"
-"    // The `abi(embed_v0)` attribute indicates that all the functions in "
+"    // The `#[abi(embed_v0)]` attribute indicates that all the functions in "
 "this implementation can be called externally.\n"
 "    // Omitting this attribute would make all the functions in this "
 "implementation internal.\n"
 "    #[abi(embed_v0)]\n"
 "    impl ExampleContract of super::IExampleContract<ContractState> {\n"
 "        // The `set` function can be called externally because it is written "
-"inside an implementation marked as `#[external]`.\n"
+"inside an implementation marked as `#[abi(embed_v0)]`.\n"
 "        // It can modify the contract's state as it is passed as a "
 "reference.\n"
 "        fn set(ref self: ContractState, value: u32) {\n"
@@ -1077,8 +1111,8 @@ msgstr ""
 "        }\n"
 "\n"
 "        // The `get` function can be called externally because it is written "
-"inside an implementation marked as `#[external]`.\n"
-"        // However, it can't modify the contract's state is passed as a "
+"inside an implementation marked as `#[abi(embed_v0)]`.\n"
+"        // However, it can't modify the contract's state, as it is passed as a "
 "snapshot: it is only a \"view\" function.\n"
 "        fn get(self: @ContractState) -> u32 {\n"
 "            // We can call an internal function from any functions within "
@@ -1096,7 +1130,7 @@ msgstr ""
 "        // The `_read_value` function is outside the implementation that is "
 "marked as `#[abi(embed_v0)]`, so it's an _internal_ function\n"
 "        // and can only be called from within the contract.\n"
-"        // However, it can't modify the contract's state is passed as a "
+"        // However, it can't modify the contract's state, as it is passed as a "
 "snapshot: it is only a \"view\" function.\n"
 "        fn _read_value(self: @ContractState) -> u32 {\n"
 "            self.value.read()\n"
@@ -1105,7 +1139,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/visibility-mutability.md:73
+#: src/getting-started/basics/visibility-mutability.md:73
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x0071dE3093AB58053b0292C225aa0eED40293e7694A0042685FF6D813d39889F) "
@@ -1117,21 +1151,21 @@ msgstr ""
 "contract/0x0071dE3093AB58053b0292C225aa0eED40293e7694A0042685FF6D813d39889F) "
 "o juega con él en [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/visibility/src/visibility.cairo)."
+"blob/main/listings/getting-started-getting-started/visibility/src/visibility.cairo)."
 
-#: src/ch00/basics/counter.md:1
+#: src/getting-started/basics/counter.md:1
 msgid "# Simple Counter"
 msgstr "# Counter Sencillo"
 
-#: src/ch00/basics/counter.md:3
+#: src/getting-started/basics/counter.md:3
 msgid "This is a simple counter contract."
 msgstr "Este es un contrato de un simple counter."
 
-#: src/ch00/basics/counter.md:5
+#: src/getting-started/basics/counter.md:5
 msgid "Here's how it works:"
 msgstr "Así es como trabaja:"
 
-#: src/ch00/basics/counter.md:7
+#: src/getting-started/basics/counter.md:7
 msgid ""
 "- The contract has a state variable called 'counter' that is initialized to "
 "0.\n"
@@ -1149,7 +1183,7 @@ msgstr ""
 "- Cuando un usuario llama 'decrement', el contrato disminuye el contador en "
 "1."
 
-#: src/ch00/basics/counter.md:13
+#: src/getting-started/basics/counter.md:13
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -1235,7 +1269,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/counter.md:54
+#: src/getting-started/basics/counter.md:54
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x01664a69Fe701a1df7Bb0ae4A353792d0cf4E27146ee860075cbf6108b1D5718) "
@@ -1247,13 +1281,13 @@ msgstr ""
 "contract/0x01664a69Fe701a1df7Bb0ae4A353792d0cf4E27146ee860075cbf6108b1D5718) "
 "o juega con él en [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/counter/src/contracts.cairo)."
+"blob/main/listings/getting-started-getting-started/counter/src/contracts.cairo)."
 
-#: src/ch00/basics/mappings.md:1
+#: src/getting-started/basics/mappings.md:1
 msgid "# Mappings"
 msgstr "# Mapas"
 
-#: src/ch00/basics/mappings.md:3
+#: src/getting-started/basics/mappings.md:3
 msgid ""
 "Maps are a key-value data structure used to store data within a smart "
 "contract. In Cairo they are implemented using the `LegacyMap` type. It's "
@@ -1266,7 +1300,7 @@ msgstr ""
 "`LegacyMap` solo se puede usar dentro de la estructura `Storage` de un "
 "contrato y no se puede usar en ningún otro lugar."
 
-#: src/ch00/basics/mappings.md:5
+#: src/getting-started/basics/mappings.md:5
 msgid ""
 "Here we demonstrate how to use the `LegacyMap` type within a Cairo contract, "
 "to map between a key of type `ContractAddress` and value of type `felt252`. "
@@ -1283,11 +1317,11 @@ msgstr ""
 "una clave determinada llamando al método `read()` y pasando la clave "
 "relevante."
 
-#: src/ch00/basics/mappings.md:7
+#: src/getting-started/basics/mappings.md:7
 msgid "Some additional notes:"
 msgstr "Algunas notas adicionales:"
 
-#: src/ch00/basics/mappings.md:9
+#: src/getting-started/basics/mappings.md:9
 msgid ""
 "- More complex key-value mappings are possible, for example we could use "
 "`LegacyMap::<(ContractAddress, ContractAddress), felt252>` to create an "
@@ -1298,7 +1332,7 @@ msgid ""
 "hash and the final value is taken `mod2251−256`. You can learn more about "
 "the contract storage layout in the [Starknet Documentation](https://docs."
 "starknet.io/documentation/architecture_and_concepts/Smart_Contracts/contract-"
-"storage/#storage_variables)"
+"storage/#storage_variables)."
 msgstr ""
 "- Son posibles asignaciones key-value más complejas; por ejemplo, podríamos "
 "usar `LegacyMap::<(ContractAddress, ContractAddress), Felt252>` para crear "
@@ -1310,9 +1344,9 @@ msgstr ""
 "información sobre el diseño de almacenamiento por contrato en la "
 "[Documentación de Starknet](https://docs.starknet.io/documentation/"
 "architecture_and_concepts/Smart_Contracts/contract-storage/"
-"#storage_variables)"
+"#storage_variables)."
 
-#: src/ch00/basics/mappings.md:13
+#: src/getting-started/basics/mappings.md:13
 msgid ""
 "```rust\n"
 "use starknet::ContractAddress;\n"
@@ -1382,7 +1416,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/mappings.md:44
+#: src/getting-started/basics/mappings.md:44
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x06214AB4c23Cc545bf2221D465eB83aFb7412779AD498BD48a724B3F645E3505) "
@@ -1394,18 +1428,18 @@ msgstr ""
 "contract/0x06214AB4c23Cc545bf2221D465eB83aFb7412779AD498BD48a724B3F645E3505) "
 "o juega con él en [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/mappings/src/mappings.cairo)."
+"blob/main/listings/getting-started-getting-started/mappings/src/mappings.cairo)."
 
-#: src/ch00/basics/mappings.md:46 src/components/how_to.md:175
+#: src/getting-started/basics/mappings.md:46 src/components/how_to.md:175
 #: src/components/dependencies.md:504 src/components/collisions.md:121
 msgid "<footer id=\"last-change\">Last change: 2023-12-17</footer>"
 msgstr "<footer id=\"last-change\">Último cambio: 2023-12-17</footer>"
 
-#: src/ch00/basics/errors.md:1
+#: src/getting-started/basics/errors.md:1
 msgid "# Errors"
 msgstr "# Errores"
 
-#: src/ch00/basics/errors.md:3
+#: src/getting-started/basics/errors.md:3
 msgid ""
 "Errors can be used to handle validation and other conditions that may occur "
 "during the execution of a smart contract.\n"
@@ -1419,11 +1453,11 @@ msgstr ""
 "contract, la ejecución se detiene y se revierte cualquier cambio realizado "
 "durante la transacción."
 
-#: src/ch00/basics/errors.md:6
+#: src/getting-started/basics/errors.md:6
 msgid "To throw an error, use the `assert` or `panic` functions:"
 msgstr "Para generar un error, use las funciones `assert` o `panic`:"
 
-#: src/ch00/basics/errors.md:8
+#: src/getting-started/basics/errors.md:8
 msgid ""
 "- `assert` is used to validate conditions.\n"
 "  If the check fails, an error is thrown along with a specified value, often "
@@ -1447,11 +1481,11 @@ msgstr ""
 "   (Utilice `panic_with_felt252` para poder pasar directamente un fieltro252 "
 "como valor de error)"
 
-#: src/ch00/basics/errors.md:16
+#: src/getting-started/basics/errors.md:16
 msgid "Here's a simple example that demonstrates the use of these functions:"
 msgstr "Aquí hay un ejemplo simple que demuestra el uso de estas funciones:"
 
-#: src/ch00/basics/errors.md:18
+#: src/getting-started/basics/errors.md:18
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -1511,7 +1545,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/errors.md:46
+#: src/getting-started/basics/errors.md:46
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x0022664463FF0b711CC9B549a9E87d65A0882bB1D29338C4108696B8F2216a40) "
@@ -1523,13 +1557,13 @@ msgstr ""
 "contract/0x0022664463FF0b711CC9B549a9E87d65A0882bB1D29338C4108696B8F2216a40) "
 "o juega con él en [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/errors/src/simple_errors.cairo)."
+"blob/main/listings/getting-started-getting-started/errors/src/simple_errors.cairo)."
 
-#: src/ch00/basics/errors.md:48
+#: src/getting-started/basics/errors.md:48
 msgid "## Custom errors"
 msgstr "## Errores personalizados"
 
-#: src/ch00/basics/errors.md:50
+#: src/getting-started/basics/errors.md:50
 msgid ""
 "You can make error handling easier by defining your error codes in a "
 "specific module."
@@ -1537,7 +1571,7 @@ msgstr ""
 "Puede facilitar el manejo de errores definiendo sus códigos de error en un "
 "módulo específico."
 
-#: src/ch00/basics/errors.md:52
+#: src/getting-started/basics/errors.md:52
 msgid ""
 "```rust\n"
 "mod Errors {\n"
@@ -1609,7 +1643,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/errors.md:85
+#: src/getting-started/basics/errors.md:85
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x0501CD5da5B453a18515B5A20b8029bd7583DFE7a399ad9f79c284F7829e4A57) "
@@ -1621,13 +1655,13 @@ msgstr ""
 "contract/0x0501CD5da5B453a18515B5A20b8029bd7583DFE7a399ad9f79c284F7829e4A57) "
 "o juega con él en [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/errors/src/custom_errors.cairo)."
+"blob/main/listings/getting-started-getting-started/errors/src/custom_errors.cairo)."
 
-#: src/ch00/basics/errors.md:87
+#: src/getting-started/basics/errors.md:87
 msgid "## Vault example"
 msgstr "## Ejemplo de Vault"
 
-#: src/ch00/basics/errors.md:89
+#: src/getting-started/basics/errors.md:89
 msgid ""
 "Here's another example that demonstrates the use of errors in a more complex "
 "contract:"
@@ -1635,7 +1669,7 @@ msgstr ""
 "Aquí hay otro ejemplo que demuestra el uso de errores en un contrato más "
 "complejo:"
 
-#: src/ch00/basics/errors.md:91
+#: src/getting-started/basics/errors.md:91
 msgid ""
 "```rust\n"
 "mod VaultErrors {\n"
@@ -1731,7 +1765,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/errors.md:137
+#: src/getting-started/basics/errors.md:137
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x020C2da26F42A28Ef54ED428eF1810FE433784b055f9bF315C5d992b1579C268) "
@@ -1743,13 +1777,13 @@ msgstr ""
 "contract/0x020C2da26F42A28Ef54ED428eF1810FE433784b055f9bF315C5d992b1579C268) "
 "o juega con él en [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/errors/src/vault_errors.cairo)."
+"blob/main/listings/getting-started-getting-started/errors/src/vault_errors.cairo)."
 
-#: src/ch00/basics/events.md:1
+#: src/getting-started/basics/events.md:1
 msgid "# Events"
 msgstr "# Eventos"
 
-#: src/ch00/basics/events.md:3
+#: src/getting-started/basics/events.md:3
 msgid ""
 "Events are a way to emit data from a contract. All events must be defined in "
 "the `Event` enum, which must be annotated with the `#[event]` attribute.\n"
@@ -1768,7 +1802,7 @@ msgstr ""
 "consultar los datos más adelante. Los datos de eventos se pueden indexar "
 "agregando un atributo `#[key]` a un miembro de campo."
 
-#: src/ch00/basics/events.md:6
+#: src/getting-started/basics/events.md:6
 msgid ""
 "Here's a simple example of a contract using events that emit an event each "
 "time a counter is incremented by the \"increment\" function:"
@@ -1777,7 +1811,7 @@ msgstr ""
 "eventos que emiten un evento cada vez que la función `increment` incrementa "
 "un contador:"
 
-#: src/ch00/basics/events.md:8
+#: src/getting-started/basics/events.md:8
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -1905,7 +1939,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/events.md:66
+#: src/getting-started/basics/events.md:66
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x022e3B59518EA04aBb5da671ea04ecC3a154400f226d2Df38eFE146741b9E2F6) "
@@ -1917,18 +1951,18 @@ msgstr ""
 "contract/0x022e3B59518EA04aBb5da671ea04ecC3a154400f226d2Df38eFE146741b9E2F6) "
 "o juega con él en [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
-"blob/main/listings/ch00-getting-started/events/src/counter.cairo)."
+"blob/main/listings/getting-started-getting-started/events/src/counter.cairo)."
 
-#: src/ch00/basics/events.md:68 src/ch00/testing/contract-testing.md:176
-#: src/ch01/upgradeable_contract.md:117
+#: src/getting-started/basics/events.md:68 src/getting-started/testing/contract-testing.md:176
+#: src/applications/upgradeable_contract.md:117
 msgid "<footer id=\"last-change\">Last change: 2023-12-21</footer>"
 msgstr "<footer id=\"last-change\">Último cambio: 2023-12-21</footer>"
 
-#: src/ch00/basics/syscalls.md:1
+#: src/getting-started/basics/syscalls.md:1
 msgid "# Syscalls"
 msgstr "# Llamadas al Sistema"
 
-#: src/ch00/basics/syscalls.md:3
+#: src/getting-started/basics/syscalls.md:3
 msgid ""
 "At the protocol level, the Starknet Operating System (OS) is the program "
 "that manages the whole Starknet network."
@@ -1936,7 +1970,7 @@ msgstr ""
 "A nivel de protocolo, el sistema operativo (SO) Starknet es el programa que "
 "gestiona toda la red Starknet."
 
-#: src/ch00/basics/syscalls.md:5
+#: src/getting-started/basics/syscalls.md:5
 msgid ""
 "Some of the OS functionalities are exposed to smart contracts through the "
 "use of syscalls (system calls). Syscalls can be used to get information "
@@ -1949,7 +1983,7 @@ msgstr ""
 "red Starknet, para interactuar/implementar contratos, emitir eventos, enviar "
 "mensajes y realizar otras operaciones de bajo nivel."
 
-#: src/ch00/basics/syscalls.md:7
+#: src/getting-started/basics/syscalls.md:7
 msgid ""
 "Syscalls return a `SyscallResult` which is either `Sucess` of `Failure`, "
 "allowing the contract to handle errors."
@@ -1957,11 +1991,11 @@ msgstr ""
 "Las llamadas al sistema devuelven un `SyscallResult` que es `Sucess` o "
 "`Failure`, lo que permite que el contrato maneje los errores."
 
-#: src/ch00/basics/syscalls.md:9
+#: src/getting-started/basics/syscalls.md:9
 msgid "Here's the available syscalls:"
 msgstr "Aquí están las llamadas al sistema disponibles:"
 
-#: src/ch00/basics/syscalls.md:10
+#: src/getting-started/basics/syscalls.md:10
 msgid ""
 "- [get_block_hash](#get_block_hash)\n"
 "- [get_execution_info](#get_execution_info)\n"
@@ -1985,15 +2019,15 @@ msgstr ""
 "- [storage_read](#storage_read)\n"
 "- [storage_write](#storage_write)"
 
-#: src/ch00/basics/syscalls.md:20
+#: src/getting-started/basics/syscalls.md:20
 msgid "<!-- - keccak_syscall ? -->"
 msgstr "<!-- - keccak_syscall ? -->"
 
-#: src/ch00/basics/syscalls.md:22
+#: src/getting-started/basics/syscalls.md:22
 msgid "#### get_block_hash"
 msgstr "#### get_block_hash"
 
-#: src/ch00/basics/syscalls.md:24
+#: src/getting-started/basics/syscalls.md:24
 msgid ""
 "```rust\n"
 "fn get_block_hash_syscall(block_number: u64) -> SyscallResult<felt252>\n"
@@ -2003,19 +2037,19 @@ msgstr ""
 "fn get_block_hash_syscall(block_number: u64) -> SyscallResult<felt252>\n"
 "```"
 
-#: src/ch00/basics/syscalls.md:28
+#: src/getting-started/basics/syscalls.md:28
 msgid "Get the hash of the block number `block_number`."
 msgstr "Obtenga el hash del número de bloque `block_number`."
 
-#: src/ch00/basics/syscalls.md:30
+#: src/getting-started/basics/syscalls.md:30
 msgid "Only within the range `[first_v0_12_0_block, current_block - 10]`."
 msgstr "Solo dentro del rango `[first_v0_12_0_block, current_block - 10]`."
 
-#: src/ch00/basics/syscalls.md:32
+#: src/getting-started/basics/syscalls.md:32
 msgid "#### get_execution_info"
 msgstr "#### get_execution_info"
 
-#: src/ch00/basics/syscalls.md:34
+#: src/getting-started/basics/syscalls.md:34
 msgid ""
 "```rust\n"
 "fn get_execution_info_syscall() -> SyscallResult<Box<starknet::info::"
@@ -2027,7 +2061,7 @@ msgstr ""
 "ExecutionInfo>>\n"
 "```"
 
-#: src/ch00/basics/syscalls.md:38
+#: src/getting-started/basics/syscalls.md:38
 msgid ""
 "Get information about the current execution context.\n"
 "The returned `ExecutionInfo` is defined as :"
@@ -2035,7 +2069,7 @@ msgstr ""
 "Obtenga información sobre el contexto de ejecución actual.\n"
 "La `ExecutionInfo` devuelta se define como:"
 
-#: src/ch00/basics/syscalls.md:41
+#: src/getting-started/basics/syscalls.md:41
 msgid ""
 "```rust\n"
 "#[derive(Copy, Drop, Debug)]\n"
@@ -2149,7 +2183,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/syscalls.md:93
+#: src/getting-started/basics/syscalls.md:93
 msgid ""
 "`starknet::info` provides helper functions to access the `ExecutionInfo` "
 "fields in a more convenient way:"
@@ -2157,7 +2191,7 @@ msgstr ""
 "`starknet::info` proporciona funciones auxiliares para acceder a los campos "
 "`ExecutionInfo` de una manera más conveniente:"
 
-#: src/ch00/basics/syscalls.md:94
+#: src/getting-started/basics/syscalls.md:94
 msgid ""
 "- `get_execution_info() -> Box<ExecutionInfo>`\n"
 "- `get_caller_address() -> ContractAddress`\n"
@@ -2175,11 +2209,11 @@ msgstr ""
 "- `get_block_timestamp() -> u64`\n"
 "- `get_block_number() -> u64`"
 
-#: src/ch00/basics/syscalls.md:102
+#: src/getting-started/basics/syscalls.md:102
 msgid "#### call_contract"
 msgstr "#### call_contract"
 
-#: src/ch00/basics/syscalls.md:104
+#: src/getting-started/basics/syscalls.md:104
 msgid ""
 "```rust\n"
 "fn call_contract_syscall(\n"
@@ -2195,7 +2229,7 @@ msgstr ""
 ") -> SyscallResult<Span<felt252>>\n"
 "```"
 
-#: src/ch00/basics/syscalls.md:110
+#: src/getting-started/basics/syscalls.md:110
 msgid ""
 "Call a contract at `address` with the given `entry_point_selector` and "
 "`calldata`.\n"
@@ -2207,7 +2241,7 @@ msgstr ""
 "No se puede detectar una falla en esta llamada al sistema; si la llamada "
 "falla, se revertirá toda la transacción."
 
-#: src/ch00/basics/syscalls.md:113
+#: src/getting-started/basics/syscalls.md:113
 msgid ""
 "This is not the recommended way to call a contract. Instead, use the "
 "dispatcher generated from the contract interface as shown in the [Calling "
@@ -2218,15 +2252,15 @@ msgstr ""
 "como se muestra en [Llamar a otros contratos] (../interacting/"
 "calling_other_contracts.md)."
 
-#: src/ch00/basics/syscalls.md:115
+#: src/getting-started/basics/syscalls.md:115
 msgid "<!-- TODO Add example ? / with interact chapter -->"
 msgstr "<!-- TODO ¿Agregar ejemplo? / con capítulo de interacción -->"
 
-#: src/ch00/basics/syscalls.md:117
+#: src/getting-started/basics/syscalls.md:117
 msgid "#### deploy"
 msgstr "#### deploy"
 
-#: src/ch00/basics/syscalls.md:119
+#: src/getting-started/basics/syscalls.md:119
 msgid ""
 "```rust\n"
 "fn deploy_syscall(\n"
@@ -2246,7 +2280,7 @@ msgstr ""
 ") -> SyscallResult<(ContractAddress, Span::<felt252>)>\n"
 "```"
 
-#: src/ch00/basics/syscalls.md:128
+#: src/getting-started/basics/syscalls.md:128
 msgid ""
 "Deploy a new contract of the predeclared class `class_hash` with "
 "`calldata`.\n"
@@ -2258,7 +2292,7 @@ msgstr ""
 "El resultado exitoso es una tupla que contiene la dirección del contrato "
 "implementado y el valor de retorno del constructor."
 
-#: src/ch00/basics/syscalls.md:131
+#: src/getting-started/basics/syscalls.md:131
 msgid ""
 "`contract_address_salt` and `deploy_from_zero` are used to compute the "
 "contract address."
@@ -2266,7 +2300,7 @@ msgstr ""
 "`contract_address_salt` y `deploy_from_zero` se utilizan para calcular la "
 "dirección del contrato."
 
-#: src/ch00/basics/syscalls.md:133
+#: src/getting-started/basics/syscalls.md:133
 msgid ""
 "Example of the usage of the `deploy` syscall from the [Factory pattern](../"
 "interacting/factory.md):"
@@ -2274,7 +2308,7 @@ msgstr ""
 "Ejemplo del uso de la llamada al sistema `deploy` del [Factory pattern] (../"
 "interacting/factory.md):"
 
-#: src/ch00/basics/syscalls.md:135
+#: src/getting-started/basics/syscalls.md:135
 msgid ""
 "```rust\n"
 "# use starknet::{ContractAddress, ClassHash};\n"
@@ -2430,11 +2464,11 @@ msgstr ""
 "# \n"
 "```"
 
-#: src/ch00/basics/syscalls.md:204
+#: src/getting-started/basics/syscalls.md:204
 msgid "#### emit_event"
 msgstr "#### emit_event"
 
-#: src/ch00/basics/syscalls.md:206
+#: src/getting-started/basics/syscalls.md:206
 msgid ""
 "```rust\n"
 "fn emit_event_syscall(\n"
@@ -2448,11 +2482,11 @@ msgstr ""
 ") -> SyscallResult<()>\n"
 "```"
 
-#: src/ch00/basics/syscalls.md:212
+#: src/getting-started/basics/syscalls.md:212
 msgid "Emit an event with the given `keys` and `data`."
 msgstr "Emite un evento con las `keys` y los `data` proporcionados."
 
-#: src/ch00/basics/syscalls.md:214
+#: src/getting-started/basics/syscalls.md:214
 msgid ""
 "Example of the usage of the `emit_event` syscall from the [Events](../basics/"
 "events.md) chapter:"
@@ -2460,7 +2494,7 @@ msgstr ""
 "Ejemplo del uso de la llamada al sistema `emit_event` del capítulo [Eventos]"
 "(../basics/events.md):"
 
-#: src/ch00/basics/syscalls.md:216
+#: src/getting-started/basics/syscalls.md:216
 msgid ""
 "```rust\n"
 "# #[starknet::interface]\n"
@@ -2592,7 +2626,7 @@ msgstr ""
 "# \n"
 "```"
 
-#: src/ch00/basics/syscalls.md:277
+#: src/getting-started/basics/syscalls.md:277
 msgid ""
 "<!-- TODO Add a more low-level example ? -->\n"
 "<!-- ```\n"
@@ -2618,11 +2652,11 @@ msgstr ""
 "emit_event_syscall(keys, values).unwrap_syscall();\n"
 "``` -->"
 
-#: src/ch00/basics/syscalls.md:289
+#: src/getting-started/basics/syscalls.md:289
 msgid "#### library_call"
 msgstr "#### library_call"
 
-#: src/ch00/basics/syscalls.md:291
+#: src/getting-started/basics/syscalls.md:291
 msgid ""
 "```rust\n"
 "fn library_call_syscall(\n"
@@ -2638,7 +2672,7 @@ msgstr ""
 ") -> SyscallResult<Span<felt252>>\n"
 "```"
 
-#: src/ch00/basics/syscalls.md:297
+#: src/getting-started/basics/syscalls.md:297
 msgid ""
 "Call the function `function_selector` of the class `class_hash` with "
 "`calldata`.\n"
@@ -2650,15 +2684,15 @@ msgstr ""
 "Esto es análogo a una llamada de delegado en Ethereum, pero solo se llama a "
 "una clase."
 
-#: src/ch00/basics/syscalls.md:300
+#: src/getting-started/basics/syscalls.md:300
 msgid "<!-- TODO Add example: issue #41 -->"
 msgstr "<!-- TODO Add example: issue #41 -->"
 
-#: src/ch00/basics/syscalls.md:302
+#: src/getting-started/basics/syscalls.md:302
 msgid "#### send_message_to_L1"
 msgstr "#### send_message_to_L1"
 
-#: src/ch00/basics/syscalls.md:304
+#: src/getting-started/basics/syscalls.md:304
 msgid ""
 "```rust\n"
 "fn send_message_to_l1_syscall(\n"
@@ -2672,20 +2706,20 @@ msgstr ""
 ") -> SyscallResult<()>\n"
 "```"
 
-#: src/ch00/basics/syscalls.md:310
+#: src/getting-started/basics/syscalls.md:310
 msgid ""
 "Send a message to the L1 contract at `to_address` with the given `payload`."
 msgstr "Envíe un mensaje al contrato L1 en `to_address` con la `payload` dada."
 
-#: src/ch00/basics/syscalls.md:312
+#: src/getting-started/basics/syscalls.md:312
 msgid "<!-- TODO - Link to message example page: issue #9 -->"
 msgstr "<!-- TODO - Link to message example page: issue #9 -->"
 
-#: src/ch00/basics/syscalls.md:314
+#: src/getting-started/basics/syscalls.md:314
 msgid "#### replace_class"
 msgstr "#### replace_class"
 
-#: src/ch00/basics/syscalls.md:316
+#: src/getting-started/basics/syscalls.md:316
 msgid ""
 "```rust\n"
 "fn replace_class_syscall(\n"
@@ -2699,19 +2733,19 @@ msgstr ""
 ") -> SyscallResult<()>\n"
 "```"
 
-#: src/ch00/basics/syscalls.md:322
+#: src/getting-started/basics/syscalls.md:322
 msgid "Replace the class of the calling contract with the class `class_hash`."
 msgstr "Reemplace la clase del contrato de llamada con la clase `class_hash`."
 
-#: src/ch00/basics/syscalls.md:324
+#: src/getting-started/basics/syscalls.md:324
 msgid ""
 "This is used for contract upgrades. Here's an example from the [Upgradeable "
-"Contract](../../ch01/upgradeable_contract.md):"
+"Contract](../../applications/upgradeable_contract.md):"
 msgstr ""
 "Esto se utiliza para actualizaciones de contratos. Aquí hay un ejemplo del "
-"[Contrato actualizable](../../ch01/upgradeable_contract.md):"
+"[Contrato actualizable](../../applications/upgradeable_contract.md):"
 
-#: src/ch00/basics/syscalls.md:326
+#: src/getting-started/basics/syscalls.md:326
 msgid ""
 "```rust\n"
 "# use starknet::class_hash::ClassHash;\n"
@@ -2746,7 +2780,7 @@ msgid ""
 "#     impl UpgradeableContract of super::IUpgradeableContract<ContractState> "
 "{\n"
 "        fn upgrade(ref self: ContractState, impl_hash: ClassHash) {\n"
-"            assert(!impl_hash.is_zero(), 'Class hash cannot be zero');\n"
+"            assert(impl_hash.is_non_zero(), 'Class hash cannot be zero');\n"
 "            starknet::replace_class_syscall(impl_hash).unwrap_syscall();\n"
 "            self.emit(Event::Upgraded(Upgraded { implementation: "
 "impl_hash }))\n"
@@ -2794,7 +2828,7 @@ msgstr ""
 "#     impl UpgradeableContract of super::IUpgradeableContract<ContractState> "
 "{\n"
 "        fn upgrade(ref self: ContractState, impl_hash: ClassHash) {\n"
-"            assert(!impl_hash.is_zero(), 'Class hash cannot be zero');\n"
+"            assert(impl_hash.is_non_zero(), 'Class hash cannot be zero');\n"
 "            starknet::replace_class_syscall(impl_hash).unwrap_syscall();\n"
 "            self.emit(Event::Upgraded(Upgraded { implementation: "
 "impl_hash }))\n"
@@ -2809,7 +2843,7 @@ msgstr ""
 "# \n"
 "```"
 
-#: src/ch00/basics/syscalls.md:372
+#: src/getting-started/basics/syscalls.md:372
 msgid ""
 "The new class code will only be used for future calls to the contract.\n"
 "The current transaction containing the `replace_class` syscall will continue "
@@ -2824,11 +2858,11 @@ msgstr ""
 "nuevo código de clase llamando a `call_contract` después de la llamada al "
 "sistema `replace_class` en la misma transacción)"
 
-#: src/ch00/basics/syscalls.md:375
+#: src/getting-started/basics/syscalls.md:375
 msgid "#### storage_read"
 msgstr "#### storage_read"
 
-#: src/ch00/basics/syscalls.md:377
+#: src/getting-started/basics/syscalls.md:377
 msgid ""
 "```rust\n"
 "fn storage_read_syscall(\n"
@@ -2842,7 +2876,7 @@ msgstr ""
 ") -> SyscallResult<felt252>\n"
 "```"
 
-#: src/ch00/basics/syscalls.md:383
+#: src/getting-started/basics/syscalls.md:383
 msgid ""
 "This low-level syscall is used to get the value in the storage of a specific "
 "key at `address` in the `address_domain`."
@@ -2850,7 +2884,7 @@ msgstr ""
 "Esta llamada al sistema de bajo nivel se utiliza para obtener el valor en el "
 "almacenamiento de una clave específica en la`address` en el `address_domain`."
 
-#: src/ch00/basics/syscalls.md:385
+#: src/getting-started/basics/syscalls.md:385
 msgid ""
 "`address_domain` is used to distinguish between data availability modes.\n"
 "Currently, only mode `ONCHAIN` (`0`) is supported."
@@ -2859,11 +2893,11 @@ msgstr ""
 "datos.\n"
 "Actualmente, solo se admite el modo `ONCHAIN` (`0`)."
 
-#: src/ch00/basics/syscalls.md:388
+#: src/getting-started/basics/syscalls.md:388
 msgid "#### storage_write"
 msgstr "#### storage_write"
 
-#: src/ch00/basics/syscalls.md:390
+#: src/getting-started/basics/syscalls.md:390
 msgid ""
 "```rust\n"
 "fn storage_write_syscall(\n"
@@ -2877,7 +2911,7 @@ msgstr ""
 ") -> SyscallResult<()>\n"
 "```"
 
-#: src/ch00/basics/syscalls.md:396
+#: src/getting-started/basics/syscalls.md:396
 msgid ""
 "Similar to `storage_read`, this low-level syscall is used to write the value "
 "`value` in the storage of a specific key at `address` in the "
@@ -2887,11 +2921,11 @@ msgstr ""
 "escribir el valor `value` en el almacenamiento de una clave específica en "
 "`address` en el `address_domain`."
 
-#: src/ch00/basics/syscalls.md:398
+#: src/getting-started/basics/syscalls.md:398
 msgid "## Documentation"
 msgstr "## Documentación"
 
-#: src/ch00/basics/syscalls.md:400
+#: src/getting-started/basics/syscalls.md:400
 msgid ""
 "Syscalls are defined in [`starknet::syscall`](https://github.com/starkware-"
 "libs/cairo/blob/ec14a5e2c484190ff40811c973a72a53739cedb7/corelib/src/"
@@ -2901,7 +2935,7 @@ msgstr ""
 "com/starkware-libs/cairo/blob/ec14a5e2c484190ff40811c973a72a53739cedb7/"
 "corelib/src/starknet/syscalls.cairo)"
 
-#: src/ch00/basics/syscalls.md:402
+#: src/getting-started/basics/syscalls.md:402
 msgid ""
 "You can also read the [official documentation page](https://docs.starknet.io/"
 "documentation/architecture_and_concepts/Smart_Contracts/system-calls-"
@@ -2911,7 +2945,7 @@ msgstr ""
 "starknet.io/documentation/architecture_and_concepts/Smart_Contracts/system-"
 "calls-cairo1/) para obtener más detalles."
 
-#: src/ch00/basics/syscalls.md:404
+#: src/getting-started/basics/syscalls.md:404
 msgid ""
 "<!--\n"
 "\n"
@@ -2989,11 +3023,11 @@ msgstr ""
 "\n"
 "<footer id=\"last-change\">Last change: 2023-12-21</footer>"
 
-#: src/ch00/basics/storing-custom-types.md:1
+#: src/getting-started/basics/storing-custom-types.md:1
 msgid "# Storing Custom Types"
 msgstr "# Almacenamiento de Tipos Personalizados"
 
-#: src/ch00/basics/storing-custom-types.md:3
+#: src/getting-started/basics/storing-custom-types.md:3
 msgid ""
 "While native types can be stored in a contract's storage without any "
 "additional work, custom types require a bit more work. This is because at "
@@ -3010,7 +3044,7 @@ msgstr ""
 "tipo personalizado. Con suerte, podremos derivar este trait para nuestro "
 "tipo personalizado, a menos que contenga arrays o diccionarios."
 
-#: src/ch00/basics/storing-custom-types.md:5
+#: src/getting-started/basics/storing-custom-types.md:5
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -3076,7 +3110,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/storing-custom-types.md:37
+#: src/getting-started/basics/storing-custom-types.md:37
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
@@ -3086,11 +3120,11 @@ msgstr ""
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
 "blob/main/listings/getting-started/storing_custom_types/src/contract.cairo)."
 
-#: src/ch00/basics/custom-types-in-entrypoints.md:1
+#: src/getting-started/basics/custom-types-in-entrypoints.md:1
 msgid "# Custom types in entrypoints"
 msgstr "# Tipos personalizados en entrypoints"
 
-#: src/ch00/basics/custom-types-in-entrypoints.md:3
+#: src/getting-started/basics/custom-types-in-entrypoints.md:3
 msgid ""
 "Using custom types in entrypoints requires our type to implement the `Serde` "
 "trait. This is because when calling an entrypoint, the input is sent as an "
@@ -3108,7 +3142,7 @@ msgstr ""
 "Afortunadamente, podemos derivar el trait `Serde` para nuestro tipo "
 "personalizado."
 
-#: src/ch00/basics/custom-types-in-entrypoints.md:6
+#: src/getting-started/basics/custom-types-in-entrypoints.md:6
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -3174,7 +3208,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/custom-types-in-entrypoints.md:37
+#: src/getting-started/basics/custom-types-in-entrypoints.md:37
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
@@ -3184,11 +3218,11 @@ msgstr ""
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
 "blob/main/listings/getting-started/custom_type_serde/src/contract.cairo)."
 
-#: src/ch00/basics/documentation.md:1
+#: src/getting-started/basics/documentation.md:1
 msgid "# Documentation"
 msgstr "# Documentación"
 
-#: src/ch00/basics/documentation.md:3
+#: src/getting-started/basics/documentation.md:3
 msgid ""
 "It's important to take the time to document your code. It will helps "
 "developers and users to understand the contract and its functionalities."
@@ -3196,15 +3230,15 @@ msgstr ""
 "Es importante tomarse el tiempo para documentar su código. Ayudará a los "
 "desarrolladores y usuarios a comprender el contrato y sus funcionalidades."
 
-#: src/ch00/basics/documentation.md:5
+#: src/getting-started/basics/documentation.md:5
 msgid "In Cairo, you can add comments with `//`."
 msgstr "En Cairo, puedes agregar comentarios con `//`."
 
-#: src/ch00/basics/documentation.md:7
+#: src/getting-started/basics/documentation.md:7
 msgid "### Best Practices:"
 msgstr "## Mejores Prácticas:"
 
-#: src/ch00/basics/documentation.md:9
+#: src/getting-started/basics/documentation.md:9
 msgid ""
 "Since Cairo 1, the community has adopted a [Rust-like documentation style]"
 "(https://doc.rust-lang.org/rust-by-example/meta/doc.html)."
@@ -3213,11 +3247,11 @@ msgstr ""
 "a [Rust-like documentation style](https://doc.rust-lang.org/rust-by-example/"
 "meta/doc.html)."
 
-#: src/ch00/basics/documentation.md:11
+#: src/getting-started/basics/documentation.md:11
 msgid "### Contract Interface:"
 msgstr "## Interfaz de Contrato:"
 
-#: src/ch00/basics/documentation.md:13
+#: src/getting-started/basics/documentation.md:13
 msgid ""
 "In smart contracts, you will often have a trait that defines the contract's "
 "interface (with `#[starknet::interface]`).\n"
@@ -3231,7 +3265,7 @@ msgstr ""
 "el propósito y la funcionalidad de los puntos de entrada del contrato. "
 "Puedes seguir esta plantilla:"
 
-#: src/ch00/basics/documentation.md:16
+#: src/getting-started/basics/documentation.md:16
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -3267,7 +3301,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/basics/documentation.md:33
+#: src/getting-started/basics/documentation.md:33
 msgid ""
 "Keep in mind that this should not describe the implementation details of the "
 "function, but rather the high-level purpose and functionality of the "
@@ -3277,11 +3311,11 @@ msgstr ""
 "la función, sino más bien el propósito de alto nivel y la funcionalidad del "
 "contrato desde la perspectiva de un usuario."
 
-#: src/ch00/basics/documentation.md:35
+#: src/getting-started/basics/documentation.md:35
 msgid "### Implementation Details:"
 msgstr "### Detalles de Implementación:"
 
-#: src/ch00/basics/documentation.md:37
+#: src/getting-started/basics/documentation.md:37
 msgid ""
 "When writing the logic of the contract, you can add comments to describe the "
 "technical implementation details of the functions."
@@ -3289,7 +3323,7 @@ msgstr ""
 "Al escribir la lógica del contrato, puede agregar comentarios para describir "
 "los detalles técnicos de implementación de las funciones."
 
-#: src/ch00/basics/documentation.md:39
+#: src/getting-started/basics/documentation.md:39
 msgid ""
 "> Avoid over-commenting: Comments should provide additional value and "
 "clarity."
@@ -3297,28 +3331,28 @@ msgstr ""
 "> Evite comentarios excesivos: Los comentarios deben aportar valor y "
 "claridad adicionales."
 
-#: src/ch00/basics/documentation.md:41
+#: src/getting-started/basics/documentation.md:41
 msgid "<footer id=\"last-change\">Last change: 2023-12-05</footer>"
 msgstr "<footer id=\"last-change\">Último cambio: 2023-12-05</footer>"
 
-#: src/ch00/interacting/interacting.md:1
+#: src/getting-started/interacting/interacting.md:1
 msgid "# Deploy and interact with contracts"
 msgstr "# Desplegar contratos e interactuar con ellos"
 
-#: src/ch00/interacting/interacting.md:3
+#: src/getting-started/interacting/interacting.md:3
 msgid "In this chapter, we will see how to deploy and interact with contracts."
 msgstr ""
 "En este capítulo, veremos cómo implementar e interactuar con contratos."
 
-#: src/ch00/interacting/interacting.md:4
+#: src/getting-started/interacting/interacting.md:4
 msgid "<footer id=\"last-change\">Last change: 2023-10-19</footer>"
 msgstr "<footer id=\"last-change\">Último cambio: 2023-10-19</footer>"
 
-#: src/ch00/interacting/interfaces-traits.md:1
+#: src/getting-started/interacting/interfaces-traits.md:1
 msgid "# Contract interfaces and Traits generation"
 msgstr "# Interfaces de Contratos y generación de Traits"
 
-#: src/ch00/interacting/interfaces-traits.md:3
+#: src/getting-started/interacting/interfaces-traits.md:3
 msgid ""
 "Contract interfaces define the structure and behavior of a contract, serving "
 "as the contract's public ABI. They list all the function signatures that a "
@@ -3332,7 +3366,7 @@ msgstr ""
 "detallada de las interfaces, puede consultar el [Cairo Book](https://book."
 "cairo-lang.org/ch99-01-02-a-simple-contract.html)."
 
-#: src/ch00/interacting/interfaces-traits.md:5
+#: src/getting-started/interacting/interfaces-traits.md:5
 msgid ""
 "In cairo, to specify the interface you need to define a trait annotated with "
 "`#[starknet::interface]` and then implement that trait in the contract."
@@ -3340,7 +3374,7 @@ msgstr ""
 "En Cairo, para especificar la interfaz es necesario definir un trait anotado "
 "con `#[starknet::interface]` y luego implementar ese trait en el contrato."
 
-#: src/ch00/interacting/interfaces-traits.md:7
+#: src/getting-started/interacting/interfaces-traits.md:7
 msgid ""
 "When a function needs to access the contract state, it must have a `self` "
 "parameter of type `ContractState`. This implies that the corresponding "
@@ -3355,7 +3389,7 @@ msgstr ""
 "funciones de la interfaz del contrato deben tener este parámetro `self` de "
 "tipo `TContractState`."
 
-#: src/ch00/interacting/interfaces-traits.md:9
+#: src/getting-started/interacting/interfaces-traits.md:9
 msgid ""
 "You can use the `#[generate_trait]` attribute to implicitly generate the "
 "trait for a specific implementation block. This attribute automatically "
@@ -3374,11 +3408,11 @@ msgstr ""
 "`#[abi(per_item)]`, y cada función con el atributo apropiado dependiendo de "
 "si es una función externa, un constructor o un manejador l1."
 
-#: src/ch00/interacting/interfaces-traits.md:11
+#: src/getting-started/interacting/interfaces-traits.md:11
 msgid "In summary, there's two ways to handle interfaces:"
 msgstr "En resumen, hay dos formas de manejar las interfaces:"
 
-#: src/ch00/interacting/interfaces-traits.md:13
+#: src/getting-started/interacting/interfaces-traits.md:13
 msgid ""
 "- Explicitly, by defining a trait annoted with `#[starknet::interface]`\n"
 "- Implicitly, by using `#[generate_trait]` combined with the "
@@ -3390,11 +3424,11 @@ msgstr ""
 "#[abi(per_item)]` y anotando cada función dentro del bloque de "
 "implementación con el atributo apropiado."
 
-#: src/ch00/interacting/interfaces-traits.md:16
+#: src/getting-started/interacting/interfaces-traits.md:16
 msgid "## Explicit interface"
 msgstr "## Interfaz explícita"
 
-#: src/ch00/interacting/interfaces-traits.md:18
+#: src/getting-started/interacting/interfaces-traits.md:18
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -3452,7 +3486,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/interacting/interfaces-traits.md:45
+#: src/getting-started/interacting/interfaces-traits.md:45
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
@@ -3462,11 +3496,11 @@ msgstr ""
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
 "blob/main/listings/getting-started/interfaces_traits/src/explicit.cairo)."
 
-#: src/ch00/interacting/interfaces-traits.md:47
+#: src/getting-started/interacting/interfaces-traits.md:47
 msgid "## Implicit interface"
 msgstr "## Interfaz implícita"
 
-#: src/ch00/interacting/interfaces-traits.md:49
+#: src/getting-started/interacting/interfaces-traits.md:49
 msgid ""
 "```rust\n"
 "#[starknet::contract]\n"
@@ -3516,7 +3550,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/interacting/interfaces-traits.md:73
+#: src/getting-started/interacting/interfaces-traits.md:73
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
@@ -3526,7 +3560,7 @@ msgstr ""
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
 "blob/main/listings/getting-started/interfaces_traits/src/implicit.cairo)."
 
-#: src/ch00/interacting/interfaces-traits.md:75
+#: src/getting-started/interacting/interfaces-traits.md:75
 msgid ""
 "> Note: You can import an implicitly generated contract interface with `use "
 "contract::{GeneratedContractInterface}`. However, the `Dispatcher` will not "
@@ -3536,11 +3570,11 @@ msgstr ""
 "`use contract::{GeneratedContractInterface}`. Sin embargo, el `Dispatcher` "
 "no se generará automáticamente."
 
-#: src/ch00/interacting/interfaces-traits.md:77
+#: src/getting-started/interacting/interfaces-traits.md:77
 msgid "## Internal functions"
 msgstr "## Funciones internas"
 
-#: src/ch00/interacting/interfaces-traits.md:79
+#: src/getting-started/interacting/interfaces-traits.md:79
 msgid ""
 "You can also use `#[generate_trait]` for your internal functions.\n"
 "Since this trait is generated in the context of the contract, you can define "
@@ -3550,7 +3584,7 @@ msgstr ""
 "Dado que este trait se genera en el contexto del contrato, también puedes "
 "definir funciones puras (funciones sin el parámetro `self`)."
 
-#: src/ch00/interacting/interfaces-traits.md:82
+#: src/getting-started/interacting/interfaces-traits.md:82
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -3644,7 +3678,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/interacting/interfaces-traits.md:127
+#: src/getting-started/interacting/interfaces-traits.md:127
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
@@ -3656,15 +3690,15 @@ msgstr ""
 "blob/main/listings/getting-started/interfaces_traits/src/implicit_internal."
 "cairo)."
 
-#: src/ch00/interacting/calling_other_contracts.md:1
+#: src/getting-started/interacting/calling_other_contracts.md:1
 msgid "# Calling other contracts"
 msgstr "## Llamar a otros contratos"
 
-#: src/ch00/interacting/calling_other_contracts.md:3
+#: src/getting-started/interacting/calling_other_contracts.md:3
 msgid "There are two different ways to call other contracts in Cairo."
 msgstr "Hay dos formas diferentes de llamar a otros contratos en Cairo."
 
-#: src/ch00/interacting/calling_other_contracts.md:5
+#: src/getting-started/interacting/calling_other_contracts.md:5
 msgid ""
 "The easiest way to call other contracts is by using the dispatcher of the "
 "contract you want to call.\n"
@@ -3678,7 +3712,7 @@ msgstr ""
 "cairo-lang.org/ch99-02-02-contract-dispatcher-library-dispatcher-and-system-"
 "calls.html#contract-dispatcher)"
 
-#: src/ch00/interacting/calling_other_contracts.md:8
+#: src/getting-started/interacting/calling_other_contracts.md:8
 msgid ""
 "The other way is to use the `starknet::call_contract_syscall` syscall "
 "yourself. However, this method is not recommended."
@@ -3686,7 +3720,7 @@ msgstr ""
 "La otra forma es utilizar la llamada al sistema `starknet::"
 "call_contract_syscall`. Sin embargo, este método no es recomendable."
 
-#: src/ch00/interacting/calling_other_contracts.md:10
+#: src/getting-started/interacting/calling_other_contracts.md:10
 msgid ""
 "In order to call other contracts using dispatchers, you will need to define "
 "the called contract's interface as a trait annotated with the `#[starknet::"
@@ -3698,7 +3732,7 @@ msgstr ""
 "`#[starknet::interface]`, y luego importar los elementos "
 "`IContractDispatcher` e `IContractDispatcherTrait` en tu contrato."
 
-#: src/ch00/interacting/calling_other_contracts.md:12
+#: src/getting-started/interacting/calling_other_contracts.md:12
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -3746,7 +3780,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/interacting/calling_other_contracts.md:34
+#: src/getting-started/interacting/calling_other_contracts.md:34
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x015c3Bb6D0DE26b64FEAF9A8f4655CfADb5c128bF4510398972704ee12775DB1) "
@@ -3760,7 +3794,7 @@ msgstr ""
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
 "blob/main/listings/getting-started/calling_other_contracts/src/callee.cairo)."
 
-#: src/ch00/interacting/calling_other_contracts.md:36
+#: src/getting-started/interacting/calling_other_contracts.md:36
 msgid ""
 "```rust\n"
 "use starknet::ContractAddress;\n"
@@ -3832,7 +3866,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/interacting/calling_other_contracts.md:68
+#: src/getting-started/interacting/calling_other_contracts.md:68
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x05fa8aF796343d2f22c53C17149386b67B7AC4aB52D9e308Aa507C185aA44778) "
@@ -3846,11 +3880,11 @@ msgstr ""
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
 "blob/main/listings/getting-started/calling_other_contracts/src/caller.cairo)."
 
-#: src/ch00/interacting/factory.md:1
+#: src/getting-started/interacting/factory.md:1
 msgid "# Factory Pattern"
 msgstr "# Patrón de la Factory"
 
-#: src/ch00/interacting/factory.md:3
+#: src/getting-started/interacting/factory.md:3
 msgid ""
 "The factory pattern is a well known pattern in object oriented programming. "
 "It provides an abstraction on how to instantiate a class. "
@@ -3858,7 +3892,7 @@ msgstr ""
 "El patrón de factory es un patrón bien conocido en la programación orientada "
 "a objetos. Proporciona una abstracción sobre cómo instanciar una clase. "
 
-#: src/ch00/interacting/factory.md:5
+#: src/getting-started/interacting/factory.md:5
 msgid ""
 "In the case of smart contracts, we can use this pattern by defining a "
 "factory contract that have the sole responsibility of creating and managing "
@@ -3868,11 +3902,11 @@ msgstr ""
 "un contrato de factory que tenga la responsabilidad exclusiva de crear y "
 "gestionar otros contratos."
 
-#: src/ch00/interacting/factory.md:7
+#: src/getting-started/interacting/factory.md:7
 msgid "## Class hash and contract instance"
 msgstr "# Class hash e instancia de contrato"
 
-#: src/ch00/interacting/factory.md:9
+#: src/getting-started/interacting/factory.md:9
 msgid ""
 "In Starknet, there's a separation between contract's classes and instances. "
 "A contract class serves as a blueprint, defined by the underling Cairo "
@@ -3887,7 +3921,7 @@ msgstr ""
 "hash de clase. Cuando se desea agregar una nueva clase a la red, primero es "
 "necesario declararla."
 
-#: src/ch00/interacting/factory.md:11
+#: src/getting-started/interacting/factory.md:11
 msgid ""
 "When deploying a contract, you need to specify the class hash of the "
 "contract you want to deploy. Each instance of a contract has their own "
@@ -3897,7 +3931,7 @@ msgstr ""
 "del contrato que se desea desplegar. Cada instancia de un contrato tiene su "
 "propio almacenamiento independientemente del hash de clase."
 
-#: src/ch00/interacting/factory.md:13
+#: src/getting-started/interacting/factory.md:13
 msgid ""
 "Using the factory pattern, we can deploy multiple instances of the same "
 "contract class and handle upgrades easily."
@@ -3905,11 +3939,11 @@ msgstr ""
 "Utilizando el patrón de factory, podemos desplegar múltiples instancias de "
 "la misma clase de contrato y manejar las actualizaciones fácilmente."
 
-#: src/ch00/interacting/factory.md:15
+#: src/getting-started/interacting/factory.md:15
 msgid "## Minimal example"
 msgstr "## Ejemplo mínimo"
 
-#: src/ch00/interacting/factory.md:17
+#: src/getting-started/interacting/factory.md:17
 msgid ""
 "Here's a minimal example of a factory contract that deploy the "
 "`SimpleCounter` contract:"
@@ -3917,7 +3951,7 @@ msgstr ""
 "He aquí un ejemplo mínimo de un contrato de factory que despliega el "
 "contrato `SimpleCounter`:"
 
-#: src/ch00/interacting/factory.md:19
+#: src/getting-started/interacting/factory.md:19
 msgid ""
 "```rust\n"
 "use starknet::{ContractAddress, ClassHash};\n"
@@ -4069,7 +4103,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/interacting/factory.md:86
+#: src/getting-started/interacting/factory.md:86
 msgid ""
 "<!-- This is not ready for \"Open in remix\" because we need multiple files "
 "-->"
@@ -4077,7 +4111,7 @@ msgstr ""
 "<!-- Esto no está listo para \"Abrir en remix\" porque necesitamos varios "
 "archivos -->"
 
-#: src/ch00/interacting/factory.md:88
+#: src/getting-started/interacting/factory.md:88
 msgid ""
 "This factory can be used to deploy multiple instances of the `SimpleCounter` "
 "contract by calling the `create_counter` and `create_counter_at` functions."
@@ -4086,7 +4120,7 @@ msgstr ""
 "contrato `SimpleCounter` llamando a las funciones `create_counter` y "
 "`create_counter_at`."
 
-#: src/ch00/interacting/factory.md:90
+#: src/getting-started/interacting/factory.md:90
 msgid ""
 "The `SimpleCounter` class hash is stored inside the factory, and can be "
 "upgraded with the `update_counter_class_hash` function which allows to reuse "
@@ -4097,7 +4131,7 @@ msgstr ""
 "reutilizar el mismo contrato de fábrica cuando se actualiza el contrato "
 "`SimpleCounter`."
 
-#: src/ch00/interacting/factory.md:92
+#: src/getting-started/interacting/factory.md:92
 msgid ""
 "This minimal example lacks several useful features such as access control, "
 "tracking of deployed contracts, events, ..."
@@ -4105,7 +4139,7 @@ msgstr ""
 "Este ejemplo mínimo carece de varias funciones útiles, como el control de "
 "acceso, el seguimiento de los contratos desplegados, los eventos, ..."
 
-#: src/ch00/interacting/factory.md:94
+#: src/getting-started/interacting/factory.md:94
 msgid ""
 "<!-- TODO maybe add a more complete example at the end of this section or in "
 "the `Applications examples` chapter -->\n"
@@ -4117,11 +4151,11 @@ msgstr ""
 "\n"
 "<footer id=\"last-change\">Último cambio: 2023-12-21</footer>"
 
-#: src/ch00/testing/contract-testing.md:1
+#: src/getting-started/testing/contract-testing.md:1
 msgid "# Contract Testing"
 msgstr "# Testing de Contrato"
 
-#: src/ch00/testing/contract-testing.md:3
+#: src/getting-started/testing/contract-testing.md:3
 msgid ""
 "Testing plays a crucial role in software development, especially for smart "
 "contracts. In this section, we'll guide you through the basics of testing a "
@@ -4132,11 +4166,11 @@ msgstr ""
 "través de los conceptos básicos de las pruebas de un smart contracts en "
 "Starknet con `scarb`."
 
-#: src/ch00/testing/contract-testing.md:5
+#: src/getting-started/testing/contract-testing.md:5
 msgid "Let's start with a simple smart contract as an example:"
 msgstr "Empecemos con un simple contrato inteligente como ejemplo:"
 
-#: src/ch00/testing/contract-testing.md:6
+#: src/getting-started/testing/contract-testing.md:6
 msgid ""
 "```rust\n"
 "use starknet::ContractAddress;\n"
@@ -4226,11 +4260,11 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/testing/contract-testing.md:50
+#: src/getting-started/testing/contract-testing.md:50
 msgid "Now, take a look at the tests for this contract:"
 msgstr "Ahora, eche un vistazo a las pruebas de este contrato:"
 
-#: src/ch00/testing/contract-testing.md:51
+#: src/getting-started/testing/contract-testing.md:51
 msgid ""
 "```rust\n"
 "#[cfg(test)]\n"
@@ -4408,7 +4442,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/testing/contract-testing.md:132
+#: src/getting-started/testing/contract-testing.md:132
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
@@ -4418,7 +4452,7 @@ msgstr ""
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
 "blob/main/listings/getting-started/testing_how_to/src/lib.cairo)."
 
-#: src/ch00/testing/contract-testing.md:134
+#: src/getting-started/testing/contract-testing.md:134
 msgid ""
 "To define our test, we use scarb, which allows us to create a separate "
 "module guarded with `#[cfg(test)]`. This ensures that the test module is "
@@ -4428,7 +4462,7 @@ msgstr ""
 "separado protegido con `#[cfg(test)]`. Esto asegura que el módulo de prueba "
 "sólo se compila cuando se ejecutan pruebas utilizando `scarb test`."
 
-#: src/ch00/testing/contract-testing.md:136
+#: src/getting-started/testing/contract-testing.md:136
 msgid ""
 "Each test is defined as a function with the `#[test]` attribute. You can "
 "also check if a test panics using the `#[should_panic]` attribute."
@@ -4437,7 +4471,7 @@ msgstr ""
 "puede comprobar si una prueba entra en pánico utilizando el atributo "
 "`#[should_panic]`."
 
-#: src/ch00/testing/contract-testing.md:138
+#: src/getting-started/testing/contract-testing.md:138
 msgid ""
 "As we are in the context of a smart contract, it's essential to set up the "
 "gas limit. You do this by using the `#[available_gas(X)]` attribute to "
@@ -4450,15 +4484,15 @@ msgstr ""
 "manera de asegurar que las funciones de tu contrato se mantienen por debajo "
 "de un cierto límite de gas!"
 
-#: src/ch00/testing/contract-testing.md:140
+#: src/getting-started/testing/contract-testing.md:140
 msgid "> Note: The term \"gas\" here refers to Sierra gas, not L1 gas"
 msgstr ">Nota: El término \"gas\" se refiere aquí al gas Sierra, no al gas L1"
 
-#: src/ch00/testing/contract-testing.md:142
+#: src/getting-started/testing/contract-testing.md:142
 msgid "Now, let's move on to the testing process:"
 msgstr "Pasemos ahora al proceso de prueba:"
 
-#: src/ch00/testing/contract-testing.md:143
+#: src/getting-started/testing/contract-testing.md:143
 msgid ""
 "- Use the `deploy` function logic to declare and deploy your contract.\n"
 "- Use `assert` to verify that the contract behaves as expected in the given "
@@ -4469,7 +4503,7 @@ msgstr ""
 "- Utilice `assert` para verificar que el contrato se comporta como se espera "
 "en el contexto dado."
 
-#: src/ch00/testing/contract-testing.md:146
+#: src/getting-started/testing/contract-testing.md:146
 msgid ""
 "To make testing more convenient, the `testing` module of the corelib "
 "provides some helpful functions:"
@@ -4477,7 +4511,7 @@ msgstr ""
 "Para que las pruebas resulten más cómodas, el módulo `testing` de corelib "
 "proporciona algunas funciones útiles:"
 
-#: src/ch00/testing/contract-testing.md:147
+#: src/getting-started/testing/contract-testing.md:147
 msgid ""
 "- `set_caller_address(address: ContractAddress)`\n"
 "- `set_contract_address(address: ContractAddress)`\n"
@@ -4493,7 +4527,7 @@ msgstr ""
 "- `set_account_contract_address(address: ContractAddress)`\n"
 "- `set_max_fee(fee: u128)`"
 
-#: src/ch00/testing/contract-testing.md:154
+#: src/getting-started/testing/contract-testing.md:154
 msgid ""
 "You may also need the `info` module from the corelib, which allows you to "
 "access information about the current execution context (see [syscalls](../"
@@ -4503,7 +4537,7 @@ msgstr ""
 "acceder a información sobre el contexto de ejecución actual (consulte "
 "[syscalls](../basics/syscalls.md)):"
 
-#: src/ch00/testing/contract-testing.md:155
+#: src/getting-started/testing/contract-testing.md:155
 msgid ""
 "- `get_caller_address() -> ContractAddress`\n"
 "- `get_contract_address() -> ContractAddress`\n"
@@ -4519,7 +4553,7 @@ msgstr ""
 "- `get_block_timestamp() -> u64`\n"
 "- `get_block_number() -> u64`"
 
-#: src/ch00/testing/contract-testing.md:163
+#: src/getting-started/testing/contract-testing.md:163
 msgid ""
 "You can found the full list of functions in the [Starknet Corelib repo]"
 "(https://github.com/starkware-libs/cairo/tree/main/corelib/src/starknet).\n"
@@ -4534,15 +4568,15 @@ msgstr ""
 "el [Libro de Cairo - Capítulo 9](https://book.cairo-lang.org/ch09-01-how-to-"
 "write-tests.html)."
 
-#: src/ch00/testing/contract-testing.md:166
+#: src/getting-started/testing/contract-testing.md:166
 msgid "## Starknet Foundry"
 msgstr "## Starknet Foundry"
 
-#: src/ch00/testing/contract-testing.md:168
+#: src/getting-started/testing/contract-testing.md:168
 msgid "<!-- TODO update this when Starknet Foundry is more mature. -->"
 msgstr "<!-- TODO actualice esto cuando Starknet Foundry esté más maduro. -->"
 
-#: src/ch00/testing/contract-testing.md:170
+#: src/getting-started/testing/contract-testing.md:170
 msgid ""
 "Starknet Foundry is a powerful toolkit for developing smart contracts on "
 "Starknet. It offers support for testing Starknet smart contracts on top of "
@@ -4552,7 +4586,7 @@ msgstr ""
 "de contratos inteligentes en Starknet. Ofrece soporte para probar contratos "
 "inteligentes Starknet sobre `scarb` con la herramienta `Forge`."
 
-#: src/ch00/testing/contract-testing.md:172
+#: src/getting-started/testing/contract-testing.md:172
 msgid ""
 "Testing with `snforge` is similar to the process we just described but "
 "simplified. Moreover, additional features are on the way, including "
@@ -4564,7 +4598,7 @@ msgstr ""
 "cheatcodes o ejecución de pruebas en paralelo. Recomendamos encarecidamente "
 "explorar Starknet Foundry e incorporarlo a tus proyectos."
 
-#: src/ch00/testing/contract-testing.md:174
+#: src/getting-started/testing/contract-testing.md:174
 msgid ""
 "For more detailed information about testing contracts with Starknet Foundry, "
 "check out the [Starknet Foundry Book - Testing Contracts](https://foundry-rs."
@@ -4574,11 +4608,11 @@ msgstr ""
 "Starknet Foundry, consulte el [Starknet Foundry Book - Testing Contracts]"
 "(https://foundry-rs.github.io/starknet-foundry/testing/contracts.html)."
 
-#: src/ch00/cairo_cheatsheet/cairo_cheatsheet.md:1
+#: src/getting-started/cairo_cheatsheet/cairo_cheatsheet.md:1
 msgid "# Cairo Cheatsheet"
 msgstr "# Hoja de ruta de Cairo"
 
-#: src/ch00/cairo_cheatsheet/cairo_cheatsheet.md:3
+#: src/getting-started/cairo_cheatsheet/cairo_cheatsheet.md:3
 msgid ""
 "This chapter aims to provide a quick reference for the most common Cairo "
 "constructs."
@@ -4586,15 +4620,15 @@ msgstr ""
 "Este capítulo pretende ofrecer una referencia rápida para las construcciones "
 "más comunes de Cairo."
 
-#: src/ch00/cairo_cheatsheet/cairo_cheatsheet.md:5
+#: src/getting-started/cairo_cheatsheet/cairo_cheatsheet.md:5
 msgid "<footer id=\"last-change\">Last change: 2023-10-31</footer>"
 msgstr "<footer id=\"last-change\">Último cambio: 2023-10-31</footer>"
 
-#: src/ch00/cairo_cheatsheet/felt.md:1
+#: src/getting-started/cairo_cheatsheet/felt.md:1
 msgid "# Felt252"
 msgstr "# Felt252"
 
-#: src/ch00/cairo_cheatsheet/felt.md:3
+#: src/getting-started/cairo_cheatsheet/felt.md:3
 msgid ""
 "Felt252 is a fundamental data type in Cairo from which all other data types "
 "are derived.\n"
@@ -4606,12 +4640,12 @@ msgstr ""
 "Felt252 también se puede utilizar para almacenar representaciones de cadenas "
 "cortas con una longitud máxima de 31 caracteres."
 
-#: src/ch00/cairo_cheatsheet/felt.md:6 src/ch00/cairo_cheatsheet/arrays.md:20
-#: src/ch02/hash-solidity-compatible.md:5
+#: src/getting-started/cairo_cheatsheet/felt.md:6 src/getting-started/cairo_cheatsheet/arrays.md:20
+#: src/advanced-concepts/hash-solidity-compatible.md:5
 msgid "For example:"
 msgstr "Por ejemplo:"
 
-#: src/ch00/cairo_cheatsheet/felt.md:8
+#: src/getting-started/cairo_cheatsheet/felt.md:8
 msgid ""
 "```rust\n"
 "    let felt: felt252 = 100;\n"
@@ -4627,18 +4661,18 @@ msgstr ""
 "    let felt = felt + felt_as_str;\n"
 "```"
 
-#: src/ch00/cairo_cheatsheet/mapping.md:1
+#: src/getting-started/cairo_cheatsheet/mapping.md:1
 msgid "# Mapping"
 msgstr "# Mapping"
 
-#: src/ch00/cairo_cheatsheet/mapping.md:3
+#: src/getting-started/cairo_cheatsheet/mapping.md:3
 msgid ""
 "The ```LegacyMap``` type can be used to represent a collection of key-value."
 msgstr ""
 "El tipo ```LegacyMap``` se puede utilizar para representar una colección de "
 "key-value."
 
-#: src/ch00/cairo_cheatsheet/mapping.md:5
+#: src/getting-started/cairo_cheatsheet/mapping.md:5
 msgid ""
 "```rust\n"
 "use starknet::ContractAddress;\n"
@@ -4768,11 +4802,11 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/cairo_cheatsheet/arrays.md:1
+#: src/getting-started/cairo_cheatsheet/arrays.md:1
 msgid "# Arrays"
 msgstr "# Arrays"
 
-#: src/ch00/cairo_cheatsheet/arrays.md:3
+#: src/getting-started/cairo_cheatsheet/arrays.md:3
 msgid ""
 "Arrays are collections of elements of the same type.\n"
 "The possible operations on arrays are defined with the `array::ArrayTrait` "
@@ -4782,7 +4816,7 @@ msgstr ""
 "Las posibles operaciones sobre arrays se definen con el `array::ArrayTrait` "
 "de corelib:"
 
-#: src/ch00/cairo_cheatsheet/arrays.md:6
+#: src/getting-started/cairo_cheatsheet/arrays.md:6
 msgid ""
 "```rust\n"
 "trait ArrayTrait<T> {\n"
@@ -4812,7 +4846,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/cairo_cheatsheet/arrays.md:22
+#: src/getting-started/cairo_cheatsheet/arrays.md:22
 msgid ""
 "```rust\n"
 "fn array() -> bool {\n"
@@ -4854,11 +4888,11 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/cairo_cheatsheet/loop.md:1
+#: src/getting-started/cairo_cheatsheet/loop.md:1
 msgid "# Loop"
 msgstr "# Loop"
 
-#: src/ch00/cairo_cheatsheet/loop.md:3
+#: src/getting-started/cairo_cheatsheet/loop.md:3
 msgid ""
 "A loop specifies a block of code that will run repetitively until a halting "
 "condition is encountered.\n"
@@ -4868,7 +4902,7 @@ msgstr ""
 "hasta que se encuentre una condición de detención.\n"
 "Por ejemplo:"
 
-#: src/ch00/cairo_cheatsheet/loop.md:6
+#: src/getting-started/cairo_cheatsheet/loop.md:6
 msgid ""
 "```rust\n"
 "    let mut arr = ArrayTrait::new();\n"
@@ -4904,24 +4938,24 @@ msgstr ""
 "    };\n"
 "```"
 
-#: src/ch00/cairo_cheatsheet/match.md:1
+#: src/getting-started/cairo_cheatsheet/match.md:1
 msgid "# Match"
 msgstr "# Match"
 
-#: src/ch00/cairo_cheatsheet/match.md:3
+#: src/getting-started/cairo_cheatsheet/match.md:3
 msgid ""
-"The \"match\" expression in Cairo allows us to control the flow of our code "
-"by comparing a felt data type or an enum against various patterns and then "
+"The `match` expression in Cairo allows us to control the flow of our code "
+"by comparing a `felt252` data type or an enum against various patterns and then "
 "running specific code based on the pattern that matches.\n"
 "For example:"
 msgstr ""
-"La expresión \"match\" en Cairo nos permite controlar el flujo de nuestro "
+"La expresión `match` en Cairo nos permite controlar el flujo de nuestro "
 "código comparando un tipo de datos sentido o una enumeración con varios "
 "patrones y luego ejecutando código específico basado en el patrón que "
 "coincide.\n"
 "Por ejemplo:"
 
-#: src/ch00/cairo_cheatsheet/match.md:6
+#: src/getting-started/cairo_cheatsheet/match.md:6
 msgid ""
 "```rust\n"
 "#[derive(Drop, Serde)]\n"
@@ -5029,11 +5063,11 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/cairo_cheatsheet/tuples.md:1
+#: src/getting-started/cairo_cheatsheet/tuples.md:1
 msgid "# Tuples"
 msgstr "# Tuples"
 
-#: src/ch00/cairo_cheatsheet/tuples.md:3
+#: src/getting-started/cairo_cheatsheet/tuples.md:3
 msgid ""
 "Tuples is a data type to group a fixed number of items of potentially "
 "different types into a single compound structure. Unlike arrays, tuples have "
@@ -5048,7 +5082,7 @@ msgstr ""
 "tamaño no puede cambiar.\n"
 "Por ejemplo:"
 
-#: src/ch00/cairo_cheatsheet/tuples.md:6
+#: src/getting-started/cairo_cheatsheet/tuples.md:6
 msgid ""
 "```rust\n"
 "    let address = \"0x000\";\n"
@@ -5074,11 +5108,11 @@ msgstr ""
 "    let (address, age, active) = stored_tuple;\n"
 "```"
 
-#: src/ch00/cairo_cheatsheet/struct.md:1
+#: src/getting-started/cairo_cheatsheet/struct.md:1
 msgid "# Struct"
 msgstr "# Struct"
 
-#: src/ch00/cairo_cheatsheet/struct.md:3
+#: src/getting-started/cairo_cheatsheet/struct.md:3
 msgid ""
 "A struct is a data type similar to tuple. Like tuples they can be used to "
 "hold data of different types.\n"
@@ -5088,7 +5122,7 @@ msgstr ""
 "tuplas, se pueden utilizar para contener datos de diferentes tipos.Por "
 "ejemplo:"
 
-#: src/ch00/cairo_cheatsheet/struct.md:6
+#: src/getting-started/cairo_cheatsheet/struct.md:6
 msgid ""
 "```rust\n"
 "// With Store, you can store Data's structs in the storage part of "
@@ -5110,11 +5144,11 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch00/cairo_cheatsheet/type_casting.md:1
+#: src/getting-started/cairo_cheatsheet/type_casting.md:1
 msgid "# Type casting"
 msgstr "# Conversión de Tipos"
 
-#: src/ch00/cairo_cheatsheet/type_casting.md:3
+#: src/getting-started/cairo_cheatsheet/type_casting.md:3
 msgid ""
 "Cairo supports the conversion from one scalar types to another by using the "
 "into and try_into methods.\n"
@@ -5130,7 +5164,7 @@ msgstr ""
 "convertir de un tipo más grande a uno más pequeño que podría no encajar.\n"
 "Por ejemplo:"
 
-#: src/ch00/cairo_cheatsheet/type_casting.md:7
+#: src/getting-started/cairo_cheatsheet/type_casting.md:7
 msgid ""
 "```rust\n"
 "    let a_number: u32 = 15;\n"
@@ -5158,7 +5192,7 @@ msgid ""
 "    let new_u256: u256 = my_felt252.into();\n"
 "    let new_felt252: felt252 = new_u16.into();\n"
 "\n"
-"    //note a usize is smaller than a felt so we use the try_into\n"
+"    // Note: usize is smaller than felt252, so we use try_into\n"
 "    let new_usize: usize = my_felt252.try_into().unwrap();\n"
 "```"
 msgstr ""
@@ -5188,7 +5222,7 @@ msgstr ""
 "    let new_u256: u256 = my_felt252.into();\n"
 "    let new_felt252: felt252 = new_u16.into();\n"
 "\n"
-"    //note a usize is smaller than a felt so we use the try_into\n"
+"    // Note: usize is smaller than felt252, so we use try_into\n"
 "    let new_usize: usize = my_felt252.try_into().unwrap();\n"
 "```"
 
@@ -7139,20 +7173,20 @@ msgid ""
 "    > of OwnableInternalTrait<TContractState> {\n"
 "        fn _assert_only_owner(self: @ComponentState<TContractState>) {\n"
 "            let caller = get_caller_address();\n"
-"            assert(!caller.is_zero(), Errors::ZERO_ADDRESS_CALLER);\n"
+"            assert(caller.is_non_zero(), Errors::ZERO_ADDRESS_CALLER);\n"
 "            assert(caller == self.ownable_owner.read(), Errors::"
 "UNAUTHORIZED);\n"
 "        }\n"
 "\n"
 "        fn _init(ref self: ComponentState<TContractState>, owner: "
 "ContractAddress) {\n"
-"            assert(!owner.is_zero(), Errors::ZERO_ADDRESS_OWNER);\n"
+"            assert(owner.is_non_zero(), Errors::ZERO_ADDRESS_OWNER);\n"
 "            self.ownable_owner.write(owner);\n"
 "        }\n"
 "\n"
 "        fn _transfer_ownership(ref self: ComponentState<TContractState>, "
 "new: ContractAddress) {\n"
-"            assert(!new.is_zero(), Errors::ZERO_ADDRESS_OWNER);\n"
+"            assert(new.is_non_zero(), Errors::ZERO_ADDRESS_OWNER);\n"
 "            let previous = self.ownable_owner.read();\n"
 "            self.ownable_owner.write(new);\n"
 "            self\n"
@@ -7243,20 +7277,20 @@ msgstr ""
 "    > of OwnableInternalTrait<TContractState> {\n"
 "        fn _assert_only_owner(self: @ComponentState<TContractState>) {\n"
 "            let caller = get_caller_address();\n"
-"            assert(!caller.is_zero(), Errors::ZERO_ADDRESS_CALLER);\n"
+"            assert(caller.is_non_zero(), Errors::ZERO_ADDRESS_CALLER);\n"
 "            assert(caller == self.ownable_owner.read(), Errors::"
 "UNAUTHORIZED);\n"
 "        }\n"
 "\n"
 "        fn _init(ref self: ComponentState<TContractState>, owner: "
 "ContractAddress) {\n"
-"            assert(!owner.is_zero(), Errors::ZERO_ADDRESS_OWNER);\n"
+"            assert(owner.is_non_zero(), Errors::ZERO_ADDRESS_OWNER);\n"
 "            self.ownable_owner.write(owner);\n"
 "        }\n"
 "\n"
 "        fn _transfer_ownership(ref self: ComponentState<TContractState>, "
 "new: ContractAddress) {\n"
-"            assert(!new.is_zero(), Errors::ZERO_ADDRESS_OWNER);\n"
+"            assert(new.is_non_zero(), Errors::ZERO_ADDRESS_OWNER);\n"
 "            let previous = self.ownable_owner.read();\n"
 "            self.ownable_owner.write(new);\n"
 "            self\n"
@@ -7646,15 +7680,15 @@ msgstr ""
 "# }\n"
 "```"
 
-#: src/components/ownable.md:282 src/ch02/hashing.md:133
+#: src/components/ownable.md:282 src/advanced-concepts/hashing.md:133
 msgid "<footer id=\"last-change\">Last change: 2024-01-05</footer>"
 msgstr "<footer id=\"last-change\">Última modificación: 2024-01-05</footer>"
 
-#: src/ch01/upgradeable_contract.md:1
+#: src/applications/upgradeable_contract.md:1
 msgid "# Upgradeable Contract"
 msgstr "# Contratos Actualizables"
 
-#: src/ch01/upgradeable_contract.md:3
+#: src/applications/upgradeable_contract.md:3
 msgid ""
 "In Starknet, contracts are divided into two parts: contract classes and "
 "contract\n"
@@ -7669,7 +7703,7 @@ msgstr ""
 "programación orientados a objetos, en los que se distingue entre definición "
 "e implementación de objetos."
 
-#: src/ch01/upgradeable_contract.md:8
+#: src/applications/upgradeable_contract.md:8
 msgid ""
 "A contract class is the definition of a contract: it specifies how the "
 "contract\n"
@@ -7684,7 +7718,7 @@ msgstr ""
 "nombres de puntos de entrada y todo lo que define su semántica\n"
 "sin ambigüedades."
 
-#: src/ch01/upgradeable_contract.md:13
+#: src/applications/upgradeable_contract.md:13
 msgid ""
 "To identify different contract classes, Starknet assigns a unique identifier "
 "to each\n"
@@ -7700,7 +7734,7 @@ msgstr ""
 "específica. Piense en ello como una instancia de un objeto en lenguajes como "
 "Java."
 
-#: src/ch01/upgradeable_contract.md:18
+#: src/applications/upgradeable_contract.md:18
 msgid ""
 "Each class is identified by its class hash, which is analogous to a class "
 "name in an object-oriented programming language. A contract instance is a "
@@ -7710,7 +7744,7 @@ msgstr ""
 "clase en un lenguaje de programación orientado a objetos. Una instancia de "
 "contrato es un contrato desplegado correspondiente a una clase."
 
-#: src/ch01/upgradeable_contract.md:20
+#: src/applications/upgradeable_contract.md:20
 msgid ""
 "You can upgrade a deployed contract to a newer version by calling the "
 "`replace_class_syscall` function. By using this function, you can update the "
@@ -7725,7 +7759,7 @@ msgstr ""
 "almacenamiento del contrato, por lo que todos los datos almacenados en el "
 "contrato seguirán siendo los mismos."
 
-#: src/ch01/upgradeable_contract.md:22
+#: src/applications/upgradeable_contract.md:22
 msgid ""
 "To illustrate this concept, let's consider an example with two contracts: "
 "`UpgradeableContract_V0`, and `UpgradeableContract_V1`.\n"
@@ -7745,7 +7779,7 @@ msgstr ""
 "Luego, llama al método `version` en el contrato para ver que el contrato fue "
 "actualizado a la versión V1."
 
-#: src/ch01/upgradeable_contract.md:25
+#: src/applications/upgradeable_contract.md:25
 msgid ""
 "```rust\n"
 "use starknet::class_hash::ClassHash;\n"
@@ -7780,7 +7814,7 @@ msgid ""
 "    impl UpgradeableContract of super::IUpgradeableContract<ContractState> "
 "{\n"
 "        fn upgrade(ref self: ContractState, impl_hash: ClassHash) {\n"
-"            assert(!impl_hash.is_zero(), 'Class hash cannot be zero');\n"
+"            assert(impl_hash.is_non_zero(), 'Class hash cannot be zero');\n"
 "            starknet::replace_class_syscall(impl_hash).unwrap_syscall();\n"
 "            self.emit(Event::Upgraded(Upgraded { implementation: "
 "impl_hash }))\n"
@@ -7826,7 +7860,7 @@ msgstr ""
 "    impl UpgradeableContract of super::IUpgradeableContract<ContractState> "
 "{\n"
 "        fn upgrade(ref self: ContractState, impl_hash: ClassHash) {\n"
-"            assert(!impl_hash.is_zero(), 'Class hash cannot be zero');\n"
+"            assert(impl_hash.is_non_zero(), 'Class hash cannot be zero');\n"
 "            starknet::replace_class_syscall(impl_hash).unwrap_syscall();\n"
 "            self.emit(Event::Upgraded(Upgraded { implementation: "
 "impl_hash }))\n"
@@ -7839,7 +7873,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch01/upgradeable_contract.md:68
+#: src/applications/upgradeable_contract.md:68
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x005300003ade5d10447d941a42d48b7141074cd8bade2b16520684896a5090ea) "
@@ -7855,7 +7889,7 @@ msgstr ""
 "blob/main/listings/applications/upgradeable_contract/src/"
 "upgradeable_contract_v0.cairo)."
 
-#: src/ch01/upgradeable_contract.md:71
+#: src/applications/upgradeable_contract.md:71
 msgid ""
 "```rust\n"
 "use starknet::class_hash::ClassHash;\n"
@@ -7890,7 +7924,7 @@ msgid ""
 "    impl UpgradeableContract of super::IUpgradeableContract<ContractState> "
 "{\n"
 "        fn upgrade(ref self: ContractState, impl_hash: ClassHash) {\n"
-"            assert(!impl_hash.is_zero(), 'Class hash cannot be zero');\n"
+"            assert(impl_hash.is_non_zero(), 'Class hash cannot be zero');\n"
 "            starknet::replace_class_syscall(impl_hash).unwrap_syscall();\n"
 "            self.emit(Event::Upgraded(Upgraded { implementation: "
 "impl_hash }))\n"
@@ -7936,7 +7970,7 @@ msgstr ""
 "    impl UpgradeableContract of super::IUpgradeableContract<ContractState> "
 "{\n"
 "        fn upgrade(ref self: ContractState, impl_hash: ClassHash) {\n"
-"            assert(!impl_hash.is_zero(), 'Class hash cannot be zero');\n"
+"            assert(impl_hash.is_non_zero(), 'Class hash cannot be zero');\n"
 "            starknet::replace_class_syscall(impl_hash).unwrap_syscall();\n"
 "            self.emit(Event::Upgraded(Upgraded { implementation: "
 "impl_hash }))\n"
@@ -7949,7 +7983,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch01/upgradeable_contract.md:114
+#: src/applications/upgradeable_contract.md:114
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x017c86152badd1d665b9836571bd6b0a484f028748aa13d9b2d5d9c9192fafc6) "
@@ -7965,11 +7999,11 @@ msgstr ""
 "blob/main/listings/applications/upgradeable_contract/src/"
 "upgradeable_contract_v1.cairo)."
 
-#: src/ch01/simple_vault.md:1
+#: src/applications/simple_vault.md:1
 msgid "# Simple Defi Vault"
 msgstr "# Simple Defi Vault"
 
-#: src/ch01/simple_vault.md:3
+#: src/applications/simple_vault.md:3
 msgid ""
 "This is the Cairo adaptation of the [Solidity by example Vault](https://"
 "solidity-by-example.org/defi/vault/).\n"
@@ -7979,7 +8013,7 @@ msgstr ""
 "solidity-by-example.org/defi/vault/).\n"
 "Funciona de la siguiente manera:"
 
-#: src/ch01/simple_vault.md:6
+#: src/applications/simple_vault.md:6
 msgid ""
 "- When a user deposits a token, the contract calculates the amount of shares "
 "to mint.\n"
@@ -7994,7 +8028,7 @@ msgstr ""
 "rendimiento y retira tanto el rendimiento como la cantidad inicial de token "
 "depositada."
 
-#: src/ch01/simple_vault.md:10
+#: src/applications/simple_vault.md:10
 msgid ""
 "```rust\n"
 "use starknet::{ContractAddress};\n"
@@ -8220,7 +8254,7 @@ msgstr ""
 "\n"
 "```"
 
-#: src/ch01/simple_vault.md:113
+#: src/applications/simple_vault.md:113
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
@@ -8230,11 +8264,11 @@ msgstr ""
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
 "blob/main/listings/applications/simple_vault/src/simple_vault.cairo)."
 
-#: src/ch01/erc20.md:1
+#: src/applications/erc20.md:1
 msgid "# ERC20 Token"
 msgstr "# Token ERC20"
 
-#: src/ch01/erc20.md:3
+#: src/applications/erc20.md:3
 msgid ""
 "Contracts that follow the [ERC20 Standard](https://eips.ethereum.org/EIPS/"
 "eip-20) are called ERC20 tokens. They are used to represent fungible assets."
@@ -8243,12 +8277,12 @@ msgstr ""
 "eip-20) se denominan tokens ERC20. Se utilizan para representar activos "
 "fungibles."
 
-#: src/ch01/erc20.md:5
+#: src/applications/erc20.md:5
 msgid ""
 "To create an ERC20 conctract, it must implement the following interface:"
 msgstr "Para crear un contrato ERC20, debe implementar la siguiente interfaz:"
 
-#: src/ch01/erc20.md:7
+#: src/applications/erc20.md:7
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -8314,7 +8348,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch01/erc20.md:33
+#: src/applications/erc20.md:33
 msgid ""
 "In Starknet, function names should be written in *snake_case*. This is not "
 "the case in Solidity, where function names are written in *camelCase*.\n"
@@ -8327,11 +8361,11 @@ msgstr ""
 "Por lo tanto, la interfaz ERC20 de Starknet es ligeramente diferente de la "
 "interfaz ERC20 de Solidity."
 
-#: src/ch01/erc20.md:36
+#: src/applications/erc20.md:36
 msgid "Here's an implementation of the ERC20 interface in Cairo:"
 msgstr "He aquí una implementación de la interfaz ERC20 en Cairo:"
 
-#: src/ch01/erc20.md:38
+#: src/applications/erc20.md:38
 msgid ""
 "```rust\n"
 "#[starknet::contract]\n"
@@ -8481,8 +8515,8 @@ msgid ""
 "            recipient: ContractAddress,\n"
 "            amount: felt252\n"
 "        ) {\n"
-"            assert(!sender.is_zero(), Errors::TRANSFER_FROM_ZERO);\n"
-"            assert(!recipient.is_zero(), Errors::TRANSFER_TO_ZERO);\n"
+"            assert(sender.is_non_zero(), Errors::TRANSFER_FROM_ZERO);\n"
+"            assert(recipient.is_non_zero(), Errors::TRANSFER_TO_ZERO);\n"
 "            self.balances.write(sender, self.balances.read(sender) - "
 "amount);\n"
 "            self.balances.write(recipient, self.balances.read(recipient) + "
@@ -8507,14 +8541,14 @@ msgid ""
 "            spender: ContractAddress,\n"
 "            amount: felt252\n"
 "        ) {\n"
-"            assert(!spender.is_zero(), Errors::APPROVE_TO_ZERO);\n"
+"            assert(spender.is_non_zero(), Errors::APPROVE_TO_ZERO);\n"
 "            self.allowances.write((owner, spender), amount);\n"
 "            self.emit(Approval { owner, spender, value: amount });\n"
 "        }\n"
 "\n"
 "        fn mint(ref self: ContractState, recipient: ContractAddress, amount: "
 "felt252) {\n"
-"            assert(!recipient.is_zero(), Errors::MINT_TO_ZERO);\n"
+"            assert(recipient.is_non_zero(), Errors::MINT_TO_ZERO);\n"
 "            let supply = self.total_supply.read() + amount; // What can go "
 "wrong here?\n"
 "            self.total_supply.write(supply);\n"
@@ -8682,8 +8716,8 @@ msgstr ""
 "            recipient: ContractAddress,\n"
 "            amount: felt252\n"
 "        ) {\n"
-"            assert(!sender.is_zero(), Errors::TRANSFER_FROM_ZERO);\n"
-"            assert(!recipient.is_zero(), Errors::TRANSFER_TO_ZERO);\n"
+"            assert(sender.is_non_zero(), Errors::TRANSFER_FROM_ZERO);\n"
+"            assert(recipient.is_non_zero(), Errors::TRANSFER_TO_ZERO);\n"
 "            self.balances.write(sender, self.balances.read(sender) - "
 "amount);\n"
 "            self.balances.write(recipient, self.balances.read(recipient) + "
@@ -8708,14 +8742,14 @@ msgstr ""
 "            spender: ContractAddress,\n"
 "            amount: felt252\n"
 "        ) {\n"
-"            assert(!spender.is_zero(), Errors::APPROVE_TO_ZERO);\n"
+"            assert(spender.is_non_zero(), Errors::APPROVE_TO_ZERO);\n"
 "            self.allowances.write((owner, spender), amount);\n"
 "            self.emit(Approval { owner, spender, value: amount });\n"
 "        }\n"
 "\n"
 "        fn mint(ref self: ContractState, recipient: ContractAddress, amount: "
 "felt252) {\n"
-"            assert(!recipient.is_zero(), Errors::MINT_TO_ZERO);\n"
+"            assert(recipient.is_non_zero(), Errors::MINT_TO_ZERO);\n"
 "            let supply = self.total_supply.read() + amount; // What can go "
 "wrong here?\n"
 "            self.total_supply.write(supply);\n"
@@ -8735,7 +8769,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch01/erc20.md:224
+#: src/applications/erc20.md:224
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
@@ -8745,7 +8779,7 @@ msgstr ""
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
 "blob/main/listings/applications/erc20/src/token.cairo)."
 
-#: src/ch01/erc20.md:226
+#: src/applications/erc20.md:226
 msgid ""
 "There's several other implementations, such as the [Open Zeppelin](https://"
 "docs.openzeppelin.com/contracts-cairo/0.7.0/erc20) or the [Cairo By Example]"
@@ -8755,11 +8789,11 @@ msgstr ""
 "openzeppelin.com/contracts-cairo/0.7.0/erc20) o la [Cairo By Example]"
 "(https://cairo-by-example.com/examples/erc20/)."
 
-#: src/ch01/constant-product-amm.md:1
+#: src/applications/constant-product-amm.md:1
 msgid "# Constant Product AMM"
 msgstr "# AMM de Producto Constante"
 
-#: src/ch01/constant-product-amm.md:3
+#: src/applications/constant-product-amm.md:3
 msgid ""
 "This is the Cairo adaptation of the [Solidity by example Constant Product "
 "AMM](https://solidity-by-example.org/defi/constant-product-amm/)."
@@ -8767,7 +8801,7 @@ msgstr ""
 "Se trata de la adaptación cairota de la [Solidez por ejemplo Producto "
 "Constante AMM](https://solidity-by-example.org/defi/constant-product-amm/)."
 
-#: src/ch01/constant-product-amm.md:5
+#: src/applications/constant-product-amm.md:5
 msgid ""
 "```rust\n"
 "use starknet::ContractAddress;\n"
@@ -9367,7 +9401,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch01/constant-product-amm.md:274
+#: src/applications/constant-product-amm.md:274
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
@@ -9379,11 +9413,11 @@ msgstr ""
 "blob/main/listings/applications/constant_product_amm/src/"
 "constant_product_amm.cairo)."
 
-#: src/ch02/write_to_any_slot.md:1
+#: src/advanced-concepts/write_to_any_slot.md:1
 msgid "# Writing to any storage slot"
 msgstr "# Escribir en cualquier ranura de almacenamiento"
 
-#: src/ch02/write_to_any_slot.md:3
+#: src/advanced-concepts/write_to_any_slot.md:3
 msgid ""
 "On Starknet, a contract's storage is a map with 2^251 slots, where each slot "
 "is a felt which is initialized to 0.\n"
@@ -9400,7 +9434,7 @@ msgstr ""
 "variables de almacenamiento se realizan normalmente utilizando las funciones "
 "`self.var.read()` y `self.var.write()`."
 
-#: src/ch02/write_to_any_slot.md:6
+#: src/advanced-concepts/write_to_any_slot.md:6
 msgid ""
 "Nevertheless, we can use the `storage_write_syscall` and "
 "`storage_read_syscall` syscalls, to write to and read from any storage "
@@ -9418,7 +9452,7 @@ msgstr ""
 "contrato se actualiza y el método de cálculo de las direcciones de las "
 "variables de almacenamiento cambia, siguen siendo accesibles."
 
-#: src/ch02/write_to_any_slot.md:9
+#: src/advanced-concepts/write_to_any_slot.md:9
 msgid ""
 "In the following example, we use the Poseidon hash function to compute the "
 "address of a storage variable. Poseidon is a ZK-friendly hash function that "
@@ -9433,7 +9467,7 @@ msgstr ""
 "calculada la dirección, utilizamos las llamadas al sistema de almacenamiento "
 "para interactuar con ella."
 
-#: src/ch02/write_to_any_slot.md:11
+#: src/advanced-concepts/write_to_any_slot.md:11
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -9535,7 +9569,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch02/write_to_any_slot.md:56
+#: src/advanced-concepts/write_to_any_slot.md:56
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x033943CB781A4E63C9dcE0A1A09eAa3b617AA43CC61637C08c043a67f3fe0087) "
@@ -9549,11 +9583,11 @@ msgstr ""
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
 "blob/main/listings/advanced-concepts/write_to_any_slot/src/contract.cairo)."
 
-#: src/ch02/storing_arrays.md:1
+#: src/advanced-concepts/storing_arrays.md:1
 msgid "# Storing Arrays"
 msgstr "# Almacenamiento de Arrays"
 
-#: src/ch02/storing_arrays.md:3
+#: src/advanced-concepts/storing_arrays.md:3
 msgid ""
 "On Starknet, complex values (e.g., tuples or structs), are stored in a "
 "continuous segment starting from the address of the storage variable. There "
@@ -9575,7 +9609,7 @@ msgstr ""
 "escribir tu propia implementación del rasgo `Store` para el tipo de array "
 "que desees almacenar."
 
-#: src/ch02/storing_arrays.md:5
+#: src/advanced-concepts/storing_arrays.md:5
 msgid ""
 "> Note: While storing arrays in storage is possible, it is not always "
 "recommended, as the read and write operations can get very costly. For "
@@ -9592,7 +9626,7 @@ msgstr ""
 "cada vez, se recomienda utilizar un `LegacyMap` y almacenar la longitud en "
 "otra variable."
 
-#: src/ch02/storing_arrays.md:7
+#: src/advanced-concepts/storing_arrays.md:7
 msgid ""
 "The following example demonstrates how to write a simple implementation of "
 "the `StorageAccess` trait for the `Array<felt252>` type, allowing us to "
@@ -9602,7 +9636,7 @@ msgstr ""
 "trait `StorageAccess` para el tipo `Array<felt252>`, permitiéndonos "
 "almacenar arrays de hasta 255 elementos `felt252`."
 
-#: src/ch02/storing_arrays.md:9
+#: src/advanced-concepts/storing_arrays.md:9
 msgid ""
 "```rust\n"
 "impl StoreFelt252Array of Store<Array<felt252>> {\n"
@@ -9750,7 +9784,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch02/storing_arrays.md:73
+#: src/advanced-concepts/storing_arrays.md:73
 msgid ""
 "You can then import this implementation in your contract and use it to store "
 "arrays in storage:"
@@ -9758,7 +9792,7 @@ msgstr ""
 "A continuación, puede importar esta implementación en su contrato y "
 "utilizarla para almacenar arrays en el almacenamiento:"
 
-#: src/ch02/storing_arrays.md:75
+#: src/advanced-concepts/storing_arrays.md:75
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -9818,7 +9852,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch02/storing_arrays.md:103
+#: src/advanced-concepts/storing_arrays.md:103
 msgid ""
 "Visit contract on [Voyager](https://goerli.voyager.online/"
 "contract/0x008F8069a3Fcd7691Db46Dc3b6F9D2C0436f9200E861330957Fd780A3595da86) "
@@ -9832,11 +9866,11 @@ msgstr ""
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
 "blob/main/listings/advanced-concepts/storing_arrays/src/contract.cairo)."
 
-#: src/ch02/struct-mapping-key.md:1
+#: src/advanced-concepts/struct-mapping-key.md:1
 msgid "# Structs as mapping keys"
 msgstr "# Estructuras como mapping keys"
 
-#: src/ch02/struct-mapping-key.md:3
+#: src/advanced-concepts/struct-mapping-key.md:3
 msgid ""
 "In order to use structs as mapping keys, you can use `#[derive(Hash)]` on "
 "the struct definition. This will automatically generate a hash function for "
@@ -9848,7 +9882,7 @@ msgstr ""
 "automáticamente una función hash para la estructura que se puede utilizar "
 "para representar la estructura como una key en un `LegacyMap`."
 
-#: src/ch02/struct-mapping-key.md:5
+#: src/advanced-concepts/struct-mapping-key.md:5
 msgid ""
 "Consider the following example in which we would like to use an object of\n"
 "type `Pet` as a key in a `LegacyMap`. The `Pet` struct has three fields: "
@@ -9860,7 +9894,7 @@ msgstr ""
 "campos: `nombre`, `edad` y `propietario`. Consideramos que la combinación de "
 "estos tres campos identifica de forma única a una mascota."
 
-#: src/ch02/struct-mapping-key.md:8
+#: src/advanced-concepts/struct-mapping-key.md:8
 msgid ""
 "```rust\n"
 "#[derive(Copy, Drop, Serde, Hash)]\n"
@@ -9938,7 +9972,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch02/struct-mapping-key.md:45
+#: src/advanced-concepts/struct-mapping-key.md:45
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
@@ -9950,11 +9984,11 @@ msgstr ""
 "blob/main/listings/advanced-concepts/struct_as_mapping_key/src/contract."
 "cairo)."
 
-#: src/ch02/hashing.md:1
+#: src/advanced-concepts/hashing.md:1
 msgid "# Hashing"
 msgstr "# Hashing"
 
-#: src/ch02/hashing.md:3
+#: src/advanced-concepts/hashing.md:3
 msgid ""
 "Hashing is a cryptographic technique that allows you to transform a variable "
 "length input into a fixed length output.\n"
@@ -9970,7 +10004,7 @@ msgstr ""
 "Las funciones hash son deterministas, lo que significa que la misma entrada "
 "siempre producirá la misma salida."
 
-#: src/ch02/hashing.md:7
+#: src/advanced-concepts/hashing.md:7
 msgid ""
 "The two hash functions provided by the Cairo library are `Poseidon` and "
 "`Pedersen`.\n"
@@ -9986,7 +10020,7 @@ msgstr ""
 "hashes Poseidon son el estándar hoy en día ya que fueron diseñados para ser "
 "muy eficientes para sistemas de Zero Knowledge proof."
 
-#: src/ch02/hashing.md:10
+#: src/advanced-concepts/hashing.md:10
 msgid ""
 "In Cairo it's possible to hash all the types that can be converted to "
 "`felt252` since they implement natively the `Hash` trait. It's also possible "
@@ -10000,7 +10034,7 @@ msgstr ""
 "el atributo `#[derive(Hash)]` pero sólo si todos los campos del struct son a "
 "su vez hashables."
 
-#: src/ch02/hashing.md:12
+#: src/advanced-concepts/hashing.md:12
 msgid ""
 "You first need to initialize a hash state with the `new` method of the "
 "`HashStateTrait` and then you can update it with the `update` method. You "
@@ -10012,7 +10046,7 @@ msgstr ""
 "acumular múltiples actualizaciones. A continuación, el método `finalize` "
 "devuelve el valor hash final como un `felt252`."
 
-#: src/ch02/hashing.md:14
+#: src/advanced-concepts/hashing.md:14
 msgid ""
 "```rust\n"
 "# #[starknet::interface]\n"
@@ -10272,11 +10306,11 @@ msgstr ""
 "# }\n"
 "```"
 
-#: src/ch02/hash-solidity-compatible.md:1
+#: src/advanced-concepts/hash-solidity-compatible.md:1
 msgid "# Hash Solidity Compatible"
 msgstr "# Hash compatible con Solidity"
 
-#: src/ch02/hash-solidity-compatible.md:3
+#: src/advanced-concepts/hash-solidity-compatible.md:3
 msgid ""
 "This contract demonstrates Keccak hashing in Cairo to match Solidity's "
 "keccak256. While both use Keccak, their endianness differs: Cairo is little-"
@@ -10291,7 +10325,7 @@ msgstr ""
 "`keccak_u256s_be_inputs`, e invirtiendo los bytes del resultado con "
 "`u128_byte_reverse`."
 
-#: src/ch02/hash-solidity-compatible.md:7
+#: src/advanced-concepts/hash-solidity-compatible.md:7
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -10373,7 +10407,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch02/hash-solidity-compatible.md:44
+#: src/advanced-concepts/hash-solidity-compatible.md:44
 msgid ""
 "Play with the contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet&url=https://github.com/NethermindEth/StarknetByExample/"
@@ -10385,19 +10419,19 @@ msgstr ""
 "blob/main/listings/advanced-concepts/hash_solidity_compatible/src/contract."
 "cairo)."
 
-#: src/ch02/optimisations/optimisations.md:1
+#: src/advanced-concepts/optimisations/optimisations.md:1
 msgid "# Optimisations "
 msgstr "# Optimizaciones "
 
-#: src/ch02/optimisations/optimisations.md:3
+#: src/advanced-concepts/optimisations/optimisations.md:3
 msgid "A collection of optimisation patterns to save gas and steps."
 msgstr "Una colección de patrones de optimización para ahorrar gas y pasos."
 
-#: src/ch02/optimisations/store_using_packing.md:1
+#: src/advanced-concepts/optimisations/store_using_packing.md:1
 msgid "# Storage optimisation "
 msgstr "# Optimización del Storage "
 
-#: src/ch02/optimisations/store_using_packing.md:3
+#: src/advanced-concepts/optimisations/store_using_packing.md:3
 msgid ""
 "A smart contract has a limited amount of **storage slots**. Each slot can "
 "store a single `felt252` value.\n"
@@ -10409,7 +10443,7 @@ msgstr ""
 "Escribir en una ranura de almacenamiento tiene un coste, por lo que queremos "
 "utilizar el menor número posible de ranuras de almacenamiento."
 
-#: src/ch02/optimisations/store_using_packing.md:6
+#: src/advanced-concepts/optimisations/store_using_packing.md:6
 msgid ""
 "In Cairo, every type is derived from the `felt252` type, which uses 252 bits "
 "to store a value.\n"
@@ -10423,11 +10457,11 @@ msgstr ""
 "en almacenamiento. Por ejemplo, si queremos almacenar un valor `u8`, "
 "necesitamos usar un slot entero, aunque sólo necesitemos 8 bits."
 
-#: src/ch02/optimisations/store_using_packing.md:9
+#: src/advanced-concepts/optimisations/store_using_packing.md:9
 msgid "## Packing"
 msgstr "## Packing"
 
-#: src/ch02/optimisations/store_using_packing.md:11
+#: src/advanced-concepts/optimisations/store_using_packing.md:11
 msgid ""
 "When storing multiple values, we can use a technique called **packing**. "
 "Packing is a technique that allows us to store multiple values in a single "
@@ -10439,7 +10473,7 @@ msgstr ""
 "múltiples valores en un único valor de felt. Esto se hace utilizando los "
 "bits del valor de felt para almacenar múltiples valores."
 
-#: src/ch02/optimisations/store_using_packing.md:13
+#: src/advanced-concepts/optimisations/store_using_packing.md:13
 msgid ""
 "For example, if we want to store two `u8` values, we can use the first 8 "
 "bits of the felt value to store the first `u8` value, and the last 8 bits to "
@@ -10451,7 +10485,7 @@ msgstr ""
 "últimos 8 bits para almacenar el segundo valor `u8`. De esta forma, podemos "
 "almacenar dos valores `u8` en un único valor de felt."
 
-#: src/ch02/optimisations/store_using_packing.md:15
+#: src/advanced-concepts/optimisations/store_using_packing.md:15
 msgid ""
 "Cairo provides a built-in store using packing that you can use with the "
 "`StorePacking` trait."
@@ -10459,7 +10493,7 @@ msgstr ""
 "Cairo proporciona un almacén incorporado que usa empaquetado que puedes usar "
 "con el trait `StorePacking`."
 
-#: src/ch02/optimisations/store_using_packing.md:17
+#: src/advanced-concepts/optimisations/store_using_packing.md:17
 msgid ""
 "```rust\n"
 "trait StorePacking<T, PackedT> {\n"
@@ -10475,7 +10509,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch02/optimisations/store_using_packing.md:24
+#: src/advanced-concepts/optimisations/store_using_packing.md:24
 msgid ""
 "This allows to store the type `T` by first packing it into the type "
 "`PackedT` with the `pack` function, and then storing the `PackedT` value "
@@ -10489,7 +10523,7 @@ msgstr ""
 "`PackedT`, y luego lo desempaquetamos en el tipo `T` utilizando la función "
 "`unpack`."
 
-#: src/ch02/optimisations/store_using_packing.md:26
+#: src/advanced-concepts/optimisations/store_using_packing.md:26
 msgid ""
 "Here's an example of storing a `Time` struct with two `u8` values using the "
 "`StorePacking` trait:"
@@ -10497,7 +10531,7 @@ msgstr ""
 "He aquí un ejemplo de almacenamiento de una estructura `Time` con dos "
 "valores `u8` utilizando el trait `StorePacking`:"
 
-#: src/ch02/optimisations/store_using_packing.md:28
+#: src/advanced-concepts/optimisations/store_using_packing.md:28
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -10627,7 +10661,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch02/optimisations/store_using_packing.md:88
+#: src/advanced-concepts/optimisations/store_using_packing.md:88
 msgid ""
 "Play with this contract in [Remix](https://remix.ethereum.org/?"
 "#activate=Starknet-cairo1-compiler&url=https://github.com/NethermindEth/"
@@ -10639,11 +10673,11 @@ msgstr ""
 "StarknetByExample/blob/main/listings/advanced-concepts/store_using_packing/"
 "src/contract.cairo)."
 
-#: src/ch02/list.md:1
+#: src/advanced-concepts/list.md:1
 msgid "# List"
 msgstr "# Lista"
 
-#: src/ch02/list.md:3
+#: src/advanced-concepts/list.md:3
 msgid ""
 "By default, there is no list type supported in Cairo, but you can use "
 "Alexandria. You can refer to the [Alexandria documentation](https://github."
@@ -10654,17 +10688,17 @@ msgstr ""
 "github.com/keep-starknet-strange/alexandria/tree/main/src/storage) para más "
 "detalles."
 
-#: src/ch02/list.md:5
+#: src/advanced-concepts/list.md:5
 msgid "## What is `List`?"
 msgstr "## ¿Qué es `List`?"
 
-#: src/ch02/list.md:7
+#: src/advanced-concepts/list.md:7
 msgid "An ordered sequence of values that can be used in Starknet storage:"
 msgstr ""
 "Una secuencia ordenada de valores que puede utilizarse en el storage de "
 "Starknet:"
 
-#: src/ch02/list.md:9
+#: src/advanced-concepts/list.md:9
 msgid ""
 "```rust\n"
 "#[storage]\n"
@@ -10680,11 +10714,11 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch02/list.md:16
+#: src/advanced-concepts/list.md:16
 msgid "### Interface"
 msgstr "### Interface"
 
-#: src/ch02/list.md:18
+#: src/advanced-concepts/list.md:18
 msgid ""
 "```rust\n"
 "trait ListTrait<T> {\n"
@@ -10710,7 +10744,7 @@ msgstr ""
 "}\n"
 "```"
 
-#: src/ch02/list.md:30
+#: src/advanced-concepts/list.md:30
 msgid ""
 "`List` also implements `IndexView` so you can use the familiar bracket "
 "notation to access its members:"
@@ -10718,7 +10752,7 @@ msgstr ""
 "`List` también implementa `IndexView` para que puedas utilizar la notación "
 "familiar de corchetes para acceder a sus miembros:"
 
-#: src/ch02/list.md:32
+#: src/advanced-concepts/list.md:32
 msgid ""
 "```rust\n"
 "let second = self.amounts.read()[1];\n"
@@ -10728,7 +10762,7 @@ msgstr ""
 "let second = self.amounts.read()[1];\n"
 "```"
 
-#: src/ch02/list.md:36
+#: src/advanced-concepts/list.md:36
 msgid ""
 "Note that unlike `get`, using this bracket notation panics when accessing an "
 "out of bounds index."
@@ -10736,11 +10770,11 @@ msgstr ""
 "Tenga en cuenta que, a diferencia de `get`, el uso de esta notación de "
 "corchetes entra en pánico cuando se accede a un índice fuera de los límites."
 
-#: src/ch02/list.md:38
+#: src/advanced-concepts/list.md:38
 msgid "### Support for custom types"
 msgstr "### Compatibilidad con tipos personalizados"
 
-#: src/ch02/list.md:40
+#: src/advanced-concepts/list.md:40
 msgid ""
 "`List` supports most of the corelib types out of the box. If you want to "
 "store a your own custom type in a `List`, it has to implement the `Store` "
@@ -10752,15 +10786,15 @@ msgstr ""
 "Puedes hacer que el compilador lo derive por ti usando el atributo "
 "`#[derive(starknet::Store)]`."
 
-#: src/ch02/list.md:42
+#: src/advanced-concepts/list.md:42
 msgid "### Caveats"
 msgstr "### Advertencias"
 
-#: src/ch02/list.md:44
+#: src/advanced-concepts/list.md:44
 msgid "There are two idiosyncacies you should be aware of when using `List`"
 msgstr "Hay dos particularidades que debe tener en cuenta al utilizar `List`"
 
-#: src/ch02/list.md:46
+#: src/advanced-concepts/list.md:46
 msgid ""
 "1. The `append` operation costs 2 storage writes - one for the value itself "
 "and another one for updating the List's length\n"
@@ -10774,7 +10808,7 @@ msgstr ""
 "operaciones de mutación con una única sentencia inline. Por ejemplo, `self."
 "amounts.read().append(42);` no funcionará. Tienes que hacerlo en 2 pasos:"
 
-#: src/ch02/list.md:49
+#: src/advanced-concepts/list.md:49
 msgid ""
 "```rust\n"
 "let mut amounts = self.amounts.read();\n"
@@ -10786,15 +10820,15 @@ msgstr ""
 "amounts.append(42);\n"
 "```"
 
-#: src/ch02/list.md:54
+#: src/advanced-concepts/list.md:54
 msgid "### Dependencies"
 msgstr "### Dependencias"
 
-#: src/ch02/list.md:56
+#: src/advanced-concepts/list.md:56
 msgid "Update your project dependencies by in the `Scarb.toml` file:"
 msgstr "Actualice las dependencias de su proyecto en el archivo `Scarb.toml`:"
 
-#: src/ch02/list.md:57
+#: src/advanced-concepts/list.md:57
 msgid ""
 "```rust\n"
 "[dependencies]\n"
@@ -10810,7 +10844,7 @@ msgstr ""
 "alexandria.git\" }\n"
 "```"
 
-#: src/ch02/list.md:63
+#: src/advanced-concepts/list.md:63
 msgid ""
 "For example, let's use `List` to create a contract that tracks a list of "
 "amounts and tasks:"
@@ -10818,7 +10852,7 @@ msgstr ""
 "Por ejemplo, utilicemos `List` para crear un contrato que realice el "
 "seguimiento de una lista de importes y tareas:"
 
-#: src/ch02/list.md:65
+#: src/advanced-concepts/list.md:65
 msgid ""
 "```rust\n"
 "#[starknet::interface]\n"
@@ -10840,7 +10874,7 @@ msgid ""
 "\n"
 "    #[storage]\n"
 "    struct Storage {\n"
-"        amount: List<u128>,\n"
+"        amounts: List<u128>,\n"
 "        tasks: List<Task>\n"
 "    }\n"
 "\n"
@@ -10854,7 +10888,7 @@ msgid ""
 "    #[abi(embed_v0)]\n"
 "    impl ListExample of super::IListExample<ContractState> {\n"
 "        fn add_in_amount(ref self: ContractState, number: u128) {\n"
-"            let mut current_amount_list = self.amount.read();\n"
+"            let mut current_amount_list = self.amounts.read();\n"
 "            current_amount_list.append(number);\n"
 "        }\n"
 "\n"
@@ -10867,32 +10901,32 @@ msgid ""
 "        }\n"
 "\n"
 "        fn is_empty_list(self: @ContractState) -> bool {\n"
-"            let mut current_amount_list = self.amount.read();\n"
+"            let mut current_amount_list = self.amounts.read();\n"
 "            current_amount_list.is_empty()\n"
 "        }\n"
 "\n"
 "        fn list_length(self: @ContractState) -> u32 {\n"
-"            let mut current_amount_list = self.amount.read();\n"
+"            let mut current_amount_list = self.amounts.read();\n"
 "            current_amount_list.len()\n"
 "        }\n"
 "\n"
 "        fn get_from_index(self: @ContractState, index: u32) -> u128 {\n"
-"            self.amount.read()[index]\n"
+"            self.amounts.read()[index]\n"
 "        }\n"
 "\n"
 "        fn set_from_index(ref self: ContractState, index: u32, number: u128) "
 "{\n"
-"            let mut current_amount_list = self.amount.read();\n"
+"            let mut current_amount_list = self.amounts.read();\n"
 "            current_amount_list.set(index, number);\n"
 "        }\n"
 "\n"
 "        fn pop_front_list(ref self: ContractState) {\n"
-"            let mut current_amount_list = self.amount.read();\n"
+"            let mut current_amount_list = self.amounts.read();\n"
 "            current_amount_list.pop_front();\n"
 "        }\n"
 "\n"
 "        fn array_conversion(self: @ContractState) -> Array<u128> {\n"
-"            let mut current_amount_list = self.amount.read();\n"
+"            let mut current_amount_list = self.amounts.read();\n"
 "            current_amount_list.array()\n"
 "        }\n"
 "    }\n"
@@ -10933,7 +10967,7 @@ msgstr ""
 "    #[abi(embed_v0)]\n"
 "    impl ListExample of super::IListExample<ContractState> {\n"
 "        fn add_in_amount(ref self: ContractState, number: u128) {\n"
-"            let mut current_amount_list = self.amount.read();\n"
+"            let mut current_amount_list = self.amounts.read();\n"
 "            current_amount_list.append(number);\n"
 "        }\n"
 "\n"
@@ -10946,32 +10980,32 @@ msgstr ""
 "        }\n"
 "\n"
 "        fn is_empty_list(self: @ContractState) -> bool {\n"
-"            let mut current_amount_list = self.amount.read();\n"
+"            let mut current_amount_list = self.amounts.read();\n"
 "            current_amount_list.is_empty()\n"
 "        }\n"
 "\n"
 "        fn list_length(self: @ContractState) -> u32 {\n"
-"            let mut current_amount_list = self.amount.read();\n"
+"            let mut current_amount_list = self.amounts.read();\n"
 "            current_amount_list.len()\n"
 "        }\n"
 "\n"
 "        fn get_from_index(self: @ContractState, index: u32) -> u128 {\n"
-"            self.amount.read()[index]\n"
+"            self.amounts.read()[index]\n"
 "        }\n"
 "\n"
 "        fn set_from_index(ref self: ContractState, index: u32, number: u128) "
 "{\n"
-"            let mut current_amount_list = self.amount.read();\n"
+"            let mut current_amount_list = self.amounts.read();\n"
 "            current_amount_list.set(index, number);\n"
 "        }\n"
 "\n"
 "        fn pop_front_list(ref self: ContractState) {\n"
-"            let mut current_amount_list = self.amount.read();\n"
+"            let mut current_amount_list = self.amounts.read();\n"
 "            current_amount_list.pop_front();\n"
 "        }\n"
 "\n"
 "        fn array_conversion(self: @ContractState) -> Array<u128> {\n"
-"            let mut current_amount_list = self.amount.read();\n"
+"            let mut current_amount_list = self.amounts.read();\n"
 "            current_amount_list.array()\n"
 "        }\n"
 "    }\n"
@@ -11071,36 +11105,36 @@ msgstr ""
 #~ "pasamos por referencia así: `ref self: ContractState`."
 
 #~ msgid ""
-#~ "// The `abi(embed_v0)` attribute indicates that all the functions in this "
+#~ "// The `#[abi(embed_v0)]` attribute indicates that all the functions in this "
 #~ "implementation can be called externally.\n"
 #~ "    // Omitting this attribute would make all the functions in this "
 #~ "implementation internal.\n"
 #~ msgstr ""
-#~ "// The `abi(embed_v0)` attribute indicates that all the functions in this "
+#~ "// The `#[abi(embed_v0)]` attribute indicates that all the functions in this "
 #~ "implementation can be called externally.\n"
 #~ "    // Omitting this attribute would make all the functions in this "
 #~ "implementation internal.\n"
 
 #~ msgid ""
 #~ "// The `set` function can be called externally because it is written "
-#~ "inside an implementation marked as `#[external]`.\n"
+#~ "inside an implementation marked as `#[abi(embed_v0)]`.\n"
 #~ "        // It can modify the contract's state as it is passed as a "
 #~ "reference.\n"
 #~ msgstr ""
 #~ "// The `set` function can be called externally because it is written "
-#~ "inside an implementation marked as `#[external]`.\n"
+#~ "inside an implementation marked as `#[abi(embed_v0)]`.\n"
 #~ "        // It can modify the contract's state as it is passed as a "
 #~ "reference.\n"
 
 #~ msgid ""
 #~ "// The `get` function can be called externally because it is written "
-#~ "inside an implementation marked as `#[external]`.\n"
-#~ "        // However, it can't modify the contract's state is passed as a "
+#~ "inside an implementation marked as `#[abi(embed_v0)]`.\n"
+#~ "        // However, it can't modify the contract's state, as it is passed as a "
 #~ "snapshot: it is only a \"view\" function.\n"
 #~ msgstr ""
 #~ "// The `get` function can be called externally because it is written "
-#~ "inside an implementation marked as `#[external]`.\n"
-#~ "        // However, it can't modify the contract's state is passed as a "
+#~ "inside an implementation marked as `#[abi(embed_v0)]`.\n"
+#~ "        // However, it can't modify the contract's state, as it is passed as a "
 #~ "snapshot: it is only a \"view\" function.\n"
 
 #~ msgid ""
@@ -11125,13 +11159,13 @@ msgstr ""
 #~ "// The `_read_value` function is outside the implementation that is "
 #~ "marked as `#[abi(embed_v0)]`, so it's an _internal_ function\n"
 #~ "        // and can only be called from within the contract.\n"
-#~ "        // However, it can't modify the contract's state is passed as a "
+#~ "        // However, it can't modify the contract's state, as it is passed as a "
 #~ "snapshot: it is only a \"view\" function.\n"
 #~ msgstr ""
 #~ "// The `_read_value` function is outside the implementation that is "
 #~ "marked as `#[abi(embed_v0)]`, so it's an _internal_ function\n"
 #~ "        // and can only be called from within the contract.\n"
-#~ "        // However, it can't modify the contract's state is passed as a "
+#~ "        // However, it can't modify the contract's state, as it is passed as a "
 #~ "snapshot: it is only a \"view\" function.\n"
 
 #~ msgid ""
@@ -11421,8 +11455,8 @@ msgstr ""
 #~ msgstr ""
 #~ "// Since a felt252 is smaller than a u256, we can use the into() method\n"
 
-#~ msgid "//note a usize is smaller than a felt so we use the try_into\n"
-#~ msgstr "//note a usize is smaller than a felt so we use the try_into\n"
+#~ msgid "// Note: usize is smaller than felt252, so we use try_into\n"
+#~ msgstr "// Note: usize is smaller than felt252, so we use try_into\n"
 
 #~ msgid "Modularity: Easily pluggable into multiple contracts."
 #~ msgstr "Modularidad: Fácilmente conectable a múltiples contratos."

@@ -3,15 +3,16 @@ members = [
   "listings/getting-started/*",
   "listings/applications/*",
   "listings/advanced-concepts/*",
-  "listings/templates/*"
+  "listings/templates/*",
 ]
 
 [workspace.scripts]
 test = "$(git rev-parse --show-toplevel)/scripts/test_resolver.sh"
 
-# [workspace.tool.snforge]
+[workspace.tool.snforge]
 
 [workspace.dependencies]
+<<<<<<< HEAD
 starknet = ">=2.6.3"
 # snforge_std = { git = "https://github.com/foundry-rs/starknet-foundry.git", tag = "v0.11.0" }
 openzeppelin = { git = "https://github.com/OpenZeppelin/cairo-contracts.git", tag="v0.11.0" }
@@ -19,6 +20,14 @@ pragma_lib = { git = "https://github.com/astraly-labs/pragma-lib" }
 
 # [workspace.dev-dependencies]
 # openzeppelin = { git = "https://github.com/OpenZeppelin/cairo-contracts.git", tag="v0.11.0" }
+=======
+starknet = ">=2.6.4"
+openzeppelin = { git = "https://github.com/OpenZeppelin/cairo-contracts.git", tag="v0.14.0" }
+components = { path = "listings/applications/components" }
+snforge_std = { git = "https://github.com/foundry-rs/starknet-foundry.git", tag = "v0.25.0" }
+# The latest Alexandria release supports only Cairo v2.6.0, so using explicit rev that supports Cairo v2.6.3
+alexandria_storage = { git = "https://github.com/keep-starknet-strange/alexandria.git", rev="800f5ad" }
+>>>>>>> main
 
 [workspace.package]
 description = "Collection of examples of how to use the Cairo programming language to create smart contracts on Starknet."
