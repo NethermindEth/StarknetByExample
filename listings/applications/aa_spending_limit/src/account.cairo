@@ -141,7 +141,6 @@ mod Account {
                             let high: u128 = Felt252TryIntoU128::try_into(*calldata[2]).unwrap();
                             let value: u256 = u256 { low, high };
 
-                            //TODO: check if the limit updated when timestamp is greater than the limit
                             let mut current_limit: u256 = self.get_spending_limit(to);
                             current_limit -= value;
                             self.current_spending_limit.write(to, current_limit);
@@ -181,6 +180,9 @@ mod Account {
             assert(sender.is_zero(), 'Account: invalid caller');
         }
 
+        //If the current block timestamp is past the time_limit, 
+        //The max new limit set by the account owner is written to the current spending limit.
+        //And the current timestamp is updated.
         fn update_timestamp(ref self: ContractState, token_address: ContractAddress) {
             let mut spending_limit = self.spending_limit.read(token_address);
             let current_timestamp: u64 = get_block_timestamp();
