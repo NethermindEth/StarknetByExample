@@ -41,7 +41,7 @@ Summary
   - [Tuples](./getting-started/cairo_cheatsheet/tuples.md)
   - [Struct](./getting-started/cairo_cheatsheet/struct.md)
   - [Type casting](./getting-started/cairo_cheatsheet/type_casting.md)
-  - [Dict](./ch00/cairo_cheatsheet/dict.md)
+  - [Dict](./getting-started/cairo_cheatsheet/dict.md)
 
 # Components
 
