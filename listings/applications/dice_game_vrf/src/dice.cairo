@@ -1,20 +1,38 @@
+use starknet::ContractAddress;
+
 #[starknet::interface]
 pub trait IDiceGame<TContractState> {
     fn roll_the_dice(ref self: TContractState, wager: u256);
 }
 
+#[starknet::interface]
+pub trait IPragmaVRF<TContractState> {
+    fn receive_random_words(
+        ref self: TContractState,
+        requestor_address: ContractAddress,
+        request_id: u64,
+        random_words: Span<felt252>,
+        calldata: Array<felt252>
+    );
+}
+
 #[starknet::contract]
 mod DiceGame {
     use core::num::traits::zero::Zero;
-    use starknet::{ContractAddress, get_caller_address, get_contract_address};
+    use starknet::{
+        ContractAddress, contract_address_const, get_caller_address, get_contract_address,
+        get_block_number
+    };
+    use pragma_lib::abi::{IRandomnessDispatcher, IRandomnessDispatcherTrait};
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
 
     #[storage]
     struct Storage {
-        min_wager: u256,
-        pragma_vrf_contract_address: ContractAddress,
+        randomness_contract_address: ContractAddress,
         prize: u256,
-        token: IERC20Dispatcher,
+        eth_dispatcher: IERC20Dispatcher,
+        nonce: u64,
+        roll_requests: LegacyMap<u64, (ContractAddress, u256)>
     }
 
     #[event]
@@ -40,30 +58,38 @@ mod DiceGame {
     mod Errors {
         pub const INVALID_ADDRESS: felt252 = 'Invalid address';
         pub const INVALID_BALANCE: felt252 = 'Invalid balance';
-        pub const INVALID_MIN_WAGER: felt252 = 'Invalid minimum wager';
         pub const TRANSFER_FAILED: felt252 = 'Transfer failed';
         pub const WAGER_TOO_LOW: felt252 = 'Wager too low';
+        pub const CALLER_NOT_RANDOMNESS: felt252 = 'Caller not randomness contract';
+        pub const REQUESTOR_NOT_SELF: felt252 = 'Requestor is not self';
+        pub const INVALID_REQUEST_ID: felt252 = 'No wager with given request ID';
     }
+
+    const PUBLISH_DELAY: u64 = 0;
+    const NUM_OF_WORDS: u64 = 1;
+    const CALLBACK_FEE_LIMIT: u128 = 100;
 
     #[constructor]
     fn constructor(
-        ref self: ContractState,
-        token_address: ContractAddress,
-        init_balance: u256,
-        min_wager: u256,
-        pragma_vrf_contract_address: ContractAddress,
+        ref self: ContractState, init_balance: u256, randomness_contract_address: ContractAddress,
     ) {
-        assert(token_address.is_non_zero(), Errors::INVALID_ADDRESS);
         assert(init_balance > 0, Errors::INVALID_BALANCE);
-        assert(min_wager > 0, Errors::INVALID_MIN_WAGER);
-        assert(pragma_vrf_contract_address.is_non_zero(), Errors::INVALID_ADDRESS);
+        assert(randomness_contract_address.is_non_zero(), Errors::INVALID_ADDRESS);
 
-        self.pragma_vrf_contract_address.write(pragma_vrf_contract_address);
-        self.token.write(IERC20Dispatcher { contract_address: token_address });
+        self.randomness_contract_address.write(randomness_contract_address);
+        self
+            .eth_dispatcher
+            .write(
+                IERC20Dispatcher {
+                    contract_address: contract_address_const::<
+                        0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7
+                    >() // ETH Contract Address
+                }
+            );
 
         let caller = get_caller_address();
         let this = get_contract_address();
-        let success = self.token.read().transfer_from(caller, this, init_balance);
+        let success = self.eth_dispatcher.read().transfer_from(caller, this, init_balance);
         assert(success, Errors::TRANSFER_FAILED);
 
         self._reset_prize();
@@ -72,18 +98,86 @@ mod DiceGame {
     #[abi(embed_v0)]
     impl DiceGame of super::IDiceGame<ContractState> {
         fn roll_the_dice(ref self: ContractState, wager: u256) {
-            assert(wager >= self.min_wager.read(), Errors::WAGER_TOO_LOW);
+            assert(wager >= 2000, Errors::WAGER_TOO_LOW);
 
             let player = get_caller_address();
             let this = get_contract_address();
-            let token = self.token.read();
 
-            let success = token.transfer_from(player, this, wager);
+            let success = self.eth_dispatcher.read().transfer_from(player, this, wager);
             assert(success, Errors::TRANSFER_FAILED);
+
+            self._request_dice_roll(player, wager);
+        }
+    }
+
+    #[abi(embed_v0)]
+    impl PragmaVRF of super::IPragmaVRF<ContractState> {
+        fn receive_random_words(
+            ref self: ContractState,
+            requestor_address: ContractAddress,
+            request_id: u64,
+            random_words: Span<felt252>,
+            calldata: Array<felt252>
+        ) {
+            let caller = get_caller_address();
+            assert(
+                caller == self.randomness_contract_address.read(), Errors::CALLER_NOT_RANDOMNESS
+            );
+
+            let this = get_contract_address();
+            assert(requestor_address == this, Errors::REQUESTOR_NOT_SELF);
+
+            self._process_dice_roll(request_id, random_words.at(0));
+        }
+    }
+
+    #[generate_trait]
+    impl Private of PrivateTrait {
+        fn _request_dice_roll(ref self: ContractState, player: ContractAddress, wager: u256) {
+            let randomness_contract_address = self.randomness_contract_address.read();
+            let randomness_dispatcher = IRandomnessDispatcher {
+                contract_address: randomness_contract_address
+            };
+
+            // Approve the randomness contract to transfer the callback fee
+            // You would need to send some ETH to this contract first to cover the fees
+            let eth_dispatcher = self.eth_dispatcher.read();
+            eth_dispatcher
+                .approve(
+                    randomness_contract_address,
+                    (CALLBACK_FEE_LIMIT + CALLBACK_FEE_LIMIT / 5).into()
+                );
+
+            let nonce = self.nonce.read();
+
+            // Request the randomness
+            let request_id = randomness_dispatcher
+                .request_random(
+                    nonce,
+                    get_contract_address(),
+                    CALLBACK_FEE_LIMIT,
+                    PUBLISH_DELAY,
+                    NUM_OF_WORDS,
+                    array![]
+                );
+
+            // store the wager with the request ID
+            self.roll_requests.write(request_id, (player, wager));
+            self.nonce.write(nonce + 1);
+        }
+
+        fn _process_dice_roll(ref self: ContractState, request_id: u64, random_word: @felt252) {
+            let (player, wager) = self.roll_requests.read(request_id);
+            assert(player.is_non_zero() && wager > 0, Errors::INVALID_REQUEST_ID);
+
+            // "consume" the stored wager
+            self.roll_requests.write(request_id, (Zero::zero(), 0));
 
             let new_prize = self.prize.read() + (wager * 40) / 100;
 
-            let roll: u8 = 3; // implement random roll with pragma
+            let random_word: u256 = (*random_word).into();
+            let roll: u8 = (random_word % 6 + 1).try_into().unwrap();
+
             self.emit(Event::Roll(Roll { player, wager, roll }));
 
             if (roll > 2) {
@@ -91,21 +185,20 @@ mod DiceGame {
                 return;
             }
 
+            let this = get_contract_address();
+            let amount = new_prize;
+
             self._reset_prize();
 
-            let amount = new_prize;
-            let success = token.transfer_from(this, player, amount);
+            let success = self.eth_dispatcher.read().transfer_from(this, player, amount);
             assert(success, Errors::TRANSFER_FAILED);
 
             self.emit(Event::Winner(Winner { winner: player, amount }));
         }
-    }
 
-    #[generate_trait]
-    impl Private of PrivateTrait {
         fn _reset_prize(ref self: ContractState) {
             let this = get_contract_address();
-            let balance = self.token.read().balance_of(this);
+            let balance = self.eth_dispatcher.read().balance_of(this);
             self.prize.write((balance * 10) / 100);
         }
     }
