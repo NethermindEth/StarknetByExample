@@ -106,7 +106,12 @@ mod DiceGame {
             let success = self.eth_dispatcher.read().transfer_from(player, this, wager);
             assert(success, Errors::TRANSFER_FAILED);
 
-            self._request_dice_roll(player, wager);
+            let nonce = self.nonce.read();
+            let request_id = self._request_randomness(player, wager, nonce);
+
+            // store the wager with the request ID
+            self.roll_requests.write(request_id, (player, wager));
+            self.nonce.write(nonce + 1);
         }
     }
 
@@ -133,7 +138,7 @@ mod DiceGame {
 
     #[generate_trait]
     impl Private of PrivateTrait {
-        fn _request_dice_roll(ref self: ContractState, player: ContractAddress, wager: u256) {
+        fn _request_randomness(ref self: ContractState, player: ContractAddress, wager: u256, seed: u64) -> u64 {
             let randomness_contract_address = self.randomness_contract_address.read();
             let randomness_dispatcher = IRandomnessDispatcher {
                 contract_address: randomness_contract_address
@@ -148,22 +153,16 @@ mod DiceGame {
                     (CALLBACK_FEE_LIMIT + CALLBACK_FEE_LIMIT / 5).into()
                 );
 
-            let nonce = self.nonce.read();
-
             // Request the randomness
-            let request_id = randomness_dispatcher
+            return randomness_dispatcher
                 .request_random(
-                    nonce,
+                    seed,
                     get_contract_address(),
                     CALLBACK_FEE_LIMIT,
                     PUBLISH_DELAY,
                     NUM_OF_WORDS,
                     array![]
                 );
-
-            // store the wager with the request ID
-            self.roll_requests.write(request_id, (player, wager));
-            self.nonce.write(nonce + 1);
         }
 
         fn _process_dice_roll(ref self: ContractState, request_id: u64, random_word: @felt252) {
