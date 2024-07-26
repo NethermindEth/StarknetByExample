@@ -17,7 +17,7 @@ pub trait IPragmaVRF<TContractState> {
 }
 
 #[starknet::contract]
-mod CoinFlip {
+pub mod CoinFlip {
     use core::num::traits::zero::Zero;
     use starknet::{
         ContractAddress, contract_address_const, get_caller_address, get_contract_address,
@@ -36,32 +36,32 @@ mod CoinFlip {
 
     #[event]
     #[derive(Drop, starknet::Event)]
-    enum Event {
+    pub enum Event {
         Flipped: Flipped,
         Landed: Landed
     }
 
     #[derive(Drop, starknet::Event)]
-    struct Flipped {
-        flip_id: u64,
-        flipper: ContractAddress,
+    pub struct Flipped {
+        pub flip_id: u64,
+        pub flipper: ContractAddress,
     }
 
     #[derive(Drop, starknet::Event)]
-    struct Landed {
-        flip_id: u64,
-        flipper: ContractAddress,
-        side: Side
+    pub struct Landed {
+        pub flip_id: u64,
+        pub flipper: ContractAddress,
+        pub side: Side
     }
 
     #[derive(Drop, Serde)]
-    enum Side {
+    pub enum Side {
         Heads,
         Tails,
         Sideways
     }
 
-    mod Errors {
+    pub mod Errors {
         pub const CALLER_NOT_RANDOMNESS: felt252 = 'Caller not randomness contract';
         pub const INVALID_ADDRESS: felt252 = 'Invalid address';
         pub const INVALID_FLIP_ID: felt252 = 'No flip with the given ID';
@@ -69,23 +69,20 @@ mod CoinFlip {
         pub const TRANSFER_FAILED: felt252 = 'Transfer failed';
     }
 
-    const PUBLISH_DELAY: u64 = 0; // return the random value asap
-    const NUM_OF_WORDS: u64 = 1; // one random value is sufficient
-    const CALLBACK_FEE_LIMIT: u128 = 10_000_000_000_000; // 0.00001 ETH
+    pub const PUBLISH_DELAY: u64 = 0; // return the random value asap
+    pub const NUM_OF_WORDS: u64 = 1; // one random value is sufficient
+    pub const CALLBACK_FEE_LIMIT: u128 = 10_000_000_000_000; // 0.00001 ETH
 
     #[constructor]
-    fn constructor(ref self: ContractState, randomness_contract_address: ContractAddress,) {
+    fn constructor(
+        ref self: ContractState,
+        randomness_contract_address: ContractAddress,
+        eth_address: ContractAddress
+    ) {
         assert(randomness_contract_address.is_non_zero(), Errors::INVALID_ADDRESS);
+        assert(eth_address.is_non_zero(), Errors::INVALID_ADDRESS);
         self.randomness_contract_address.write(randomness_contract_address);
-        self
-            .eth_dispatcher
-            .write(
-                IERC20Dispatcher {
-                    contract_address: contract_address_const::<
-                        0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7
-                    >() // ETH Contract Address
-                }
-            );
+        self.eth_dispatcher.write(IERC20Dispatcher { contract_address: eth_address });
     }
 
     #[abi(embed_v0)]
