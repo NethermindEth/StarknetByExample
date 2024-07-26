@@ -55,10 +55,10 @@ However, achieving true randomness on a decentralized platform poses significant
     - **Collusion:** If participants collude, they can influence the randomness outcome.
     - **Disruption:** If participants do not follow through (e.g., not revealing their values), the beacon may fail to produce a valid random number.
 
-## Dice Game using Pragma VRF
+## CoinFlip using Pragma VRF
 
 Below is an implementation of a `CoinFlip` contract that utilizes a [Pragma Verifiable Random Function (VRF)](https://docs.pragma.build/Resources/Cairo%201/randomness/randomness) to generate random numbers on-chain.
 
 ```rust
-{{#include ../../listings/applications/coin_flip/src/coin_flip.cairo}}
+{{#include ../../listings/applications/coin_flip/src/contract.cairo}}
 ```

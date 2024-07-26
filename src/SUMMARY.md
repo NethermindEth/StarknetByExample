@@ -62,7 +62,7 @@ Summary
 - [Simple Storage with Starknet-js](./applications/simple_storage_starknetjs.md)
 - [Crowdfunding Campaign](./applications/crowdfunding.md)
 - [AdvancedFactory: Crowdfunding](./applications/advanced_factory.md)
-- [Dice Game VRF](./applications/random_number_generator.md)
+- [Random Number Generator](./applications/random_number_generator.md)
 
 <!-- advanced-concepts -->
 
