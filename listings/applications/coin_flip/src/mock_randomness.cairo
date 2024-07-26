@@ -66,9 +66,7 @@ pub mod MockRandomness {
             calldata: Array<felt252>
         ) {
             let requestor = IPragmaVRFDispatcher { contract_address: callback_address };
-            let hash = PoseidonTrait::new().update_with((seed, request_id)).finalize();
-            requestor
-                .receive_random_words(requestor_address, request_id, array![hash].span(), calldata);
+            requestor.receive_random_words(requestor_address, request_id, random_words, calldata);
         }
 
 
