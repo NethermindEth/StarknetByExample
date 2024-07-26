@@ -6,10 +6,7 @@ pub mod erc20_streaming {
     use core::num::traits::Zero;
     use starknet::get_caller_address;
     use starknet::ContractAddress;
-    use starknet::SyscallResultTrait;
     use starknet::LegacyMap;
-    use starknet::testing::set_contract_address;
-    use starknet::testing::set_account_contract_address;
 
     #[storage]
     struct Storage {
