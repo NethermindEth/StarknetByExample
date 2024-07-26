@@ -1,5 +1,5 @@
 mod dice_game_vrf;
-mod dice;
+mod powerball_lottery;
 
 #[cfg(test)]
 mod tests;
