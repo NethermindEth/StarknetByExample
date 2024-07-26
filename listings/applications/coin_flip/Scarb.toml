@@ -1,5 +1,5 @@
 [package]
-name = "dice_game_vrf"
+name = "coin_flip"
 version = "0.1.0"
 edition = "2023_11"
 
@@ -7,7 +7,6 @@ edition = "2023_11"
 starknet.workspace = true
 openzeppelin.workspace = true
 pragma_lib.workspace = true
-alexandria_sorting.workspace = true
 
 [scripts]
 test.workspace = true

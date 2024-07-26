@@ -57,8 +57,8 @@ However, achieving true randomness on a decentralized platform poses significant
 
 ## Dice Game using Pragma VRF
 
-Below is an implementation of a Dice Game contract that utilizes a [Pragma Verifiable Random Function (VRF)](https://docs.pragma.build/Resources/Cairo%201/randomness/randomness) to generate random numbers on-chain.
+Below is an implementation of a `CoinFlip` contract that utilizes a [Pragma Verifiable Random Function (VRF)](https://docs.pragma.build/Resources/Cairo%201/randomness/randomness) to generate random numbers on-chain.
 
 ```rust
-{{#include ../../listings/applications/dice_game_vrf/src/dice_game_vrf.cairo}}
+{{#include ../../listings/applications/coin_flip/src/coin_flip.cairo}}
 ```
