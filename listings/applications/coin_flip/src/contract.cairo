@@ -91,14 +91,21 @@ pub mod CoinFlip {
             let flipper = get_caller_address();
             let this = get_contract_address();
 
-            // we pass the PragmaVRF fee to the caller
+            // we pass the PragmaVRF fee to the flipper
+            // we take twice the callback fee amount just to make sure we 
+            // can cover it
             let eth_dispatcher = self.eth_dispatcher.read();
-            let success = eth_dispatcher.transfer_from(flipper, this, CALLBACK_FEE_LIMIT.into());
+            let success = eth_dispatcher.transfer_from(flipper, this, CALLBACK_FEE_LIMIT.into() * 2);
             assert(success, Errors::TRANSFER_FAILED);
 
             let flip_id = self._request_my_randomness();
 
             self.flips.write(flip_id, flipper);
+            
+            // we return to the flipper whatever is left over after the fee is paid
+            let leftover_balance = eth_dispatcher.balance_of(this);
+            let success = eth_dispatcher.transfer(flipper, leftover_balance);
+            assert(success, Errors::TRANSFER_FAILED);
 
             self.emit(Event::Flipped(Flipped { flip_id, flipper }));
         }
@@ -133,10 +140,17 @@ pub mod CoinFlip {
                 contract_address: randomness_contract_address
             };
 
+            let caller = get_caller_address();
+            let premium_fee = randomness_dispatcher.compute_premium_fee(caller);
+
             // Approve the randomness contract to transfer the callback fee
             // You would need to send some ETH to this contract first to cover the fees
             let eth_dispatcher = self.eth_dispatcher.read();
-            eth_dispatcher.approve(randomness_contract_address, CALLBACK_FEE_LIMIT.into());
+            eth_dispatcher
+                .approve(
+                    randomness_contract_address,
+                    (CALLBACK_FEE_LIMIT + premium_fee + CALLBACK_FEE_LIMIT / 5).into()
+                );
 
             let nonce = self.nonce.read();
 

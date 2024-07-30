@@ -42,7 +42,7 @@ fn deploy() -> (ICoinFlipDispatcher, IRandomnessDispatcher, IERC20Dispatcher, Co
     // approve the CoinFlip contract to spend the callback fee
     let eth_dispatcher = IERC20Dispatcher { contract_address: eth_address };
     start_cheat_caller_address(eth_address, deployer);
-    eth_dispatcher.approve(coin_flip_address, CoinFlip::CALLBACK_FEE_LIMIT.into() * 2);
+    eth_dispatcher.approve(coin_flip_address, CoinFlip::CALLBACK_FEE_LIMIT.into() * 4);
     stop_cheat_caller_address(eth_address);
 
     let randomness_dispatcher = IRandomnessDispatcher { contract_address: randomness_address };

@@ -44,7 +44,12 @@ pub mod MockRandomness {
             let caller = get_caller_address();
             let this = get_contract_address();
             let eth_dispatcher = self.eth_dispatcher.read();
-            let success = eth_dispatcher.transfer_from(caller, this, callback_fee_limit.into());
+            let success = eth_dispatcher
+                .transfer_from(
+                    caller,
+                    this,
+                    (callback_fee_limit + self.compute_premium_fee(callback_address)).into()
+                );
             assert(success, Errors::TRANSFER_FAILED);
 
             let request_id = self.next_request_id.read();
@@ -67,6 +72,10 @@ pub mod MockRandomness {
         ) {
             let requestor = IPragmaVRFDispatcher { contract_address: callback_address };
             requestor.receive_random_words(requestor_address, request_id, random_words, calldata);
+        }
+
+        fn compute_premium_fee(self: @ContractState, caller_address: ContractAddress) -> u128 {
+            100_000_000
         }
 
 
@@ -139,9 +148,6 @@ pub mod MockRandomness {
             panic!("unimplemented")
         }
         fn get_contract_balance(self: @ContractState) -> u256 {
-            panic!("unimplemented")
-        }
-        fn compute_premium_fee(self: @ContractState, caller_address: ContractAddress) -> u128 {
             panic!("unimplemented")
         }
         fn get_admin_address(self: @ContractState,) -> ContractAddress {
