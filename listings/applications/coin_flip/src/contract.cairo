@@ -144,7 +144,6 @@ pub mod CoinFlip {
             let premium_fee = randomness_dispatcher.compute_premium_fee(caller);
 
             // Approve the randomness contract to transfer the callback fee
-            // You would need to send some ETH to this contract first to cover the fees
             let eth_dispatcher = self.eth_dispatcher.read();
             eth_dispatcher
                 .approve(
