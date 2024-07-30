@@ -23,6 +23,8 @@ pub mod MockRandomness {
         pub const INVALID_ADDRESS: felt252 = 'Invalid address';
         pub const TRANSFER_FAILED: felt252 = 'Transfer failed';
     }
+    
+    pub const PREMIUM_FEE: u128 = 100_000_000;
 
     #[constructor]
     fn constructor(ref self: ContractState, eth_address: ContractAddress) {
@@ -75,7 +77,7 @@ pub mod MockRandomness {
         }
 
         fn compute_premium_fee(self: @ContractState, caller_address: ContractAddress) -> u128 {
-            100_000_000
+            PREMIUM_FEE
         }
 
 

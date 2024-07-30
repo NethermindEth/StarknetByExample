@@ -54,10 +54,11 @@ fn deploy() -> (ICoinFlipDispatcher, IRandomnessDispatcher, IERC20Dispatcher, Co
 #[test]
 #[fuzzer(runs: 10, seed: 22)]
 fn test_two_flips(random_word_1: felt252, random_word_2: felt252) {
-    let (coin_flip, randomness, _, deployer) = deploy();
+    let (coin_flip, randomness, eth, deployer) = deploy();
 
     let mut spy = spy_events(SpyOn::One(coin_flip.contract_address));
 
+    let previous_balance = eth.balance_of(deployer);
     start_cheat_caller_address(coin_flip.contract_address, deployer);
     coin_flip.flip();
     stop_cheat_caller_address(coin_flip.contract_address);
@@ -75,6 +76,7 @@ fn test_two_flips(random_word_1: felt252, random_word_2: felt252) {
                 )
             ]
         );
+    assert_eq!(eth.balance_of(deployer), previous_balance - CoinFlip::CALLBACK_FEE_LIMIT.into() - MockRandomness::PREMIUM_FEE.into());
 
     randomness
         .submit_random(
@@ -113,6 +115,8 @@ fn test_two_flips(random_word_1: felt252, random_word_2: felt252) {
             ]
         );
 
+    let previous_balance = eth.balance_of(deployer);
+
     start_cheat_caller_address(coin_flip.contract_address, deployer);
     coin_flip.flip();
     stop_cheat_caller_address(coin_flip.contract_address);
@@ -130,6 +134,7 @@ fn test_two_flips(random_word_1: felt252, random_word_2: felt252) {
                 )
             ]
         );
+    assert_eq!(eth.balance_of(deployer), previous_balance - CoinFlip::CALLBACK_FEE_LIMIT.into() - MockRandomness::PREMIUM_FEE.into());
 
     randomness
         .submit_random(
