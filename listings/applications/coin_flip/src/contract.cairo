@@ -71,7 +71,7 @@ pub mod CoinFlip {
 
     pub const PUBLISH_DELAY: u64 = 0; // return the random value asap
     pub const NUM_OF_WORDS: u64 = 1; // one random value is sufficient
-    pub const CALLBACK_FEE_LIMIT: u128 = 10_000_000_000_000; // 0.00001 ETH
+    pub const CALLBACK_FEE_LIMIT: u128 = 1_000_000_000_000_000; // 0.001 ETH
 
     #[constructor]
     fn constructor(
@@ -95,13 +95,13 @@ pub mod CoinFlip {
             // we take twice the callback fee amount just to make sure we 
             // can cover it
             let eth_dispatcher = self.eth_dispatcher.read();
-            let success = eth_dispatcher.transfer_from(flipper, this, CALLBACK_FEE_LIMIT.into() * 2);
+            let success = eth_dispatcher.transfer_from(flipper, this, CALLBACK_FEE_LIMIT.into());
             assert(success, Errors::TRANSFER_FAILED);
 
             let flip_id = self._request_my_randomness();
 
             self.flips.write(flip_id, flipper);
-            
+
             // we return to the flipper whatever is left over after the fee is paid
             let leftover_balance = eth_dispatcher.balance_of(this);
             let success = eth_dispatcher.transfer(flipper, leftover_balance);
@@ -140,6 +140,8 @@ pub mod CoinFlip {
                 contract_address: randomness_contract_address
             };
 
+            let callback_address = get_contract_address();
+
             let caller = get_caller_address();
             let premium_fee = randomness_dispatcher.compute_premium_fee(caller);
 
@@ -148,7 +150,7 @@ pub mod CoinFlip {
             eth_dispatcher
                 .approve(
                     randomness_contract_address,
-                    (CALLBACK_FEE_LIMIT + premium_fee + CALLBACK_FEE_LIMIT / 5).into()
+                    CALLBACK_FEE_LIMIT.into() + premium_fee.into() + CALLBACK_FEE_LIMIT.into() / 5
                 );
 
             let nonce = self.nonce.read();
@@ -157,12 +159,15 @@ pub mod CoinFlip {
             let request_id = randomness_dispatcher
                 .request_random(
                     nonce,
-                    get_contract_address(),
+                    callback_address,
                     CALLBACK_FEE_LIMIT,
                     PUBLISH_DELAY,
                     NUM_OF_WORDS,
                     array![]
                 );
+
+            // remove approval once the randomness is paid for
+            eth_dispatcher.approve(randomness_contract_address, 0);
 
             self.nonce.write(nonce + 1);
 

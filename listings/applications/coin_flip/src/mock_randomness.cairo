@@ -1,3 +1,12 @@
+use starknet::ContractAddress;
+
+#[starknet::interface]
+pub trait IMockRandomnessFee<TContractState> {
+    fn calculate_total_fee(
+        self: @TContractState, callback_fee_limit: u128, callback_address: ContractAddress
+    ) -> u128;
+}
+
 #[starknet::contract]
 pub mod MockRandomness {
     use pragma_lib::abi::IRandomness;
@@ -23,13 +32,22 @@ pub mod MockRandomness {
         pub const INVALID_ADDRESS: felt252 = 'Invalid address';
         pub const TRANSFER_FAILED: felt252 = 'Transfer failed';
     }
-    
+
     pub const PREMIUM_FEE: u128 = 100_000_000;
 
     #[constructor]
     fn constructor(ref self: ContractState, eth_address: ContractAddress) {
         assert(eth_address.is_non_zero(), Errors::INVALID_ADDRESS);
         self.eth_dispatcher.write(IERC20Dispatcher { contract_address: eth_address });
+    }
+
+    #[abi(embed_v0)]
+    impl MockRandomnessFee of super::IMockRandomnessFee<ContractState> {
+        fn calculate_total_fee(
+            self: @ContractState, callback_fee_limit: u128, callback_address: ContractAddress
+        ) -> u128 {
+            callback_fee_limit / 2 + self.compute_premium_fee(callback_address)
+        }
     }
 
     #[abi(embed_v0)]
@@ -45,12 +63,13 @@ pub mod MockRandomness {
         ) -> u64 {
             let caller = get_caller_address();
             let this = get_contract_address();
+
             let eth_dispatcher = self.eth_dispatcher.read();
             let success = eth_dispatcher
                 .transfer_from(
                     caller,
                     this,
-                    (callback_fee_limit + self.compute_premium_fee(callback_address)).into()
+                    self.calculate_total_fee(callback_fee_limit, callback_address).into()
                 );
             assert(success, Errors::TRANSFER_FAILED);
 

@@ -2,7 +2,9 @@ use coin_flip::contract::{
     CoinFlip, ICoinFlipDispatcher, ICoinFlipDispatcherTrait, IPragmaVRFDispatcher,
     IPragmaVRFDispatcherTrait
 };
-use coin_flip::mock_randomness::MockRandomness;
+use coin_flip::mock_randomness::{
+    MockRandomness, IMockRandomnessFeeDispatcher, IMockRandomnessFeeDispatcherTrait
+};
 use starknet::{
     ContractAddress, ClassHash, get_block_timestamp, contract_address_const, get_caller_address
 };
@@ -42,7 +44,7 @@ fn deploy() -> (ICoinFlipDispatcher, IRandomnessDispatcher, IERC20Dispatcher, Co
     // approve the CoinFlip contract to spend the callback fee
     let eth_dispatcher = IERC20Dispatcher { contract_address: eth_address };
     start_cheat_caller_address(eth_address, deployer);
-    eth_dispatcher.approve(coin_flip_address, CoinFlip::CALLBACK_FEE_LIMIT.into() * 4);
+    eth_dispatcher.approve(coin_flip_address, CoinFlip::CALLBACK_FEE_LIMIT.into() * 2);
     stop_cheat_caller_address(eth_address);
 
     let randomness_dispatcher = IRandomnessDispatcher { contract_address: randomness_address };
@@ -55,6 +57,11 @@ fn deploy() -> (ICoinFlipDispatcher, IRandomnessDispatcher, IERC20Dispatcher, Co
 #[fuzzer(runs: 10, seed: 22)]
 fn test_two_flips(random_word_1: felt252, random_word_2: felt252) {
     let (coin_flip, randomness, eth, deployer) = deploy();
+
+    let expected_fee = IMockRandomnessFeeDispatcher {
+        contract_address: randomness.contract_address
+    }
+        .calculate_total_fee(CoinFlip::CALLBACK_FEE_LIMIT, coin_flip.contract_address);
 
     let mut spy = spy_events(SpyOn::One(coin_flip.contract_address));
 
@@ -76,7 +83,8 @@ fn test_two_flips(random_word_1: felt252, random_word_2: felt252) {
                 )
             ]
         );
-    assert_eq!(eth.balance_of(deployer), previous_balance - CoinFlip::CALLBACK_FEE_LIMIT.into() - MockRandomness::PREMIUM_FEE.into());
+
+    assert_eq!(eth.balance_of(deployer), previous_balance - expected_fee.into());
 
     randomness
         .submit_random(
@@ -134,7 +142,7 @@ fn test_two_flips(random_word_1: felt252, random_word_2: felt252) {
                 )
             ]
         );
-    assert_eq!(eth.balance_of(deployer), previous_balance - CoinFlip::CALLBACK_FEE_LIMIT.into() - MockRandomness::PREMIUM_FEE.into());
+    assert_eq!(eth.balance_of(deployer), previous_balance - expected_fee.into());
 
     randomness
         .submit_random(
