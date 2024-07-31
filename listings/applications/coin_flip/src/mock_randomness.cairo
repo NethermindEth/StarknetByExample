@@ -49,21 +49,17 @@ pub mod MockRandomness {
             let caller = get_caller_address();
             let this = get_contract_address();
 
-            let total_fee = (callback_fee_limit / 2 + self.compute_premium_fee(callback_address)).into();
+            let total_fee = (callback_fee_limit / 2 + self.compute_premium_fee(callback_address))
+                .into();
             let eth_dispatcher = self.eth_dispatcher.read();
-            let success = eth_dispatcher
-                .transfer_from(
-                    caller,
-                    this,
-                    total_fee
-                );
+            let success = eth_dispatcher.transfer_from(caller, this, total_fee);
             assert(success, Errors::TRANSFER_FAILED);
- 
+
             let request_id = self.next_request_id.read();
             self.next_request_id.write(request_id + 1);
-            
+
             self.total_fees.write((caller, request_id), total_fee);
-            
+
             request_id
         }
 
@@ -87,7 +83,7 @@ pub mod MockRandomness {
         fn compute_premium_fee(self: @ContractState, caller_address: ContractAddress) -> u128 {
             PREMIUM_FEE
         }
-        
+
         fn get_total_fees(
             self: @ContractState, caller_address: ContractAddress, request_id: u64
         ) -> u256 {

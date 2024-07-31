@@ -180,8 +180,7 @@ pub mod CoinFlip {
 
             // Approve the randomness contract to transfer the callback deposit/fee
             let eth_dispatcher = self.eth_dispatcher.read();
-            eth_dispatcher
-                .approve(randomness_contract_address, self.get_expected_deposit().into());
+            eth_dispatcher.approve(randomness_contract_address, self.get_expected_deposit().into());
 
             let nonce = self.nonce.read();
 
