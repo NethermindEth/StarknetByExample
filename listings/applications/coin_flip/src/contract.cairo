@@ -28,10 +28,17 @@ pub mod CoinFlip {
     use pragma_lib::abi::{IRandomnessDispatcher, IRandomnessDispatcherTrait};
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
 
+    #[derive(Drop, starknet::Store)]
+    struct FlipData {
+        flipper: ContractAddress,
+        deposit: u256,
+        refunded: bool
+    }
+
     #[storage]
     struct Storage {
         eth_dispatcher: IERC20Dispatcher,
-        flips: LegacyMap<u64, (ContractAddress, u256, bool)>,
+        flips: LegacyMap<u64, FlipData>,
         nonce: u64,
         randomness_contract_address: ContractAddress,
     }
@@ -113,7 +120,7 @@ pub mod CoinFlip {
 
             let flip_id = self._request_my_randomness();
 
-            self.flips.write(flip_id, (flipper, deposit, false));
+            self.flips.write(flip_id, FlipData { flipper, deposit, refunded: false });
 
             self.emit(Event::Flipped(Flipped { flip_id, flipper }));
         }
@@ -124,10 +131,10 @@ pub mod CoinFlip {
 
         fn refund(ref self: ContractState, flip_id: u64) {
             let caller = get_caller_address();
-            let (flipper, deposit, is_refunded) = self.flips.read(flip_id);
+            let FlipData { flipper, deposit, refunded } = self.flips.read(flip_id);
             assert(flipper.is_non_zero(), Errors::INVALID_FLIP_ID);
             assert(flipper == caller, Errors::ONLY_FLIPPER_CAN_REFUND);
-            assert(!is_refunded, Errors::ALREADY_REFUNDED);
+            assert(!refunded, Errors::ALREADY_REFUNDED);
 
             let randomness_dispatcher = IRandomnessDispatcher {
                 contract_address: self.randomness_contract_address.read()
@@ -137,7 +144,7 @@ pub mod CoinFlip {
 
             let to_refund: u256 = deposit - total_paid;
 
-            self.flips.write(flip_id, (flipper, deposit, true));
+            self.flips.write(flip_id, FlipData { flipper, deposit, refunded: true });
 
             let eth_dispatcher = self.eth_dispatcher.read();
             let success = eth_dispatcher.transfer(flipper, to_refund);
@@ -199,7 +206,8 @@ pub mod CoinFlip {
         }
 
         fn _process_coin_flip(ref self: ContractState, flip_id: u64, random_value: @felt252) {
-            let (flipper, _, _) = self.flips.read(flip_id);
+            let flipData = self.flips.read(flip_id);
+            let flipper = flipData.flipper;
             assert(flipper.is_non_zero(), Errors::INVALID_FLIP_ID);
 
             // The chance of a flipped coin landing sideways is approximately 1 in 6000.
