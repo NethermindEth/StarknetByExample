@@ -1,12 +1,5 @@
 use starknet::ContractAddress;
 
-#[starknet::interface]
-pub trait IMockRandomnessFee<TContractState> {
-    fn calculate_total_fee(
-        self: @TContractState, callback_fee_limit: u128, callback_address: ContractAddress
-    ) -> u128;
-}
-
 #[starknet::contract]
 pub mod MockRandomness {
     use pragma_lib::abi::IRandomness;
@@ -21,7 +14,8 @@ pub mod MockRandomness {
     #[storage]
     struct Storage {
         eth_dispatcher: IERC20Dispatcher,
-        next_request_id: u64
+        next_request_id: u64,
+        total_fees: LegacyMap::<(ContractAddress, u64), u256>,
     }
 
     #[event]
@@ -42,15 +36,6 @@ pub mod MockRandomness {
     }
 
     #[abi(embed_v0)]
-    impl MockRandomnessFee of super::IMockRandomnessFee<ContractState> {
-        fn calculate_total_fee(
-            self: @ContractState, callback_fee_limit: u128, callback_address: ContractAddress
-        ) -> u128 {
-            callback_fee_limit / 2 + self.compute_premium_fee(callback_address)
-        }
-    }
-
-    #[abi(embed_v0)]
     impl MockRandomness of IRandomness<ContractState> {
         fn request_random(
             ref self: ContractState,
@@ -64,17 +49,21 @@ pub mod MockRandomness {
             let caller = get_caller_address();
             let this = get_contract_address();
 
+            let total_fee = (callback_fee_limit / 2 + self.compute_premium_fee(callback_address)).into();
             let eth_dispatcher = self.eth_dispatcher.read();
             let success = eth_dispatcher
                 .transfer_from(
                     caller,
                     this,
-                    self.calculate_total_fee(callback_fee_limit, callback_address).into()
+                    total_fee
                 );
             assert(success, Errors::TRANSFER_FAILED);
-
+ 
             let request_id = self.next_request_id.read();
             self.next_request_id.write(request_id + 1);
+            
+            self.total_fees.write((caller, request_id), total_fee);
+            
             request_id
         }
 
@@ -97,6 +86,12 @@ pub mod MockRandomness {
 
         fn compute_premium_fee(self: @ContractState, caller_address: ContractAddress) -> u128 {
             PREMIUM_FEE
+        }
+        
+        fn get_total_fees(
+            self: @ContractState, caller_address: ContractAddress, request_id: u64
+        ) -> u256 {
+            self.total_fees.read((caller_address, request_id))
         }
 
 
@@ -153,11 +148,6 @@ pub mod MockRandomness {
         fn refund_operation(
             ref self: ContractState, caller_address: ContractAddress, request_id: u64
         ) {
-            panic!("unimplemented")
-        }
-        fn get_total_fees(
-            self: @ContractState, caller_address: ContractAddress, request_id: u64
-        ) -> u256 {
             panic!("unimplemented")
         }
         fn get_out_of_gas_requests(

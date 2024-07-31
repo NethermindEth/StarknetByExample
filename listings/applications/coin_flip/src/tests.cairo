@@ -2,9 +2,7 @@ use coin_flip::contract::{
     CoinFlip, ICoinFlipDispatcher, ICoinFlipDispatcherTrait, IPragmaVRFDispatcher,
     IPragmaVRFDispatcherTrait
 };
-use coin_flip::mock_randomness::{
-    MockRandomness, IMockRandomnessFeeDispatcher, IMockRandomnessFeeDispatcherTrait
-};
+use coin_flip::mock_randomness::MockRandomness;
 use starknet::{
     ContractAddress, ClassHash, get_block_timestamp, contract_address_const, get_caller_address
 };
@@ -58,14 +56,11 @@ fn deploy() -> (ICoinFlipDispatcher, IRandomnessDispatcher, IERC20Dispatcher, Co
 fn test_two_flips(random_word_1: felt252, random_word_2: felt252) {
     let (coin_flip, randomness, eth, deployer) = deploy();
 
-    let expected_fee = IMockRandomnessFeeDispatcher {
-        contract_address: randomness.contract_address
-    }
-        .calculate_total_fee(CoinFlip::CALLBACK_FEE_LIMIT, coin_flip.contract_address);
+    let callback_fee_limit = coin_flip.get_callback_fee_limit();
 
     let mut spy = spy_events(SpyOn::One(coin_flip.contract_address));
 
-    let previous_balance = eth.balance_of(deployer);
+    let original_balance = eth.balance_of(deployer);
     start_cheat_caller_address(coin_flip.contract_address, deployer);
     coin_flip.flip();
     stop_cheat_caller_address(coin_flip.contract_address);
@@ -84,7 +79,7 @@ fn test_two_flips(random_word_1: felt252, random_word_2: felt252) {
             ]
         );
 
-    assert_eq!(eth.balance_of(deployer), previous_balance - expected_fee.into());
+    assert_eq!(eth.balance_of(deployer), original_balance - callback_fee_limit.into());
 
     randomness
         .submit_random(
@@ -123,7 +118,13 @@ fn test_two_flips(random_word_1: felt252, random_word_2: felt252) {
             ]
         );
 
-    let previous_balance = eth.balance_of(deployer);
+    start_cheat_caller_address(coin_flip.contract_address, deployer);
+    coin_flip.refund(expected_request_id);
+    stop_cheat_caller_address(coin_flip.contract_address);
+
+    assert_eq!(eth.balance_of(deployer), original_balance - randomness.get_total_fees(coin_flip.contract_address, expected_request_id));
+
+    let original_balance = eth.balance_of(deployer);
 
     start_cheat_caller_address(coin_flip.contract_address, deployer);
     coin_flip.flip();
@@ -142,7 +143,8 @@ fn test_two_flips(random_word_1: felt252, random_word_2: felt252) {
                 )
             ]
         );
-    assert_eq!(eth.balance_of(deployer), previous_balance - expected_fee.into());
+
+    assert_eq!(eth.balance_of(deployer), original_balance - callback_fee_limit.into());
 
     randomness
         .submit_random(
@@ -180,6 +182,12 @@ fn test_two_flips(random_word_1: felt252, random_word_2: felt252) {
                 )
             ]
         );
+
+    start_cheat_caller_address(coin_flip.contract_address, deployer);
+    coin_flip.refund(expected_request_id);
+    stop_cheat_caller_address(coin_flip.contract_address);
+
+    assert_eq!(eth.balance_of(deployer), original_balance - randomness.get_total_fees(coin_flip.contract_address, expected_request_id));
 }
 
 #[test]

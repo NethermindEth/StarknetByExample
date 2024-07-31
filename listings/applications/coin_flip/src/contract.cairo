@@ -3,7 +3,8 @@ use starknet::ContractAddress;
 #[starknet::interface]
 pub trait ICoinFlip<TContractState> {
     fn flip(ref self: TContractState);
-    fn refund(ref self: TContractState);
+    fn get_callback_fee_limit(self: @TContractState) -> u128;
+    fn refund(ref self: TContractState, flip_id: u64);
 }
 
 #[starknet::interface]
@@ -105,10 +106,9 @@ pub mod CoinFlip {
             // we pass the PragmaVRF fee to the flipper
             // we take twice the callback fee amount just to make sure we 
             // can cover the fee + the premium
-            let total_fee = self._calculate_total_fee_limit(this);
+            let total_fee = self.get_callback_fee_limit();
             let eth_dispatcher = self.eth_dispatcher.read();
-            let success = eth_dispatcher
-                .transfer_from(flipper, this, total_fee.into());
+            let success = eth_dispatcher.transfer_from(flipper, this, total_fee.into());
             assert(success, Errors::TRANSFER_FAILED);
 
             let flip_id = self._request_my_randomness();
@@ -117,28 +117,37 @@ pub mod CoinFlip {
 
             self.emit(Event::Flipped(Flipped { flip_id, flipper }));
         }
-        
+
+        fn get_callback_fee_limit(self: @ContractState) -> u128 {
+            let randomness_dispatcher = IRandomnessDispatcher {
+                contract_address: self.randomness_contract_address.read()
+            };
+            let this = get_contract_address();
+            let premium_fee = randomness_dispatcher.compute_premium_fee(this);
+            CALLBACK_FEE_LIMIT.into() + premium_fee.into() + CALLBACK_FEE_LIMIT.into() / 5
+        }
+
         fn refund(ref self: ContractState, flip_id: u64) {
             let caller = get_caller_address();
             let (flipper, total_fee, is_refunded) = self.flips.read(flip_id);
             assert(flipper.is_non_zero(), Errors::INVALID_FLIP_ID);
             assert(flipper == caller, Errors::ONLY_FLIPPER_CAN_REFUND);
             assert(!is_refunded, Errors::ALREADY_REFUNDED);
-            
+
             let randomness_dispatcher = IRandomnessDispatcher {
                 contract_address: self.randomness_contract_address.read()
             };
-            
+
             let total_paid = randomness_dispatcher.get_total_fees(get_contract_address(), flip_id);
-            
-            let to_refund: u256 = (total_fee - total_paid).into();
+
+            let to_refund: u256 = total_fee.into() - total_paid;
 
             self.flips.write(flip_id, (flipper, total_fee, true));
-            
+
             let eth_dispatcher = self.eth_dispatcher.read();
-            let success = eth_dispatcher.transfer(caller, to_refund);
+            let success = eth_dispatcher.transfer(flipper, to_refund);
             assert(success, Errors::TRANSFER_FAILED);
-            
+
             self.emit(Event::Refunded(Refunded { flip_id, flipper, amount: to_refund }));
         }
     }
@@ -177,22 +186,14 @@ pub mod CoinFlip {
             // Approve the randomness contract to transfer the callback fee
             let eth_dispatcher = self.eth_dispatcher.read();
             eth_dispatcher
-                .approve(
-                    randomness_contract_address,
-                    self._calculate_total_fee_limit(this).into()
-                );
+                .approve(randomness_contract_address, self.get_callback_fee_limit().into());
 
             let nonce = self.nonce.read();
 
             // Request the randomness to be used to construct the winning combination
             let request_id = randomness_dispatcher
                 .request_random(
-                    nonce,
-                    this,
-                    CALLBACK_FEE_LIMIT,
-                    PUBLISH_DELAY,
-                    NUM_OF_WORDS,
-                    array![]
+                    nonce, this, CALLBACK_FEE_LIMIT, PUBLISH_DELAY, NUM_OF_WORDS, array![]
                 );
 
             // remove approval once the randomness is paid for
@@ -204,7 +205,7 @@ pub mod CoinFlip {
         }
 
         fn _process_coin_flip(ref self: ContractState, flip_id: u64, random_value: @felt252) {
-            let (flipper, total_fee) = self.flips.read(flip_id);
+            let (flipper, _, _) = self.flips.read(flip_id);
             assert(flipper.is_non_zero(), Errors::INVALID_FLIP_ID);
 
             // The chance of a flipped coin landing sideways is approximately 1 in 6000.
@@ -221,15 +222,6 @@ pub mod CoinFlip {
             };
 
             self.emit(Event::Landed(Landed { flip_id, flipper, side }));
-        }
-        
-        fn _calculate_total_fee_limit(self: ContractState, callback_address: ContractAddress) -> u128 {
-            let randomness_dispatcher = IRandomnessDispatcher {
-                contract_address: self.randomness_contract_address.read()
-            };
-            let caller = get_caller_address();
-            let premium_fee = randomness_dispatcher.compute_premium_fee(caller);
-            CALLBACK_FEE_LIMIT.into() + premium_fee.into() + CALLBACK_FEE_LIMIT.into() / 5
         }
     }
 }
