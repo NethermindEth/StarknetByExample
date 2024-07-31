@@ -29,16 +29,24 @@ pub mod CoinFlip {
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
 
     #[derive(Drop, starknet::Store)]
-    struct FlipData {
+    struct RefundData {
         flipper: ContractAddress,
-        deposit: u256,
-        refunded: bool
+        amount: u256,
+    }
+
+    #[derive(Drop, starknet::Store)]
+    struct LastRequestData {
+        flip_id: u64,
+        flipper: ContractAddress,
+        last_balance: u256,
     }
 
     #[storage]
     struct Storage {
         eth_dispatcher: IERC20Dispatcher,
-        flips: LegacyMap<u64, FlipData>,
+        flips: LegacyMap<u64, ContractAddress>,
+        last_received_request_id: Option<LastRequestData>,
+        refunds: LegacyMap<u64, RefundData>,
         nonce: u64,
         randomness_contract_address: ContractAddress,
     }
@@ -83,6 +91,7 @@ pub mod CoinFlip {
         pub const CALLER_NOT_RANDOMNESS: felt252 = 'Caller not randomness contract';
         pub const INVALID_ADDRESS: felt252 = 'Invalid address';
         pub const INVALID_FLIP_ID: felt252 = 'No flip with the given ID';
+        pub const NOTHING_TO_REFUND: felt252 = 'Nothing to refund';
         pub const ONLY_FLIPPER_CAN_REFUND: felt252 = 'Only the flipper can refund';
         pub const REQUESTOR_NOT_SELF: felt252 = 'Requestor is not self';
         pub const TRANSFER_FAILED: felt252 = 'Transfer failed';
@@ -120,7 +129,7 @@ pub mod CoinFlip {
 
             let flip_id = self._request_my_randomness();
 
-            self.flips.write(flip_id, FlipData { flipper, deposit, refunded: false });
+            self.flips.write(flip_id, flipper);
 
             self.emit(Event::Flipped(Flipped { flip_id, flipper }));
         }
@@ -131,26 +140,27 @@ pub mod CoinFlip {
 
         fn refund(ref self: ContractState, flip_id: u64) {
             let caller = get_caller_address();
-            let FlipData { flipper, deposit, refunded } = self.flips.read(flip_id);
-            assert(flipper.is_non_zero(), Errors::INVALID_FLIP_ID);
+            let flipper = self.flips.read(flip_id);
             assert(flipper == caller, Errors::ONLY_FLIPPER_CAN_REFUND);
-            assert(!refunded, Errors::ALREADY_REFUNDED);
-
-            let randomness_dispatcher = IRandomnessDispatcher {
-                contract_address: self.randomness_contract_address.read()
-            };
-
-            let total_paid = randomness_dispatcher.get_total_fees(get_contract_address(), flip_id);
-
-            let to_refund: u256 = deposit - total_paid;
-
-            self.flips.write(flip_id, FlipData { flipper, deposit, refunded: true });
 
             let eth_dispatcher = self.eth_dispatcher.read();
-            let success = eth_dispatcher.transfer(flipper, to_refund);
+
+            if let Option::Some(data) = self.last_received_request_id.read() {
+                let to_refund = eth_dispatcher.balance_of(get_contract_address())
+                    - data.last_balance;
+                self.refunds.write(data.flip_id, RefundData { flipper, amount: to_refund });
+                self.last_received_request_id.write(Option::None);
+            }
+
+            let RefundData { flipper, amount } = self.refunds.read(flip_id);
+            assert(flipper.is_non_zero(), Errors::NOTHING_TO_REFUND);
+
+            self.refunds.write(flip_id, RefundData { flipper: Zero::zero(), amount: 0 });
+
+            let success = eth_dispatcher.transfer(flipper, amount);
             assert(success, Errors::TRANSFER_FAILED);
 
-            self.emit(Event::Refunded(Refunded { flip_id, flipper, amount: to_refund }));
+            self.emit(Event::Refunded(Refunded { flip_id, flipper, amount }));
         }
     }
 
@@ -206,9 +216,26 @@ pub mod CoinFlip {
         }
 
         fn _process_coin_flip(ref self: ContractState, flip_id: u64, random_value: @felt252) {
-            let flipData = self.flips.read(flip_id);
-            let flipper = flipData.flipper;
+            let flipper = self.flips.read(flip_id);
             assert(flipper.is_non_zero(), Errors::INVALID_FLIP_ID);
+
+            let eth_dispatcher = self.eth_dispatcher.read();
+            let current_balance = eth_dispatcher.balance_of(get_contract_address());
+            if let Option::Some(data) = self.last_received_request_id.read() {
+                self
+                    .refunds
+                    .write(
+                        data.flip_id,
+                        RefundData { flipper, amount: current_balance - data.last_balance }
+                    );
+            }
+            self
+                .last_received_request_id
+                .write(
+                    Option::Some(
+                        LastRequestData { flip_id, flipper, last_balance: current_balance }
+                    )
+                );
 
             // The chance of a flipped coin landing sideways is approximately 1 in 6000.
             // https://journals.aps.org/pre/abstract/10.1103/PhysRevE.48.2547

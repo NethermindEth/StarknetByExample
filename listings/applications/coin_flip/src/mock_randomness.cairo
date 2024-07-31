@@ -1,5 +1,3 @@
-use starknet::ContractAddress;
-
 #[starknet::contract]
 pub mod MockRandomness {
     use pragma_lib::abi::IRandomness;
@@ -15,7 +13,7 @@ pub mod MockRandomness {
     struct Storage {
         eth_dispatcher: IERC20Dispatcher,
         next_request_id: u64,
-        total_fees: LegacyMap::<(ContractAddress, u64), u256>,
+        total_fees: LegacyMap<(ContractAddress, u64), u256>,
     }
 
     #[event]
@@ -26,8 +24,6 @@ pub mod MockRandomness {
         pub const INVALID_ADDRESS: felt252 = 'Invalid address';
         pub const TRANSFER_FAILED: felt252 = 'Transfer failed';
     }
-
-    pub const PREMIUM_FEE: u128 = 100_000_000;
 
     #[constructor]
     fn constructor(ref self: ContractState, eth_address: ContractAddress) {
@@ -49,8 +45,7 @@ pub mod MockRandomness {
             let caller = get_caller_address();
             let this = get_contract_address();
 
-            let total_fee = (callback_fee_limit / 2 + self.compute_premium_fee(callback_address))
-                .into();
+            let total_fee: u256 = callback_fee_limit.into() * 5;
             let eth_dispatcher = self.eth_dispatcher.read();
             let success = eth_dispatcher.transfer_from(caller, this, total_fee);
             assert(success, Errors::TRANSFER_FAILED);
@@ -78,10 +73,10 @@ pub mod MockRandomness {
         ) {
             let requestor = IPragmaVRFDispatcher { contract_address: callback_address };
             requestor.receive_random_words(requestor_address, request_id, random_words, calldata);
-        }
-
-        fn compute_premium_fee(self: @ContractState, caller_address: ContractAddress) -> u128 {
-            PREMIUM_FEE
+            let eth_dispatcher = self.eth_dispatcher.read();
+            let success = eth_dispatcher
+                .transfer(requestor_address, (callback_fee_limit - callback_fee).into());
+            assert(success, Errors::TRANSFER_FAILED);
         }
 
         fn get_total_fees(
@@ -91,6 +86,9 @@ pub mod MockRandomness {
         }
 
 
+        fn compute_premium_fee(self: @ContractState, caller_address: ContractAddress) -> u128 {
+            panic!("unimplemented 'compute_premium_fee'")
+        }
         fn update_status(
             ref self: ContractState,
             requestor_address: ContractAddress,
