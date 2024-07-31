@@ -30,7 +30,7 @@ pub mod CoinFlip {
     #[storage]
     struct Storage {
         eth_dispatcher: IERC20Dispatcher,
-        flips: LegacyMap<u64, (ContractAddress, u128)>,
+        flips: LegacyMap<u64, (ContractAddress, u128, bool)>,
         nonce: u64,
         randomness_contract_address: ContractAddress,
     }
@@ -71,6 +71,7 @@ pub mod CoinFlip {
     }
 
     pub mod Errors {
+        pub const ALREADY_REFUNDED: felt252 = 'Already refunded';
         pub const CALLER_NOT_RANDOMNESS: felt252 = 'Caller not randomness contract';
         pub const INVALID_ADDRESS: felt252 = 'Invalid address';
         pub const INVALID_FLIP_ID: felt252 = 'No flip with the given ID';
@@ -112,16 +113,17 @@ pub mod CoinFlip {
 
             let flip_id = self._request_my_randomness();
 
-            self.flips.write(flip_id, (flipper, total_fee));
+            self.flips.write(flip_id, (flipper, total_fee, false));
 
             self.emit(Event::Flipped(Flipped { flip_id, flipper }));
         }
         
         fn refund(ref self: ContractState, flip_id: u64) {
             let caller = get_caller_address();
-            let (flipper, total_fee) = self.flips.read(flip_id);
+            let (flipper, total_fee, is_refunded) = self.flips.read(flip_id);
             assert(flipper.is_non_zero(), Errors::INVALID_FLIP_ID);
             assert(flipper == caller, Errors::ONLY_FLIPPER_CAN_REFUND);
+            assert(!is_refunded, Errors::ALREADY_REFUNDED);
             
             let randomness_dispatcher = IRandomnessDispatcher {
                 contract_address: self.randomness_contract_address.read()
@@ -130,6 +132,8 @@ pub mod CoinFlip {
             let total_paid = randomness_dispatcher.get_total_fees(get_contract_address(), flip_id);
             
             let to_refund: u256 = (total_fee - total_paid).into();
+
+            self.flips.write(flip_id, (flipper, total_fee, true));
             
             let eth_dispatcher = self.eth_dispatcher.read();
             let success = eth_dispatcher.transfer(caller, to_refund);
