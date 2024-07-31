@@ -3,7 +3,7 @@ use starknet::ContractAddress;
 #[starknet::interface]
 pub trait ICoinFlip<TContractState> {
     fn flip(ref self: TContractState);
-    fn get_callback_fee_limit(self: @TContractState) -> u128;
+    fn get_expected_deposit(self: @TContractState) -> u256;
     fn refund(ref self: TContractState, flip_id: u64);
 }
 
@@ -31,7 +31,7 @@ pub mod CoinFlip {
     #[storage]
     struct Storage {
         eth_dispatcher: IERC20Dispatcher,
-        flips: LegacyMap<u64, (ContractAddress, u128, bool)>,
+        flips: LegacyMap<u64, (ContractAddress, u256, bool)>,
         nonce: u64,
         randomness_contract_address: ContractAddress,
     }
@@ -83,7 +83,7 @@ pub mod CoinFlip {
 
     pub const PUBLISH_DELAY: u64 = 0; // return the random value asap
     pub const NUM_OF_WORDS: u64 = 1; // one random value is sufficient
-    pub const CALLBACK_FEE_LIMIT: u128 = 1_000_000_000_000_000; // 0.001 ETH
+    pub const CALLBACK_FEE_LIMIT: u128 = 100_000_000_000_000; // 0.0001 ETH
 
     #[constructor]
     fn constructor(
@@ -106,30 +106,25 @@ pub mod CoinFlip {
             // we pass the PragmaVRF fee to the flipper
             // we take twice the callback fee amount just to make sure we 
             // can cover the fee + the premium
-            let total_fee = self.get_callback_fee_limit();
+            let deposit: u256 = self.get_expected_deposit();
             let eth_dispatcher = self.eth_dispatcher.read();
-            let success = eth_dispatcher.transfer_from(flipper, this, total_fee.into());
+            let success = eth_dispatcher.transfer_from(flipper, this, deposit);
             assert(success, Errors::TRANSFER_FAILED);
 
             let flip_id = self._request_my_randomness();
 
-            self.flips.write(flip_id, (flipper, total_fee, false));
+            self.flips.write(flip_id, (flipper, deposit, false));
 
             self.emit(Event::Flipped(Flipped { flip_id, flipper }));
         }
 
-        fn get_callback_fee_limit(self: @ContractState) -> u128 {
-            let randomness_dispatcher = IRandomnessDispatcher {
-                contract_address: self.randomness_contract_address.read()
-            };
-            let this = get_contract_address();
-            let premium_fee = randomness_dispatcher.compute_premium_fee(this);
-            CALLBACK_FEE_LIMIT.into() + premium_fee.into() + CALLBACK_FEE_LIMIT.into() / 5
+        fn get_expected_deposit(self: @ContractState) -> u256 {
+            CALLBACK_FEE_LIMIT.into() * 5
         }
 
         fn refund(ref self: ContractState, flip_id: u64) {
             let caller = get_caller_address();
-            let (flipper, total_fee, is_refunded) = self.flips.read(flip_id);
+            let (flipper, deposit, is_refunded) = self.flips.read(flip_id);
             assert(flipper.is_non_zero(), Errors::INVALID_FLIP_ID);
             assert(flipper == caller, Errors::ONLY_FLIPPER_CAN_REFUND);
             assert(!is_refunded, Errors::ALREADY_REFUNDED);
@@ -140,9 +135,9 @@ pub mod CoinFlip {
 
             let total_paid = randomness_dispatcher.get_total_fees(get_contract_address(), flip_id);
 
-            let to_refund: u256 = total_fee.into() - total_paid;
+            let to_refund: u256 = deposit - total_paid;
 
-            self.flips.write(flip_id, (flipper, total_fee, true));
+            self.flips.write(flip_id, (flipper, deposit, true));
 
             let eth_dispatcher = self.eth_dispatcher.read();
             let success = eth_dispatcher.transfer(flipper, to_refund);
@@ -183,10 +178,10 @@ pub mod CoinFlip {
 
             let this = get_contract_address();
 
-            // Approve the randomness contract to transfer the callback fee
+            // Approve the randomness contract to transfer the callback deposit/fee
             let eth_dispatcher = self.eth_dispatcher.read();
             eth_dispatcher
-                .approve(randomness_contract_address, self.get_callback_fee_limit().into());
+                .approve(randomness_contract_address, self.get_expected_deposit().into());
 
             let nonce = self.nonce.read();
 

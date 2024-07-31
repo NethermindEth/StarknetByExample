@@ -39,16 +39,16 @@ fn deploy() -> (ICoinFlipDispatcher, IRandomnessDispatcher, IERC20Dispatcher, Co
     (randomness_address, eth_address).serialize(ref coin_flip_ctor_calldata);
     let (coin_flip_address, _) = coin_flip_contract.deploy(@coin_flip_ctor_calldata).unwrap();
 
+    let randomness_dispatcher = IRandomnessDispatcher { contract_address: randomness_address };
+    let coin_flip_dispatcher = ICoinFlipDispatcher { contract_address: coin_flip_address };
+    
     // approve the CoinFlip contract to spend the callback fee
     let eth_dispatcher = IERC20Dispatcher { contract_address: eth_address };
     start_cheat_caller_address(eth_address, deployer);
-    eth_dispatcher.approve(coin_flip_address, CoinFlip::CALLBACK_FEE_LIMIT.into() * 4);
+    eth_dispatcher.approve(coin_flip_address, coin_flip_dispatcher.get_expected_deposit() * 2); // the test will flip the coin twice
     stop_cheat_caller_address(eth_address);
 
-    let randomness_dispatcher = IRandomnessDispatcher { contract_address: randomness_address };
-    let coin_flip_dispathcer = ICoinFlipDispatcher { contract_address: coin_flip_address };
-
-    (coin_flip_dispathcer, randomness_dispatcher, eth_dispatcher, deployer)
+    (coin_flip_dispatcher, randomness_dispatcher, eth_dispatcher, deployer)
 }
 
 #[test]
@@ -56,7 +56,7 @@ fn deploy() -> (ICoinFlipDispatcher, IRandomnessDispatcher, IERC20Dispatcher, Co
 fn test_two_flips(random_word_1: felt252, random_word_2: felt252) {
     let (coin_flip, randomness, eth, deployer) = deploy();
 
-    let callback_fee_limit = coin_flip.get_callback_fee_limit();
+    let callback_fee_limit = coin_flip.get_expected_deposit();
 
     let mut spy = spy_events(SpyOn::One(coin_flip.contract_address));
 
@@ -79,7 +79,7 @@ fn test_two_flips(random_word_1: felt252, random_word_2: felt252) {
             ]
         );
 
-    assert_eq!(eth.balance_of(deployer), original_balance - callback_fee_limit.into());
+    assert_eq!(eth.balance_of(deployer), original_balance - callback_fee_limit);
 
     randomness
         .submit_random(
@@ -144,7 +144,7 @@ fn test_two_flips(random_word_1: felt252, random_word_2: felt252) {
             ]
         );
 
-    assert_eq!(eth.balance_of(deployer), original_balance - callback_fee_limit.into());
+    assert_eq!(eth.balance_of(deployer), original_balance - callback_fee_limit);
 
     randomness
         .submit_random(
@@ -215,7 +215,7 @@ fn test_flip_without_enough_for_fees() {
     // approve the CoinFlip contract, but leave the flipper with no balance
     let flipper_with_no_funds = contract_address_const::<'flipper_with_no_funds'>();
     start_cheat_caller_address(eth.contract_address, flipper_with_no_funds);
-    eth.approve(coin_flip.contract_address, (CoinFlip::CALLBACK_FEE_LIMIT).into() * 2);
+    eth.approve(coin_flip.contract_address, (coin_flip.get_expected_deposit()));
     stop_cheat_caller_address(eth.contract_address);
 
     start_cheat_caller_address(coin_flip.contract_address, flipper_with_no_funds);
