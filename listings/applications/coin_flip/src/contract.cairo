@@ -52,7 +52,7 @@ pub mod CoinFlip {
         pub side: Side
     }
 
-    #[derive(Drop, Serde)]
+    #[derive(Drop, Debug, PartialEq, Serde)]
     pub enum Side {
         Heads,
         Tails,
