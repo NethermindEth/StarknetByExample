@@ -43,7 +43,7 @@ fn deploy() -> (ICoinFlipDispatcher, IRandomnessDispatcher, IERC20Dispatcher, Co
 
 #[test]
 #[fuzzer(runs: 10, seed: 22)]
-fn test_two_flips(random_word: felt252) {
+fn test_two_flips(random_word_1: felt252, random_word_2: felt252, random_word_3: felt252) {
     let (coin_flip, randomness, eth, deployer) = deploy();
 
     // fund the CoinFlip contract
@@ -52,13 +52,13 @@ fn test_two_flips(random_word: felt252) {
     stop_cheat_caller_address(eth.contract_address);
 
     _flip_request(
-        coin_flip, randomness, eth, deployer, 0, CoinFlip::CALLBACK_FEE_LIMIT / 5 * 3, random_word
+        coin_flip, randomness, eth, deployer, 0, CoinFlip::CALLBACK_FEE_LIMIT / 5 * 3, random_word_1
     );
     _flip_request(
-        coin_flip, randomness, eth, deployer, 1, CoinFlip::CALLBACK_FEE_LIMIT / 4 * 3, random_word
+        coin_flip, randomness, eth, deployer, 1, CoinFlip::CALLBACK_FEE_LIMIT / 4 * 3, random_word_2
     );
     _flip_request(
-        coin_flip, randomness, eth, deployer, 2, CoinFlip::CALLBACK_FEE_LIMIT, random_word
+        coin_flip, randomness, eth, deployer, 2, CoinFlip::CALLBACK_FEE_LIMIT, random_word_3
     );
 }
 
