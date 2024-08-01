@@ -18,7 +18,7 @@ fn deploy() -> (ICoinFlipDispatcher, IRandomnessDispatcher, IERC20Dispatcher, Co
     let eth_contract = declare("ERC20Upgradeable").unwrap();
     let eth_name: ByteArray = "Ethereum";
     let eth_symbol: ByteArray = "ETH";
-    let eth_supply: u256 = CoinFlip::CALLBACK_FEE_LIMIT.into() * 20;
+    let eth_supply: u256 = CoinFlip::CALLBACK_FEE_LIMIT.into() * 100;
     let mut eth_ctor_calldata = array![];
     let deployer = contract_address_const::<'deployer'>();
     ((eth_name, eth_symbol, eth_supply, deployer), deployer).serialize(ref eth_ctor_calldata);
@@ -39,16 +39,16 @@ fn deploy() -> (ICoinFlipDispatcher, IRandomnessDispatcher, IERC20Dispatcher, Co
     (randomness_address, eth_address).serialize(ref coin_flip_ctor_calldata);
     let (coin_flip_address, _) = coin_flip_contract.deploy(@coin_flip_ctor_calldata).unwrap();
 
+    let eth_dispatcher = IERC20Dispatcher { contract_address: eth_address };
     let randomness_dispatcher = IRandomnessDispatcher { contract_address: randomness_address };
     let coin_flip_dispatcher = ICoinFlipDispatcher { contract_address: coin_flip_address };
 
-    // approve the CoinFlip contract to spend the callback fee
-    let eth_dispatcher = IERC20Dispatcher { contract_address: eth_address };
+    // fund the CoinFlip contract
     start_cheat_caller_address(eth_address, deployer);
     eth_dispatcher
-        .approve(
-            coin_flip_address, coin_flip_dispatcher.get_expected_deposit() * 2
-        ); // the test will flip the coin twice
+        .transfer(
+            coin_flip_address, CoinFlip::CALLBACK_FEE_LIMIT.into() * 100
+        );
     stop_cheat_caller_address(eth_address);
 
     (coin_flip_dispatcher, randomness_dispatcher, eth_dispatcher, deployer)
@@ -59,19 +59,19 @@ fn deploy() -> (ICoinFlipDispatcher, IRandomnessDispatcher, IERC20Dispatcher, Co
 fn test_two_flips(random_word_1: felt252, random_word_2: felt252) {
     let (coin_flip, randomness, eth, deployer) = deploy();
 
-    let expected_deposit = coin_flip.get_expected_deposit();
-    let expected_callback_fee = CoinFlip::CALLBACK_FEE_LIMIT / 2;
-    let expected_total_fee: u256 = expected_deposit
-        - (CoinFlip::CALLBACK_FEE_LIMIT - expected_callback_fee).into();
+    _flip_request(coin_flip, randomness, eth, deployer, 0, CoinFlip::CALLBACK_FEE_LIMIT / 5 * 3);
+    _flip_request(coin_flip, randomness, eth, deployer, 1, CoinFlip::CALLBACK_FEE_LIMIT / 4 * 3);
+    _flip_request(coin_flip, randomness, eth, deployer, 2, CoinFlip::CALLBACK_FEE_LIMIT);
+}
 
+fn _flip_request(coin_flip: ICoinFlipDispatcher, randomness: IRandomnessDispatcher, eth: IERC20Dispatcher, deployer: ContractAddress, expected_request_id: u64, expected_callback_fee: u128) {
     let mut spy = spy_events(SpyOn::One(coin_flip.contract_address));
 
-    let original_balance = eth.balance_of(deployer);
+    let original_balance = eth.balance_of(coin_flip.contract_address);
+
     start_cheat_caller_address(coin_flip.contract_address, deployer);
     coin_flip.flip();
     stop_cheat_caller_address(coin_flip.contract_address);
-
-    let expected_request_id = 0;
 
     spy
         .assert_emitted(
@@ -85,7 +85,8 @@ fn test_two_flips(random_word_1: felt252, random_word_2: felt252) {
             ]
         );
 
-    assert_eq!(eth.balance_of(deployer), original_balance - expected_deposit);
+    let post_flip_balance = eth.balance_of(coin_flip.contract_address);
+    assert_eq!(post_flip_balance, original_balance - randomness.get_total_fees(coin_flip.contract_address, expected_request_id));
 
     randomness
         .submit_random(
@@ -124,22 +125,24 @@ fn test_two_flips(random_word_1: felt252, random_word_2: felt252) {
             ]
         );
 
-    start_cheat_caller_address(coin_flip.contract_address, deployer);
-    coin_flip.refund(expected_request_id);
-    stop_cheat_caller_address(coin_flip.contract_address);
+    assert_eq!(eth.balance_of(coin_flip.contract_address), post_flip_balance + (CoinFlip::CALLBACK_FEE_LIMIT - expected_callback_fee));
+}
 
-    assert_eq!(eth.balance_of(deployer), original_balance - expected_total_fee);
+#[test]
+fn test_two_consecutive_flips() {
+    let (coin_flip, randomness, eth, deployer) = deploy();
 
-    let original_balance = eth.balance_of(deployer);
-    let expected_callback_fee = CoinFlip::CALLBACK_FEE_LIMIT / 2 + 1000;
-    let expected_total_fee: u256 = expected_deposit
-        - (CoinFlip::CALLBACK_FEE_LIMIT - expected_callback_fee).into();
+    let mut spy = spy_events(SpyOn::One(coin_flip.contract_address));
+
+    let original_balance = eth.balance_of(coin_flip.contract_address);
+
+    let other_flipper = contract_address_const::<'other_flipper'>();
 
     start_cheat_caller_address(coin_flip.contract_address, deployer);
     coin_flip.flip();
+    start_cheat_caller_address(coin_flip.contract_address, other_flipper);
+    coin_flip.flip();
     stop_cheat_caller_address(coin_flip.contract_address);
-
-    let expected_request_id = 1;
 
     spy
         .assert_emitted(
@@ -147,30 +150,62 @@ fn test_two_flips(random_word_1: felt252, random_word_2: felt252) {
                 (
                     coin_flip.contract_address,
                     CoinFlip::Event::Flipped(
-                        CoinFlip::Flipped { flip_id: expected_request_id, flipper: deployer }
+                        CoinFlip::Flipped { flip_id: 0, flipper: deployer }
+                    )
+                ),
+                (
+                    coin_flip.contract_address,
+                    CoinFlip::Event::Flipped(
+                        CoinFlip::Flipped { flip_id: 1, flipper: other_flipper }
                     )
                 )
             ]
         );
 
-    assert_eq!(eth.balance_of(deployer), original_balance - expected_deposit);
+    let post_flip_balance = eth.balance_of(coin_flip.contract_address);
+    assert_eq!(post_flip_balance, original_balance - randomness.get_total_fees(coin_flip.contract_address, expected_request_id) * 2);
+
+    let expected_callback_fee = CoinFlip::CALLBACK_FEE_LIMIT / 5 * 3;
+    let random_word_deployer = 'this is a string representation of some felt';
+    let random_word_other_user = 'this is another felt value that we need';
 
     randomness
         .submit_random(
-            expected_request_id,
+            0,
             coin_flip.contract_address,
-            1,
+            0,
             0,
             coin_flip.contract_address,
             CoinFlip::CALLBACK_FEE_LIMIT,
             expected_callback_fee,
-            array![random_word_2].span(),
+            array![random_word_deployer].span(),
+            array![].span(),
+            array![]
+        );
+    randomness
+        .submit_random(
+            1,
+            coin_flip.contract_address,
+            0,
+            0,
+            coin_flip.contract_address,
+            CoinFlip::CALLBACK_FEE_LIMIT,
+            expected_callback_fee,
+            array![random_word_other_user].span(),
             array![].span(),
             array![]
         );
 
-    let random_value: u256 = random_word_2.into() % 12000;
-    let expected_side = if random_value < 5999 {
+    let random_value: u256 = random_word_deployer.into() % 12000;
+    let expected_side_deployer = if random_value < 5999 {
+        CoinFlip::Side::Heads
+    } else if random_value > 6000 {
+        CoinFlip::Side::Tails
+    } else {
+        CoinFlip::Side::Sideways
+    };
+    let random_value: u256 = random_word_other_user.into() % 12000;
+    let expected_side_other_user = if random_value < 5999 {
         CoinFlip::Side::Heads
     } else if random_value > 6000 {
         CoinFlip::Side::Tails
@@ -185,48 +220,28 @@ fn test_two_flips(random_word_1: felt252, random_word_2: felt252) {
                     coin_flip.contract_address,
                     CoinFlip::Event::Landed(
                         CoinFlip::Landed {
-                            flip_id: expected_request_id, flipper: deployer, side: expected_side
+                            flip_id: 0, flipper: deployer, side: expected_side_deployer
+                        }
+                    )
+                )
+                (
+                    coin_flip.contract_address,
+                    CoinFlip::Event::Landed(
+                        CoinFlip::Landed {
+                            flip_id: 1, flipper: other_flipper, side: expected_side_other_flipper
                         }
                     )
                 )
             ]
         );
 
-    start_cheat_caller_address(coin_flip.contract_address, deployer);
-    coin_flip.refund(expected_request_id);
-    stop_cheat_caller_address(coin_flip.contract_address);
-
-    assert_eq!(eth.balance_of(deployer), original_balance - expected_total_fee);
-}
-
-#[test]
-#[should_panic(expected: 'ERC20: insufficient allowance')]
-fn test_flip_no_allowance() {
-    let (coin_flip, _, eth, deployer) = deploy();
-
-    let new_flipper = contract_address_const::<'new_flipper'>();
-
-    // ensure new flipper has funds, just that they haven't approved the 
-    // CoinFlip contract to spend them to cover the fee
-    start_cheat_caller_address(eth.contract_address, deployer);
-    eth.transfer(new_flipper, (CoinFlip::CALLBACK_FEE_LIMIT).into() * 2);
-    stop_cheat_caller_address(eth.contract_address);
-
-    start_cheat_caller_address(coin_flip.contract_address, new_flipper);
-    coin_flip.flip();
+    assert_eq!(eth.balance_of(coin_flip.contract_address), post_flip_balance + (CoinFlip::CALLBACK_FEE_LIMIT - expected_callback_fee) * 2);
 }
 
 #[test]
 #[should_panic(expected: 'ERC20: insufficient balance')]
 fn test_flip_without_enough_for_fees() {
-    let (coin_flip, _, eth, _) = deploy();
-
-    // approve the CoinFlip contract, but leave the flipper with no balance
-    let flipper_with_no_funds = contract_address_const::<'flipper_with_no_funds'>();
-    start_cheat_caller_address(eth.contract_address, flipper_with_no_funds);
-    eth.approve(coin_flip.contract_address, (coin_flip.get_expected_deposit()));
-    stop_cheat_caller_address(eth.contract_address);
-
-    start_cheat_caller_address(coin_flip.contract_address, flipper_with_no_funds);
+    let (coin_flip, _, _, deployer) = deploy();
+    start_cheat_caller_address(coin_flip.contract_address, deployer);
     coin_flip.flip();
 }
