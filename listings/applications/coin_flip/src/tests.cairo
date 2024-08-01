@@ -43,28 +43,39 @@ fn deploy() -> (ICoinFlipDispatcher, IRandomnessDispatcher, IERC20Dispatcher, Co
     let randomness_dispatcher = IRandomnessDispatcher { contract_address: randomness_address };
     let coin_flip_dispatcher = ICoinFlipDispatcher { contract_address: coin_flip_address };
 
-    // fund the CoinFlip contract
-    start_cheat_caller_address(eth_address, deployer);
-    eth_dispatcher
-        .transfer(
-            coin_flip_address, CoinFlip::CALLBACK_FEE_LIMIT.into() * 100
-        );
-    stop_cheat_caller_address(eth_address);
-
     (coin_flip_dispatcher, randomness_dispatcher, eth_dispatcher, deployer)
 }
 
 #[test]
 #[fuzzer(runs: 10, seed: 22)]
-fn test_two_flips(random_word_1: felt252, random_word_2: felt252) {
+fn test_two_flips(random_word: felt252) {
     let (coin_flip, randomness, eth, deployer) = deploy();
 
-    _flip_request(coin_flip, randomness, eth, deployer, 0, CoinFlip::CALLBACK_FEE_LIMIT / 5 * 3);
-    _flip_request(coin_flip, randomness, eth, deployer, 1, CoinFlip::CALLBACK_FEE_LIMIT / 4 * 3);
-    _flip_request(coin_flip, randomness, eth, deployer, 2, CoinFlip::CALLBACK_FEE_LIMIT);
+    // fund the CoinFlip contract
+    start_cheat_caller_address(eth.contract_address, deployer);
+    eth.transfer(coin_flip.contract_address, CoinFlip::CALLBACK_FEE_LIMIT.into() * 50);
+    stop_cheat_caller_address(eth.contract_address);
+
+    _flip_request(
+        coin_flip, randomness, eth, deployer, 0, CoinFlip::CALLBACK_FEE_LIMIT / 5 * 3, random_word
+    );
+    _flip_request(
+        coin_flip, randomness, eth, deployer, 1, CoinFlip::CALLBACK_FEE_LIMIT / 4 * 3, random_word
+    );
+    _flip_request(
+        coin_flip, randomness, eth, deployer, 2, CoinFlip::CALLBACK_FEE_LIMIT, random_word
+    );
 }
 
-fn _flip_request(coin_flip: ICoinFlipDispatcher, randomness: IRandomnessDispatcher, eth: IERC20Dispatcher, deployer: ContractAddress, expected_request_id: u64, expected_callback_fee: u128) {
+fn _flip_request(
+    coin_flip: ICoinFlipDispatcher,
+    randomness: IRandomnessDispatcher,
+    eth: IERC20Dispatcher,
+    deployer: ContractAddress,
+    expected_request_id: u64,
+    expected_callback_fee: u128,
+    random_word: felt252
+) {
     let mut spy = spy_events(SpyOn::One(coin_flip.contract_address));
 
     let original_balance = eth.balance_of(coin_flip.contract_address);
@@ -86,7 +97,11 @@ fn _flip_request(coin_flip: ICoinFlipDispatcher, randomness: IRandomnessDispatch
         );
 
     let post_flip_balance = eth.balance_of(coin_flip.contract_address);
-    assert_eq!(post_flip_balance, original_balance - randomness.get_total_fees(coin_flip.contract_address, expected_request_id));
+    assert_eq!(
+        post_flip_balance,
+        original_balance
+            - randomness.get_total_fees(coin_flip.contract_address, expected_request_id)
+    );
 
     randomness
         .submit_random(
@@ -97,12 +112,12 @@ fn _flip_request(coin_flip: ICoinFlipDispatcher, randomness: IRandomnessDispatch
             coin_flip.contract_address,
             CoinFlip::CALLBACK_FEE_LIMIT,
             expected_callback_fee,
-            array![random_word_1].span(),
+            array![random_word].span(),
             array![].span(),
             array![]
         );
 
-    let random_value: u256 = random_word_1.into() % 12000;
+    let random_value: u256 = random_word.into() % 12000;
     let expected_side = if random_value < 5999 {
         CoinFlip::Side::Heads
     } else if random_value > 6000 {
@@ -125,12 +140,20 @@ fn _flip_request(coin_flip: ICoinFlipDispatcher, randomness: IRandomnessDispatch
             ]
         );
 
-    assert_eq!(eth.balance_of(coin_flip.contract_address), post_flip_balance + (CoinFlip::CALLBACK_FEE_LIMIT - expected_callback_fee));
+    assert_eq!(
+        eth.balance_of(coin_flip.contract_address),
+        post_flip_balance + (CoinFlip::CALLBACK_FEE_LIMIT - expected_callback_fee).into()
+    );
 }
 
 #[test]
 fn test_two_consecutive_flips() {
     let (coin_flip, randomness, eth, deployer) = deploy();
+
+    // fund the CoinFlip contract
+    start_cheat_caller_address(eth.contract_address, deployer);
+    eth.transfer(coin_flip.contract_address, CoinFlip::CALLBACK_FEE_LIMIT.into() * 50);
+    stop_cheat_caller_address(eth.contract_address);
 
     let mut spy = spy_events(SpyOn::One(coin_flip.contract_address));
 
@@ -149,9 +172,7 @@ fn test_two_consecutive_flips() {
             @array![
                 (
                     coin_flip.contract_address,
-                    CoinFlip::Event::Flipped(
-                        CoinFlip::Flipped { flip_id: 0, flipper: deployer }
-                    )
+                    CoinFlip::Event::Flipped(CoinFlip::Flipped { flip_id: 0, flipper: deployer })
                 ),
                 (
                     coin_flip.contract_address,
@@ -163,11 +184,16 @@ fn test_two_consecutive_flips() {
         );
 
     let post_flip_balance = eth.balance_of(coin_flip.contract_address);
-    assert_eq!(post_flip_balance, original_balance - randomness.get_total_fees(coin_flip.contract_address, expected_request_id) * 2);
+    assert_eq!(
+        post_flip_balance,
+        original_balance
+            - randomness.get_total_fees(coin_flip.contract_address, 0)
+            - randomness.get_total_fees(coin_flip.contract_address, 1)
+    );
 
     let expected_callback_fee = CoinFlip::CALLBACK_FEE_LIMIT / 5 * 3;
-    let random_word_deployer = 'this is a string representation of some felt';
-    let random_word_other_user = 'this is another felt value that we need';
+    let random_word_deployer = 'this is some random word value';
+    let random_word_other_flipper = 'this is another random word';
 
     randomness
         .submit_random(
@@ -191,7 +217,7 @@ fn test_two_consecutive_flips() {
             coin_flip.contract_address,
             CoinFlip::CALLBACK_FEE_LIMIT,
             expected_callback_fee,
-            array![random_word_other_user].span(),
+            array![random_word_other_flipper].span(),
             array![].span(),
             array![]
         );
@@ -204,8 +230,8 @@ fn test_two_consecutive_flips() {
     } else {
         CoinFlip::Side::Sideways
     };
-    let random_value: u256 = random_word_other_user.into() % 12000;
-    let expected_side_other_user = if random_value < 5999 {
+    let random_value: u256 = random_word_other_flipper.into() % 12000;
+    let expected_side_other_flipper = if random_value < 5999 {
         CoinFlip::Side::Heads
     } else if random_value > 6000 {
         CoinFlip::Side::Tails
@@ -223,7 +249,7 @@ fn test_two_consecutive_flips() {
                             flip_id: 0, flipper: deployer, side: expected_side_deployer
                         }
                     )
-                )
+                ),
                 (
                     coin_flip.contract_address,
                     CoinFlip::Event::Landed(
@@ -235,7 +261,10 @@ fn test_two_consecutive_flips() {
             ]
         );
 
-    assert_eq!(eth.balance_of(coin_flip.contract_address), post_flip_balance + (CoinFlip::CALLBACK_FEE_LIMIT - expected_callback_fee) * 2);
+    assert_eq!(
+        eth.balance_of(coin_flip.contract_address),
+        post_flip_balance + (CoinFlip::CALLBACK_FEE_LIMIT - expected_callback_fee).into() * 2
+    );
 }
 
 #[test]

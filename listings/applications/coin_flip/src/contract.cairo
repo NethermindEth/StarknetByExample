@@ -1,3 +1,5 @@
+use starknet::ContractAddress;
+
 #[starknet::interface]
 pub trait ICoinFlip<TContractState> {
     fn flip(ref self: TContractState);
@@ -70,7 +72,8 @@ pub mod CoinFlip {
     pub const PUBLISH_DELAY: u64 = 0; // return the random value asap
     pub const NUM_OF_WORDS: u64 = 1; // one random value is sufficient
     pub const CALLBACK_FEE_LIMIT: u128 = 100_000_000_000_000; // 0.0001 ETH
-    pub const MAX_CALLBACK_FEE_DEPOSIT: u256 = CALLBACK_FEE_LIMIT * 5; // needs to cover the Premium fee
+    pub const MAX_CALLBACK_FEE_DEPOSIT: u256 =
+        500_000_000_000_000; // CALLBACK_FEE_LIMIT * 5; needs to cover the Premium fee
 
     #[constructor]
     fn constructor(
