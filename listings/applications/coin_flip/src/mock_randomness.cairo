@@ -4,8 +4,6 @@ pub mod MockRandomness {
     use pragma_lib::types::RequestStatus;
     use starknet::{ContractAddress, ClassHash, get_caller_address, get_contract_address};
     use core::num::traits::zero::Zero;
-    use core::poseidon::PoseidonTrait;
-    use core::hash::{HashStateTrait, HashStateExTrait};
     use coin_flip::contract::{IPragmaVRFDispatcher, IPragmaVRFDispatcherTrait};
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
 

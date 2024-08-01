@@ -1,14 +1,9 @@
-use coin_flip::contract::{
-    CoinFlip, ICoinFlipDispatcher, ICoinFlipDispatcherTrait, IPragmaVRFDispatcher,
-    IPragmaVRFDispatcherTrait
-};
+use coin_flip::contract::{CoinFlip, ICoinFlipDispatcher, ICoinFlipDispatcherTrait,};
 use coin_flip::mock_randomness::MockRandomness;
-use starknet::{
-    ContractAddress, ClassHash, get_block_timestamp, contract_address_const, get_caller_address
-};
+use starknet::{ContractAddress, contract_address_const};
 use snforge_std::{
-    declare, ContractClass, ContractClassTrait, start_cheat_caller_address,
-    stop_cheat_caller_address, spy_events, SpyOn, EventSpy, EventAssertions, get_class_hash
+    declare, start_cheat_caller_address, stop_cheat_caller_address, spy_events, EventAssertions,
+    SpyOn, ContractClassTrait
 };
 use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
 use pragma_lib::abi::{IRandomnessDispatcher, IRandomnessDispatcherTrait};

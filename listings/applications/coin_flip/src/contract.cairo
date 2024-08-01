@@ -5,6 +5,7 @@ pub trait ICoinFlip<TContractState> {
     fn flip(ref self: TContractState);
 }
 
+// declares just the pragma_lib::abi::IRandomness.receive_random_words function
 #[starknet::interface]
 pub trait IPragmaVRF<TContractState> {
     fn receive_random_words(
@@ -19,10 +20,7 @@ pub trait IPragmaVRF<TContractState> {
 #[starknet::contract]
 pub mod CoinFlip {
     use core::num::traits::zero::Zero;
-    use starknet::{
-        ContractAddress, contract_address_const, get_caller_address, get_contract_address,
-        get_block_number
-    };
+    use starknet::{ContractAddress, get_caller_address, get_contract_address,};
     use pragma_lib::abi::{IRandomnessDispatcher, IRandomnessDispatcherTrait};
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
 
@@ -69,7 +67,7 @@ pub mod CoinFlip {
         pub const TRANSFER_FAILED: felt252 = 'Transfer failed';
     }
 
-    pub const PUBLISH_DELAY: u64 = 0; // return the random value asap
+    pub const PUBLISH_DELAY: u64 = 1; // return the random value asap
     pub const NUM_OF_WORDS: u64 = 1; // one random value is sufficient
     pub const CALLBACK_FEE_LIMIT: u128 = 100_000_000_000_000; // 0.0001 ETH
     pub const MAX_CALLBACK_FEE_DEPOSIT: u256 =
