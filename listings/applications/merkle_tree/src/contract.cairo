@@ -31,15 +31,9 @@ mod Errors {
 
 #[starknet::contract]
 pub mod MerkleTree {
-    use core::box::BoxTrait;
-    use core::option::OptionTrait;
-    use core::array::SpanTrait;
-    use core::array::ArrayTrait;
-    use merkle_tree::contract::IMerkleTree;
     use core::poseidon::PoseidonTrait;
     use core::hash::{HashStateTrait, HashStateExTrait};
     use super::ByteArrayHashTrait;
-    use starknet::get_caller_address;
 
     #[storage]
     struct Storage {
