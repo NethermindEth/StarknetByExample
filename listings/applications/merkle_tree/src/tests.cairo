@@ -50,7 +50,7 @@ fn build_tree_succeeds() {
     let actual_hashes = deploy.build_tree(arguments);
 
     /// Then
-    let mut expected_hashes: Array<felt252> = ArrayTrait::new();
+    let mut expected_hashes: Array<felt252> = array![];
 
     // leaves' hashes
     expected_hashes.append(data_1.hash());
