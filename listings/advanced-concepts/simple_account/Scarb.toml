@@ -1,11 +1,12 @@
 [package]
-name = "simple_vault"
+name = "simple_account"
 version.workspace = true
 edition = '2023_11'
 
+
 [dependencies]
 starknet.workspace = true
-erc20 = { path = "../erc20" }
+openzeppelin.workspace = true
 
 [scripts]
 test.workspace = true

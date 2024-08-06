@@ -87,11 +87,11 @@ msgstr "Llamar a otros contratos"
 
 #: src/SUMMARY.md:26
 msgid "Factory pattern"
-msgstr "Patrón de la Factory"
+msgstr "Patrón Factory"
 
 #: src/SUMMARY.md:27
 msgid "Testing contracts"
-msgstr "Contratos de Testing"
+msgstr "Testing de Contratos"
 
 #: src/SUMMARY.md:28
 msgid "Cairo cheatsheet"
@@ -220,7 +220,7 @@ msgstr ""
 #: src/starknet-by-example.md:5
 msgid ""
 "Starknet is a permissionless Validity-Rollup that supports general "
-"computation. It is currently used as an Ethereum layer-2. Starknet use the "
+"computation. It is currently used as an Ethereum layer-2. Starknet uses the "
 "STARK cryptographic proof system to ensure high safety and scalability."
 msgstr ""
 "Starknet es un Validity-Rollup sin permiso que admite el cálculo general. "
@@ -234,26 +234,12 @@ msgid ""
 "Turing-complete programming language designed to write provable programs, "
 "abstracting the zk-STARK proof system away from the programmer."
 msgstr ""
-"Los smart contracts de Starknet están escritos en el idioma de Cairo. Cairo "
-"es un lenguaje de programación completo de Turing diseñado para escribir "
+"Los smart contracts de Starknet están escritos en el lenguaje Cairo. Cairo "
+"es un lenguaje de programación Turing completo diseñado para escribir "
 "programas demostrables, abstrayendo el sistema de prueba zk-STARK del "
 "programador."
 
 #: src/starknet-by-example.md:9
-msgid "The current version of this book use:"
-msgstr "La versión actual de este libro usa:"
-
-#: src/starknet-by-example.md:10
-msgid ""
-"```\n"
-"scarb 2.3.1\n"
-"```"
-msgstr ""
-"```\n"
-"scarb 2.3.1\n"
-"```"
-
-#: src/starknet-by-example.md:14
 msgid ""
 "> ⚠️ The examples have not been audited and are not intended for production "
 "use.\n"
@@ -265,11 +251,11 @@ msgstr ""
 "> Los autores no se hacen responsables de los daños causados por el uso del "
 "código proporcionado en este libro."
 
-#: src/starknet-by-example.md:17
+#: src/starknet-by-example.md:12
 msgid "## For whom is this for?"
-msgstr "## ¿Para quién es esto?"
+msgstr "## ¿A quién va dirigido?"
 
-#: src/starknet-by-example.md:19
+#: src/starknet-by-example.md:14
 msgid ""
 "Starknet By Example is for anyone who wants to quickly learn how to write "
 "smart contracts on Starknet using Cairo with some technical background in "
@@ -279,7 +265,7 @@ msgstr ""
 "escribir contratos inteligentes en Starknet usando Cairo con cierta "
 "experiencia técnica en programación y blockchain."
 
-#: src/starknet-by-example.md:21
+#: src/starknet-by-example.md:16
 msgid ""
 "The first chapters will give you a basic understanding of the Cairo "
 "programming language and how to write, deploy and use smart contracts on "
@@ -292,11 +278,41 @@ msgstr ""
 "inteligentes en Starknet. Los capítulos posteriores cubrirán temas más "
 "avanzados y le mostrarán cómo escribir contratos inteligentes más complejos."
 
-#: src/starknet-by-example.md:24
+#: src/starknet-by-example.md:19
+msgid "## How to use this book?"
+msgstr "## ¿Como usar este libro?"
+
+#: src/starknet-by-example.md:21
+msgid ""
+"Each chapter is a standalone example that demonstrates a specific feature "
+"or common use case of smart contracts on Starknet. If you are new to Starknet, "
+"it is recommended to read the chapters in order."
+msgstr ""
+"Cada capítulo en un ejemplo independiente que muestra una característica "
+"específica o un caso de uso común de un contrato inteligente en Starknet. "
+"Si eres nuevo en Starknet, es recomendable que leas los capítulos en orden."
+
+#: src/starknet-by-example.md:23
+msgid ""
+"Most examples contain interfaces and tests that are hidden by default. "
+"You can hover over the code blocks and click on the \"Show hidden lines\" "
+"(eyes icon) to see the hidden code.\n"
+msgstr ""
+"La mayoria de los ejemplos contienen interfaces y pruebas que están ocultas por defecto "
+"Puedes colocar el cursor sobre los bloques de codígo y darle click en \"Mostrar lineas ocultas\" "
+"(icono de ojos) para ver el codígo oculto"
+
+#: src/starknet-by-example.md:25
+msgid ""
+"You can run each example online by using the [Starknet Remix Plugin](https://remix.ethereum.org/?#activate=Starknet)."
+msgstr ""
+"Puedes ejecutar cada uno de los ejemplos en línea usando [El plugin de Starknet en Remix ](https://remix.ethereum.org/?#activate=Starknet)."
+
+#: src/starknet-by-example.md:27
 msgid "## Further reading"
 msgstr "## Otras lecturas"
 
-#: src/starknet-by-example.md:26
+#: src/starknet-by-example.md:29
 msgid ""
 "If you want to learn more about the Cairo programming language, you can read "
 "the [Cairo Book](https://book.cairo-lang.org).\n"
@@ -309,13 +325,31 @@ msgstr ""
 "más información sobre Starknet, puede leer la [Documentación de Starknet]"
 "(https://docs.starknet.io/) y el [Starknet Book](https://book.starknet.io)."
 
-#: src/starknet-by-example.md:29
+#: src/starknet-by-example.md:32
 msgid ""
 "For more resources, check [Awesome Starknet](https://github.com/keep-"
 "starknet-strange/awesome-starknet)."
 msgstr ""
 "Para obtener más recursos, consulte [Awesome Starknet](https://github.com/"
 "keep-starknet-strange/awesome-starknet)."
+
+#: src/starknet-by-example.md:34
+msgid "## Versions"
+msgstr "## Versiones"
+
+#: src/starknet-by-example.md:36
+msgid "The current version of this book uses:"
+msgstr "La versión actual de este libro usa:"
+
+#: src/starknet-by-example.md:38
+msgid ""
+"```\n"
+"scarb 2.6.3\n"
+"```"
+msgstr ""
+"```\n"
+"edition = '2023_11'\n"
+"```"
 
 #: src/starknet-by-example.md:31 src/getting-started/basics/storage.md:34
 #: src/getting-started/basics/constructor.md:27 src/getting-started/basics/variables.md:126
