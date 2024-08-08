@@ -134,7 +134,6 @@ mod test {
     use starknet::ContractAddress;
     use starknet::{syscalls::deploy_syscall, SyscallResultTrait, contract_address_const};
     use starknet::testing::{set_caller_address, set_contract_address};
-    use core::traits::TryInto;
     use core::num::traits::Zero;
 
     fn deploy() -> (IOwnableDispatcher, ContractAddress) {
