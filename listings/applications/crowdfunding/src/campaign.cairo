@@ -33,7 +33,7 @@ pub trait ICampaign<TContractState> {
 #[starknet::contract]
 pub mod Campaign {
     use components::ownable::ownable_component::OwnableInternalTrait;
-    use core::num::traits::zero::Zero;
+    use core::num::traits::Zero;
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
     use starknet::{
         ClassHash, ContractAddress, SyscallResultTrait, get_block_timestamp, contract_address_const,
