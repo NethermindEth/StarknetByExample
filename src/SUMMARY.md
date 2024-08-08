@@ -64,6 +64,7 @@ Summary
 - [Simple Storage with Starknet-js](./applications/simple_storage_starknetjs.md)
 - [Crowdfunding Campaign](./applications/crowdfunding.md)
 - [AdvancedFactory: Crowdfunding](./applications/advanced_factory.md)
+- [Account Contract - Spending Limits](./applications/aa_spending_limit.md)
 
 <!-- advanced-concepts -->
 
