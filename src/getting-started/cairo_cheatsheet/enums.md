@@ -14,7 +14,7 @@ Enums can be declared both inside and outside a contract. If declared outside, t
 
     - It is possible to store `enums` in the contract storage. But unlike most of the core library types which implement the `Store` trait, enums are custom types and therefore do not automatically implement the `Store` trait. The enum as well as all of its variants have to explicitly implement the `Store` trait in order for it to be stored inside a contract storage.
 
-    - If all of its variants implement the `Store` trait, implementing the `Store` trait on the enum is as simple as deriving it, using `#[derive(starknet::Store)]` (as shown in example above). If not, the `Store` trait has to be manually implemented -- see an example of manually implementing the `Store` trait for a complex type in chapter [Storing Arrays](https://starknet-by-example.voyager.online/ch02/storing_arrays.html).
+    - If all of its variants implement the `Store` trait, implementing the `Store` trait on the enum is as simple as deriving it, using `#[derive(starknet::Store)]` (as shown in example above). If not, the `Store` trait has to be manually implemented -- see an example of manually implementing the `Store` trait for a complex type in chapter [Storing Arrays](../../advanced-concepts/storing_arrays.md).
 
 2. Enums as parameters and return values to entrypoints
 

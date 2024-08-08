@@ -16,7 +16,6 @@ pub mod UpgradeableContract_V0 {
     #[storage]
     struct Storage {}
 
-
     #[event]
     #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
     pub enum Event {

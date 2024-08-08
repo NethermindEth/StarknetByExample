@@ -3,7 +3,7 @@
 There are two different ways to call other contracts in Cairo.
 
 The easiest way to call other contracts is by using the dispatcher of the contract you want to call.
-You can read more about Dispatchers in the [Cairo Book](https://book.cairo-lang.org/ch99-02-02-contract-dispatcher-library-dispatcher-and-system-calls.html#contract-dispatcher).
+You can read more about Dispatchers in the [Cairo Book](https://book.cairo-lang.org/ch15-02-interacting-with-another-contract.html#calling-contracts-using-the-contract-dispatcher).
 
 The other way is to use the `starknet::call_contract_syscall` syscall yourself. However, this method is not recommended and will not be covered in this chapter.
 

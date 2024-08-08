@@ -1,3 +1,4 @@
+// ANCHOR: contract
 use starknet::ContractAddress;
 
 // In order to make contract calls within our Vault,
@@ -62,12 +63,10 @@ pub mod SimpleVault {
             self.total_supply.write(self.total_supply.read() - shares);
             self.balance_of.write(from, self.balance_of.read(from) - shares);
         }
-        
     }
 
     #[abi(embed_v0)]
     impl SimpleVault of super::ISimpleVault<ContractState> {
-
         fn user_balance_of(ref self: ContractState, account: ContractAddress) -> u256 {
             self.balance_of.read(account)
         }
@@ -76,8 +75,7 @@ pub mod SimpleVault {
             self.total_supply.read()
         }
 
-
-        fn deposit(ref self: ContractState, amount: u256){
+        fn deposit(ref self: ContractState, amount: u256) {
             // a = amount
             // B = balance of token before deposit
             // T = total supply
@@ -93,13 +91,12 @@ pub mod SimpleVault {
             if self.total_supply.read() == 0 {
                 shares = amount;
             } else {
-                let balance: u256 = self.token.read().balance_of(this).try_into()
-                .unwrap();
+                let balance: u256 = self.token.read().balance_of(this).try_into().unwrap();
                 shares = (amount * self.total_supply.read()) / balance;
             }
-            
-           PrivateFunctions::_mint(ref self, caller, shares);
-           
+
+            PrivateFunctions::_mint(ref self, caller, shares);
+
             let amount_felt252: felt252 = amount.low.into();
             self.token.read().transfer_from(caller, this, amount_felt252);
         }
@@ -124,23 +121,19 @@ pub mod SimpleVault {
         }
     }
 }
-// ANCHOR_END: simple_vault
+// ANCHOR_END: contract
 
 #[cfg(test)]
 mod tests {
-    use core::traits::Into;
     use super::{
         SimpleVault, ISimpleVaultDispatcher, ISimpleVaultDispatcherTrait, IERC20Dispatcher,
         IERC20DispatcherTrait
     };
-
-    // use erc20::token::IERC20;
-    use erc20::token::{IERC20DispatcherTrait as IERC20DispatcherTrait_token,
+    use erc20::token::{
+        IERC20DispatcherTrait as IERC20DispatcherTrait_token,
         IERC20Dispatcher as IERC20Dispatcher_token
     };
-
     use core::num::traits::Zero;
-
     use starknet::testing::{set_contract_address, set_account_contract_address};
     use starknet::{
         ContractAddress, SyscallResultTrait, syscalls::deploy_syscall, get_caller_address,
@@ -198,9 +191,8 @@ mod tests {
         let balance_of_caller = dispatcher.user_balance_of(caller);
         let total_supply = dispatcher.contract_total_supply();
 
-        assert(balance_of_caller == amount, 'Deposit failed');
-        assert(total_supply == amount, 'total supply mismatch');
-
+        assert_eq!(balance_of_caller, amount);
+        assert_eq!(total_supply, amount);
     }
 
     #[test]
@@ -222,8 +214,6 @@ mod tests {
         // Check balances of user in the vault after withdraw
         let balance_of_caller = dispatcher.user_balance_of(caller);
 
-        assert(balance_of_caller == 0.into(), 'withdraw failed');
+        assert_eq!(balance_of_caller, 0.into());
     }
-   
-    
 }

@@ -32,7 +32,6 @@ trait IEnumContract<TContractState> {
 #[starknet::contract]
 mod EnumContract {
     use core::clone::Clone;
-    use core::traits::Into;
     use super::IEnumContract;
     use super::{Action, Position, UserCommand};
 

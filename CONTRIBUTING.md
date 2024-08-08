@@ -127,7 +127,7 @@ mod contract;
 mod tests;
 ```
 
-> About Starknet Foundry: It is currently not possible to use Starknet Foundry but we are working on it.
+You can also use Starknet Foundry to write and run your tests.
 
 ### Use of anchor
 
