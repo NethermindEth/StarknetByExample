@@ -45,6 +45,7 @@ However, achieving true randomness on a decentralized platform poses significant
 - **Risks:**
     - **Dishonest Behavior:** Participants may choose not to reveal their values if the outcome is unfavorable.
     - **Coordination:** Requires honest participation from multiple parties, which can be hard to guarantee.
+    <!-- TODO: link to Commit-Reveal chapter once implemented: https://github.com/NethermindEth/StarknetByExample/issues/77 -->
 
 #### 5. On-Chain Randomness Beacons
 
