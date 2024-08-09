@@ -1,0 +1,17 @@
+[package]
+name = "coin_flip"
+version = "0.1.0"
+edition = "2023_11"
+
+[dependencies]
+starknet.workspace = true
+openzeppelin.workspace = true
+pragma_lib.workspace = true
+snforge_std.workspace = true
+
+[scripts]
+test.workspace = true
+
+[[target.starknet-contract]]
+casm = true
+build-external-contracts = ["openzeppelin::presets::erc20::ERC20Upgradeable"]
