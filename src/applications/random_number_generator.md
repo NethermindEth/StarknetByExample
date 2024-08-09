@@ -19,7 +19,7 @@ However, achieving true randomness on a decentralized platform poses significant
 - **Example:** A common approach is to use the hash of a recent block as a seed for random number generation.
 - **Risks:**
     - **Predictability:** Miners can influence future block hashes by controlling the nonce they use during mining.
-    - **Manipulation:** Miners or validators with significant influence can manipulate the block hash to their advantage, especially if they stand to gain from a specific random outcome.
+    - **Manipulation:** Many of the blockchain properties (block hash, timestamp etc.) can be manipulated by some entities, especially if they stand to gain from a specific random outcome.
 
 #### 2. User-Provided Inputs
 
