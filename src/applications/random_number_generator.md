@@ -9,7 +9,7 @@ In blockchain and smart contracts, randomness is needed for:
 - **Security:** Generating cryptographic keys and nonces that are hard to predict.
 - **Consensus Protocols:** Selecting validators or block producers in some proof-of-stake systems.
 
-However, achieving true randomness on a decentralized platform poses significant challenges. There are numerous sources of entropy, each with its stregths and weaknesses.
+However, achieving true randomness on a decentralized platform poses significant challenges. There are numerous sources of entropy, each with its strengths and weaknesses.
 
 ### Sources of Entropy
 
