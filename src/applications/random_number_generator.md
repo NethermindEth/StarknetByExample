@@ -35,7 +35,7 @@ However, achieving true randomness on a decentralized platform poses significant
 - **Example:** Pragma VRF (Verifiable Random Function) is a service that provides cryptographically secure randomness.
 - **Risks:**
     - **Trust:** Reliance on a third party undermines the trustless nature of blockchain.
-    - **Centralization:** If the oracle service is compromised, so is the randomness it provides.
+    - **Centralization:** If the oracle service is compromised or shut down, so is the randomness it provides.
     - **Cost:** Using an oracle often involves additional transaction fees.
 
 #### 4. Commit-Reveal Schemes
