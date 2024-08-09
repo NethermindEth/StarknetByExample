@@ -32,7 +32,7 @@ However, achieving true randomness on a decentralized platform poses significant
 #### 3. External Oracles
 
 - **Description:** Using a trusted third-party service to supply randomness. Oracles are off-chain services that provide data to smart contracts.
-- **Example:** Chainlink VRF (Verifiable Random Function) is a service that provides cryptographically secure randomness.
+- **Example:** Pragma VRF (Verifiable Random Function) is a service that provides cryptographically secure randomness.
 - **Risks:**
     - **Trust:** Reliance on a third party undermines the trustless nature of blockchain.
     - **Centralization:** If the oracle service is compromised, so is the randomness it provides.
