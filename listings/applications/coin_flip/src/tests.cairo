@@ -14,7 +14,6 @@ impl FeltIntoSide of core::traits::Into<felt252, Side> {
         match self {
             0 => Side::Heads,
             1 => Side::Tails,
-            2 => Side::Sideways,
             _ => panic!("non-existent side, felt value: {self}")
         }
     }
@@ -64,24 +63,15 @@ fn test_all_relevant_random_words() {
 
     let mut random_words: Array<(felt252, Side, u64)> = array![
         (0, Side::Heads, 0),
-        (1, Side::Heads, 1),
-        (2406, Side::Heads, 2),
-        (5998, Side::Heads, 3),
-        (12000, Side::Heads, 4),
-        (15000, Side::Heads, 5),
-        (123456789, Side::Heads, 6),
-        (6001, Side::Tails, 7),
-        (6002, Side::Tails, 8),
-        (9999, Side::Tails, 9),
-        (11999, Side::Tails, 10),
-        (18001, Side::Tails, 11),
-        (12345654321, Side::Tails, 12),
-        (5999, Side::Sideways, 13),
-        (6000, Side::Sideways, 14),
-        (17999, Side::Sideways, 15),
-        (18000, Side::Sideways, 16),
-        (533999, Side::Sideways, 17),
-        (534000, Side::Sideways, 18)
+        (2, Side::Heads, 1),
+        (4, Side::Heads, 2),
+        (1000, Side::Heads, 3),
+        (12345654320, Side::Heads, 4),
+        (1, Side::Tails, 5),
+        (3, Side::Tails, 6),
+        (5, Side::Tails, 7),
+        (1001, Side::Tails, 8),
+        (12345654321, Side::Tails, 9),
     ];
     while let Option::Some((random_word, expected_side, expected_request_id)) = random_words
         .pop_front() {
@@ -108,7 +98,7 @@ fn test_multiple_flips() {
     stop_cheat_caller_address(eth.contract_address);
 
     _flip_request(
-        coin_flip, randomness, eth, deployer, 0, CALLBACK_FEE_LIMIT / 5 * 3, 123456789, Side::Heads
+        coin_flip, randomness, eth, deployer, 0, CALLBACK_FEE_LIMIT / 5 * 3, 123456789, Side::Tails
     );
     _flip_request(
         coin_flip,
@@ -120,7 +110,7 @@ fn test_multiple_flips() {
         12345654321,
         Side::Tails
     );
-    _flip_request(coin_flip, randomness, eth, deployer, 2, CALLBACK_FEE_LIMIT, 3, Side::Heads);
+    _flip_request(coin_flip, randomness, eth, deployer, 2, CALLBACK_FEE_LIMIT, 3, Side::Tails);
 }
 
 fn _flip_request(
@@ -246,9 +236,9 @@ fn test_two_consecutive_flips() {
 
     let expected_callback_fee = CALLBACK_FEE_LIMIT / 5 * 3;
     let random_word_deployer = 5633;
-    let expected_side_deployer = Side::Heads;
+    let expected_side_deployer = Side::Tails;
     let random_word_other_flipper = 8000;
-    let expected_side_other_flipper = Side::Tails;
+    let expected_side_other_flipper = Side::Heads;
 
     randomness
         .submit_random(

@@ -56,7 +56,6 @@ pub mod CoinFlip {
     pub enum Side {
         Heads,
         Tails,
-        Sideways
     }
 
     pub mod Errors {
@@ -157,13 +156,11 @@ pub mod CoinFlip {
             let flipper = self.flips.read(flip_id);
             assert(flipper.is_non_zero(), Errors::INVALID_FLIP_ID);
 
-            let random_value: u256 = (*random_value).into() % 12000;
-            let side = if random_value < 5999 {
+            let random_value: u256 = (*random_value).into();
+            let side = if random_value % 2 == 0 {
                 Side::Heads
-            } else if random_value > 6000 {
-                Side::Tails
             } else {
-                Side::Sideways
+                Side::Tails
             };
 
             self.emit(Event::Landed(Landed { flip_id, flipper, side }));
