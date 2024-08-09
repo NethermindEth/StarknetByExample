@@ -41,6 +41,7 @@ Summary
   - [Tuples](./getting-started/cairo_cheatsheet/tuples.md)
   - [Struct](./getting-started/cairo_cheatsheet/struct.md)
   - [Type casting](./getting-started/cairo_cheatsheet/type_casting.md)
+  - [Dict](./getting-started/cairo_cheatsheet/dict.md)
 
 # Components
 
@@ -56,6 +57,7 @@ Summary
 - [Upgradeable Contract](./applications/upgradeable_contract.md)
 - [Defi Vault](./applications/simple_vault.md)
 - [ERC20 Token](./applications/erc20.md)
+- [NFT Dutch Auction](./applications/nft_dutch_auction.md)
 - [Constant Product AMM](./applications/constant-product-amm.md)
 - [TimeLock](./applications/timelock.md)
 - [Staking](./applications/staking.md)

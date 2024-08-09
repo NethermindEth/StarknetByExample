@@ -25,8 +25,7 @@ mod ERC721 {
     // library imports
     ////////////////////////////////
     use starknet::{ContractAddress, get_caller_address};
-    use core::traits::TryInto;
-    use core::num::traits::zero::Zero;
+    use core::num::traits::Zero;
 
     ////////////////////////////////
     // storage variables
