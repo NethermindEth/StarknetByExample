@@ -47,13 +47,7 @@ However, achieving true randomness on a decentralized platform poses significant
     - **Coordination:** Requires honest participation from multiple parties, which can be hard to guarantee.
     <!-- TODO: link to Commit-Reveal chapter once implemented: https://github.com/NethermindEth/StarknetByExample/issues/77 -->
 
-#### 5. On-Chain Randomness Beacons
-
-- **Description:** Dedicated smart contracts or mechanisms designed to generate and provide randomness on-chain.
-- **Example:** Randomness beacons like RANDAO, which aggregate randomness from multiple participants.
-- **Risks:**
-    - **Collusion:** If participants collude, they can influence the randomness outcome.
-    - **Disruption:** If participants do not follow through (e.g., not revealing their values), the beacon may fail to produce a valid random number.
+> There are other ways to generate randomness on-chain, for more information read the ["Public Randomness and Randomness Beacons"](https://a16zcrypto.com/posts/article/public-randomness-and-randomness-beacons/) article.
 
 ## CoinFlip using Pragma VRF
 
