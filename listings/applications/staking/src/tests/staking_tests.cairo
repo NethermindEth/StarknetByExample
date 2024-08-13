@@ -7,7 +7,6 @@ mod tests {
     use staking::contract::StakingContract::__member_module_balance_of::InternalContractMemberStateTrait as BalInt;
     use staking::contract::StakingContract::__member_module_staking_token::InternalContractMemberStateTrait as StakeTokInt;
     use staking::contract::StakingContract::__member_module_reward_token::InternalContractMemberStateTrait as RewardTokInt;
-    use core::traits::TryInto;
     use openzeppelin::token::erc20::interface::IERC20DispatcherTrait;
     use openzeppelin::token::erc20::erc20::ERC20Component::InternalTrait;
     use staking::contract::IStakingContractDispatcherTrait;

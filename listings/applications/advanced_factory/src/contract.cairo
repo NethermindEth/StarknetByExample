@@ -21,7 +21,7 @@ pub trait ICampaignFactory<TContractState> {
 
 #[starknet::contract]
 pub mod CampaignFactory {
-    use core::num::traits::zero::Zero;
+    use core::num::traits::Zero;
     use starknet::{
         ContractAddress, ClassHash, SyscallResultTrait, syscalls::deploy_syscall,
         get_caller_address, get_contract_address

@@ -3,6 +3,7 @@
 This is the Cairo adaptation (with some modifications) of the [Solidity by example NFT Dutch Auction](https://solidity-by-example.org/app/dutch-auction/).
 
 Here's how it works:
+
 - The seller of the NFT deploys this contract with a startingPrice.
 - The auction lasts for a specified duration.
 - The price decreases over time.
@@ -10,5 +11,5 @@ Here's how it works:
 - The auction ends when either the totalSupply is reached or the duration has elapsed.
 
 ```rust
-{{#include ../../listings/applications/nft_auction/src/nft_auction.cairo}}
+{{#rustdoc_include ../../listings/applications/nft_dutch_auction/src/nft_dutch_auction.cairo:contract}}
 ```
