@@ -24,7 +24,7 @@ enum SignerType {
 
 #[derive(Drop, Copy, Serde)]
 enum SignerSignature {
-    Secp256r1: (Secp256r1Signer, Secp256Signature),
+    Secp256r1: (Secp256r1Signer, Secp2newAccount56Signature),
     Secp256k1: (Secp256k1Signer, Secp256Signature),
 }
 
@@ -64,8 +64,10 @@ impl Secp256k1SignerSerde of Serde<Secp256k1Signer> {
 trait Secp256SignatureTrait {
     fn is_valid_signature(self: SignerSignature, hash: felt252) -> bool;
     fn signer(self: SignerSignature) -> Signer;
-}
-
+    }
+    
+    // ANCHOR: is_valid_signature
+// To check if secp256k1 and secp256r1 signatures are valid
 impl Secp256SignatureImpl of Secp256SignatureTrait {
     #[inline(always)]
     fn is_valid_signature(self: SignerSignature, hash: felt252) -> bool {
@@ -78,7 +80,8 @@ impl Secp256SignatureImpl of Secp256SignatureTrait {
             )) => is_valid_secp256k1_signature(hash.into(), signer.pubkey_hash.into(), signature),
         }
     }
-
+    
+    
     #[inline(always)]
     fn signer(self: SignerSignature) -> Signer {
         match self {
@@ -105,6 +108,7 @@ fn is_valid_secp256r1_signature(hash: u256, signer: Secp256r1Signer, signature: 
     let (recovered_signer, _) = recovered_pubkey.get_coordinates().expect('invalid sig format');
     recovered_signer == signer.pubkey.into()
 }
+// ANCHOR_END: is_valid_signature
 
 // impl to convert signer type into felt252 using into()
 impl SignerTypeIntoFelt252 of Into<SignerType, felt252> {
