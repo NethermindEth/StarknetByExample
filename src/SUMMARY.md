@@ -79,7 +79,6 @@ Summary
   - [Storage Optimisations](./advanced-concepts/optimisations/store_using_packing.md)
 - [Account Abstraction](./advanced-concepts/account_abstraction/index.md)
   - [Account Contract](./advanced-concepts/account_abstraction/account_contract.md)
-- [List](./advanced-concepts/list.md)
 - [Library Calls](./advanced-concepts/library_calls.md)
 - [Plugins](./advanced-concepts/plugins.md)
 - [Signature Verification](./advanced-concepts/signature_verification.md)
