@@ -81,6 +81,9 @@ starknet.workspace = true
 # If you want to use another Starknet By Example's listing, you can add it as a dependency like this:
 # erc20 = { path = "../../getting-started/erc20" }
 
+[dev-dependencies]
+cairo_test.workspace = true
+
 [scripts]
 test.workspace = true
 

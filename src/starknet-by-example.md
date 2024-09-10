@@ -37,6 +37,6 @@ The current version this book uses:
 
 ```
 cairo 2.6.3
-edition = '2023_11'
+edition = '2024_07'
 {{#include ../.tool-versions}}
 ```

@@ -5,16 +5,10 @@ version = 1
 name = "advanced_factory"
 version = "0.1.0"
 dependencies = [
- "alexandria_storage",
  "components",
  "crowdfunding",
  "snforge_std",
 ]
-
-[[package]]
-name = "alexandria_storage"
-version = "0.3.0"
-source = "git+https://github.com/keep-starknet-strange/alexandria.git?rev=800f5ad#800f5ad217847b5ded63c0302a444161766ee9d6"
 
 [[package]]
 name = "bytearray"
@@ -117,8 +111,94 @@ dependencies = [
 
 [[package]]
 name = "openzeppelin"
-version = "0.14.0"
-source = "git+https://github.com/OpenZeppelin/cairo-contracts.git?tag=v0.14.0#f091c4f51ddeb10297db984acae965328c5a4e5b"
+version = "0.16.0"
+source = "git+https://github.com/OpenZeppelin/cairo-contracts.git?tag=v0.16.0#ba00ce76a93dcf25c081ab2698da20690b5a1cfb"
+dependencies = [
+ "openzeppelin_access",
+ "openzeppelin_account",
+ "openzeppelin_governance",
+ "openzeppelin_introspection",
+ "openzeppelin_merkle_tree",
+ "openzeppelin_presets",
+ "openzeppelin_security",
+ "openzeppelin_token",
+ "openzeppelin_upgrades",
+ "openzeppelin_utils",
+]
+
+[[package]]
+name = "openzeppelin_access"
+version = "0.16.0"
+source = "git+https://github.com/OpenZeppelin/cairo-contracts.git?tag=v0.16.0#ba00ce76a93dcf25c081ab2698da20690b5a1cfb"
+dependencies = [
+ "openzeppelin_introspection",
+ "openzeppelin_utils",
+]
+
+[[package]]
+name = "openzeppelin_account"
+version = "0.16.0"
+source = "git+https://github.com/OpenZeppelin/cairo-contracts.git?tag=v0.16.0#ba00ce76a93dcf25c081ab2698da20690b5a1cfb"
+dependencies = [
+ "openzeppelin_introspection",
+ "openzeppelin_utils",
+]
+
+[[package]]
+name = "openzeppelin_governance"
+version = "0.16.0"
+source = "git+https://github.com/OpenZeppelin/cairo-contracts.git?tag=v0.16.0#ba00ce76a93dcf25c081ab2698da20690b5a1cfb"
+dependencies = [
+ "openzeppelin_access",
+ "openzeppelin_introspection",
+]
+
+[[package]]
+name = "openzeppelin_introspection"
+version = "0.16.0"
+source = "git+https://github.com/OpenZeppelin/cairo-contracts.git?tag=v0.16.0#ba00ce76a93dcf25c081ab2698da20690b5a1cfb"
+
+[[package]]
+name = "openzeppelin_merkle_tree"
+version = "0.16.0"
+source = "git+https://github.com/OpenZeppelin/cairo-contracts.git?tag=v0.16.0#ba00ce76a93dcf25c081ab2698da20690b5a1cfb"
+
+[[package]]
+name = "openzeppelin_presets"
+version = "0.16.0"
+source = "git+https://github.com/OpenZeppelin/cairo-contracts.git?tag=v0.16.0#ba00ce76a93dcf25c081ab2698da20690b5a1cfb"
+dependencies = [
+ "openzeppelin_access",
+ "openzeppelin_account",
+ "openzeppelin_introspection",
+ "openzeppelin_token",
+ "openzeppelin_upgrades",
+]
+
+[[package]]
+name = "openzeppelin_security"
+version = "0.16.0"
+source = "git+https://github.com/OpenZeppelin/cairo-contracts.git?tag=v0.16.0#ba00ce76a93dcf25c081ab2698da20690b5a1cfb"
+
+[[package]]
+name = "openzeppelin_token"
+version = "0.16.0"
+source = "git+https://github.com/OpenZeppelin/cairo-contracts.git?tag=v0.16.0#ba00ce76a93dcf25c081ab2698da20690b5a1cfb"
+dependencies = [
+ "openzeppelin_account",
+ "openzeppelin_governance",
+ "openzeppelin_introspection",
+]
+
+[[package]]
+name = "openzeppelin_upgrades"
+version = "0.16.0"
+source = "git+https://github.com/OpenZeppelin/cairo-contracts.git?tag=v0.16.0#ba00ce76a93dcf25c081ab2698da20690b5a1cfb"
+
+[[package]]
+name = "openzeppelin_utils"
+version = "0.16.0"
+source = "git+https://github.com/OpenZeppelin/cairo-contracts.git?tag=v0.16.0#ba00ce76a93dcf25c081ab2698da20690b5a1cfb"
 
 [[package]]
 name = "scarb"
@@ -143,9 +223,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "snforge_scarb_plugin"
+version = "0.1.0"
+source = "git+https://github.com/foundry-rs/starknet-foundry.git?tag=v0.30.0#196f06b251926697c3d66800f2a93ae595e76496"
+
+[[package]]
 name = "snforge_std"
-version = "0.25.0"
-source = "git+https://github.com/foundry-rs/starknet-foundry.git?tag=v0.25.0#5b366e24821e530fea97f11b211d220e8493fbea"
+version = "0.30.0"
+source = "git+https://github.com/foundry-rs/starknet-foundry.git?tag=v0.30.0#196f06b251926697c3d66800f2a93ae595e76496"
+dependencies = [
+ "snforge_scarb_plugin",
+]
 
 [[package]]
 name = "staking"
@@ -190,13 +278,6 @@ dependencies = [
 [[package]]
 name = "upgradeable_contract"
 version = "0.1.0"
-
-[[package]]
-name = "using_lists"
-version = "0.1.0"
-dependencies = [
- "alexandria_storage",
-]
 
 [[package]]
 name = "variables"
