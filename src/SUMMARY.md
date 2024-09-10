@@ -30,7 +30,7 @@ Summary
 - [Testing contracts](./getting-started/testing/contract-testing.md)
 - [Cairo cheatsheet](./getting-started/cairo_cheatsheet/cairo_cheatsheet.md)
   - [Felt](./getting-started/cairo_cheatsheet/felt.md)
-  - [LegacyMap](./getting-started/cairo_cheatsheet/mapping.md)
+  - [Map](./getting-started/cairo_cheatsheet/mapping.md)
   - [Arrays](./getting-started/cairo_cheatsheet/arrays.md)
   - [loop](./getting-started/cairo_cheatsheet/loop.md)
   - [while](./getting-started/cairo_cheatsheet/while.md)
