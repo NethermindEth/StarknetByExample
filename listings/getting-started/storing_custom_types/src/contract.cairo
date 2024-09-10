@@ -14,10 +14,11 @@ pub struct Person {
 
 #[starknet::contract]
 pub mod StoringCustomType {
+    use starknet::storage::StoragePointerWriteAccess;
     use super::Person;
 
     #[storage]
-    pub struct Storage {
+    struct Storage {
         pub person: Person
     }
 
@@ -32,10 +33,8 @@ pub mod StoringCustomType {
 
 #[cfg(test)]
 mod tests {
-    use super::{
-        IStoringCustomType, StoringCustomType, Person,
-        StoringCustomType::personContractMemberStateTrait
-    };
+    use super::{IStoringCustomType, StoringCustomType, Person,};
+    use starknet::storage::StoragePointerReadAccess;
 
     #[test]
     fn can_call_set_person() {
@@ -44,6 +43,7 @@ mod tests {
         let person = Person { age: 10, name: 'Joe' };
 
         state.set_person(person);
+
         let read_person = state.person.read();
 
         assert(person.age == read_person.age, 'wrong age');

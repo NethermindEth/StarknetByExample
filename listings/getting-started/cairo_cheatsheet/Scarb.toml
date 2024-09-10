@@ -1,12 +1,16 @@
 [package]
 name = "cairo_cheatsheet"
 version.workspace = true
-edition = '2023_11'
+edition = '2024_07'
 
 [dependencies]
 starknet.workspace = true
+
+[dev-dependencies]
+cairo_test.workspace = true
 
 [scripts]
 test.workspace = true
 
 [[target.starknet-contract]]
+allowed-libfuncs-list.name = "experimental"

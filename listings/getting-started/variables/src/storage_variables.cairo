@@ -7,12 +7,15 @@ pub trait IStorageVariableExample<TContractState> {
 // ANCHOR: contract
 #[starknet::contract]
 pub mod StorageVariablesExample {
+    // You need to import these storage functions to read and write to storage variables
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
+
     // All storage variables are contained in a struct called Storage
     // annotated with the `#[storage]` attribute
     #[storage]
     struct Storage {
         // Storage variable holding a number
-        value: u32
+        pub value: u32
     }
 
     #[abi(embed_v0)]
@@ -34,7 +37,7 @@ pub mod StorageVariablesExample {
 #[cfg(test)]
 mod test {
     use super::{
-        StorageVariablesExample, StorageVariablesExample::valueContractMemberStateTrait,
+        StorageVariablesExample,
         IStorageVariableExampleDispatcher, IStorageVariableExampleDispatcherTrait
     };
     use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
@@ -55,7 +58,7 @@ mod test {
         assert_eq!(contract.get(), initial_value);
 
         // With contract state directly
-        let state = StorageVariablesExample::contract_state_for_testing();
+        let state = @StorageVariablesExample::contract_state_for_testing();
         set_contract_address(contract_address);
         assert_eq!(state.value.read(), initial_value);
     }
