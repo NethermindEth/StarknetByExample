@@ -201,10 +201,6 @@ version = "0.16.0"
 source = "git+https://github.com/OpenZeppelin/cairo-contracts.git?tag=v0.16.0#ba00ce76a93dcf25c081ab2698da20690b5a1cfb"
 
 [[package]]
-name = "scarb"
-version = "0.1.0"
-
-[[package]]
 name = "simple_account"
 version = "0.1.0"
 dependencies = [
