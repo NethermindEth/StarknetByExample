@@ -42,6 +42,7 @@ mod test {
     };
     use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
     use starknet::testing::set_contract_address;
+    use starknet::storage::StoragePointerReadAccess;
 
     #[test]
     fn test_can_deploy_and_mutate_storage() {
