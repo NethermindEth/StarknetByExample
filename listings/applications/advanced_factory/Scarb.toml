@@ -1,14 +1,16 @@
 [package]
 name = "advanced_factory"
 version.workspace = true
-edition = "2023_11"
+edition = "2024_07"
 
 [dependencies]
 starknet.workspace = true
 components.workspace = true
-alexandria_storage.workspace = true
 snforge_std.workspace = true
 crowdfunding = { path = "../crowdfunding" }
+
+[dev-dependencies]
+cairo_test.workspace = true
 
 [scripts]
 test.workspace = true

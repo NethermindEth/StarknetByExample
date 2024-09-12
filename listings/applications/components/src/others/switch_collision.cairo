@@ -9,6 +9,7 @@ pub trait ISwitchCollision<TContractState> {
 #[starknet::contract]
 pub mod SwitchCollisionContract {
     use components::switchable::switchable_component;
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
 
     component!(path: switchable_component, storage: switch, event: SwitchableEvent);
 
@@ -50,12 +51,10 @@ pub mod SwitchCollisionContract {
 
 #[cfg(test)]
 mod switch_collision_tests {
-    use components::switchable::switchable_component::SwitchableInternalTrait;
-    use components::switchable::{ISwitchable, ISwitchableDispatcher, ISwitchableDispatcherTrait};
+    use components::switchable::{ISwitchableDispatcher, ISwitchableDispatcherTrait};
     use super::{
         SwitchCollisionContract, ISwitchCollisionDispatcher, ISwitchCollisionDispatcherTrait
     };
-    use starknet::storage::StorageMemberAccessTrait;
     use starknet::SyscallResultTrait;
     use starknet::syscalls::deploy_syscall;
 
@@ -89,5 +88,5 @@ mod switch_collision_tests {
         contract.set(false);
         assert_eq!(contract.get(), contract_iswitch.is_on());
     }
-// ANCHOR_END: collision
+    // ANCHOR_END: collision
 }

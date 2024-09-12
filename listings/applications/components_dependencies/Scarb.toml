@@ -1,11 +1,14 @@
 [package]
 name = "components_dependencies"
 version.workspace = true
-edition = '2023_11'
+edition = '2024_07'
 
 [dependencies]
 starknet.workspace = true
 components = { path = "../components" }
+
+[dev-dependencies]
+cairo_test.workspace = true
 
 [scripts]
 test.workspace = true

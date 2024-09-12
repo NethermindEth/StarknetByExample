@@ -1,16 +1,16 @@
 [package]
 name = "timelock"
 version.workspace = true
-edition = "2023_11"
+edition = "2024_07"
 
 [dependencies]
 starknet.workspace = true
-# Starknet Foundry:
 snforge_std.workspace = true
-# OpenZeppelin:
 openzeppelin.workspace = true
-# StarknetByExample Components
 components.workspace = true
+
+[dev-dependencies]
+cairo_test.workspace = true
 
 [scripts]
 test.workspace = true

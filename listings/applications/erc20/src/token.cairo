@@ -33,6 +33,10 @@ pub mod erc20 {
     use starknet::get_caller_address;
     use starknet::contract_address_const;
     use starknet::ContractAddress;
+    use starknet::storage::{
+        Map, StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess,
+        StoragePointerWriteAccess
+    };
 
     #[storage]
     struct Storage {
@@ -40,8 +44,8 @@ pub mod erc20 {
         symbol: felt252,
         decimals: u8,
         total_supply: felt252,
-        balances: LegacyMap::<ContractAddress, felt252>,
-        allowances: LegacyMap::<(ContractAddress, ContractAddress), felt252>,
+        balances: Map::<ContractAddress, felt252>,
+        allowances: Map::<(ContractAddress, ContractAddress), felt252>,
     }
 
     #[event]
@@ -217,12 +221,11 @@ mod tests {
     use super::{erc20, IERC20Dispatcher, IERC20DispatcherTrait, erc20::{Event, Transfer, Approval}};
 
     use starknet::{
-        ContractAddress, SyscallResultTrait, syscalls::deploy_syscall, get_caller_address,
-        contract_address_const
+        ContractAddress, SyscallResultTrait, syscalls::deploy_syscall, contract_address_const
     };
     use core::num::traits::Zero;
 
-    use starknet::testing::{set_contract_address, set_account_contract_address};
+    use starknet::testing::set_contract_address;
 
     const token_name: felt252 = 'myToken';
     const decimals: u8 = 18;

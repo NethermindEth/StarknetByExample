@@ -1,12 +1,15 @@
 [package]
 name = "components"
 version.workspace = true
-edition = '2023_11'
+edition = '2024_07'
 
 [lib]
 
 [dependencies]
 starknet.workspace = true
+
+[dev-dependencies]
+cairo_test.workspace = true
 
 [scripts]
 test.workspace = true

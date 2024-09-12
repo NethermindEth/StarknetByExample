@@ -1,11 +1,14 @@
 [package]
 name = "constant_product_amm"
 version.workspace = true
-edition = '2023_11'
+edition = '2024_07'
 
 [dependencies]
 starknet.workspace = true
 openzeppelin.workspace = true
+
+[dev-dependencies]
+cairo_test.workspace = true
 
 [scripts]
 test.workspace = true

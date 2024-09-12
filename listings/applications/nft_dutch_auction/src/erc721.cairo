@@ -25,6 +25,7 @@ mod ERC721 {
     // library imports
     ////////////////////////////////
     use starknet::{ContractAddress, get_caller_address};
+    use starknet::storage::{Map, StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess, StoragePointerWriteAccess};
     use core::num::traits::Zero;
 
     ////////////////////////////////
@@ -34,11 +35,11 @@ mod ERC721 {
     struct Storage {
         name: felt252,
         symbol: felt252,
-        owners: LegacyMap::<u256, ContractAddress>,
-        balances: LegacyMap::<ContractAddress, u256>,
-        token_approvals: LegacyMap::<u256, ContractAddress>,
-        operator_approvals: LegacyMap::<(ContractAddress, ContractAddress), bool>,
-        token_uri: LegacyMap<u256, felt252>,
+        owners: Map::<u256, ContractAddress>,
+        balances: Map::<ContractAddress, u256>,
+        token_approvals: Map::<u256, ContractAddress>,
+        operator_approvals: Map::<(ContractAddress, ContractAddress), bool>,
+        token_uri: Map<u256, felt252>,
     }
 
     #[event]

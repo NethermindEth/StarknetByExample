@@ -53,7 +53,8 @@ pub trait INFTDutchAuction<TContractState> {
 #[starknet::contract]
 pub mod NFTDutchAuction {
     use super::{IERC20Dispatcher, IERC20DispatcherTrait, IERC721Dispatcher, IERC721DispatcherTrait};
-    use starknet::{ContractAddress, get_caller_address, get_contract_address, get_block_timestamp};
+    use starknet::{ContractAddress, get_caller_address, get_block_timestamp};
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
 
     #[storage]
     struct Storage {
@@ -140,7 +141,7 @@ pub mod NFTDutchAuction {
 mod tests {
     use starknet::ContractAddress;
     use snforge_std::{
-        BlockId, declare, ContractClassTrait, ContractClass, cheat_caller_address, CheatSpan,
+        declare, DeclareResultTrait, ContractClassTrait, cheat_caller_address, CheatSpan,
         cheat_block_timestamp
     };
     use nft_dutch_auction::erc721::{IERC721Dispatcher, IERC721DispatcherTrait};
@@ -166,10 +167,10 @@ mod tests {
     pub const total_supply: felt252 = 2;
 
     fn get_contract_addresses() -> (ContractAddress, ContractAddress, ContractAddress) {
-        let erc721 = declare("ERC721").unwrap();
+        let erc721 = declare("ERC721").unwrap().contract_class();
         let erc721_constructor_calldata = array![erc721_name, erc721_symbol];
         let (erc721_address, _) = erc721.deploy(@erc721_constructor_calldata).unwrap();
-        let erc20 = declare("erc20").unwrap();
+        let erc20 = declare("erc20").unwrap().contract_class();
         let erc20_constructor_calldata = array![
             erc20_recipient,
             erc20_name,
@@ -178,7 +179,7 @@ mod tests {
             erc20_symbol
         ];
         let (erc20_address, _) = erc20.deploy(@erc20_constructor_calldata).unwrap();
-        let nft_auction = declare("NFTDutchAuction").unwrap();
+        let nft_auction = declare("NFTDutchAuction").unwrap().contract_class();
         let nft_auction_constructor_calldata = array![
             erc20_address.into(),
             erc721_address.into(),

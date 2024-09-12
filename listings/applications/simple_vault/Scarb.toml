@@ -1,11 +1,14 @@
 [package]
 name = "simple_vault"
 version.workspace = true
-edition = '2023_11'
+edition = '2024_07'
 
 [dependencies]
 starknet.workspace = true
 erc20 = { path = "../erc20" }
+
+[dev-dependencies]
+cairo_test.workspace = true
 
 [scripts]
 test.workspace = true
