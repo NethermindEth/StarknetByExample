@@ -1,6 +1,6 @@
 # Contributing
 
-When contributing to this repository, please first discuss the change you wish to make via issue or in the telegram channel before making a change. 
+When contributing to this repository, please first discuss the change you wish to make via issue or in the telegram channel before making a change.
 
 Join the telegram channel: https://t.me/StarknetByExample
 
@@ -32,6 +32,7 @@ Please note we have a code of conduct, please follow it in all your interactions
 1. Clone this repository.
 
 2. Rust related packages:
+
    - Install toolchain providing `cargo` using [rustup](https://rustup.rs/).
    - Install [mdBook](https://rust-lang.github.io/mdBook/guide/installation.html) and the required extension with `cargo install mdbook  mdbook-i18n-helpers mdbook-last-changed `.
 
@@ -61,7 +62,7 @@ You can find a template of a blank scarb project in the `listings/template` dire
 (You can also use `scarb init` to create a new scarb project, but be sure to remove the generated git repository)
 
 Here's the required `Scarb.toml` configuration:
-  
+
 ```toml
 [package]
 name = "pkg_name"
@@ -92,6 +93,7 @@ casm = true
 ```
 
 You also NEED to do the following:
+
 - Remove the generated git repository, `rm -rf .git` (this is important!)
 - Double check that the `pkg_name` is the same as the name of the directory
 
@@ -113,28 +115,40 @@ You can also use `scarb fmt` to format all the Cairo programs.
 
 Every listing needs to have atleast integration tests:
 
-- Integration tests are tests that deploy the contract and interact with the provided interface(s). They should be placed on a separate file/module named `tests.cairo`. At minimal make one test to deploy the contract.
+- Integration tests are tests that deploy the contract and interact with the provided interface(s). At minimal make one test to deploy the contract.
 
-- (Optional) Unit tests do not have to deploy the contract and use the interface(s). Unit tests can use mocked implementation or state to test only one specific feature. They should be placed on the same file as the example (and hidden in the book using ANCHOR).
+- (Optional) Unit tests do not have to deploy the contract and use the interface(s). Unit tests can use mocked implementation or state to test only one specific feature.
 
-The tests modules need to have the `#[cfg(test)]` flag.
+Add your contract in a specific file, you can name it `contract.cairo` or anything else. You can also add other files if needed.
 
-Add your contract in a different file, you can name it `contract.cairo` or anything else. You can also add other files if needed.
+You should add the tests in the same file as the contract, using the `#[cfg(test)]` flag and a `tests` module. With the usage of ANCHOR, the tests will not be displayed in the book but can be optionally be displayed by using the `{{#rustdoc_include ...}}` syntax.
 
 Here's a sample `lib.cairo` file:
 
 ```cairo
 mod contract;
-
-#[cfg(test)]
-mod tests;
+// any other modules you want
 ```
 
-You can also use Starknet Foundry to write and run your tests.
+And in the `contract.cairo` file:
+
+```cairo
+// ANCHOR: contract
+// Write your contract here
+// ANCHOR_END: contract
+
+#[cfg(test)]
+mod tests {
+  // Write your tests for the contract here
+}
+```
+
+You can use Starknet Foundry to write and run your tests.
 
 ### Use of anchor
 
 You can add delimiting comments to select part of the code in the book.
+
 ```cairo
 file.cairo:
 
@@ -147,11 +161,12 @@ c
 
 Then, in the markdown file, you can use the following syntax to include only the code between the delimiting comments:
 
-```markdown
-  ```rust
-  {{#include ../../listings/path/to/listing/src/contract.cairo:anchor_name}}
-  \```
-```
+````markdown
+````rust
+{{#include ../../listings/path/to/listing/src/contract.cairo:anchor_name}}
+\```
+````
+````
 
 This will result in the following code being included in the book:
 
@@ -159,7 +174,18 @@ This will result in the following code being included in the book:
 b
 ```
 
+Using `#rustdoc_include` you can have the same result, but users can expand the code in the book to see the whole file (used for showing tests):
+
+````markdown
+````rust
+{{#rustdoc_include ../../listings/path/to/listing/src/contract.cairo:anchor_name}}
+\```
+````
+````
+
 ## Translations
+
+> Translations efforts are currently on hold. If you are interested in helping out, please send a message in the telegram channel.
 
 To work with translations, those are the steps to update the translated content:
 
@@ -198,21 +224,21 @@ orientation.
 Examples of behavior that contributes to creating a positive environment
 include:
 
-* Using welcoming and inclusive language
-* Being respectful of differing viewpoints and experiences
-* Gracefully accepting constructive criticism
-* Focusing on what is best for the community
-* Showing empathy towards other community members
+- Using welcoming and inclusive language
+- Being respectful of differing viewpoints and experiences
+- Gracefully accepting constructive criticism
+- Focusing on what is best for the community
+- Showing empathy towards other community members
 
 Examples of unacceptable behavior by participants include:
 
-* The use of sexualized language or imagery and unwelcome sexual attention or
-advances
-* Trolling, insulting/derogatory comments, and personal or political attacks
-* Public or private harassment
-* Publishing others' private information, such as a physical or electronic
+- The use of sexualized language or imagery and unwelcome sexual attention or
+  advances
+- Trolling, insulting/derogatory comments, and personal or political attacks
+- Public or private harassment
+- Publishing others' private information, such as a physical or electronic
   address, without explicit permission
-* Other conduct which could reasonably be considered inappropriate in a
+- Other conduct which could reasonably be considered inappropriate in a
   professional setting
 
 ### Our Responsibilities
@@ -256,3 +282,5 @@ available at [http://contributor-covenant.org/version/1/4][version]
 
 [homepage]: http://contributor-covenant.org
 [version]: http://contributor-covenant.org/version/1/4/
+
+Copyright (c) 2024 Nethermind
