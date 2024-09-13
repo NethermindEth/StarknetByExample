@@ -37,8 +37,8 @@ pub mod StorageVariablesExample {
 #[cfg(test)]
 mod test {
     use super::{
-        StorageVariablesExample,
-        IStorageVariableExampleDispatcher, IStorageVariableExampleDispatcherTrait
+        StorageVariablesExample, IStorageVariableExampleDispatcher,
+        IStorageVariableExampleDispatcherTrait
     };
     use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
     use starknet::testing::set_contract_address;

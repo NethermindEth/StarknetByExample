@@ -235,7 +235,7 @@ mod tests {
         assert_eq!(buyer_bal_after_buy, buyer_bal_before_buy - nft_price);
         assert_eq!(erc721_dispatcher.owner_of(nft_id_1), buyer);
 
-        // Forward block timestamp in order for a reduced nft price    
+        // Forward block timestamp in order for a reduced nft price
         let forward_blocktime_by = 4000; // milliseconds
         cheat_block_timestamp(nft_auction_address, forward_blocktime_by, CheatSpan::TargetCalls(1));
 
@@ -277,7 +277,7 @@ mod tests {
         erc20_dispatcher.approve(nft_auction_address, nft_price);
         nft_auction_dispatcher.buy(nft_id_1);
 
-        // Forward block timestamp in order for a reduced nft price    
+        // Forward block timestamp in order for a reduced nft price
         let forward_blocktime_by = 4000; // 4 seconds (in milliseconds)
         cheat_block_timestamp(nft_auction_address, forward_blocktime_by, CheatSpan::TargetCalls(1));
 
@@ -322,7 +322,7 @@ mod tests {
         nft_auction_dispatcher.buy(nft_id_1);
 
         // Forward block timestamp to a time after duration has ended
-        // During deployment, duration was set to 60 seconds 
+        // During deployment, duration was set to 60 seconds
         let forward_blocktime_by = 61000; // 61 seconds (in milliseconds)
         cheat_block_timestamp(nft_auction_address, forward_blocktime_by, CheatSpan::TargetCalls(1));
 

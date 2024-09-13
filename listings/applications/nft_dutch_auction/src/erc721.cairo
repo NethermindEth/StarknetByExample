@@ -25,7 +25,10 @@ mod ERC721 {
     // library imports
     ////////////////////////////////
     use starknet::{ContractAddress, get_caller_address};
-    use starknet::storage::{Map, StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess, StoragePointerWriteAccess};
+    use starknet::storage::{
+        Map, StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess,
+        StoragePointerWriteAccess
+    };
     use core::num::traits::Zero;
 
     ////////////////////////////////
@@ -163,7 +166,7 @@ mod ERC721 {
         }
 
         ////////////////////////////////
-        // set_approval_for_all function approves an operator to spend all tokens 
+        // set_approval_for_all function approves an operator to spend all tokens
         ////////////////////////////////
         fn set_approval_for_all(
             ref self: ContractState, operator: ContractAddress, approved: bool
