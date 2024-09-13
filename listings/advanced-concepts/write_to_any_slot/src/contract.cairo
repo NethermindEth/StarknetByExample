@@ -35,7 +35,8 @@ pub mod WriteToAnySlot {
         data.append(variable_name);
         let hashed_name: felt252 = poseidon_hash_span(data.span());
         let MASK_250: u256 = 0x03ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff;
-        // By taking the 250 least significant bits of the hash output, we get a valid 250bits storage address.
+        // By taking the 250 least significant bits of the hash output, we get a valid 250bits
+        // storage address.
         let result: felt252 = (hashed_name.into() & MASK_250).try_into().unwrap();
         let result: StorageAddress = result.try_into().unwrap();
         result

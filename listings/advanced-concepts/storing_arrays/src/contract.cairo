@@ -1,17 +1,16 @@
-use starknet::SyscallResultTrait;
 use starknet::{Store, SyscallResult};
 use starknet::storage_access::StorageBaseAddress;
 
 // ANCHOR: StorageAccessImpl
 impl StoreFelt252Array of Store<Array<felt252>> {
     fn read(address_domain: u32, base: StorageBaseAddress) -> SyscallResult<Array<felt252>> {
-        StoreFelt252Array::read_at_offset(address_domain, base, 0)
+        Self::read_at_offset(address_domain, base, 0)
     }
 
     fn write(
         address_domain: u32, base: StorageBaseAddress, value: Array<felt252>
     ) -> SyscallResult<()> {
-        StoreFelt252Array::write_at_offset(address_domain, base, 0, value)
+        Self::write_at_offset(address_domain, base, 0, value)
     }
 
     fn read_at_offset(
@@ -49,11 +48,10 @@ impl StoreFelt252Array of Store<Array<felt252>> {
         offset += 1;
 
         // Store the array elements sequentially
-        while let Option::Some(element) = value
-            .pop_front() {
-                Store::<felt252>::write_at_offset(address_domain, base, offset, element).unwrap();
-                offset += Store::<felt252>::size();
-            };
+        while let Option::Some(element) = value.pop_front() {
+            Store::<felt252>::write_at_offset(address_domain, base, offset, element).unwrap();
+            offset += Store::<felt252>::size();
+        };
 
         Result::Ok(())
     }
@@ -73,6 +71,7 @@ pub trait IStoreArrayContract<TContractState> {
 
 #[starknet::contract]
 pub mod StoreArrayContract {
+    use starknet::storage::{StoragePointerWriteAccess, StoragePointerReadAccess};
     use super::StoreFelt252Array;
 
     #[storage]

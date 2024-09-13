@@ -4,7 +4,7 @@ On Starknet, complex values (e.g. tuples or structs) are stored in a continuous 
 
 However, the `ByteArray` struct can be used to store `Array<bytes31>` in storage without additional implementation. Before implementing your own `Store` trait, consider wether the `ByteArray` struct can be used to store the data you need! See the [ByteArray](../getting-started/basics/bytearrays-strings.md#bytearray-long-strings) section for more information.
 
-> Note: While storing arrays in storage is possible, it is not always recommended, as the read and write operations can get very costly. For example, reading an array of size `n` requires `n` storage reads, and writing to an array of size `n` requires `n` storage writes. If you only need to access a single element of the array at a time, it is recommended to use a `LegacyMap` and store the length in another variable instead.
+> Note: While storing arrays in storage is possible, it is not always recommended, as the read and write operations can get very costly. For example, reading an array of size `n` requires `n` storage reads, and writing to an array of size `n` requires `n` storage writes. If you only need to access a single element of the array at a time, it is recommended to use a `Map` and store the length in another variable instead.
 
 The following example demonstrates how to write a simple implementation of the `StorageAccess` trait for the `Array<felt252>` type, allowing us to store arrays of up to 255 `felt252` elements.
 

@@ -6,7 +6,6 @@ mod tests {
     use starknet::syscalls::deploy_syscall;
 
     #[test]
-    #[available_gas(20000000)]
     fn test_array_storage() {
         // Set up.
         let mut calldata: Array<felt252> = array![];
@@ -24,13 +23,12 @@ mod tests {
 
         // Read the array.
         let read_array = contract.read_array();
-        assert(read_array.len() == 2, 'Array length mismatch');
-        assert(*read_array[0] == 1, 'Array element mismatch');
-        assert(*read_array[1] == 2, 'Array element mismatch');
+        assert_eq!(read_array.len(), 2);
+        assert_eq!(*read_array[0], 1);
+        assert_eq!(*read_array[1], 2);
     }
 
     #[test]
-    #[available_gas(20000000000)]
     #[should_panic(expected: ('Storage - Span too large', 'ENTRYPOINT_FAILED'))]
     fn test_array_storage_too_large() {
         // Set up.
@@ -55,8 +53,8 @@ mod tests {
 
         // Read the array.
         let read_array = contract.read_array();
-        assert(read_array.len() == 2, 'Array too large');
-        assert(*read_array[0] == 1, 'Array element mismatch');
-        assert(*read_array[1] == 2, 'Array element mismatch');
+        assert_eq!(read_array.len(), 2);
+        assert_eq!(*read_array[0], 1);
+        assert_eq!(*read_array[1], 2);
     }
 }

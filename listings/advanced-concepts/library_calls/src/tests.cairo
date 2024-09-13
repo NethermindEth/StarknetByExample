@@ -1,12 +1,11 @@
 mod tests {
-    use starknet::syscalls::{deploy_syscall};
+    use starknet::syscalls::deploy_syscall;
     use starknet::SyscallResultTrait;
     use library_calls::library_call::{
         MathUtils, MathUtilsLibraryCall, IMathUtilsDispatcher, IMathUtilsDispatcherTrait
     };
 
     #[test]
-    #[available_gas(20000000)]
     fn test_library_dispatcher() {
         let math_utils_class_hash: starknet::ClassHash = MathUtils::TEST_CLASS_HASH
             .try_into()
