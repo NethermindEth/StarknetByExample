@@ -1,6 +1,7 @@
 #[starknet::interface]
 pub trait IStoringCustomType<TContractState> {
     fn set_person(ref self: TContractState, person: Person);
+    fn set_name(ref self: TContractState, name: felt252);
 }
 
 // ANCHOR: contract
@@ -27,6 +28,12 @@ pub mod StoringCustomType {
         fn set_person(ref self: ContractState, person: Person) {
             self.person.write(person);
         }
+
+        // ANCHOR: set_name
+        fn set_name(ref self: ContractState, name: felt252) {
+            self.person.name.write(name);
+        }
+        // ANCHOR_END: set_name
     }
 }
 // ANCHOR_END: contract
@@ -46,7 +53,17 @@ mod tests {
 
         let read_person = state.person.read();
 
-        assert(person.age == read_person.age, 'wrong age');
-        assert(person.name == read_person.name, 'wrong name');
+        assert_eq!(person.age, read_person.age);
+        assert_eq!(person.name, read_person.name);
+    }
+
+    #[test]
+    fn can_call_set_name() {
+        let mut state = StoringCustomType::contract_state_for_testing();
+
+        state.set_name('John');
+
+        let read_person = state.person.read();
+        assert_eq!(read_person.name, 'John');
     }
 }
