@@ -11,7 +11,10 @@ crowdfunding = { path = "../crowdfunding" }
 
 [dev-dependencies]
 cairo_test.workspace = true
- 
+
+[scripts]
+test.workspace = true
+
 [[target.starknet-contract]]
 casm = true
 build-external-contracts = ["crowdfunding::campaign::Campaign"]

@@ -6,5 +6,8 @@ edition = "2024_07"
 [dependencies]
 starknet.workspace = true
 openzeppelin.workspace = true
- 
+
+[scripts]
+test.workspace = true
+
 [[target.starknet-contract]]

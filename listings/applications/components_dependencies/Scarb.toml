@@ -9,5 +9,8 @@ components = { path = "../components" }
 
 [dev-dependencies]
 cairo_test.workspace = true
- 
+
+[scripts]
+test.workspace = true
+
 [[target.starknet-contract]]

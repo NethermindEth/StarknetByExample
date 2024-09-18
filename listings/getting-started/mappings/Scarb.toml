@@ -8,5 +8,8 @@ starknet.workspace = true
 
 [dev-dependencies]
 cairo_test = "2.7.1"
- 
+
+[scripts]
+test.workspace = true
+
 [[target.starknet-contract]]

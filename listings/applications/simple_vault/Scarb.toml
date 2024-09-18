@@ -9,5 +9,8 @@ erc20 = { path = "../erc20" }
 
 [dev-dependencies]
 cairo_test.workspace = true
- 
+
+[scripts]
+test.workspace = true
+
 [[target.starknet-contract]]
