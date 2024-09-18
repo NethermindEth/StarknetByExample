@@ -70,7 +70,6 @@ Summary
 # Advanced concepts
 
 - [Writing to any storage slot](./advanced-concepts/write_to_any_slot.md)
-- [Storing Arrays](./advanced-concepts/storing_arrays.md)
 - [Struct as mapping key](./advanced-concepts/struct-mapping-key.md)
 - [Hashing](./advanced-concepts/hashing.md)
   <!-- Hidden until #123 is solved -->
