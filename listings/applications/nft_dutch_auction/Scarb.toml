@@ -10,9 +10,5 @@ snforge_std.workspace = true
 
 [dev-dependencies]
 cairo_test.workspace = true
-
-[scripts]
-test.workspace = true
-
 [[target.starknet-contract]]
 build-external-contracts = ["erc20::token::erc20"]

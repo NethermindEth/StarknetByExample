@@ -85,9 +85,6 @@ starknet.workspace = true
 [dev-dependencies]
 cairo_test.workspace = true
 
-[scripts]
-test.workspace = true
-
 [[target.starknet-contract]]
 casm = true
 ```
