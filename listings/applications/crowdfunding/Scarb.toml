@@ -12,7 +12,7 @@ components.workspace = true
 snforge_std.workspace = true
 
 [dev-dependencies]
-cairo_test.workspace = true
+assert_macros.workspace = true
 
 [scripts]
 test.workspace = true

@@ -10,7 +10,7 @@ snforge_std.workspace = true
 crowdfunding = { path = "../crowdfunding" }
 
 [dev-dependencies]
-cairo_test.workspace = true
+assert_macros.workspace = true
 
 [scripts]
 test.workspace = true

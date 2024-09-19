@@ -61,7 +61,10 @@ You can add or modify examples in the `listings` directory. Each listing is a sc
 You can find a template of a blank scarb project in the `listings/template` directory.
 (You can also use `scarb init` to create a new scarb project, but be sure to remove the generated git repository)
 
-Here's the required `Scarb.toml` configuration:
+You can choose to use standard cairo with `cairo-test` or Starknet Foundry with `snforge_std`.
+Please use the appropriate `Scarb.toml` configuration. `scarb test` will automatically resolve to `snforge test` if `snforge_std` is in the dependencies.
+
+Here's the required `Scarb.toml` configuration for **Cairo test**:
 
 ```toml
 [package]
@@ -74,8 +77,6 @@ version.workspace = true
 [dependencies]
 starknet.workspace = true
 # Uncomment the following lines if you want to use additional dependencies:
-# Starknet Foundry:
-# snforge_std.workspace = true
 # OpenZeppelin:
 # openzeppelin.workspace = true
 
@@ -84,6 +85,36 @@ starknet.workspace = true
 
 [dev-dependencies]
 cairo_test.workspace = true
+
+[scripts]
+test.workspace = true
+
+[[target.starknet-contract]]
+casm = true
+```
+
+Here's the required `Scarb.toml` configuration for **Starknet Foundry**:
+
+```toml
+[package]
+name = "pkg_name"
+version.workspace = true
+
+# Specify that this can be used as a dependency in another scarb project:
+[lib]
+
+[dependencies]
+starknet.workspace = true
+snforge_std.workspace = true
+# Uncomment the following lines if you want to use additional dependencies:
+# OpenZeppelin:
+# openzeppelin.workspace = true
+
+# If you want to use another Starknet By Example's listing, you can add it as a dependency like this:
+# erc20 = { path = "../../getting-started/erc20" }
+
+[dev-dependencies]
+assert_macros.workspace = true
 
 [scripts]
 test.workspace = true

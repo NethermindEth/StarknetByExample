@@ -6,13 +6,17 @@ members = [
   "listings/templates/*",
 ]
 
+[workspace.scripts]
+test = "$(git rev-parse --show-toplevel)/scripts/test_resolver.sh"
+
 [workspace.tool.snforge]
 
 [workspace.dependencies]
 starknet = "2.8.2"
 cairo_test = "2.8.2"
-openzeppelin = "0.16.0"
+assert_macros = "2.8.2" 
 snforge_std = "0.30.0"
+openzeppelin = "0.16.0"
 components = { path = "listings/applications/components" }
 
 [workspace.package]
