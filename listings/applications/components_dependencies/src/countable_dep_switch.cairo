@@ -1,11 +1,12 @@
 // ANCHOR: contract
 #[starknet::component]
 pub mod countable_component {
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
     use components::countable::ICountable;
     use components::switchable::ISwitchable;
 
     #[storage]
-    struct Storage {
+    pub struct Storage {
         countable_value: u32,
     }
 
@@ -24,7 +25,7 @@ pub mod countable_component {
             }
         }
     }
-// ANCHOR_END: impl
+    // ANCHOR_END: impl
 }
 
 //ANCHOR_END: contract

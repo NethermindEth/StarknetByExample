@@ -5,3 +5,10 @@ While native types can be stored in a contract's storage without any additional 
 ```rust
 {{#rustdoc_include ../../../listings/getting-started/storing_custom_types/src/contract.cairo:contract}}
 ```
+
+Note that it is also possible to individually access the members of the stored struct.
+This is possible because deriving the `Store` trait also generates the corresponding `StoragePointer` for each member.
+
+```rust
+{{#rustdoc_include ../../../listings/getting-started/storing_custom_types/src/contract.cairo:set_name}}
+```

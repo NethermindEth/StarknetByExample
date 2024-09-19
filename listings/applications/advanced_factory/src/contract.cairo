@@ -23,12 +23,14 @@ pub trait ICampaignFactory<TContractState> {
 pub mod CampaignFactory {
     use core::num::traits::Zero;
     use starknet::{
-        ContractAddress, ClassHash, SyscallResultTrait, syscalls::deploy_syscall,
-        get_caller_address, get_contract_address
+        ContractAddress, ClassHash, SyscallResultTrait, syscalls::deploy_syscall, get_caller_address
     };
-    use alexandria_storage::list::{List, ListTrait};
     use crowdfunding::campaign::{ICampaignDispatcher, ICampaignDispatcherTrait};
     use components::ownable::ownable_component;
+    use starknet::storage::{
+        Map, StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess,
+        StoragePointerWriteAccess
+    };
 
     component!(path: ownable_component, storage: ownable, event: OwnableEvent);
 
@@ -41,7 +43,7 @@ pub mod CampaignFactory {
         #[substorage(v0)]
         ownable: ownable_component::Storage,
         /// Store all of the created campaign instances' addresses and thei class hashes
-        campaigns: LegacyMap<(ContractAddress, ContractAddress), ClassHash>,
+        campaigns: Map<(ContractAddress, ContractAddress), ClassHash>,
         /// Store the class hash of the contract to deploy
         campaign_class_hash: ClassHash,
     }

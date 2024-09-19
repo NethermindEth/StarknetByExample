@@ -7,6 +7,8 @@ pub trait IExplicitInterfaceContract<TContractState> {
 
 #[starknet::contract]
 pub mod ExplicitInterfaceContract {
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
+
     #[storage]
     struct Storage {
         value: u32
@@ -28,10 +30,10 @@ pub mod ExplicitInterfaceContract {
 #[cfg(test)]
 mod tests {
     use super::{
-        IExplicitInterfaceContract, ExplicitInterfaceContract, IExplicitInterfaceContractDispatcher,
+        ExplicitInterfaceContract, IExplicitInterfaceContractDispatcher,
         IExplicitInterfaceContractDispatcherTrait
     };
-    use starknet::{ContractAddress, SyscallResultTrait, syscalls::deploy_syscall};
+    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
 
     #[test]
     fn test_interface() {

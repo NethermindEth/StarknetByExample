@@ -1,11 +1,9 @@
 use core::panic_with_felt252;
-use starknet::get_block_timestamp;
 use starknet::account::Call;
 use core::poseidon::{PoseidonTrait, poseidon_hash_span};
-use core::hash::{HashStateTrait, HashStateExTrait};
+use core::hash::HashStateTrait;
 use snforge_std::{
-    cheat_caller_address, cheat_block_timestamp, CheatSpan, spy_events, SpyOn, EventSpy,
-    EventAssertions
+    cheat_caller_address, cheat_block_timestamp, CheatSpan, spy_events, EventSpyAssertionsTrait
 };
 use openzeppelin::token::erc721::interface::IERC721DispatcherTrait;
 use openzeppelin::token::erc721::erc721::ERC721Component;
@@ -75,7 +73,7 @@ fn test_queue_timestamp_not_in_range() {
 #[test]
 fn test_queue_success() {
     let timelock_test = TimeLockTestTrait::setup();
-    let mut spy = spy_events(SpyOn::One(timelock_test.timelock_address));
+    let mut spy = spy_events();
     let timestamp = timelock_test.get_timestamp();
     let tx_id = timelock_test.timelock.queue(timelock_test.get_call(), timestamp);
     spy
@@ -154,7 +152,7 @@ fn test_execute_success() {
     timelock_test.timelock.queue(timelock_test.get_call(), timestamp);
     timelock_test.erc721.approve(timelock_test.timelock_address, TOKEN_ID);
     cheat_block_timestamp(timelock_test.timelock_address, timestamp + 1, CheatSpan::TargetCalls(1));
-    let mut spy = spy_events(SpyOn::One(timelock_test.timelock_address));
+    let mut spy = spy_events();
     timelock_test.timelock.execute(timelock_test.get_call(), timestamp);
     spy
         .assert_emitted(
@@ -214,7 +212,7 @@ fn test_cancel_success() {
     let tx_id = timelock_test
         .timelock
         .queue(timelock_test.get_call(), timelock_test.get_timestamp());
-    let mut spy = spy_events(SpyOn::One(timelock_test.timelock_address));
+    let mut spy = spy_events();
     timelock_test.timelock.cancel(tx_id);
     spy
         .assert_emitted(

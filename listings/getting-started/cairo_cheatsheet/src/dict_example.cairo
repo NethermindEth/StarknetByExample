@@ -1,4 +1,6 @@
 // ANCHOR: sheet
+use core::dict::Felt252Dict;
+
 fn dict() {
     let mut Auctions: Felt252Dict<u64> = Default::default();
 
