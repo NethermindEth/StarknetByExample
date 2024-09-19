@@ -12,12 +12,12 @@ test = "$(git rev-parse --show-toplevel)/scripts/test_resolver.sh"
 [workspace.tool.snforge]
 
 [workspace.dependencies]
-starknet = ">=2.6.4"
-openzeppelin = { git = "https://github.com/OpenZeppelin/cairo-contracts.git", tag="v0.14.0" }
+starknet = "2.8.2"
+cairo_test = "2.8.2"
+assert_macros = "2.8.2" 
+snforge_std = "0.30.0"
+openzeppelin = "0.16.0"
 components = { path = "listings/applications/components" }
-snforge_std = { git = "https://github.com/foundry-rs/starknet-foundry.git", tag = "v0.25.0" }
-# The latest Alexandria release supports only Cairo v2.6.0, so using explicit rev that supports Cairo v2.6.3
-alexandria_storage = { git = "https://github.com/keep-starknet-strange/alexandria.git", rev="800f5ad" }
 
 [workspace.package]
 description = "Collection of examples of how to use the Cairo programming language to create smart contracts on Starknet."
@@ -26,9 +26,6 @@ homepage = "https://www.nethermind.io/"
 license = "MIT"
 authors = ["julio4", "msaug"]
 version = "0.1.0"
-
-[scripts]
-test.workspace = true
 
 [tool]
 snforge.workspace = true

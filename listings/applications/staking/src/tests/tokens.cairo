@@ -12,7 +12,7 @@ pub mod RewardToken {
     #[storage]
     struct Storage {
         #[substorage(v0)]
-        erc20: ERC20Component::Storage,
+        pub erc20: ERC20Component::Storage,
     }
 
     #[event]
@@ -49,7 +49,7 @@ pub mod StakingToken {
     #[storage]
     struct Storage {
         #[substorage(v0)]
-        erc20: ERC20Component::Storage,
+        pub erc20: ERC20Component::Storage,
     }
 
     #[event]

@@ -15,11 +15,12 @@ trait IMappingExample<TContractState> {
 #[starknet::contract]
 mod MappingContract {
     use starknet::ContractAddress;
+    use starknet::storage::{Map, StorageMapReadAccess, StorageMapWriteAccess};
 
     #[storage]
     struct Storage {
-        students_name: LegacyMap::<ContractAddress, felt252>,
-        students_result_record: LegacyMap::<(ContractAddress, felt252), u16>,
+        students_name: Map::<ContractAddress, felt252>,
+        students_result_record: Map::<(ContractAddress, felt252), u16>,
     }
 
     #[abi(embed_v0)]

@@ -7,13 +7,11 @@ trait IWriteToAnySlot<TContractState> {
 }
 
 mod tests {
-    use super::WriteToAnySlot::get_address_from_name;
     use super::WriteToAnySlot;
     use super::{IWriteToAnySlotDispatcher, IWriteToAnySlotDispatcherTrait};
     use starknet::syscalls::deploy_syscall;
 
     #[test]
-    #[available_gas(2000000000)]
     fn test_read_write() {
         // Set up.
         let mut calldata: Array<felt252> = array![];
@@ -29,7 +27,7 @@ mod tests {
 
         // Read from slot.
         let read_value = contract.read_slot();
-        assert(read_value == value, 'wrong value read');
+        assert_eq!(read_value, value);
     }
 }
 

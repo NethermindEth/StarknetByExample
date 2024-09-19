@@ -9,5 +9,5 @@ fn tuple() {
 
     // Access tuple
     let (address, age, active) = stored_tuple;
-// ANCHOR_END: sheet
+    // ANCHOR_END: sheet
 }

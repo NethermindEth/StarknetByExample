@@ -12,7 +12,7 @@ Crowdfunding is a method of raising capital through the collective effort of man
 8. The creator can at any point cancel the campaign for whatever reason and refund all of the pledgers.
 9. The contract admin can upgrade the contract implementation, refunding all of the users and reseting the campaign state (we will use this in the [Advanced Factory chapter](./advanced_factory.md)).
 
-Because contract upgrades need to be able to refund all of the pledges, we need to be able to iterate over all of the pledgers and their amounts. Since iteration is not supported by `LegacyMap`, we need to create a custom storage type that will encompass pledge management. We use a component for this purpose.
+Because contract upgrades need to be able to refund all of the pledges, we need to be able to iterate over all of the pledgers and their amounts. Since iteration is not supported by `Map`, we need to create a custom storage type that will encompass pledge management. We use a component for this purpose.
 
 ```rust
 {{#include ../../listings/applications/crowdfunding/src/campaign/pledgeable.cairo:component}}

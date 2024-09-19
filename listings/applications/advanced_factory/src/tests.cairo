@@ -3,26 +3,24 @@ use core::result::ResultTrait;
 use advanced_factory::contract::{
     CampaignFactory, ICampaignFactoryDispatcher, ICampaignFactoryDispatcherTrait
 };
-use starknet::{
-    ContractAddress, ClassHash, get_block_timestamp, contract_address_const, get_caller_address
-};
+use crowdfunding::campaign::Campaign;
+use starknet::{ClassHash, get_block_timestamp, contract_address_const};
 use snforge_std::{
-    declare, ContractClass, ContractClassTrait, start_cheat_caller_address,
-    stop_cheat_caller_address, spy_events, SpyOn, EventSpy, EventAssertions, get_class_hash
+    declare, start_cheat_caller_address, stop_cheat_caller_address, spy_events, DeclareResultTrait,
+    ContractClassTrait, get_class_hash, EventSpyAssertionsTrait
 };
 
 // Define a goal contract to deploy
-use crowdfunding::campaign::{Campaign, ICampaignDispatcher, ICampaignDispatcherTrait};
+use crowdfunding::campaign::{ICampaignDispatcher, ICampaignDispatcherTrait};
 use components::ownable::{IOwnableDispatcher, IOwnableDispatcherTrait};
-
 
 /// Deploy a campaign factory contract with the provided campaign class hash
 fn deploy_factory_with(campaign_class_hash: ClassHash) -> ICampaignFactoryDispatcher {
     let mut constructor_calldata: @Array::<felt252> = @array![campaign_class_hash.into()];
 
-    let contract = declare("CampaignFactory").unwrap();
+    let contract = declare("CampaignFactory").unwrap().contract_class();
     let contract_address = contract.precalculate_address(constructor_calldata);
-    let factory_owner: ContractAddress = contract_address_const::<'factory_owner'>();
+    let factory_owner = contract_address_const::<'factory_owner'>();
     start_cheat_caller_address(contract_address, factory_owner);
 
     contract.deploy(constructor_calldata).unwrap();
@@ -34,18 +32,18 @@ fn deploy_factory_with(campaign_class_hash: ClassHash) -> ICampaignFactoryDispat
 
 /// Deploy a campaign factory contract with default campaign class hash
 fn deploy_factory() -> ICampaignFactoryDispatcher {
-    let campaign_class_hash = declare("Campaign").unwrap().class_hash;
-    deploy_factory_with(campaign_class_hash)
+    let campaign = declare("Campaign").unwrap().contract_class();
+    deploy_factory_with(*campaign.class_hash)
 }
 
 #[test]
 fn test_deploy_factory() {
-    let campaign_class_hash = declare("Campaign").unwrap().class_hash;
-    let factory = deploy_factory_with(campaign_class_hash);
+    let campaign = declare("Campaign").unwrap().contract_class();
+    let factory = deploy_factory_with(*campaign.class_hash);
 
-    assert_eq!(factory.get_campaign_class_hash(), campaign_class_hash);
+    assert_eq!(factory.get_campaign_class_hash(), *campaign.class_hash);
 
-    let factory_owner: ContractAddress = contract_address_const::<'factory_owner'>();
+    let factory_owner = contract_address_const::<'factory_owner'>();
     let factory_ownable = IOwnableDispatcher { contract_address: factory.contract_address };
     assert_eq!(factory_ownable.owner(), factory_owner);
 }
@@ -54,9 +52,9 @@ fn test_deploy_factory() {
 fn test_create_campaign() {
     let factory = deploy_factory();
 
-    let mut spy = spy_events(SpyOn::One(factory.contract_address));
+    let mut spy = spy_events();
 
-    let campaign_creator: ContractAddress = contract_address_const::<'campaign_creator'>();
+    let campaign_creator = contract_address_const::<'campaign_creator'>();
     start_cheat_caller_address(factory.contract_address, campaign_creator);
 
     let title: ByteArray = "New campaign";
@@ -104,7 +102,7 @@ fn test_create_campaign() {
 fn test_uprade_campaign_class_hash() {
     let factory = deploy_factory();
     let old_class_hash = factory.get_campaign_class_hash();
-    let new_class_hash = declare("MockContract").unwrap().class_hash;
+    let new_class_hash = *declare("MockContract").unwrap().contract_class().class_hash;
 
     let token = contract_address_const::<'token'>();
 
@@ -133,9 +131,7 @@ fn test_uprade_campaign_class_hash() {
     assert_eq!(old_class_hash, get_class_hash(active_campaign));
 
     // update the factory's campaign class hash value
-    let mut spy = spy_events(
-        SpyOn::Multiple(array![factory.contract_address, pending_campaign, active_campaign])
-    );
+    let mut spy = spy_events();
 
     let factory_owner = contract_address_const::<'factory_owner'>();
     start_cheat_caller_address(factory.contract_address, factory_owner);

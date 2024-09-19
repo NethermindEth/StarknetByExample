@@ -31,7 +31,7 @@ pub mod ErrorsExample {
 #[cfg(test)]
 mod test {
     use super::{ErrorsExample, IErrorsExampleDispatcher, IErrorsExampleDispatcherTrait};
-    use starknet::{ContractAddress, SyscallResultTrait, syscalls::deploy_syscall};
+    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
 
     fn deploy() -> IErrorsExampleDispatcher {
         let (contract_address, _) = deploy_syscall(

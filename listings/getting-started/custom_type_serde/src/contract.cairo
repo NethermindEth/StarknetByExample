@@ -36,7 +36,7 @@ mod tests {
     use super::{
         SerdeCustomType, Person, ISerdeCustomTypeDispatcher, ISerdeCustomTypeDispatcherTrait
     };
-    use starknet::{ContractAddress, syscalls::deploy_syscall, SyscallResultTrait};
+    use starknet::{syscalls::deploy_syscall, SyscallResultTrait};
 
     fn deploy() -> ISerdeCustomTypeDispatcher {
         let (contract_address, _) = deploy_syscall(
