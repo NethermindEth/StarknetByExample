@@ -1,5 +1,3 @@
-use merkle_tree::contract::MerkleTree::__member_module_hashes::InternalContractMemberStateTrait as HashesInt;
-use merkle_tree::contract::MerkleTree::__member_module_hashes_length::InternalContractMemberStateTrait as HashesLenInt;
 use merkle_tree::contract::IMerkleTreeDispatcherTrait;
 use merkle_tree::contract::{IMerkleTreeDispatcher, MerkleTree, ByteArrayHashTrait};
 use starknet::syscalls::deploy_syscall;
@@ -7,11 +5,11 @@ use starknet::{ContractAddress, SyscallResultTrait};
 use starknet::testing::set_contract_address;
 use core::poseidon::PoseidonTrait;
 use core::hash::{HashStateTrait, HashStateExTrait};
+use starknet::storage::{StorageMapReadAccess, StoragePointerReadAccess};
 
 fn deploy_util(class_hash: felt252, calldata: Array<felt252>) -> ContractAddress {
     let (address, _) = deploy_syscall(class_hash.try_into().unwrap(), 0, calldata.span(), false)
         .unwrap_syscall();
-
     address
 }
 
@@ -22,11 +20,10 @@ fn setup() -> IMerkleTreeDispatcher {
 }
 
 #[test]
-#[available_gas(20000000)]
 fn should_deploy() {
     let deploy = setup();
 
-    let state = MerkleTree::contract_state_for_testing();
+    let state = @MerkleTree::contract_state_for_testing();
     // "link" a new MerkleTree struct to the deployed MerkleTree contract
     // in order to access its internal state fields for assertions
     set_contract_address(deploy.contract_address);
@@ -35,7 +32,6 @@ fn should_deploy() {
 }
 
 #[test]
-#[available_gas(20000000)]
 fn build_tree_succeeds() {
     /// Set up
     let deploy = setup();
@@ -80,7 +76,7 @@ fn build_tree_succeeds() {
 
     // verify contract storage state
 
-    let state = MerkleTree::contract_state_for_testing();
+    let state = @MerkleTree::contract_state_for_testing();
     // "link" a new MerkleTree struct to the deployed MerkleTree contract
     // in order to access its internal state fields for assertions
     set_contract_address(deploy.contract_address);
@@ -88,15 +84,13 @@ fn build_tree_succeeds() {
     assert_eq!(state.hashes_length.read(), expected_hashes.len());
 
     let mut i = 0;
-    while i < expected_hashes
-        .len() {
-            assert_eq!(state.hashes.read(i), *expected_hashes.at(i));
-            i += 1;
-        };
+    while i < expected_hashes.len() {
+        assert_eq!(state.hashes.read(i), *expected_hashes.at(i));
+        i += 1;
+    };
 }
 
 #[test]
-#[available_gas(20000000)]
 #[should_panic(expected: ('Data length is not a power of 2', 'ENTRYPOINT_FAILED'))]
 fn build_tree_fails() {
     /// Set up
@@ -113,7 +107,6 @@ fn build_tree_fails() {
 }
 
 #[test]
-#[available_gas(20000000)]
 fn verify_leaf_succeeds() {
     /// Set up
     let deploy = setup();
