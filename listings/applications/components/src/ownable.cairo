@@ -19,9 +19,10 @@ pub mod ownable_component {
     use super::Errors;
     use starknet::{ContractAddress, get_caller_address};
     use core::num::traits::Zero;
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
 
     #[storage]
-    struct Storage {
+    pub struct Storage {
         ownable_owner: ContractAddress,
     }
 
@@ -99,7 +100,7 @@ pub mod ownable_component {
 // ANCHOR: contract
 #[starknet::contract]
 pub mod OwnedContract {
-    use super::{IOwnable, ownable_component, ownable_component::OwnableInternalTrait};
+    use super::{ownable_component, ownable_component::OwnableInternalTrait};
 
     component!(path: ownable_component, storage: ownable, event: OwnableEvent);
 
@@ -128,12 +129,11 @@ pub mod OwnedContract {
 #[cfg(test)]
 mod test {
     use super::OwnedContract;
-    use super::ownable_component::{Event, OwnershipRenouncedEvent, OwnershipTransferredEvent};
+    use super::ownable_component::{OwnershipRenouncedEvent, OwnershipTransferredEvent};
     use super::{IOwnableDispatcher, IOwnableDispatcherTrait};
-    use super::Errors;
     use starknet::ContractAddress;
     use starknet::{syscalls::deploy_syscall, SyscallResultTrait, contract_address_const};
-    use starknet::testing::{set_caller_address, set_contract_address};
+    use starknet::testing::{set_contract_address};
     use core::num::traits::Zero;
 
     fn deploy() -> (IOwnableDispatcher, ContractAddress) {

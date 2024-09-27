@@ -3,6 +3,9 @@ pub mod MockRandomness {
     use pragma_lib::abi::IRandomness;
     use pragma_lib::types::RequestStatus;
     use starknet::{ContractAddress, ClassHash, get_caller_address, get_contract_address};
+    use starknet::storage::{
+        Map, StoragePointerReadAccess, StoragePathEntry, StoragePointerWriteAccess
+    };
     use core::num::traits::zero::Zero;
     use coin_flip::contract::{IPragmaVRFDispatcher, IPragmaVRFDispatcherTrait};
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
@@ -11,7 +14,7 @@ pub mod MockRandomness {
     struct Storage {
         eth_dispatcher: IERC20Dispatcher,
         next_request_id: u64,
-        total_fees: LegacyMap<(ContractAddress, u64), u256>,
+        total_fees: Map<(ContractAddress, u64), u256>,
     }
 
     #[event]
@@ -51,7 +54,7 @@ pub mod MockRandomness {
             let request_id = self.next_request_id.read();
             self.next_request_id.write(request_id + 1);
 
-            self.total_fees.write((caller, request_id), total_fee);
+            self.total_fees.entry((caller, request_id)).write(total_fee);
 
             request_id
         }
@@ -80,7 +83,7 @@ pub mod MockRandomness {
         fn get_total_fees(
             self: @ContractState, caller_address: ContractAddress, request_id: u64
         ) -> u256 {
-            self.total_fees.read((caller_address, request_id))
+            self.total_fees.entry((caller_address, request_id)).read()
         }
 
 

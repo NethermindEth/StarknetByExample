@@ -5,7 +5,6 @@ mod tests {
     use starknet::syscalls::deploy_syscall;
 
     #[test]
-    #[available_gas(20000000)]
     fn test_packing() {
         // Set up.
         let mut calldata: Array<felt252> = array![];
@@ -21,7 +20,7 @@ mod tests {
 
         // Read the stored struct.
         let read_time: Time = contract.get();
-        assert(read_time.hour == time.hour, 'Time.hour mismatch');
-        assert(read_time.minute == time.minute, 'Time.minute mismatch');
+        assert_eq!(read_time.hour, time.hour);
+        assert_eq!(read_time.minute, time.minute);
     }
 }

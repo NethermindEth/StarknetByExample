@@ -1,27 +1,17 @@
-use coin_flip::contract::{CoinFlip, ICoinFlipDispatcher, ICoinFlipDispatcherTrait,};
-use coin_flip::contract::CoinFlip::{Side, CALLBACK_FEE_LIMIT};
-use coin_flip::mock_randomness::MockRandomness;
+use coin_flip::contract::{
+    CoinFlip, CoinFlip::{Side, CALLBACK_FEE_LIMIT}, ICoinFlipDispatcher, ICoinFlipDispatcherTrait,
+};
 use starknet::{ContractAddress, contract_address_const};
 use snforge_std::{
-    declare, start_cheat_caller_address, stop_cheat_caller_address, spy_events, EventAssertions,
-    SpyOn, ContractClassTrait, EventSpy, Event, EventFetcher
+    declare, start_cheat_caller_address, stop_cheat_caller_address, spy_events,
+    EventSpyAssertionsTrait, DeclareResultTrait, ContractClassTrait
 };
 use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
 use pragma_lib::abi::{IRandomnessDispatcher, IRandomnessDispatcherTrait};
 
-impl FeltIntoSide of core::traits::Into<felt252, Side> {
-    fn into(self: felt252) -> Side {
-        match self {
-            0 => Side::Heads,
-            1 => Side::Tails,
-            _ => panic!("non-existent side, felt value: {self}")
-        }
-    }
-}
-
 fn deploy() -> (ICoinFlipDispatcher, IRandomnessDispatcher, IERC20Dispatcher, ContractAddress) {
     // deploy mock ETH token
-    let eth_contract = declare("ERC20Upgradeable").unwrap();
+    let eth_contract = declare("ERC20Upgradeable").unwrap().contract_class();
     let eth_name: ByteArray = "Ethereum";
     let eth_symbol: ByteArray = "ETH";
     let eth_supply: u256 = CALLBACK_FEE_LIMIT.into() * 100;
@@ -34,13 +24,13 @@ fn deploy() -> (ICoinFlipDispatcher, IRandomnessDispatcher, IERC20Dispatcher, Co
     stop_cheat_caller_address(eth_address);
 
     // deploy MockRandomness
-    let mock_randomness = declare("MockRandomness").unwrap();
+    let mock_randomness = declare("MockRandomness").unwrap().contract_class();
     let mut randomness_calldata: Array<felt252> = array![];
     (eth_address).serialize(ref randomness_calldata);
     let (randomness_address, _) = mock_randomness.deploy(@randomness_calldata).unwrap();
 
     // deploy the actual CoinFlip contract
-    let coin_flip_contract = declare("CoinFlip").unwrap();
+    let coin_flip_contract = declare("CoinFlip").unwrap().contract_class();
     let mut coin_flip_ctor_calldata: Array<felt252> = array![];
     (randomness_address, eth_address).serialize(ref coin_flip_ctor_calldata);
     let (coin_flip_address, _) = coin_flip_contract.deploy(@coin_flip_ctor_calldata).unwrap();
@@ -61,7 +51,7 @@ fn test_all_relevant_random_words() {
     eth.transfer(coin_flip.contract_address, CALLBACK_FEE_LIMIT.into() * 100);
     stop_cheat_caller_address(eth.contract_address);
 
-    let mut random_words: Array<(felt252, Side, u64)> = array![
+    let random_words: Array<(felt252, Side, u64)> = array![
         (0, Side::Heads, 0),
         (2, Side::Heads, 1),
         (4, Side::Heads, 2),
@@ -73,19 +63,20 @@ fn test_all_relevant_random_words() {
         (1001, Side::Tails, 8),
         (12345654321, Side::Tails, 9),
     ];
-    while let Option::Some((random_word, expected_side, expected_request_id)) = random_words
-        .pop_front() {
-            _flip_request(
-                coin_flip,
-                randomness,
-                eth,
-                deployer,
-                expected_request_id,
-                CALLBACK_FEE_LIMIT / 5 * 3,
-                random_word,
-                expected_side
-            );
-        }
+    for (
+        random_word, expected_side, expected_request_id
+    ) in random_words {
+        _flip_request(
+            coin_flip,
+            randomness,
+            eth,
+            deployer,
+            expected_request_id,
+            CALLBACK_FEE_LIMIT / 5 * 3,
+            random_word,
+            expected_side
+        );
+    }
 }
 
 #[test]
@@ -123,32 +114,25 @@ fn _flip_request(
     random_word: felt252,
     expected_side: Side
 ) {
-    let test_data = format!(
-        "\n---\nTest data:\nexpected_request_id: {:?},\nexpected_callback_fee: {:?},\nrandom_word: {:?},\nexpected_side: {:?}\n---\n",
-        expected_request_id,
-        expected_callback_fee,
-        random_word,
-        expected_side,
-    );
-
     let original_balance = eth.balance_of(coin_flip.contract_address);
 
-    let mut spy = spy_events(SpyOn::One(coin_flip.contract_address));
+    let mut spy = spy_events();
 
     start_cheat_caller_address(coin_flip.contract_address, deployer);
     coin_flip.flip();
     stop_cheat_caller_address(coin_flip.contract_address);
 
-    // manually asserting event data, as it results in clearer error messages
-    spy.fetch_events();
-
-    assert_eq!(spy.events.len(), 1, "{test_data}On flip.\n");
-    let (_, event) = spy.events.at(0);
-    assert_eq!(event.keys.len(), 1, "{test_data}Event should have one key.\n");
-    assert_eq!(event.keys.at(0), @selector!("Flipped"), "{test_data}Expected 'Flipped' to emit.\n");
-    assert_eq!(event.data.len(), 2, "{test_data}Flipped event should contain 2 fields.\n");
-    assert_eq!(event.data.at(0), @expected_request_id.into(), "{test_data}",);
-    assert_eq!(event.data.at(1), @deployer.into(), "{test_data}",);
+    spy
+        .assert_emitted(
+            @array![
+                (
+                    coin_flip.contract_address,
+                    CoinFlip::Event::Flipped(
+                        CoinFlip::Flipped { flip_id: expected_request_id, flipper: deployer }
+                    )
+                )
+            ]
+        );
 
     let post_flip_balance = eth.balance_of(coin_flip.contract_address);
     assert_eq!(
@@ -156,9 +140,6 @@ fn _flip_request(
         original_balance
             - randomness.get_total_fees(coin_flip.contract_address, expected_request_id)
     );
-
-    // reset the event spy
-    let mut spy = spy_events(SpyOn::One(coin_flip.contract_address));
 
     randomness
         .submit_random(
@@ -174,17 +155,19 @@ fn _flip_request(
             array![]
         );
 
-    spy.fetch_events();
-
-    assert_eq!(spy.events.len(), 1, "{test_data}On receiving the random word.\n");
-    let (_, event) = spy.events.at(0);
-    assert_eq!(event.keys.len(), 1, "{test_data}Landed event should have one key.\n");
-    assert_eq!(event.keys.at(0), @selector!("Landed"), "{test_data}Expected 'Landed' to emit.\n");
-    assert_eq!(event.data.len(), 3, "{test_data}Landed event should contain 3 fields.\n");
-    assert_eq!(event.data.at(0), @expected_request_id.into(), "{test_data}",);
-    assert_eq!(event.data.at(1), @deployer.into(), "{test_data}",);
-    let actual_side: Side = (*event.data.at(2)).into();
-    assert_eq!(actual_side, expected_side, "{test_data}");
+    spy
+        .assert_emitted(
+            @array![
+                (
+                    coin_flip.contract_address,
+                    CoinFlip::Event::Landed(
+                        CoinFlip::Landed {
+                            flip_id: expected_request_id, flipper: deployer, side: expected_side
+                        }
+                    )
+                )
+            ]
+        );
 
     assert_eq!(
         eth.balance_of(coin_flip.contract_address),
@@ -201,7 +184,7 @@ fn test_two_consecutive_flips() {
     eth.transfer(coin_flip.contract_address, CALLBACK_FEE_LIMIT.into() * 50);
     stop_cheat_caller_address(eth.contract_address);
 
-    let mut spy = spy_events(SpyOn::One(coin_flip.contract_address));
+    let mut spy = spy_events();
 
     let original_balance = eth.balance_of(coin_flip.contract_address);
 

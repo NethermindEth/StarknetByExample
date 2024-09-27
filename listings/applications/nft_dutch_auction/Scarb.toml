@@ -1,14 +1,15 @@
 [package]
 name = "nft_dutch_auction"
 version.workspace = true
-edition = '2023_11'
+edition = "2024_07"
 
 [dependencies]
 erc20 = { path = "../erc20" }
 starknet.workspace = true
+snforge_std.workspace = true
 
 [dev-dependencies]
-snforge_std.workspace = true
+assert_macros.workspace = true
 
 [scripts]
 test.workspace = true

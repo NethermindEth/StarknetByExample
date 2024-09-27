@@ -8,6 +8,8 @@ pub trait IImplicitInternalContract<TContractState> {
 
 #[starknet::contract]
 pub mod ImplicitInternalContract {
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
+
     #[storage]
     struct Storage {
         value: u32
@@ -49,10 +51,10 @@ pub mod ImplicitInternalContract {
 #[cfg(test)]
 mod tests {
     use super::{
-        IImplicitInternalContract, ImplicitInternalContract, IImplicitInternalContractDispatcher,
+        ImplicitInternalContract, IImplicitInternalContractDispatcher,
         IImplicitInternalContractDispatcherTrait
     };
-    use starknet::{ContractAddress, SyscallResultTrait, syscalls::deploy_syscall};
+    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
 
     #[test]
     fn test_interface() {

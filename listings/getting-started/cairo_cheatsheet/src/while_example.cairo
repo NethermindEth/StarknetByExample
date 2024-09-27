@@ -7,5 +7,5 @@ fn do_loop() {
         arr.append(i);
         i += 1;
     };
-// ANCHOR_END: sheet
+    // ANCHOR_END: sheet
 }

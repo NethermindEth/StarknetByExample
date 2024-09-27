@@ -9,11 +9,12 @@ pub trait ISimpleContract<TContractState> {
 #[starknet::contract]
 pub mod SimpleContract {
     use starknet::{get_caller_address, ContractAddress};
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
 
     #[storage]
     struct Storage {
-        value: u32,
-        owner: ContractAddress
+        pub value: u32,
+        pub owner: ContractAddress
     }
 
     #[constructor]
@@ -48,9 +49,7 @@ mod tests {
 
     // Import the deploy syscall to be able to deploy the contract.
     use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
-    use starknet::{
-        ContractAddress, get_caller_address, get_contract_address, contract_address_const
-    };
+    use starknet::{get_contract_address, contract_address_const};
 
     // Use starknet test utils to fake the contract_address
     use starknet::testing::set_contract_address;
@@ -111,7 +110,7 @@ mod tests {
         // As the current caller is not the owner, the value cannot be set.
         let new_value: u32 = 20;
         contract.set_value(new_value);
-    // Panic expected
+        // Panic expected
     }
 
     #[test]
@@ -125,18 +124,14 @@ mod tests {
 // ANCHOR: tests_with_state
 #[cfg(test)]
 mod tests_with_states {
-    // Only import the contract
+    // Only import the contract and implementation
     use super::SimpleContract;
-
-    // For accessing storage variables and entrypoints,
-    // we must import the contract member state traits and implementation.
-    use SimpleContract::{
-        SimpleContractImpl, valueContractMemberStateTrait, ownerContractMemberStateTrait
-    };
+    use SimpleContract::SimpleContractImpl;
 
     use starknet::contract_address_const;
     use starknet::testing::set_caller_address;
     use core::num::traits::Zero;
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
 
     #[test]
     fn test_standalone_state() {
@@ -145,7 +140,7 @@ mod tests_with_states {
         // As no contract was deployed, the constructor was not called on the state
         // - with valueContractMemberStateTrait
         assert_eq!(state.value.read(), 0);
-        // - with SimpleContractImpl 
+        // - with SimpleContractImpl
         assert_eq!(state.get_value(), 0);
         assert_eq!(state.owner.read(), Zero::zero());
 
@@ -169,9 +164,7 @@ mod tests_with_states {
     // But we can also deploy the contract and interact with it using the dispatcher
     // as shown in the previous tests, and still use the state for testing.
     use super::{ISimpleContractDispatcher, ISimpleContractDispatcherTrait};
-    use starknet::{
-        ContractAddress, SyscallResultTrait, syscalls::deploy_syscall, testing::set_contract_address
-    };
+    use starknet::{SyscallResultTrait, syscalls::deploy_syscall, testing::set_contract_address};
 
     #[test]
     fn test_state_with_contract() {

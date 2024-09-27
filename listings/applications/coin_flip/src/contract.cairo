@@ -21,13 +21,16 @@ pub trait IPragmaVRF<TContractState> {
 pub mod CoinFlip {
     use core::num::traits::zero::Zero;
     use starknet::{ContractAddress, get_caller_address, get_contract_address,};
+    use starknet::storage::{
+        Map, StoragePointerReadAccess, StoragePathEntry, StoragePointerWriteAccess
+    };
     use pragma_lib::abi::{IRandomnessDispatcher, IRandomnessDispatcherTrait};
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
 
     #[storage]
     struct Storage {
         eth_dispatcher: IERC20Dispatcher,
-        flips: LegacyMap<u64, ContractAddress>,
+        flips: Map<u64, ContractAddress>,
         nonce: u64,
         randomness_contract_address: ContractAddress,
     }
@@ -91,7 +94,7 @@ pub mod CoinFlip {
         fn flip(ref self: ContractState) {
             let flip_id = self._request_my_randomness();
             let flipper = get_caller_address();
-            self.flips.write(flip_id, flipper);
+            self.flips.entry(flip_id).write(flipper);
             self.emit(Event::Flipped(Flipped { flip_id, flipper }));
         }
     }
@@ -144,16 +147,8 @@ pub mod CoinFlip {
             request_id
         }
 
-        /// The chance of a flipped coin landing sideways is approximately 1 in 6000.
-        /// See paper: https://journals.aps.org/pre/abstract/10.1103/PhysRevE.48.2547
-        /// 
-        /// Since splitting the remainder (5999) equally between heads and tails is impossible,
-        /// we double the probability values:
-        /// - 2 in 12000 chance that it's sideways
-        /// - 5999 in 12000 chance that it's heads
-        /// - 5999 in 12000 chance that it's tails
         fn _process_coin_flip(ref self: ContractState, flip_id: u64, random_value: @felt252) {
-            let flipper = self.flips.read(flip_id);
+            let flipper = self.flips.entry(flip_id).read();
             assert(flipper.is_non_zero(), Errors::INVALID_FLIP_ID);
 
             let random_value: u256 = (*random_value).into();

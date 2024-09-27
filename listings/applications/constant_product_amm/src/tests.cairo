@@ -38,7 +38,8 @@ pub mod ERC20Token {
 // Wait for OZ #953 fix
 // mod tests {
 //     use super::ERC20Token;
-//     use openzeppelin::token::erc20::{interface::IERC20Dispatcher, interface::IERC20DispatcherTrait};
+//     use openzeppelin::token::erc20::{interface::IERC20Dispatcher,
+//     interface::IERC20DispatcherTrait};
 //     use openzeppelin::tests::utils;
 //     use openzeppelin::utils::serde::SerializedAppend;
 
@@ -93,7 +94,8 @@ pub mod ERC20Token {
 //             .unwrap();
 //         // Or with OpenZeppelin helper:
 //         // let contract_address = utils::deploy(ConstantProductAmm::TEST_CLASS_HASH, calldata);
-//         Deployment { contract: IConstantProductAmmDispatcher { contract_address }, token0, token1 }
+//         Deployment { contract: IConstantProductAmmDispatcher { contract_address }, token0, token1
+//         }
 //     }
 
 //     fn add_liquidity(deploy: Deployment, amount: u256) -> u256 {

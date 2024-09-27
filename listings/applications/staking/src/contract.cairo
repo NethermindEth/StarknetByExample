@@ -26,25 +26,29 @@ pub mod StakingContract {
     use core::num::traits::Zero;
     use starknet::{ContractAddress, get_caller_address, get_block_timestamp, get_contract_address};
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+    use starknet::storage::{
+        Map, StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess,
+        StoragePointerWriteAccess
+    };
 
     #[storage]
     struct Storage {
-        staking_token: IERC20Dispatcher,
-        reward_token: IERC20Dispatcher,
-        owner: ContractAddress,
-        reward_rate: u256,
-        duration: u256,
-        current_reward_per_staked_token: u256,
-        finish_at: u256,
+        pub staking_token: IERC20Dispatcher,
+        pub reward_token: IERC20Dispatcher,
+        pub owner: ContractAddress,
+        pub reward_rate: u256,
+        pub duration: u256,
+        pub current_reward_per_staked_token: u256,
+        pub finish_at: u256,
         // last time an operation (staking / withdrawal / rewards claimed) was registered
-        last_updated_at: u256,
-        last_user_reward_per_staked_token: LegacyMap::<ContractAddress, u256>,
-        unclaimed_rewards: LegacyMap::<ContractAddress, u256>,
-        total_distributed_rewards: u256,
+        pub last_updated_at: u256,
+        pub last_user_reward_per_staked_token: Map::<ContractAddress, u256>,
+        pub unclaimed_rewards: Map::<ContractAddress, u256>,
+        pub total_distributed_rewards: u256,
         // total amount of staked tokens
-        total_supply: u256,
+        pub total_supply: u256,
         // amount of staked tokens per user
-        balance_of: LegacyMap::<ContractAddress, u256>,
+        pub balance_of: Map::<ContractAddress, u256>,
     }
 
     #[event]
@@ -125,7 +129,8 @@ pub mod StakingContract {
 
             self.reward_rate.write(rate);
 
-            // even if the previous reward duration has not finished, we reset the finish_at variable
+            // even if the previous reward duration has not finished, we reset the finish_at
+            // variable
             self.finish_at.write(block_timestamp + self.duration.read());
             self.last_updated_at.write(block_timestamp);
 
@@ -223,7 +228,8 @@ pub mod StakingContract {
                     // owner should set up NEW rewards into the contract
                     self.emit(RewardsFinished { msg: 'Rewards all distributed' });
                 } else {
-                    // owner should set up rewards into the contract (or add duration by setting up rewards)
+                    // owner should set up rewards into the contract (or add duration by setting up
+                    // rewards)
                     self.emit(RewardsFinished { msg: 'Rewards not active yet' });
                 }
             }
@@ -248,7 +254,7 @@ pub mod StakingContract {
 
         #[inline(always)]
         fn last_time_applicable(self: @ContractState) -> u256 {
-            PrivateFunctions::min(self.finish_at.read(), get_block_timestamp().into())
+            Self::min(self.finish_at.read(), get_block_timestamp().into())
         }
 
         #[inline(always)]
