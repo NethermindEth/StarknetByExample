@@ -1,4 +1,3 @@
-use core::result::ResultTrait;
 use starknet::{ContractAddress, get_block_timestamp, contract_address_const,};
 use snforge_std::{
     declare, ContractClass, ContractClassTrait, start_cheat_caller_address,
