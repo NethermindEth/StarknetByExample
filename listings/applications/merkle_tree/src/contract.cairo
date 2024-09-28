@@ -1,16 +1,10 @@
-use core::poseidon::PoseidonTrait;
-use core::hash::{HashStateTrait};
-use core::poseidon::poseidon_hash_span;
-
 #[generate_trait]
 pub impl ByteArrayHashTraitImpl of ByteArrayHashTrait {
     fn hash(self: @ByteArray) -> felt252 {
         let mut serialized_byte_arr: Array<felt252> = ArrayTrait::new();
         self.serialize(ref serialized_byte_arr);
 
-        let mut hash = PoseidonTrait::new().update(poseidon_hash_span(serialized_byte_arr.span()));
-
-        hash.finalize()
+        core::poseidon::poseidon_hash_span(serialized_byte_arr.span())
     }
 }
 
@@ -24,7 +18,7 @@ pub trait IMerkleTree<TContractState> {
     ) -> bool;
 }
 
-mod Errors {
+mod errors {
     pub const NOT_POW_2: felt252 = 'Data length is not a power of 2';
     pub const NOT_PRESENT: felt252 = 'No element in merkle tree';
 }
@@ -34,16 +28,14 @@ pub mod MerkleTree {
     use core::poseidon::PoseidonTrait;
     use core::hash::{HashStateTrait, HashStateExTrait};
     use starknet::storage::{
-        Map, StorageMapReadAccess, StorageMapWriteAccess, StoragePointerWriteAccess,
-        StoragePointerReadAccess
+        StoragePointerWriteAccess, StoragePointerReadAccess,
+        Vec, MutableVecTrait, VecTrait
     };
     use super::ByteArrayHashTrait;
 
     #[storage]
     struct Storage {
-        // cannot store Array, therefore use a LegacyMap to simulate an array
-        pub hashes: Map::<usize, felt252>,
-        pub hashes_length: usize
+        pub hashes: Vec<felt252>
     }
 
     #[derive(Drop, Serde, Copy)]
@@ -56,16 +48,13 @@ pub mod MerkleTree {
     impl IMerkleTreeImpl of super::IMerkleTree<ContractState> {
         fn build_tree(ref self: ContractState, mut data: Array<ByteArray>) -> Array<felt252> {
             let data_len = data.len();
-            assert(data_len > 0 && (data_len & (data_len - 1)) == 0, super::Errors::NOT_POW_2);
+            assert(data_len > 0 && (data_len & (data_len - 1)) == 0, super::errors::NOT_POW_2);
 
             let mut _hashes: Array<felt252> = ArrayTrait::new();
 
             // first, hash every leaf
-            let mut i = 0;
-            while let Option::Some(value) = data.pop_front() {
+            for value in data {
                 _hashes.append(value.hash());
-
-                i += 1;
             };
 
             // then, hash all levels above leaves
@@ -89,22 +78,18 @@ pub mod MerkleTree {
             };
 
             // write to the contract state (useful for the get_root function)
-            let mut i = 0;
-            let hashes_span = _hashes.span();
-            while i < hashes_span.len() {
-                self.hashes.write(i, *hashes_span.at(i));
-                i += 1;
+            for hash in _hashes.span() {
+                self.hashes.append().write(*hash);
             };
-            self.hashes_length.write(hashes_span.len());
 
             _hashes
         }
 
         fn get_root(self: @ContractState) -> felt252 {
-            let merkle_tree_length = self.hashes_length.read();
-            assert(merkle_tree_length > 0, super::Errors::NOT_PRESENT);
+            let merkle_tree_length = self.hashes.len();
+            assert(merkle_tree_length > 0, super::errors::NOT_PRESENT);
 
-            self.hashes.read(merkle_tree_length - 1)
+            self.hashes.at(merkle_tree_length - 1).read()
         }
 
         fn verify(

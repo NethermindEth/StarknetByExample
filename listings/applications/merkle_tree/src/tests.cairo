@@ -5,7 +5,7 @@ use starknet::{ContractAddress, SyscallResultTrait};
 use starknet::testing::set_contract_address;
 use core::poseidon::PoseidonTrait;
 use core::hash::{HashStateTrait, HashStateExTrait};
-use starknet::storage::{StorageMapReadAccess, StoragePointerReadAccess};
+use starknet::storage::{VecTrait, StoragePointerReadAccess};
 
 fn deploy_util(class_hash: felt252, calldata: Array<felt252>) -> ContractAddress {
     let (address, _) = deploy_syscall(class_hash.try_into().unwrap(), 0, calldata.span(), false)
@@ -28,7 +28,7 @@ fn should_deploy() {
     // in order to access its internal state fields for assertions
     set_contract_address(deploy.contract_address);
 
-    assert_eq!(state.hashes_length.read(), 0);
+    assert_eq!(state.hashes.len(), 0);
 }
 
 #[test]
@@ -81,13 +81,11 @@ fn build_tree_succeeds() {
     // in order to access its internal state fields for assertions
     set_contract_address(deploy.contract_address);
 
-    assert_eq!(state.hashes_length.read(), expected_hashes.len());
+    assert_eq!(state.hashes.len(), expected_hashes.len().into());
 
-    let mut i = 0;
-    while i < expected_hashes.len() {
-        assert_eq!(state.hashes.read(i), *expected_hashes.at(i));
-        i += 1;
-    };
+    for i in 0..expected_hashes.len() {
+        assert_eq!(state.hashes.at(i.into()).read(), *expected_hashes.at(i));
+    }
 }
 
 #[test]
