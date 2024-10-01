@@ -9,3 +9,4 @@ output
 # Others
 .snfoundry_cache
 .vscode/settings.json
+**/starkli-wallet
