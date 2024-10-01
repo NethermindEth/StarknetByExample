@@ -83,9 +83,11 @@ fn build_tree_succeeds() {
 
     assert_eq!(state.hashes.len(), expected_hashes.len().into());
 
-    for i in 0..expected_hashes.len() {
-        assert_eq!(state.hashes.at(i.into()).read(), *expected_hashes.at(i));
-    }
+    for i in 0
+        ..expected_hashes
+            .len() {
+                assert_eq!(state.hashes.at(i.into()).read(), *expected_hashes.at(i));
+            }
 }
 
 #[test]

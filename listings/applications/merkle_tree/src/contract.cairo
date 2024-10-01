@@ -28,8 +28,7 @@ pub mod MerkleTree {
     use core::poseidon::PoseidonTrait;
     use core::hash::{HashStateTrait, HashStateExTrait};
     use starknet::storage::{
-        StoragePointerWriteAccess, StoragePointerReadAccess,
-        Vec, MutableVecTrait, VecTrait
+        StoragePointerWriteAccess, StoragePointerReadAccess, Vec, MutableVecTrait, VecTrait
     };
     use super::ByteArrayHashTrait;
 
