@@ -1,5 +1,3 @@
-use core::clone::Clone;
-use core::result::ResultTrait;
 use advanced_factory::contract::{
     CampaignFactory, ICampaignFactoryDispatcher, ICampaignFactoryDispatcherTrait
 };

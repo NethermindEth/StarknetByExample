@@ -23,6 +23,15 @@ name = "calling_other_contracts"
 version = "0.1.0"
 
 [[package]]
+name = "coin_flip"
+version = "0.1.0"
+dependencies = [
+ "openzeppelin",
+ "pragma_lib",
+ "snforge_std",
+]
+
+[[package]]
 name = "components"
 version = "0.1.0"
 
@@ -205,6 +214,11 @@ name = "openzeppelin_utils"
 version = "0.16.0"
 source = "registry+https://scarbs.xyz/"
 checksum = "sha256:a494aeb5f1371db7f22e922196aa41d1d1698877a766a838350c0b6ffe49fda2"
+
+[[package]]
+name = "pragma_lib"
+version = "1.0.0"
+source = "git+https://github.com/astraly-labs/pragma-lib#86d7ccdc15b349b8b48d9796fc8464c947bea6e1"
 
 [[package]]
 name = "simple_account"
