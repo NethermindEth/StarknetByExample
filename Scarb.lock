@@ -111,6 +111,10 @@ name = "mappings"
 version = "0.1.0"
 
 [[package]]
+name = "merkle_tree"
+version = "0.1.0"
+
+[[package]]
 name = "nft_dutch_auction"
 version = "0.1.0"
 dependencies = [
