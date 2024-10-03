@@ -10,7 +10,7 @@ pub trait ICoinFlip<TContractState> {
 pub trait IPragmaVRF<TContractState> {
     fn receive_random_words(
         ref self: TContractState,
-        requestor_address: ContractAddress,
+        requestER_address: ContractAddress,
         request_id: u64,
         random_words: Span<felt252>,
         calldata: Array<felt252>
@@ -65,7 +65,7 @@ pub mod CoinFlip {
         pub const CALLER_NOT_RANDOMNESS: felt252 = 'Caller not randomness contract';
         pub const INVALID_ADDRESS: felt252 = 'Invalid address';
         pub const INVALID_FLIP_ID: felt252 = 'No flip with the given ID';
-        pub const REQUESTOR_NOT_SELF: felt252 = 'Requestor is not self';
+        pub const REQUESTER_NOT_SELF: felt252 = 'RequestER is not self';
         pub const TRANSFER_FAILED: felt252 = 'Transfer failed';
     }
 
@@ -103,7 +103,7 @@ pub mod CoinFlip {
     impl PragmaVRF of super::IPragmaVRF<ContractState> {
         fn receive_random_words(
             ref self: ContractState,
-            requestor_address: ContractAddress,
+            requestER_address: ContractAddress,
             request_id: u64,
             random_words: Span<felt252>,
             calldata: Array<felt252>
@@ -114,7 +114,7 @@ pub mod CoinFlip {
             );
 
             let this = get_contract_address();
-            assert(requestor_address == this, Errors::REQUESTOR_NOT_SELF);
+            assert(requestER_address == this, Errors::REQUESTER_NOT_SELF);
 
             self._process_coin_flip(request_id, random_words.at(0));
         }

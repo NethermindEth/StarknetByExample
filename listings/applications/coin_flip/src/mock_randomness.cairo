@@ -62,7 +62,7 @@ pub mod MockRandomness {
         fn submit_random(
             ref self: ContractState,
             request_id: u64,
-            requestor_address: ContractAddress,
+            requester_address: ContractAddress,
             seed: u64,
             minimum_block_number: u64,
             callback_address: ContractAddress,
@@ -72,11 +72,11 @@ pub mod MockRandomness {
             proof: Span<felt252>,
             calldata: Array<felt252>
         ) {
-            let requestor = IPragmaVRFDispatcher { contract_address: callback_address };
-            requestor.receive_random_words(requestor_address, request_id, random_words, calldata);
+            let requester = IPragmaVRFDispatcher { contract_address: callback_address };
+            requester.receive_random_words(requester_address, request_id, random_words, calldata);
             let eth_dispatcher = self.eth_dispatcher.read();
             let success = eth_dispatcher
-                .transfer(requestor_address, (callback_fee_limit - callback_fee).into());
+                .transfer(requester_address, (callback_fee_limit - callback_fee).into());
             assert(success, Errors::TRANSFER_FAILED);
         }
 
@@ -92,7 +92,7 @@ pub mod MockRandomness {
         }
         fn update_status(
             ref self: ContractState,
-            requestor_address: ContractAddress,
+            requester_address: ContractAddress,
             request_id: u64,
             new_status: RequestStatus
         ) {
@@ -102,7 +102,7 @@ pub mod MockRandomness {
         fn cancel_random_request(
             ref self: ContractState,
             request_id: u64,
-            requestor_address: ContractAddress,
+            requester_address: ContractAddress,
             seed: u64,
             minimum_block_number: u64,
             callback_address: ContractAddress,
@@ -113,22 +113,22 @@ pub mod MockRandomness {
         }
 
         fn get_pending_requests(
-            self: @ContractState, requestor_address: ContractAddress, offset: u64, max_len: u64
+            self: @ContractState, requester_address: ContractAddress, offset: u64, max_len: u64
         ) -> Span<felt252> {
             panic!("unimplemented")
         }
 
         fn get_request_status(
-            self: @ContractState, requestor_address: ContractAddress, request_id: u64
+            self: @ContractState, requester_address: ContractAddress, request_id: u64
         ) -> RequestStatus {
             panic!("unimplemented")
         }
-        fn requestor_current_index(
-            self: @ContractState, requestor_address: ContractAddress
+        fn requester_current_index(
+            self: @ContractState, requester_address: ContractAddress
         ) -> u64 {
             panic!("unimplemented")
         }
-        fn get_public_key(self: @ContractState, requestor_address: ContractAddress) -> felt252 {
+        fn get_public_key(self: @ContractState, requester_address: ContractAddress) -> felt252 {
             panic!("unimplemented")
         }
         fn get_payment_token(self: @ContractState) -> ContractAddress {
@@ -146,7 +146,7 @@ pub mod MockRandomness {
             panic!("unimplemented")
         }
         fn get_out_of_gas_requests(
-            self: @ContractState, requestor_address: ContractAddress,
+            self: @ContractState, requester_address: ContractAddress,
         ) -> Span<u64> {
             panic!("unimplemented")
         }

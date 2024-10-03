@@ -18,7 +18,7 @@ Enums can be declared both inside and outside a contract. If declared outside, t
 
 2. Enums as parameters and return values to entrypoints
 
-    - It is possible to pass `enums` to contract entrypoints as parameters, as well as return them from entrypoints. For that purpose, the enum needs to be serializable and dropable, hence the derivation of traits `Serde` and `Drop` in the above code snippet.
+    - It is possible to pass `enums` to contract entrypoints as parameters, as well as return them from entrypoints. For that purpose, the enum needs to be serializable and droppable, hence the derivation of traits `Serde` and `Drop` in the above code snippet.
 
 Here is an example of a contract illustrating the above statements :
 
