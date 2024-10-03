@@ -23,6 +23,7 @@ pub mod erc20_streaming {
         end_time: u64,
         total_amount: felt252,
         released_amount: felt252,
+        to: ContractAddress,
     }
 
     #[event]
@@ -50,6 +51,8 @@ pub mod erc20_streaming {
     mod Errors {
         pub const STREAM_AMOUNT_ZERO: felt252 = 'Stream amount cannot be zero';
         pub const STREAM_ALREADY_EXISTS: felt252 = 'Stream already exists';
+        pub const END_TIME_INVALID: felt252 = 'End time must be greater than start time';
+        pub const STREAM_UNAUTHORIZED: felt252 = 'Caller is not the recipient of the stream';
     }
 
     #[constructor]
@@ -63,11 +66,13 @@ pub mod erc20_streaming {
             ref self: ContractState,
             to: ContractAddress,
             total_amount: felt252,
-            start_time: u64,
             end_time: u64
         ) {
             assert(total_amount != felt252::zero(), Errors::STREAM_AMOUNT_ZERO);
             let caller = get_caller_address();
+            let start_time = get_block_timestamp(); // Use block timestamp for start time
+            assert(end_time > start_time, Errors::END_TIME_INVALID); // Assert end_time > start_time
+
             let stream_key = (caller, to);
             assert(self.streams.read(stream_key).start_time == 0, Errors::STREAM_ALREADY_EXISTS);
 
@@ -86,13 +91,20 @@ pub mod erc20_streaming {
             self.emit(StreamCreated { from: caller, to, total_amount, start_time, end_time });
         }
 
-        fn release_tokens(ref self: ContractState, to: ContractAddress) {
+        fn release_tokens(ref self: ContractState, stream_id: u64) {
             let caller = get_caller_address();
             let stream_key = (caller, to);
-            let stream = self.streams.read(stream_key);
+            let stream = self.streams.read(stream_id);
+            assert(caller == stream.to, Errors::STREAM_UNAUTHORIZED);
+
             let releasable_amount = self.releasable_amount(stream);
+            assert(
+                releasable_amount <= (stream.total_amount - stream.released_amount),
+                "Releasable amount exceeds remaining tokens"
+            );
+
             self.streams.write(
-                stream_key,
+                stream_id,
                 Stream {
                     released_amount: stream.released_amount + releasable_amount,
                     ..stream
@@ -107,15 +119,13 @@ pub mod erc20_streaming {
         }
 
         fn releasable_amount(&self, stream: Stream) -> felt252 {
-            let current_time = starknet::get_block_timestamp();
-            if current_time >= stream.end_time {
-                return stream.total_amount - stream.released_amount;
-            } else {
+                let current_time = starknet::get_block_timestamp();
                 let time_elapsed = current_time - stream.start_time;
                 let vesting_duration = stream.end_time - stream.start_time;
-                let vested_amount = stream.total_amount * time_elapsed / vesting_duration;
-                return vested_amount - stream.released_amount;
+
+                let vested_amount = stream.total_amount * min(time_elapsed, vesting_duration) / vesting_duration;;
+                vested_amount - stream.released_amount;
             }
         }
     }
-}
+
