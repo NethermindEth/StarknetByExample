@@ -1,3 +1,4 @@
+// [!region hash]
 #[starknet::interface]
 pub trait IHashTrait<T> {
     fn save_user_with_poseidon(
@@ -8,7 +9,6 @@ pub trait IHashTrait<T> {
     ) -> felt252;
 }
 
-// ANCHOR: hash
 #[starknet::contract]
 pub mod HashTraits {
     use core::hash::{HashStateTrait, HashStateExTrait};
@@ -59,8 +59,9 @@ pub mod HashTraits {
         }
     }
 }
-// ANCHOR_END: hash
+// [!endregion hash]
 
+// [!region tests]
 #[cfg(test)]
 mod tests {
     use starknet::SyscallResultTrait;
@@ -113,3 +114,4 @@ mod tests {
         );
     }
 }
+// [!endregion tests]

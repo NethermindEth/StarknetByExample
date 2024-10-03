@@ -1,5 +1,5 @@
 fn while_let() {
-    // ANCHOR: sheet
+    // [!region sheet]
     let mut option = Option::Some(0_usize);
 
     // "while `let` destructures `option` into `Some(i)`:
@@ -14,5 +14,5 @@ fn while_let() {
                 option = Option::Some(i + 1);
             }
         }
-// ANCHOR_END: sheet
+// [!endregion sheet]
 }

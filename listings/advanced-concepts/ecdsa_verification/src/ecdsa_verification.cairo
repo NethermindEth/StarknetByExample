@@ -4,6 +4,7 @@
 // 2. Hash the message
 // 3. Sign the hash (off chain, keep your private key secret)
 
+// [!region contract]
 use core::starknet::eth_address::EthAddress;
 use starknet::secp256_trait::{Signature};
 #[starknet::interface]
@@ -95,4 +96,4 @@ mod verifySignature {
         }
     }
 }
-
+// [!endregion contract]

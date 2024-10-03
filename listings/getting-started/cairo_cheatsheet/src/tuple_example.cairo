@@ -1,5 +1,5 @@
 fn tuple() {
-    // ANCHOR: sheet
+    // [!region sheet]
     let address = "0x000";
     let age = 20;
     let active = true;
@@ -9,5 +9,5 @@ fn tuple() {
 
     // Access tuple
     let (address, age, active) = stored_tuple;
-// ANCHOR_END: sheet
+// [!endregion sheet]
 }

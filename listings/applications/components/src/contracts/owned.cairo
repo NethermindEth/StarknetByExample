@@ -1,4 +1,4 @@
-// ANCHOR: contract
+// [!region contract]
 #[starknet::interface]
 pub trait IOwned<TContractState> {
     fn do_something(ref self: TContractState);
@@ -39,8 +39,9 @@ pub mod OwnedContract {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
+// [!region tests]
 #[cfg(test)]
 mod tests {
     use core::num::traits::Zero;
@@ -172,3 +173,4 @@ mod tests {
         contract.do_something();
     }
 }
+// [!endregion tests]

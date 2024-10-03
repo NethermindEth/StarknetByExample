@@ -1,6 +1,5 @@
-book
-target
-output
+node_modules
+.env
 
 # Editors tmp files.
 *~

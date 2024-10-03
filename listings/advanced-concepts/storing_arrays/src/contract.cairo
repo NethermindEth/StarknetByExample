@@ -3,7 +3,7 @@ use starknet::{Store, SyscallResult};
 use starknet::storage_access::{StorageBaseAddress, storage_address_from_base_and_offset};
 use starknet::syscalls::{storage_read_syscall, storage_write_syscall};
 
-// ANCHOR: StorageAccessImpl
+// [!region StorageAccessImpl]
 impl StoreFelt252Array of Store<Array<felt252>> {
     fn read(address_domain: u32, base: StorageBaseAddress) -> SyscallResult<Array<felt252>> {
         StoreFelt252Array::read_at_offset(address_domain, base, 0)
@@ -63,9 +63,9 @@ impl StoreFelt252Array of Store<Array<felt252>> {
         255 * Store::<felt252>::size()
     }
 }
-// ANCHOR_END: StorageAccessImpl
+// [!endregion StorageAccessImpl]
 
-// ANCHOR: StoreArrayContract
+// [!region StoreArrayContract]
 #[starknet::interface]
 pub trait IStoreArrayContract<TContractState> {
     fn store_array(ref self: TContractState, arr: Array<felt252>);
@@ -92,6 +92,6 @@ pub mod StoreArrayContract {
         }
     }
 }
-// ANCHOR_END: StoreArrayContract
+// [!endregion StoreArrayContract]
 
 

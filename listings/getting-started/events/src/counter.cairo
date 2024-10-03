@@ -1,9 +1,9 @@
+// [!region contract]
 #[starknet::interface]
 pub trait IEventCounter<TContractState> {
     fn increment(ref self: TContractState, amount: u128);
 }
 
-// ANCHOR: contract
 #[starknet::contract]
 pub mod EventCounter {
     use starknet::{get_caller_address, ContractAddress};
@@ -44,7 +44,7 @@ pub mod EventCounter {
         fn increment(ref self: ContractState, amount: u128) {
             self.counter.write(self.counter.read() + amount);
             // Emit event
-            // ANCHOR: emit
+            // [!region emit]
             self.emit(Event::CounterIncreased(CounterIncreased { amount }));
             self
                 .emit(
@@ -54,12 +54,13 @@ pub mod EventCounter {
                         }
                     )
                 );
-        // ANCHOR_END: emit
+            // [!endregion emit]
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
+// [!region tests]
 #[cfg(test)]
 mod tests {
     use super::{
@@ -94,12 +95,13 @@ mod tests {
         assert_eq!(state.counter.read(), amount);
 
         // Notice the order: the first event emitted is the first to be popped.
-        /// ANCHOR: test_events
+        // [!region test_events]
         assert_eq!(
             starknet::testing::pop_log(contract_address),
             Option::Some(Event::CounterIncreased(CounterIncreased { amount }))
         );
-        // ANCHOR_END: test_events
+        // [!endregion test_events]
+
         assert_eq!(
             starknet::testing::pop_log(contract_address),
             Option::Some(
@@ -108,3 +110,4 @@ mod tests {
         );
     }
 }
+// [!endregion tests]

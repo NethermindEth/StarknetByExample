@@ -1,10 +1,10 @@
+// [!region contract]
 #[starknet::interface]
 pub trait IVaultErrorsExample<TContractState> {
     fn deposit(ref self: TContractState, amount: u256);
     fn withdraw(ref self: TContractState, amount: u256);
 }
 
-// ANCHOR: contract
 pub mod VaultErrors {
     pub const INSUFFICIENT_BALANCE: felt252 = 'insufficient_balance';
 // you can define more errors here
@@ -43,8 +43,9 @@ pub mod VaultErrorsExample {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
+// [!region tests]
 #[cfg(test)]
 mod test {
     use super::{
@@ -75,3 +76,4 @@ mod test {
         contract.withdraw(15);
     }
 }
+// [!endregion tests]

@@ -1,4 +1,4 @@
-// ANCHOR: contract
+// [!region contract]
 pub use starknet::{ContractAddress, ClassHash};
 
 #[starknet::interface]
@@ -36,7 +36,7 @@ pub mod CounterFactory {
 
     #[abi(embed_v0)]
     impl Factory of super::ICounterFactory<ContractState> {
-        // ANCHOR: deploy
+        // [!region deploy]
         fn create_counter_at(ref self: ContractState, init_value: u128) -> ContractAddress {
             // Contructor arguments
             let mut constructor_calldata: Array::<felt252> = array![init_value.into()];
@@ -49,7 +49,7 @@ pub mod CounterFactory {
 
             deployed_address
         }
-        // ANCHOR_END: deploy
+        // [!endregion deploy]
 
         fn create_counter(ref self: ContractState) -> ContractAddress {
             self.create_counter_at(self.init_value.read())
@@ -64,8 +64,9 @@ pub mod CounterFactory {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
+// [!region tests]
 #[cfg(test)]
 mod tests {
     use super::{CounterFactory, ICounterFactoryDispatcher, ICounterFactoryDispatcherTrait};
@@ -188,3 +189,4 @@ mod tests {
         assert_eq!(counter_2.get_current_count(), argument_value);
     }
 }
+// [!endregion tests]
