@@ -149,7 +149,7 @@ pub mod Campaign {
         pub const TRANSFER_FAILED: felt252 = 'Transfer failed';
         pub const ZERO_ADDRESS_CALLER: felt252 = 'Caller address zero';
         pub const ZERO_ADDRESS_PLEDGER: felt252 = 'Pledger address zero';
-        pub const ZERO_ADDRESS_TOKEN: felt252 = 'Token address zerp';
+        pub const ZERO_ADDRESS_TOKEN: felt252 = 'Token address zero';
         pub const ZERO_DONATION: felt252 = 'Donation must be > 0';
         pub const ZERO_GOAL: felt252 = 'Goal must be > 0';
         pub const ZERO_PLEDGES: felt252 = 'No pledges to claim';

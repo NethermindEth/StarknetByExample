@@ -39,7 +39,7 @@ pub mod CounterFactory {
     impl Factory of super::ICounterFactory<ContractState> {
         // ANCHOR: deploy
         fn create_counter_at(ref self: ContractState, init_value: u128) -> ContractAddress {
-            // Contructor arguments
+            // Constructor arguments
             let mut constructor_calldata: Array::<felt252> = array![init_value.into()];
 
             // Contract deployment

@@ -71,7 +71,7 @@ mod tests {
     }
 
     #[test]
-    fn test_succesful_upgrade_from_v0_to_v1() {
+    fn test_successful_upgrade_from_v0_to_v1() {
         let (dispatcher_v0, contract_address, _) = deploy_v0();
         let (_, _, class_hash) = deploy_v1();
         dispatcher_v0.upgrade(class_hash);

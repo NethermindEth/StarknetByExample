@@ -55,6 +55,13 @@ To add a new chapter, create a new markdown file in the `src` directory. All the
 
 Do not write directly Cairo program inside the markdown files. Instead, use code blocks that import the Cairo programs from the `listing` directory. These programs are bundled into scarb projects, which makes it easier to test and build all programs. See the next section for more details.
 
+Be sure to check for typos with `typos`:
+
+```shell
+cargo install typos-cli
+typos src/
+```
+
 ## Adding a new Cairo program
 
 You can add or modify examples in the `listings` directory. Each listing is a scarb project.

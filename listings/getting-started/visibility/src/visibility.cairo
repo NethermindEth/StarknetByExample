@@ -96,7 +96,7 @@ mod test {
         assert_eq!(24, state.value.read());
         assert_eq!(24, contract.get());
 
-        // We can also acces internal functions from the state
+        // We can also access internal functions from the state
         assert_eq!(state._read_value(), state.value.read());
         assert_eq!(state._read_value(), contract.get());
     }

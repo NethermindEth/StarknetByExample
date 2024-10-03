@@ -4,7 +4,7 @@ At the protocol level, the Starknet Operating System (OS) is the program that ma
 
 Some of the OS functionalities are exposed to smart contracts through the use of syscalls (system calls). Syscalls can be used to get information about the state of the Starknet network, to interact with/deploy contracts, emit events, send messages, and perform other low-level operations.
 
-Syscalls return a `SyscallResult` which is either `Sucess` of `Failure`, allowing the contract to handle errors.
+Syscalls return a `SyscallResult` which is either `Success` of `Failure`, allowing the contract to handle errors.
 
 Here's the available syscalls:
 
