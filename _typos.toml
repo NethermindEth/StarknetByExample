@@ -1,3 +1,6 @@
+[default]
+extend-ignore-identifiers-re = ["requestor", "REQUESTOR", "Requestor"]
+
 [type.po]
 extend-glob = ["*.po", "*.css", "*.js"]
 check-file = false
