@@ -97,7 +97,7 @@ fn test_create_campaign() {
 }
 
 #[test]
-fn test_uprade_campaign_class_hash() {
+fn test_upgrade_campaign_class_hash() {
     let factory = deploy_factory();
     let old_class_hash = factory.get_campaign_class_hash();
     let new_class_hash = *declare("MockContract").unwrap().contract_class().class_hash;

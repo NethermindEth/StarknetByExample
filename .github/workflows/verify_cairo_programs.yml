@@ -31,3 +31,9 @@ jobs:
         run: |
           chmod +x scripts/cairo_programs_verifier.sh
           ./scripts/cairo_programs_verifier.sh
+
+  typos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: crate-ci/typos@master

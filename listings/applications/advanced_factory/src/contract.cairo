@@ -42,7 +42,7 @@ pub mod CampaignFactory {
     struct Storage {
         #[substorage(v0)]
         ownable: ownable_component::Storage,
-        /// Store all of the created campaign instances' addresses and thei class hashes
+        /// Store all of the created campaign instances' addresses and their class hashes
         campaigns: Map<(ContractAddress, ContractAddress), ClassHash>,
         /// Store the class hash of the contract to deploy
         campaign_class_hash: ClassHash,
@@ -102,7 +102,7 @@ pub mod CampaignFactory {
         ) -> ContractAddress {
             let creator = get_caller_address();
 
-            // Create contructor arguments
+            // Create constructor arguments
             let mut constructor_calldata: Array::<felt252> = array![];
             ((creator, title, description, goal), start_time, end_time, token_address)
                 .serialize(ref constructor_calldata);
