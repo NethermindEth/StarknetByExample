@@ -1,4 +1,4 @@
-// ANCHOR: contract
+// [!region contract]
 #[starknet::interface]
 pub trait IImplicitInternalContract<TContractState> {
     fn add(ref self: TContractState, nb: u32);
@@ -46,8 +46,9 @@ pub mod ImplicitInternalContract {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
+// [!region tests]
 #[cfg(test)]
 mod tests {
     use super::{
@@ -74,3 +75,4 @@ mod tests {
         assert_eq!(contract.get_value(), initial_value + add_value);
     }
 }
+// [!endregion tests]

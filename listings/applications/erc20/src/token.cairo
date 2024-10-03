@@ -1,6 +1,6 @@
 use starknet::ContractAddress;
 
-// ANCHOR: interface
+// [!region interface]
 #[starknet::interface]
 pub trait IERC20<TContractState> {
     fn get_name(self: @TContractState) -> felt252;
@@ -24,9 +24,9 @@ pub trait IERC20<TContractState> {
         ref self: TContractState, spender: ContractAddress, subtracted_value: felt252
     );
 }
-// ANCHOR_END: interface
+// [!endregion interface]
 
-// ANCHOR: erc20
+// [!region erc20]
 #[starknet::contract]
 pub mod erc20 {
     use core::num::traits::Zero;
@@ -214,7 +214,7 @@ pub mod erc20 {
         }
     }
 }
-// ANCHOR_END: erc20
+// [!endregion erc20]
 
 #[cfg(test)]
 mod tests {

@@ -1,10 +1,10 @@
+// [!region contract]
 #[starknet::interface]
 pub trait IStorageVariableExample<TContractState> {
     fn set(ref self: TContractState, value: u32);
     fn get(self: @TContractState) -> u32;
 }
 
-// ANCHOR: contract
 #[starknet::contract]
 pub mod StorageVariablesExample {
     // You need to import these storage functions to read and write to storage variables
@@ -32,8 +32,9 @@ pub mod StorageVariablesExample {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
+// [!region tests]
 #[cfg(test)]
 mod test {
     use super::{
@@ -64,3 +65,4 @@ mod test {
         assert_eq!(state.value.read(), initial_value);
     }
 }
+// [!endregion tests]

@@ -1,6 +1,5 @@
-book
-target
-output
+node_modules
+.env
 
 # Editors tmp files.
 *~
@@ -10,3 +9,8 @@ output
 .snfoundry_cache
 .vscode/settings.json
 **/starkli-wallet
+
+# From previous mdbook build
+book/*
+target/*
+src/**/*.md

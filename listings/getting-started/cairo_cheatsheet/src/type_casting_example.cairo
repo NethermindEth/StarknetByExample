@@ -1,5 +1,5 @@
 fn type_casting() {
-    // ANCHOR: sheet
+    // [!region sheet]
     let a_number: u32 = 15;
     let my_felt252 = 15;
 
@@ -23,5 +23,5 @@ fn type_casting() {
 
     // Note: usize is smaller than felt252, so we use try_into
     let _new_usize: usize = my_felt252.try_into().unwrap();
-    // ANCHOR_END: sheet
+    // [!endregion sheet]
 }

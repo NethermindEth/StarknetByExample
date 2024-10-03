@@ -1,4 +1,4 @@
-// ANCHOR: sheet
+// [!region sheet]
 #[derive(Drop)]
 enum Foo {
     Bar,
@@ -46,6 +46,6 @@ fn if_let() {
         println!("c is {}", value);
     }
 }
-// ANCHOR_END: sheet
+// [!endregion sheet]
 
 

@@ -1,4 +1,4 @@
-// ANCHOR: contract
+// [!region contract]
 #[starknet::component]
 pub mod countable_component {
     use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
@@ -10,7 +10,7 @@ pub mod countable_component {
         countable_value: u32,
     }
 
-    // ANCHOR: impl
+    // [!region impl]
     #[embeddable_as(Countable)]
     impl CountableImpl<
         TContractState, +HasComponent<TContractState>, +ISwitchable<TContractState>
@@ -25,10 +25,9 @@ pub mod countable_component {
             }
         }
     }
-    // ANCHOR_END: impl
+    // [!endregion impl]
 }
-
-//ANCHOR_END: contract
+// [!endregion contract]
 
 #[starknet::contract]
 mod MockContract {
@@ -61,7 +60,6 @@ mod MockContract {
         }
     }
 }
-
 
 #[cfg(test)]
 mod test {

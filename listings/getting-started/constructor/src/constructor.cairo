@@ -1,4 +1,4 @@
-// ANCHOR: contract
+// [!region contract]
 #[starknet::contract]
 pub mod ExampleConstructor {
     use starknet::ContractAddress;
@@ -16,8 +16,9 @@ pub mod ExampleConstructor {
         self.names.write(address, name);
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
+// [!region tests]
 #[cfg(test)]
 mod tests {
     use super::ExampleConstructor;
@@ -45,3 +46,4 @@ mod tests {
         assert_eq!(name, 'bob');
     }
 }
+// [!endregion tests]

@@ -1,4 +1,4 @@
-// ANCHOR: contract
+// [!region contract]
 #[starknet::contract]
 pub mod CountableContract {
     use components_dependencies::countable_internal_dep_switch::countable_component;
@@ -33,8 +33,9 @@ pub mod CountableContract {
         SwitchableEvent: switchable_component::Event,
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
+// [!region tests]
 #[cfg(test)]
 mod tests {
     use super::CountableContract;
@@ -103,3 +104,4 @@ mod tests {
         assert_eq!(counter.get(), 3);
     }
 }
+// [!endregion tests]
