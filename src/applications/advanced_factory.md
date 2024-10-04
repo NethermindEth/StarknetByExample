@@ -9,5 +9,5 @@ Key Features
     - the factory only updates it's `Campaign` class hash and emits an event to notify any listeners, but the `Campaign` creators are in the end responsible for actually upgrading their contracts.
 
 ```rust
-{{#include ../../listings/applications/advanced_factory/src/contract.cairo:contract}}
+{{#include ../../listings/applications/crowdfunding/src/campaign.cairo:contract}}
 ```
