@@ -11,11 +11,13 @@ pub mod erc20_streaming {
     #[storage]
     struct Storage {
         streams: LegacyMap<(ContractAddress, ContractAddress), Stream>,
+        next_stream_id: u64,  
        
     }
 
     #[derive(Copy, Drop, Debug, PartialEq)]
     struct Stream {
+        from: ContractAddress,
         start_time: u64,
         end_time: u64,
         total_amount: felt252,
@@ -50,13 +52,14 @@ pub mod erc20_streaming {
         pub const STREAM_AMOUNT_ZERO: felt252 = 'Stream amount cannot be zero';
         pub const STREAM_ALREADY_EXISTS: felt252 = 'Stream already exists';
         pub const END_TIME_INVALID: felt252 = 'End time must be greater than start time';
-        pub const START_TIME_INVALID: felt252 = 'End time must be greater than start time';
+        pub const START_TIME_INVALID: felt252 = '';
         pub const STREAM_UNAUTHORIZED: felt252 = 'Caller is not the recipient of the stream';
     }
 
     #[constructor]
     fn constructor(ref self: ContractState, erc20_token: ContractAddress) {
         self.erc20_token.write(erc20_token);
+        self.next_stream_id.write(1);
     }
 
     #[abi(embed_v0)]
@@ -82,15 +85,19 @@ pub mod erc20_streaming {
             erc20.call("transfer_from", (caller, self.contract_address(), total_amount));
 
             let stream = Stream {
+                from: caller;
+                to,
                 start_time,
                 end_time,
                 total_amount,
                 released_amount: felt252::zero(),
             };
-            self.streams.write(stream_key, stream);
+            self.streams.write(stream_id, stream);
 
-            self.emit(StreamCreated { from: caller, to, total_amount, start_time, end_time });
+            self.emit(StreamCreated { stream_id, from: caller, to, total_amount, start_time, end_time });
         }
+        self.next_stream_id.write(stream_id + 1); // Increment the stream ID counter
+    }
 
         fn release_tokens(ref self: ContractState, stream_id: u64) {
             let caller = get_caller_address();
@@ -114,7 +121,7 @@ pub mod erc20_streaming {
 
             // Call the ERC20 contract to transfer tokens
             let erc20 = self.erc20_token.read();
-            erc20.call("transfer", (to, releasable_amount));
+            erc20.call("transfer", (stream.to, releasable_amount));
 
             self.emit(TokensReleased { to, amount: releasable_amount });
         }
@@ -128,5 +135,4 @@ pub mod erc20_streaming {
                 vested_amount - stream.released_amount;
             }
         }
-    }
 
