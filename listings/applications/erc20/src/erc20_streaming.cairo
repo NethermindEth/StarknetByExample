@@ -52,7 +52,7 @@ pub mod erc20_streaming {
         pub const STREAM_AMOUNT_ZERO: felt252 = 'Stream amount cannot be zero';
         pub const STREAM_ALREADY_EXISTS: felt252 = 'Stream already exists';
         pub const END_TIME_INVALID: felt252 = 'End time must be greater than start time';
-        pub const START_TIME_INVALID: felt252 = '';
+        pub const START_TIME_INVALID: felt252 = 'Start time must be greater than or equal to the current block timestamp';'';
         pub const STREAM_UNAUTHORIZED: felt252 = 'Caller is not the recipient of the stream';
     }
 
