@@ -10,6 +10,6 @@ Here's how it works:
 
 - When a user calls the `decrement`, the contract decrements `counter` by `1`.
 
-```rust
+```cairo
 {{#rustdoc_include ../../../listings/getting-started/counter/src/counter.cairo:contract}}
 ```

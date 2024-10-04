@@ -22,7 +22,7 @@ Here's the available syscalls:
 
 #### get_block_hash
 
-```rust
+```cairo
 fn get_block_hash_syscall(block_number: u64) -> SyscallResult<felt252>
 ```
 
@@ -32,14 +32,14 @@ Only within the range `[first_v0_12_0_block, current_block - 10]`.
 
 #### get_execution_info
 
-```rust
+```cairo
 fn get_execution_info_syscall() -> SyscallResult<Box<starknet::info::ExecutionInfo>>
 ```
 
 Get information about the current execution context.
 The returned `ExecutionInfo` is defined as :
 
-```rust
+```cairo
 #[derive(Copy, Drop, Debug)]
 pub struct ExecutionInfo {
     pub block_info: Box<BlockInfo>,
@@ -103,7 +103,7 @@ pub struct TxInfo {
 
 #### call_contract
 
-```rust
+```cairo
 fn call_contract_syscall(
     address: ContractAddress, entry_point_selector: felt252, calldata: Span<felt252>
 ) -> SyscallResult<Span<felt252>>
@@ -118,7 +118,7 @@ This is not the recommended way to call a contract. Instead, use the dispatcher 
 
 #### deploy
 
-```rust
+```cairo
 fn deploy_syscall(
     class_hash: ClassHash,
     contract_address_salt: felt252,
@@ -134,13 +134,13 @@ The success result is a tuple containing the deployed contract address and the r
 
 Example of the usage of the `deploy` syscall from the [Factory pattern](../interacting/factory.md):
 
-```rust
+```cairo
 {{#rustdoc_include ../../../listings/getting-started/factory/src/simple_factory.cairo:deploy}}
 ```
 
 #### emit_event
 
-```rust
+```cairo
 fn emit_event_syscall(
     keys: Span<felt252>, data: Span<felt252>
 ) -> SyscallResult<()>
@@ -150,7 +150,7 @@ Emit an event with the given `keys` and `data`.
 
 Example of the usage of the `emit_event` syscall from the [Events](../basics/events.md) chapter:
 
-```rust
+```cairo
 {{#rustdoc_include ../../../listings/getting-started/events/src/counter.cairo:emit}}
 ```
 
@@ -168,7 +168,7 @@ emit_event_syscall(keys, values).unwrap_syscall();
 
 #### library_call
 
-```rust
+```cairo
 fn library_call_syscall(
     class_hash: ClassHash, function_selector: felt252, calldata: Span<felt252>
 ) -> SyscallResult<Span<felt252>>
@@ -181,7 +181,7 @@ This is analogous to a delegate call in Ethereum, but only a single class is cal
 
 #### send_message_to_L1
 
-```rust
+```cairo
 fn send_message_to_l1_syscall(
     to_address: felt252, payload: Span<felt252>
 ) -> SyscallResult<()>
@@ -193,7 +193,7 @@ Send a message to the L1 contract at `to_address` with the given `payload`.
 
 #### replace_class
 
-```rust
+```cairo
 fn replace_class_syscall(
     class_hash: ClassHash
 ) -> SyscallResult<()>
@@ -203,7 +203,7 @@ Replace the class of the calling contract with the class `class_hash`.
 
 This is used for contract upgrades. Here's an example from the [Upgradeable Contract](../../applications/upgradeable_contract.md):
 
-```rust
+```cairo
 {{#rustdoc_include ../../../listings/applications/upgradeable_contract/src/upgradeable_contract_v0.cairo:upgrade}}
 ```
 
@@ -212,7 +212,7 @@ The current transaction containing the `replace_class` syscall will continue to 
 
 #### storage_read
 
-```rust
+```cairo
 fn storage_read_syscall(
     address_domain: u32, address: StorageAddress,
 ) -> SyscallResult<felt252>
@@ -225,7 +225,7 @@ Currently, only mode `ONCHAIN` (`0`) is supported.
 
 #### storage_write
 
-```rust
+```cairo
 fn storage_write_syscall(
     address_domain: u32, address: StorageAddress, value: felt252
 ) -> SyscallResult<()>
@@ -243,7 +243,7 @@ You can also read the [official documentation page](https://docs.starknet.io/doc
 
 #### Gas cost
 
-```rust
+```cairo
 mod gas_costs {
     const STEP: usize = 100;
     const RANGE_CHECK: usize = 70;

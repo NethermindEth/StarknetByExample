@@ -2,7 +2,7 @@
 
 Here's the most minimal contract you can write in Cairo:
 
-```rust
+```cairo
 {{#rustdoc_include ../../../listings/getting-started/storage/src/minimal_contract.cairo:contract}}
 ```
 
@@ -11,7 +11,7 @@ It's a key-value store, where each key will be mapped to a storage address of th
 
 You can define [storage variables](./variables.md#storage-variables) in your contract, and then use them to store and retrieve data.
 
-```rust
+```cairo
 {{#rustdoc_include ../../../listings/getting-started/storage/src/contract.cairo:contract}}
 ```
 
