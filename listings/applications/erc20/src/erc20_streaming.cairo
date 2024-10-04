@@ -11,7 +11,7 @@ pub mod erc20_streaming {
     #[storage]
     struct Storage {
         streams: LegacyMap<(ContractAddress, ContractAddress), Stream>,
-        erc20_token: ContractAddress,
+       
     }
 
     #[derive(Copy, Drop, Debug, PartialEq)]
@@ -21,6 +21,7 @@ pub mod erc20_streaming {
         total_amount: felt252,
         released_amount: felt252,
         to: ContractAddress,
+        erc20_token: ContractAddress,
     }
 
     #[event]
@@ -49,6 +50,7 @@ pub mod erc20_streaming {
         pub const STREAM_AMOUNT_ZERO: felt252 = 'Stream amount cannot be zero';
         pub const STREAM_ALREADY_EXISTS: felt252 = 'Stream already exists';
         pub const END_TIME_INVALID: felt252 = 'End time must be greater than start time';
+        pub const START_TIME_INVALID: felt252 = 'End time must be greater than start time';
         pub const STREAM_UNAUTHORIZED: felt252 = 'Caller is not the recipient of the stream';
     }
 
@@ -63,12 +65,14 @@ pub mod erc20_streaming {
             ref self: ContractState,
             to: ContractAddress,
             total_amount: felt252,
+            start_time: u64,
             end_time: u64
         ) {
             assert(total_amount != felt252::zero(), Errors::STREAM_AMOUNT_ZERO);
             let caller = get_caller_address();
             let start_time = get_block_timestamp(); // Use block timestamp for start time
             assert(end_time > start_time, Errors::END_TIME_INVALID); // Assert end_time > start_time
+            assert(start_time >= get_block_timestamp(), Errors::START_TIME_INVALID);
 
             let stream_key = (caller, to);
             assert(self.streams.read(stream_key).start_time == 0, Errors::STREAM_ALREADY_EXISTS);
@@ -90,7 +94,7 @@ pub mod erc20_streaming {
 
         fn release_tokens(ref self: ContractState, stream_id: u64) {
             let caller = get_caller_address();
-            let stream_key = (caller, to);
+            let stream_id = (caller, to);
             let stream = self.streams.read(stream_id);
             assert(caller == stream.to, Errors::STREAM_UNAUTHORIZED);
 
