@@ -4,6 +4,6 @@ Tuples is a data type to group a fixed number of items of potentially different 
 
 For example:
 
-```rust
+```cairo
 {{#include ../../../listings/getting-started/cairo_cheatsheet/src/tuple_example.cairo:sheet}}
 ```
