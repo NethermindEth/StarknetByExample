@@ -1,0 +1,17 @@
+[package]
+name = "erc721"
+version.workspace = true
+edition = "2024_07"
+
+[lib]
+
+[dependencies]
+starknet.workspace = true
+
+[dev-dependencies]
+cairo_test.workspace = true
+
+[scripts]
+test.workspace = true
+
+[[target.starknet-contract]]

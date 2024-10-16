@@ -79,6 +79,10 @@ name = "erc20"
 version = "0.1.0"
 
 [[package]]
+name = "erc721"
+version = "0.1.0"
+
+[[package]]
 name = "errors"
 version = "0.1.0"
 
