@@ -109,11 +109,21 @@ pub mod erc721 {
         fn set_approval_for_all(
             ref self: ContractState, operator: ContractAddress, approved: bool
         ) {
-            self._set_approval_for_all(get_caller_address(), operator, approved)
+            assert(!operator.is_zero(), Errors::INVALID_OPERATOR);
+            let owner = get_caller_address();
+            self.operator_approvals.write((owner, operator), approved);
+            self.emit(ApprovalForAll { owner, operator, approved });
         }
 
         fn approve(ref self: ContractState, approved: ContractAddress, token_id: u256) {
-            self._approve(approved, token_id, get_caller_address());
+            let owner = self._require_owned(token_id);
+            let caller = get_caller_address();
+            assert(
+                caller == owner || self.is_approved_for_all(owner, caller), Errors::UNAUTHORIZED
+            );
+
+            self.approvals.write(token_id, approved);
+            self.emit(Approval { owner, approved, token_id });
         }
 
         fn get_approved(self: @ContractState, token_id: u256) -> ContractAddress {
@@ -124,29 +134,19 @@ pub mod erc721 {
         fn transfer_from(
             ref self: ContractState, from: ContractAddress, to: ContractAddress, token_id: u256
         ) {
-            assert(!to.is_zero(), Errors::INVALID_RECEIVER);
-
-            let caller = get_caller_address();
-            let previous_owner = self._owner_of(token_id);
-
-            // Perform (optional) operator check
-            if !caller.is_zero() {
-                self._check_authorized(from, caller, token_id);
-            }
-            if !from.is_zero() {
-                let zero_address = Zero::zero();
-                self._approve_with_optional_event(zero_address, token_id, zero_address, false);
-
-                self.balances.write(from, self.balances.read(from) - 1);
-            }
-            if !to.is_zero() {
-                self.balances.write(to, self.balances.read(to) + 1);
-            }
-
-            self.owners.write(token_id, to);
-            self.emit(Transfer { from, to, token_id });
-
+            let previous_owner = self._require_owned(token_id);
             assert(from == previous_owner, Errors::INVALID_SENDER);
+            assert(!to.is_zero(), Errors::INVALID_RECEIVER);
+            assert(
+                self._is_approved_or_owner(from, get_caller_address(), token_id),
+                Errors::UNAUTHORIZED
+            );
+
+            self.balances.write(from, self.balances.read(from) - 1);
+            self.balances.write(to, self.balances.read(to) + 1);
+            self.owners.write(token_id, to);
+
+            self.emit(Transfer { from, to, token_id });
         }
 
         fn safe_transfer_from(
@@ -158,7 +158,7 @@ pub mod erc721 {
         ) {
             Self::transfer_from(ref self, from, to, token_id);
             assert(
-                _check_on_erc721_received(from, to, token_id, data), Errors::SAFE_TRANSFER_FAILED
+                self._check_on_erc721_received(from, to, token_id, data), Errors::SAFE_TRANSFER_FAILED
             );
         }
 
@@ -172,56 +172,12 @@ pub mod erc721 {
     #[generate_trait]
     pub impl InternalImpl of InternalTrait {
         fn _require_owned(self: @ContractState, token_id: u256) -> ContractAddress {
-            let owner = self._owner_of(token_id);
+            let owner = self.owners.read(token_id);
             assert(!owner.is_zero(), Errors::INVALID_TOKEN_ID);
             owner
         }
 
-        fn _owner_of(self: @ContractState, token_id: u256) -> ContractAddress {
-            self.owners.read(token_id)
-        }
-
-        fn _approve(
-            ref self: ContractState, to: ContractAddress, token_id: u256, auth: ContractAddress
-        ) {
-            self._approve_with_optional_event(to, token_id, auth, true);
-        }
-
-        fn _approve_with_optional_event(
-            ref self: ContractState,
-            to: ContractAddress,
-            token_id: u256,
-            auth: ContractAddress,
-            emit_event: bool
-        ) {
-            if emit_event || !auth.is_zero() {
-                let owner = self._require_owned(token_id);
-
-                if !auth.is_zero() && owner != auth {
-                    let is_approved_for_all = IERC721Impl::is_approved_for_all(@self, owner, auth);
-                    assert(is_approved_for_all, Errors::UNAUTHORIZED);
-                }
-
-                if emit_event {
-                    self.emit(Approval { owner, approved: to, token_id });
-                }
-            }
-
-            self.approvals.write(token_id, to);
-        }
-
-        fn _set_approval_for_all(
-            ref self: ContractState,
-            owner: ContractAddress,
-            operator: ContractAddress,
-            approved: bool
-        ) {
-            assert(!operator.is_zero(), Errors::INVALID_OPERATOR);
-            self.operator_approvals.write((owner, operator), approved);
-            self.emit(ApprovalForAll { owner, operator, approved });
-        }
-
-        fn _is_authorized(
+        fn _is_approved_or_owner(
             self: @ContractState, owner: ContractAddress, spender: ContractAddress, token_id: u256
         ) -> bool {
             let is_approved_for_all = IERC721Impl::is_approved_for_all(self, owner, spender);
@@ -231,29 +187,21 @@ pub mod erc721 {
                     || is_approved_for_all
                     || spender == IERC721Impl::get_approved(self, token_id))
         }
-
-        fn _check_authorized(
-            self: @ContractState, owner: ContractAddress, spender: ContractAddress, token_id: u256
-        ) {
-            // Non-existent token
-            assert(!owner.is_zero(), Errors::INVALID_TOKEN_ID);
-            assert(self._is_authorized(owner, spender, token_id), Errors::UNAUTHORIZED);
-        }
-    }
-
-    fn _check_on_erc721_received(
-        from: ContractAddress, to: ContractAddress, token_id: u256, data: Span<felt252>
-    ) -> bool {
-        let src5_dispatcher = ISRC5Dispatcher { contract_address: to };
-
-        if src5_dispatcher.supports_interface(IERC721_RECEIVER_ID) {
-            IERC721ReceiverDispatcher { contract_address: to }
-                .on_erc721_received(
-                    get_caller_address(), from, token_id, data
-                ) == IERC721_RECEIVER_ID
-        } else {
-            src5_dispatcher.supports_interface(openzeppelin_account::interface::ISRC6_ID)
-        }
+        
+            fn _check_on_erc721_received(
+                self: @ContractState, from: ContractAddress, to: ContractAddress, token_id: u256, data: Span<felt252>
+            ) -> bool {
+                let src5_dispatcher = ISRC5Dispatcher { contract_address: to };
+        
+                if src5_dispatcher.supports_interface(IERC721_RECEIVER_ID) {
+                    IERC721ReceiverDispatcher { contract_address: to }
+                        .on_erc721_received(
+                            get_caller_address(), from, token_id, data
+                        ) == IERC721_RECEIVER_ID
+                } else {
+                    src5_dispatcher.supports_interface(openzeppelin_account::interface::ISRC6_ID)
+                }
+            }
     }
 }
 // ANCHOR_END: erc721
