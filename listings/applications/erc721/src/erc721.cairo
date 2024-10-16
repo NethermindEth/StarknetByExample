@@ -21,6 +21,8 @@ pub trait IERC721<TContractState> {
     fn is_approved_for_all(
         self: @TContractState, owner: ContractAddress, operator: ContractAddress
     ) -> bool;
+    fn mint(ref self: TContractState, to: ContractAddress, token_id: u256);
+    fn burn(ref self: TContractState, token_id: u256);
 }
 
 pub const IERC721_RECEIVER_ID: felt252 =
@@ -93,6 +95,7 @@ pub mod erc721 {
         pub const INVALID_RECEIVER: felt252 = 'ERC721: invalid receiver';
         pub const INVALID_SENDER: felt252 = 'ERC721: invalid sender';
         pub const SAFE_TRANSFER_FAILED: felt252 = 'ERC721: safe transfer failed';
+        pub const ALREADY_MINTED: felt252 = 'ERC721: token already minted';
     }
 
     #[abi(embed_v0)]
@@ -158,7 +161,8 @@ pub mod erc721 {
         ) {
             Self::transfer_from(ref self, from, to, token_id);
             assert(
-                self._check_on_erc721_received(from, to, token_id, data), Errors::SAFE_TRANSFER_FAILED
+                self._check_on_erc721_received(from, to, token_id, data),
+                Errors::SAFE_TRANSFER_FAILED
             );
         }
 
@@ -166,6 +170,27 @@ pub mod erc721 {
             self: @ContractState, owner: ContractAddress, operator: ContractAddress
         ) -> bool {
             self.operator_approvals.read((owner, operator))
+        }
+
+        fn mint(ref self: ContractState, to: ContractAddress, token_id: u256) {
+            assert(!to.is_zero(), Errors::INVALID_RECEIVER);
+            assert(self.owners.read(token_id).is_zero(), Errors::ALREADY_MINTED);
+
+            self.balances.write(to, self.balances.read(to) + 1);
+            self.owners.write(token_id, to);
+
+            self.emit(Transfer { from: Zero::zero(), to, token_id });
+        }
+
+        fn burn(ref self: ContractState, token_id: u256) {
+            let owner = self._require_owned(token_id);
+
+            self.balances.write(owner, self.balances.read(owner) - 1);
+
+            self.owners.write(token_id, Zero::zero());
+            self.approvals.write(token_id, Zero::zero());
+
+            self.emit(Transfer { from: owner, to: Zero::zero(), token_id });
         }
     }
 
@@ -180,28 +205,30 @@ pub mod erc721 {
         fn _is_approved_or_owner(
             self: @ContractState, owner: ContractAddress, spender: ContractAddress, token_id: u256
         ) -> bool {
-            let is_approved_for_all = IERC721Impl::is_approved_for_all(self, owner, spender);
-
             !spender.is_zero()
                 && (owner == spender
-                    || is_approved_for_all
-                    || spender == IERC721Impl::get_approved(self, token_id))
+                    || self.is_approved_for_all(owner, spender)
+                    || spender == self.get_approved(token_id))
         }
-        
-            fn _check_on_erc721_received(
-                self: @ContractState, from: ContractAddress, to: ContractAddress, token_id: u256, data: Span<felt252>
-            ) -> bool {
-                let src5_dispatcher = ISRC5Dispatcher { contract_address: to };
-        
-                if src5_dispatcher.supports_interface(IERC721_RECEIVER_ID) {
-                    IERC721ReceiverDispatcher { contract_address: to }
-                        .on_erc721_received(
-                            get_caller_address(), from, token_id, data
-                        ) == IERC721_RECEIVER_ID
-                } else {
-                    src5_dispatcher.supports_interface(openzeppelin_account::interface::ISRC6_ID)
-                }
+
+        fn _check_on_erc721_received(
+            self: @ContractState,
+            from: ContractAddress,
+            to: ContractAddress,
+            token_id: u256,
+            data: Span<felt252>
+        ) -> bool {
+            let src5_dispatcher = ISRC5Dispatcher { contract_address: to };
+
+            if src5_dispatcher.supports_interface(IERC721_RECEIVER_ID) {
+                IERC721ReceiverDispatcher { contract_address: to }
+                    .on_erc721_received(
+                        get_caller_address(), from, token_id, data
+                    ) == IERC721_RECEIVER_ID
+            } else {
+                src5_dispatcher.supports_interface(openzeppelin_account::interface::ISRC6_ID)
             }
+        }
     }
 }
 // ANCHOR_END: erc721
