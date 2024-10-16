@@ -1,1 +1,1 @@
-pub mod token;
+pub mod erc721;
