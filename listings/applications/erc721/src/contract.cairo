@@ -29,9 +29,9 @@ pub const IERC721_RECEIVER_ID: felt252 =
     0x3a0dff5f70d80458ad14ae37bb182a728e3c8cdda0402a5daa86620bdf910bc;
 
 #[starknet::interface]
-pub trait IERC721Receiver<TState> {
+pub trait IERC721Receiver<TContractState> {
     fn on_erc721_received(
-        self: @TState,
+        self: @TContractState,
         operator: ContractAddress,
         from: ContractAddress,
         token_id: u256,
@@ -42,7 +42,7 @@ pub trait IERC721Receiver<TState> {
 
 // ANCHOR: erc721
 #[starknet::contract]
-pub mod erc721 {
+pub mod ERC721 {
     use core::num::traits::Zero;
     use starknet::get_caller_address;
     use starknet::ContractAddress;
@@ -59,28 +59,28 @@ pub mod erc721 {
     }
 
     #[event]
-    #[derive(Drop, PartialEq, starknet::Event)]
+    #[derive(Drop, starknet::Event)]
     pub enum Event {
         Transfer: Transfer,
         Approval: Approval,
         ApprovalForAll: ApprovalForAll,
     }
 
-    #[derive(Drop, PartialEq, starknet::Event)]
+    #[derive(Drop, starknet::Event)]
     pub struct Transfer {
         pub from: ContractAddress,
         pub to: ContractAddress,
         pub token_id: u256
     }
 
-    #[derive(Drop, PartialEq, starknet::Event)]
+    #[derive(Drop, starknet::Event)]
     pub struct Approval {
         pub owner: ContractAddress,
         pub approved: ContractAddress,
         pub token_id: u256
     }
 
-    #[derive(Drop, PartialEq, starknet::Event)]
+    #[derive(Drop, starknet::Event)]
     pub struct ApprovalForAll {
         pub owner: ContractAddress,
         pub operator: ContractAddress,
@@ -99,7 +99,7 @@ pub mod erc721 {
     }
 
     #[abi(embed_v0)]
-    impl IERC721Impl of super::IERC721<ContractState> {
+    impl ERC721 of super::IERC721<ContractState> {
         fn owner_of(self: @ContractState, token_id: u256) -> ContractAddress {
             self._require_owned(token_id)
         }
@@ -233,5 +233,4 @@ pub mod erc721 {
 }
 // ANCHOR_END: erc721
 
-#[cfg(test)]
-mod tests {}
+
