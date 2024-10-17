@@ -1,4 +1,4 @@
-pub mod contract;
+pub mod erc721;
 
 #[cfg(test)]
 mod tests;
