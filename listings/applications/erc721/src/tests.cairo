@@ -19,16 +19,16 @@ pub fn SPENDER() -> ContractAddress {
     contract_address_const::<'SPENDER'>()
 }
 
-fn deploy() -> IERC721Dispatcher {
+fn deploy() -> (IERC721Dispatcher, ContractAddress) {
     let contract = declare("ERC721").unwrap().contract_class();
     let (contract_address, _) = contract.deploy(@array![]).unwrap();
-    IERC721Dispatcher { contract_address }
+    (IERC721Dispatcher { contract_address }, contract_address)
 }
 
-fn setup() -> IERC721Dispatcher {
-    let contract = deploy();
+fn setup() -> (IERC721Dispatcher, ContractAddress) {
+    let (contract, contract_address) = deploy();
     contract.mint(OWNER(), TOKEN_ID);
-    contract
+    (contract, contract_address)
 }
 
 //
@@ -37,37 +37,37 @@ fn setup() -> IERC721Dispatcher {
 
 #[test]
 fn test_balance_of() {
-    let contract = setup();
+    let (contract, _) = setup();
     assert_eq!(contract.balance_of(OWNER()), 1);
 }
 
 #[test]
 #[should_panic(expected: ('ERC721: invalid account',))]
 fn test_balance_of_zero() {
-    let contract = setup();
+    let (contract, _) = setup();
     contract.balance_of(ZERO());
 }
 
 #[test]
 fn test_owner_of() {
-    let contract = setup();
+    let (contract, _) = setup();
     assert_eq!(contract.owner_of(TOKEN_ID), OWNER());
 }
 
 #[test]
 #[should_panic(expected: ('ERC721: invalid token ID',))]
 fn test_owner_of_non_minted() {
-    let contract = setup();
+    let (contract, _) = setup();
     contract.owner_of(7);
 }
 
 #[test]
 fn test_get_approved() {
-    let mut contract = setup();
+    let (mut contract, contract_address) = setup();
     let spender = SPENDER();
     let token_id = TOKEN_ID;
 
-    start_cheat_caller_address(contract.contract_address, OWNER());
+    start_cheat_caller_address(contract_address, OWNER());
 
     assert_eq!(contract.get_approved(token_id), ZERO());
     contract.approve(spender, token_id);
@@ -77,6 +77,6 @@ fn test_get_approved() {
 #[test]
 #[should_panic(expected: ('ERC721: invalid token ID',))]
 fn test_get_approved_nonexistent() {
-    let contract = setup();
+    let (contract, _) = setup();
     contract.get_approved(7);
 }
