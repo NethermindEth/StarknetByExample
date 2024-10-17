@@ -8,6 +8,9 @@ use snforge_std::{
 };
 use starknet::{ContractAddress, contract_address_const};
 
+pub const SUCCESS: felt252 = 'SUCCESS';
+pub const FAILURE: felt252 = 'FAILURE';
+pub const PUBKEY: felt252 = 'PUBKEY';
 pub const TOKEN_ID: u256 = 21;
 
 pub fn CALLER() -> ContractAddress {
@@ -38,14 +41,37 @@ pub fn ZERO() -> ContractAddress {
     contract_address_const::<0>()
 }
 
-fn deploy() -> (IERC721Dispatcher, ContractAddress) {
-    let contract = declare("ERC721").unwrap().contract_class();
+pub fn DATA(success: bool) -> Span<felt252> {
+    let value = if success {
+        SUCCESS
+    } else {
+        FAILURE
+    };
+    array![value].span()
+}
+
+fn deploy_account() -> ContractAddress {
+    let contract = declare("AccountMock").unwrap().contract_class();
+    let (contract_address, _) = contract.deploy(@array![PUBKEY]).unwrap();
+    contract_address
+}
+
+fn deploy_receiver() -> ContractAddress {
+    let contract = declare("ERC721ReceiverMock").unwrap().contract_class();
     let (contract_address, _) = contract.deploy(@array![]).unwrap();
-    (IERC721Dispatcher { contract_address }, contract_address)
+    contract_address
+}
+
+fn deploy_non_receiver() -> ContractAddress {
+    let contract = declare("NonReceiverMock").unwrap().contract_class();
+    let (contract_address, _) = contract.deploy(@array![]).unwrap();
+    contract_address
 }
 
 fn setup() -> (IERC721Dispatcher, ContractAddress) {
-    let (contract, contract_address) = deploy();
+    let contract = declare("ERC721").unwrap().contract_class();
+    let (contract_address, _) = contract.deploy(@array![]).unwrap();
+    let contract = IERC721Dispatcher { contract_address };
     contract.mint(OWNER(), TOKEN_ID);
     (contract, contract_address)
 }
@@ -392,6 +418,188 @@ fn test_transfer_from_unauthorized() {
     let (mut contract, contract_address) = setup();
     start_cheat_caller_address(contract_address, OTHER());
     contract.transfer_from(OWNER(), RECIPIENT(), TOKEN_ID);
+}
+
+//
+// safe_transfer_from
+//
+
+#[test]
+fn test_safe_transfer_from_to_account() {
+    let (mut contract, contract_address) = setup();
+    let account = deploy_account();
+    let mut spy = spy_events();
+    let token_id = TOKEN_ID;
+    let owner = OWNER();
+
+    assert_state_before_transfer(contract, owner, account, token_id);
+
+    start_cheat_caller_address(contract_address, owner);
+    contract.safe_transfer_from(owner, account, token_id, DATA(true));
+    spy
+        .assert_emitted(
+            @array![
+                (contract_address, Event::Transfer(Transfer { from: owner, to: account, token_id }))
+            ]
+        );
+
+    assert_state_after_transfer(contract, owner, account, token_id);
+}
+
+#[test]
+fn test_safe_transfer_from_to_receiver() {
+    let (mut contract, contract_address) = setup();
+    let receiver = deploy_receiver();
+    let mut spy = spy_events();
+    let token_id = TOKEN_ID;
+    let owner = OWNER();
+
+    assert_state_before_transfer(contract, owner, receiver, token_id);
+
+    start_cheat_caller_address(contract_address, owner);
+    contract.safe_transfer_from(owner, receiver, token_id, DATA(true));
+    spy
+        .assert_emitted(
+            @array![
+                (
+                    contract_address,
+                    Event::Transfer(Transfer { from: owner, to: receiver, token_id })
+                )
+            ]
+        );
+
+    assert_state_after_transfer(contract, owner, receiver, token_id);
+}
+
+#[test]
+#[should_panic(expected: ('ERC721: safe transfer failed',))]
+fn test_safe_transfer_from_to_receiver_failure() {
+    let (mut contract, contract_address) = setup();
+    let receiver = deploy_receiver();
+    let token_id = TOKEN_ID;
+    let owner = OWNER();
+
+    start_cheat_caller_address(contract_address, owner);
+    contract.safe_transfer_from(owner, receiver, token_id, DATA(false));
+}
+
+#[test]
+#[ignore] // REASON: should_panic attribute not fit for complex panic messages.
+#[should_panic(expected: ('ENTRYPOINT_NOT_FOUND',))]
+fn test_safe_transfer_from_to_non_receiver() {
+    let (mut contract, contract_address) = setup();
+    let recipient = deploy_non_receiver();
+    let token_id = TOKEN_ID;
+    let owner = OWNER();
+
+    start_cheat_caller_address(contract_address, owner);
+    contract.safe_transfer_from(owner, recipient, token_id, DATA(true));
+}
+
+#[test]
+#[should_panic(expected: ('ERC721: invalid token ID',))]
+fn test_safe_transfer_from_nonexistent() {
+    let (mut contract, contract_address) = setup();
+    start_cheat_caller_address(contract_address, OWNER());
+    contract.safe_transfer_from(ZERO(), RECIPIENT(), TOKEN_ID, DATA(true));
+}
+
+#[test]
+#[should_panic(expected: ('ERC721: invalid receiver',))]
+fn test_safe_transfer_from_to_zero() {
+    let (mut contract, contract_address) = setup();
+    start_cheat_caller_address(contract_address, OWNER());
+    contract.safe_transfer_from(OWNER(), ZERO(), TOKEN_ID, DATA(true));
+}
+
+#[test]
+fn test_safe_transfer_from_to_owner() {
+    let (mut contract, contract_address) = setup();
+    let token_id = TOKEN_ID;
+    let owner = deploy_receiver();
+
+    assert_eq!(contract.owner_of(token_id), owner);
+    assert_eq!(contract.balance_of(owner), 1);
+
+    let mut spy = spy_events();
+
+    start_cheat_caller_address(contract_address, owner);
+    contract.safe_transfer_from(owner, owner, token_id, DATA(true));
+    spy
+        .assert_emitted(
+            @array![
+                (contract_address, Event::Transfer(Transfer { from: owner, to: owner, token_id }))
+            ]
+        );
+
+    assert_eq!(contract.owner_of(token_id), owner);
+    assert_eq!(contract.balance_of(owner), 1);
+}
+
+#[test]
+fn test_safe_transfer_from_approved() {
+    let (mut contract, contract_address) = setup();
+    let receiver = deploy_receiver();
+    let token_id = TOKEN_ID;
+    let owner = OWNER();
+
+    assert_state_before_transfer(contract, owner, receiver, token_id);
+
+    start_cheat_caller_address(contract_address, owner);
+    contract.approve(OPERATOR(), token_id);
+
+    let mut spy = spy_events();
+
+    start_cheat_caller_address(contract_address, OPERATOR());
+    contract.safe_transfer_from(owner, receiver, token_id, DATA(true));
+    spy
+        .assert_emitted(
+            @array![
+                (
+                    contract_address,
+                    Event::Transfer(Transfer { from: owner, to: receiver, token_id })
+                )
+            ]
+        );
+
+    assert_state_after_transfer(contract, owner, receiver, token_id);
+}
+
+#[test]
+fn test_safe_transfer_from_approved_for_all() {
+    let (mut contract, contract_address) = setup();
+    let receiver = deploy_receiver();
+    let token_id = TOKEN_ID;
+    let owner = OWNER();
+
+    assert_state_before_transfer(contract, owner, receiver, token_id);
+
+    start_cheat_caller_address(contract_address, owner);
+    contract.set_approval_for_all(OPERATOR(), true);
+
+    let mut spy = spy_events();
+
+    start_cheat_caller_address(contract_address, OPERATOR());
+    contract.safe_transfer_from(owner, receiver, token_id, DATA(true));
+    spy
+        .assert_emitted(
+            @array![
+                (
+                    contract_address,
+                    Event::Transfer(Transfer { from: owner, to: receiver, token_id })
+                )
+            ]
+        );
+
+    assert_state_after_transfer(contract, owner, receiver, token_id);
+}
+
+#[test]
+#[should_panic(expected: ('ERC721: unauthorized caller',))]
+fn test_safe_transfer_from_unauthorized() {
+    let (mut contract, contract_address) = setup();
+    start_cheat_caller_address(contract_address, OTHER());
+    contract.safe_transfer_from(OWNER(), RECIPIENT(), TOKEN_ID, DATA(true));
 }
 
 //
