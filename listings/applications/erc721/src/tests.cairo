@@ -1,12 +1,13 @@
 use core::num::traits::Zero;
 use erc721::erc721::{
-    IERC721Dispatcher, IERC721DispatcherTrait, ERC721::{Event, Transfer, Approval, ApprovalForAll}
+    IERC721Dispatcher, IERC721DispatcherTrait, ERC721, IERC721,
+    ERC721::{Event, Transfer, Approval, ApprovalForAll, InternalTrait},
 };
 use snforge_std::{
-    declare, DeclareResultTrait, ContractClassTrait, start_cheat_caller_address, spy_events,
-    EventSpyAssertionsTrait,
+    declare, test_address, DeclareResultTrait, ContractClassTrait, start_cheat_caller_address,
+    spy_events, EventSpyAssertionsTrait,
 };
-use starknet::{ContractAddress, contract_address_const};
+use starknet::{ContractAddress, contract_address_const,};
 
 pub const SUCCESS: felt252 = 'SUCCESS';
 pub const FAILURE: felt252 = 'FAILURE';
@@ -683,6 +684,73 @@ fn test_burn() {
 fn test_burn_nonexistent() {
     let (mut contract, _) = setup();
     contract.burn(TOKEN_ID);
+}
+
+//
+// Internals
+//
+
+fn setup_internals() -> ERC721::ContractState {
+    let mut state = ERC721::contract_state_for_testing();
+    state.mint(OWNER(), TOKEN_ID);
+    state
+}
+
+#[test]
+fn test__require_owned() {
+    let mut state = setup_internals();
+    let owner = state._require_owned(TOKEN_ID);
+    assert_eq!(owner, OWNER());
+}
+
+#[test]
+#[should_panic(expected: ('ERC721: invalid token ID',))]
+fn test__require_owned_non_existent() {
+    let mut state = setup_internals();
+    state._require_owned(0x123);
+}
+
+#[test]
+fn test__is_approved_or_owner_owner() {
+    let mut state = setup_internals();
+    let authorized = state._is_approved_or_owner(OWNER(), OWNER(), TOKEN_ID);
+    assert!(authorized);
+}
+
+#[test]
+fn test__is_approved_or_owner_approved_for_all() {
+    let mut state = setup_internals();
+
+    start_cheat_caller_address(test_address(), OWNER());
+    state.set_approval_for_all(SPENDER(), true);
+
+    let authorized = state._is_approved_or_owner(OWNER(), SPENDER(), TOKEN_ID);
+    assert!(authorized);
+}
+
+#[test]
+fn test__is_approved_or_owner_approved() {
+    let mut state = setup_internals();
+
+    start_cheat_caller_address(test_address(), OWNER());
+    state.approve(SPENDER(), TOKEN_ID);
+
+    let authorized = state._is_approved_or_owner(OWNER(), SPENDER(), TOKEN_ID);
+    assert!(authorized);
+}
+
+#[test]
+fn test__is_approved_or_owner_not_authorized() {
+    let mut state = setup_internals();
+    let not_authorized = !state._is_approved_or_owner(OWNER(), CALLER(), TOKEN_ID);
+    assert!(not_authorized);
+}
+
+#[test]
+fn test__is_approved_or_owner_zero_address() {
+    let mut state = setup_internals();
+    let not_authorized = !state._is_approved_or_owner(OWNER(), ZERO(), TOKEN_ID);
+    assert!(not_authorized);
 }
 
 //

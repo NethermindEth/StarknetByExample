@@ -51,11 +51,11 @@ pub mod ERC721 {
     use super::{IERC721ReceiverDispatcher, IERC721ReceiverDispatcherTrait, IERC721_RECEIVER_ID};
 
     #[storage]
-    struct Storage {
-        owners: Map<u256, ContractAddress>,
-        balances: Map<ContractAddress, u256>,
-        approvals: Map<u256, ContractAddress>,
-        operator_approvals: Map<(ContractAddress, ContractAddress), bool>,
+    pub struct Storage {
+        pub owners: Map<u256, ContractAddress>,
+        pub balances: Map<ContractAddress, u256>,
+        pub approvals: Map<u256, ContractAddress>,
+        pub operator_approvals: Map<(ContractAddress, ContractAddress), bool>,
     }
 
     #[event]
