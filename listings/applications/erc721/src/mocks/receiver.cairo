@@ -3,7 +3,7 @@ const SUCCESS: felt252 = 'SUCCESS';
 #[starknet::contract]
 pub mod ERC721ReceiverMock {
     use openzeppelin_introspection::src5::SRC5Component;
-    use erc721::erc721::IERC721Receiver;
+    use erc721::interfaces::{IERC721Receiver, IERC721_RECEIVER_ID};
     use starknet::ContractAddress;
 
     component!(path: SRC5Component, storage: src5, event: SRC5Event);
@@ -11,6 +11,7 @@ pub mod ERC721ReceiverMock {
     // SRC5
     #[abi(embed_v0)]
     impl SRC5Impl = SRC5Component::SRC5Impl<ContractState>;
+    impl SRC5InternalImpl = SRC5Component::InternalImpl<ContractState>;
 
     #[storage]
     pub struct Storage {
@@ -30,9 +31,8 @@ pub mod ERC721ReceiverMock {
         self.src5.register_interface(IERC721_RECEIVER_ID);
     }
 
-    #[abi(per_item)]
+    #[abi(embed_v0)]
     impl ExternalImpl of IERC721Receiver<ContractState> {
-        #[external(v0)]
         fn on_erc721_received(
             self: @ContractState,
             operator: ContractAddress,

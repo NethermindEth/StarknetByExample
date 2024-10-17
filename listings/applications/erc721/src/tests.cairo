@@ -1,8 +1,6 @@
 use core::num::traits::Zero;
-use erc721::erc721::{
-    IERC721Dispatcher, IERC721DispatcherTrait, ERC721, IERC721,
-    ERC721::{Event, Transfer, Approval, ApprovalForAll, InternalTrait},
-};
+use erc721::interfaces::{IERC721, IERC721Dispatcher, IERC721DispatcherTrait,};
+use erc721::erc721::{ERC721, ERC721::{Event, Transfer, Approval, ApprovalForAll, InternalTrait},};
 use snforge_std::{
     declare, test_address, DeclareResultTrait, ContractClassTrait, start_cheat_caller_address,
     spy_events, EventSpyAssertionsTrait,
