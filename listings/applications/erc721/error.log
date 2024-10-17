@@ -1,0 +1,5 @@
+   Compiling snforge_scarb_plugin v0.2.0
+    Finished `release` profile [optimized] target(s) in 0.05s
+   Compiling lib(erc721) erc721 v0.1.0 (/home/neshi/repos/StarknetByExample/listings/applications/erc721/Scarb.toml)
+   Compiling starknet-contract(erc721) erc721 v0.1.0 (/home/neshi/repos/StarknetByExample/listings/applications/erc721/Scarb.toml)
+warn: external contracts not found for selectors: `openzeppelin_introspection::interface::ISRC5`
