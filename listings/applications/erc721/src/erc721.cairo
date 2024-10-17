@@ -107,6 +107,7 @@ pub mod ERC721 {
             self.balances.write(from, self.balances.read(from) - 1);
             self.balances.write(to, self.balances.read(to) + 1);
             self.owners.write(token_id, to);
+            self.approvals.write(token_id, to);
 
             self.emit(Transfer { from, to, token_id });
         }

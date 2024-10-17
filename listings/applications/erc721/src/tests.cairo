@@ -6,11 +6,13 @@ use snforge_std::{
     spy_events, EventSpyAssertionsTrait,
 };
 use starknet::{ContractAddress, contract_address_const,};
+use starknet::storage::StorageMapReadAccess;
 
 pub const SUCCESS: felt252 = 'SUCCESS';
 pub const FAILURE: felt252 = 'FAILURE';
 pub const PUBKEY: felt252 = 'PUBKEY';
 pub const TOKEN_ID: u256 = 21;
+pub const NONEXISTENT_TOKEN_ID: u256 = 7;
 
 pub fn CALLER() -> ContractAddress {
     contract_address_const::<'CALLER'>()
@@ -68,11 +70,27 @@ fn deploy_non_receiver() -> ContractAddress {
 }
 
 fn setup() -> (IERC721Dispatcher, ContractAddress) {
+    _setup_optional_mint(true)
+}
+
+fn setup_no_mint() -> (IERC721Dispatcher, ContractAddress) {
+    _setup_optional_mint(false)
+}
+
+fn _setup_optional_mint(should_mint: bool) -> (IERC721Dispatcher, ContractAddress) {
     let contract = declare("ERC721").unwrap().contract_class();
     let (contract_address, _) = contract.deploy(@array![]).unwrap();
     let contract = IERC721Dispatcher { contract_address };
-    contract.mint(OWNER(), TOKEN_ID);
+    if should_mint {
+        contract.mint(OWNER(), TOKEN_ID);
+    }
     (contract, contract_address)
+}
+
+fn setup_internals() -> ERC721::ContractState {
+    let mut state = ERC721::contract_state_for_testing();
+    state.mint(OWNER(), TOKEN_ID);
+    state
 }
 
 //
@@ -102,7 +120,7 @@ fn test_owner_of() {
 #[should_panic(expected: ('ERC721: invalid token ID',))]
 fn test_owner_of_non_minted() {
     let (contract, _) = setup();
-    contract.owner_of(7);
+    contract.owner_of(NONEXISTENT_TOKEN_ID);
 }
 
 #[test]
@@ -122,7 +140,7 @@ fn test_get_approved() {
 #[should_panic(expected: ('ERC721: invalid token ID',))]
 fn test_get_approved_nonexistent() {
     let (contract, _) = setup();
-    contract.get_approved(7);
+    contract.get_approved(NONEXISTENT_TOKEN_ID);
 }
 
 //
@@ -193,7 +211,7 @@ fn test_approve_from_unauthorized() {
 #[should_panic(expected: ('ERC721: invalid token ID',))]
 fn test_approve_nonexistent() {
     let (mut contract, _) = setup();
-    contract.approve(SPENDER(), TOKEN_ID);
+    contract.approve(SPENDER(), NONEXISTENT_TOKEN_ID);
 }
 
 #[test]
@@ -318,7 +336,7 @@ fn test_transfer_from_owner() {
 fn test_transfer_from_nonexistent() {
     let (mut contract, contract_address) = setup();
     start_cheat_caller_address(contract_address, OWNER());
-    contract.transfer_from(ZERO(), RECIPIENT(), TOKEN_ID);
+    contract.transfer_from(ZERO(), RECIPIENT(), NONEXISTENT_TOKEN_ID);
 }
 
 #[test]
@@ -500,7 +518,7 @@ fn test_safe_transfer_from_to_non_receiver() {
 fn test_safe_transfer_from_nonexistent() {
     let (mut contract, contract_address) = setup();
     start_cheat_caller_address(contract_address, OWNER());
-    contract.safe_transfer_from(ZERO(), RECIPIENT(), TOKEN_ID, DATA(true));
+    contract.safe_transfer_from(ZERO(), RECIPIENT(), NONEXISTENT_TOKEN_ID, DATA(true));
 }
 
 #[test]
@@ -513,9 +531,11 @@ fn test_safe_transfer_from_to_zero() {
 
 #[test]
 fn test_safe_transfer_from_to_owner() {
-    let (mut contract, contract_address) = setup();
+    let (mut contract, contract_address) = setup_no_mint();
     let token_id = TOKEN_ID;
     let owner = deploy_receiver();
+
+    contract.mint(owner, token_id);
 
     assert_eq!(contract.owner_of(token_id), owner);
     assert_eq!(contract.balance_of(owner), 1);
@@ -650,18 +670,19 @@ fn test_mint_already_exist() {
 
 #[test]
 fn test_burn() {
-    let (mut contract, contract_address) = setup();
+    let mut state = setup_internals();
+    let contract_address = test_address();
 
     start_cheat_caller_address(contract_address, OWNER());
-    contract.approve(OTHER(), TOKEN_ID);
+    state.approve(OTHER(), TOKEN_ID);
 
-    assert_eq!(contract.owner_of(TOKEN_ID), OWNER());
-    assert_eq!(contract.balance_of(OWNER()), 1);
-    assert_eq!(contract.get_approved(TOKEN_ID), OTHER());
+    assert_eq!(state.owner_of(TOKEN_ID), OWNER());
+    assert_eq!(state.balance_of(OWNER()), 1);
+    assert_eq!(state.get_approved(TOKEN_ID), OTHER());
 
     let mut spy = spy_events();
 
-    contract.burn(TOKEN_ID);
+    state.burn(TOKEN_ID);
     spy
         .assert_emitted(
             @array![
@@ -672,27 +693,21 @@ fn test_burn() {
             ]
         );
 
-    assert_eq!(contract.owner_of(TOKEN_ID), ZERO());
-    assert_eq!(contract.balance_of(OWNER()), 0);
-    assert_eq!(contract.get_approved(TOKEN_ID), ZERO());
+    assert_eq!(state.owners.read(TOKEN_ID), ZERO());
+    assert_eq!(state.balance_of(OWNER()), 0);
+    assert_eq!(state.approvals.read(TOKEN_ID), ZERO());
 }
 
 #[test]
 #[should_panic(expected: ('ERC721: invalid token ID',))]
 fn test_burn_nonexistent() {
     let (mut contract, _) = setup();
-    contract.burn(TOKEN_ID);
+    contract.burn(NONEXISTENT_TOKEN_ID);
 }
 
 //
 // Internals
 //
-
-fn setup_internals() -> ERC721::ContractState {
-    let mut state = ERC721::contract_state_for_testing();
-    state.mint(OWNER(), TOKEN_ID);
-    state
-}
 
 #[test]
 fn test__require_owned() {
@@ -703,9 +718,9 @@ fn test__require_owned() {
 
 #[test]
 #[should_panic(expected: ('ERC721: invalid token ID',))]
-fn test__require_owned_non_existent() {
+fn test__require_owned_nonexistent() {
     let mut state = setup_internals();
-    state._require_owned(0x123);
+    state._require_owned(NONEXISTENT_TOKEN_ID);
 }
 
 #[test]
