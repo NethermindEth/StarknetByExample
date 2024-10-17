@@ -646,6 +646,46 @@ fn test_mint_already_exist() {
 }
 
 //
+// burn
+//
+
+#[test]
+fn test_burn() {
+    let (mut contract, contract_address) = setup();
+
+    start_cheat_caller_address(contract_address, OWNER());
+    contract.approve(OTHER(), TOKEN_ID);
+
+    assert_eq!(contract.owner_of(TOKEN_ID), OWNER());
+    assert_eq!(contract.balance_of(OWNER()), 1);
+    assert_eq!(contract.get_approved(TOKEN_ID), OTHER());
+
+    let mut spy = spy_events();
+
+    contract.burn(TOKEN_ID);
+    spy
+        .assert_emitted(
+            @array![
+                (
+                    contract_address,
+                    Event::Transfer(Transfer { from: OWNER(), to: ZERO(), token_id: TOKEN_ID })
+                )
+            ]
+        );
+
+    assert_eq!(contract.owner_of(TOKEN_ID), ZERO());
+    assert_eq!(contract.balance_of(OWNER()), 0);
+    assert_eq!(contract.get_approved(TOKEN_ID), ZERO());
+}
+
+#[test]
+#[should_panic(expected: ('ERC721: invalid token ID',))]
+fn test_burn_nonexistent() {
+    let (mut contract, _) = setup();
+    contract.burn(TOKEN_ID);
+}
+
+//
 // Helpers
 //
 
