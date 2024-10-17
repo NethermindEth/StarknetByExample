@@ -7,11 +7,14 @@ edition = "2024_07"
 
 [dependencies]
 starknet.workspace = true
+openzeppelin.workspace = true
+snforge_std.workspace = true
 
 [dev-dependencies]
-cairo_test.workspace = true
+assert_macros.workspace = true
 
 [scripts]
 test.workspace = true
 
 [[target.starknet-contract]]
+build-external-contracts = ["openzeppelin_introspection::interface::ISRC5"]

@@ -81,6 +81,10 @@ version = "0.1.0"
 [[package]]
 name = "erc721"
 version = "0.1.0"
+dependencies = [
+ "openzeppelin",
+ "snforge_std",
+]
 
 [[package]]
 name = "errors"
