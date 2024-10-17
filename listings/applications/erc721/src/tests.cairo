@@ -627,7 +627,7 @@ fn test_safe_transfer_from_unauthorized() {
 
 #[test]
 fn test_mint() {
-    let (mut contract, contract_address) = setup();
+    let (mut contract, contract_address) = setup_no_mint();
     let mut spy = spy_events();
     let recipient = RECIPIENT();
     let token_id = TOKEN_ID;
