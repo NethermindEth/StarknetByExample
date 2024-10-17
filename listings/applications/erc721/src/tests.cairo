@@ -603,6 +603,49 @@ fn test_safe_transfer_from_unauthorized() {
 }
 
 //
+// mint
+//
+
+#[test]
+fn test_mint() {
+    let (mut contract, contract_address) = setup();
+    let mut spy = spy_events();
+    let recipient = RECIPIENT();
+    let token_id = TOKEN_ID;
+
+    assert!(contract.balance_of(recipient).is_zero());
+
+    contract.mint(recipient, TOKEN_ID);
+    spy
+        .assert_emitted(
+            @array![
+                (
+                    contract_address,
+                    Event::Transfer(Transfer { from: ZERO(), to: recipient, token_id })
+                )
+            ]
+        );
+
+    assert_eq!(contract.owner_of(token_id), recipient);
+    assert_eq!(contract.balance_of(recipient), 1);
+    assert!(contract.get_approved(token_id).is_zero());
+}
+
+#[test]
+#[should_panic(expected: ('ERC721: invalid receiver',))]
+fn test_mint_to_zero() {
+    let (mut contract, _) = setup();
+    contract.mint(ZERO(), TOKEN_ID);
+}
+
+#[test]
+#[should_panic(expected: ('ERC721: token already minted',))]
+fn test_mint_already_exist() {
+    let (mut contract, _) = setup();
+    contract.mint(RECIPIENT(), TOKEN_ID);
+}
+
+//
 // Helpers
 //
 
