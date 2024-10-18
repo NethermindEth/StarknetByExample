@@ -11,7 +11,6 @@ pragma_lib.workspace = true
 [dev-dependencies]
 assert_macros.workspace = true
 snforge_std.workspace = true
-cairo_test.workspace = true
 
 [scripts]
 test.workspace = true
