@@ -16,5 +16,4 @@ snforge_std.workspace = true
 test.workspace = true
 
 [[target.starknet-contract]]
-casm = true
 build-external-contracts = ["crowdfunding::campaign::Campaign"]
