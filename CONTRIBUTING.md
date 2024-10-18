@@ -112,7 +112,6 @@ version.workspace = true
 
 [dependencies]
 starknet.workspace = true
-snforge_std.workspace = true
 # Uncomment the following lines if you want to use additional dependencies:
 # OpenZeppelin:
 # openzeppelin.workspace = true
@@ -122,6 +121,7 @@ snforge_std.workspace = true
 
 [dev-dependencies]
 assert_macros.workspace = true
+snforge_std.workspace = true
 
 [scripts]
 test.workspace = true

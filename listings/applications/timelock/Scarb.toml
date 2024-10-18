@@ -5,12 +5,12 @@ edition.workspace = true
 
 [dependencies]
 starknet.workspace = true
-snforge_std.workspace = true
 openzeppelin.workspace = true
 components.workspace = true
 
 [dev-dependencies]
 assert_macros.workspace = true
+snforge_std.workspace = true
 
 [scripts]
 test.workspace = true

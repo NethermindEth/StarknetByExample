@@ -9,10 +9,10 @@ edition.workspace = true
 starknet.workspace = true
 openzeppelin.workspace = true
 components.workspace = true
-snforge_std.workspace = true
 
 [dev-dependencies]
 assert_macros.workspace = true
+snforge_std.workspace = true
 
 [scripts]
 test.workspace = true

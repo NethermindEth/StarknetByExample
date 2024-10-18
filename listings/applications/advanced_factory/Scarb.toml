@@ -6,11 +6,11 @@ edition.workspace = true
 [dependencies]
 starknet.workspace = true
 components.workspace = true
-snforge_std.workspace = true
 crowdfunding = { path = "../crowdfunding" }
 
 [dev-dependencies]
 assert_macros.workspace = true
+snforge_std.workspace = true
 
 [scripts]
 test.workspace = true

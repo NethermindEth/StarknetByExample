@@ -6,10 +6,10 @@ edition.workspace = true
 [dependencies]
 erc20 = { path = "../erc20" }
 starknet.workspace = true
-snforge_std.workspace = true
 
 [dev-dependencies]
 assert_macros.workspace = true
+snforge_std.workspace = true
 
 [scripts]
 test.workspace = true
