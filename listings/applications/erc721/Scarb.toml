@@ -1,9 +1,7 @@
 [package]
 name = "erc721"
 version.workspace = true
-edition.workspace = true
-
-[lib]
+edition = "2024_07"
 
 [dependencies]
 starknet.workspace = true
