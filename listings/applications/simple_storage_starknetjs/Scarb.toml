@@ -3,8 +3,6 @@ name = "simple_storage"
 version.workspace = true
 edition.workspace = true
 
-[lib]
-
 [dependencies]
 starknet.workspace = true
 
