@@ -15,7 +15,7 @@ test = "$(git rev-parse --show-toplevel)/scripts/test_resolver.sh"
 starknet = "2.8.2"
 cairo_test = "2.8.2"
 assert_macros = "2.8.2" 
-snforge_std = "0.31.0"
+snforge_std = "0.30.0"
 openzeppelin = "0.16.0"
 components = { path = "listings/applications/components" }
 pragma_lib = { git = "https://github.com/astraly-labs/pragma-lib" }
