@@ -7,6 +7,9 @@ edition.workspace = true
 starknet.workspace = true
 openzeppelin.workspace = true
 
+[dev-dependencies]
+cairo_test.workspace = true
+
 [scripts]
 test.workspace = true
 
