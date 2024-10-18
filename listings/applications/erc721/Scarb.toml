@@ -8,10 +8,10 @@ edition = "2024_07"
 [dependencies]
 starknet.workspace = true
 openzeppelin.workspace = true
-snforge_std.workspace = true
 
 [dev-dependencies]
 assert_macros.workspace = true
+snforge_std.workspace = true
 
 [scripts]
 test.workspace = true
