@@ -103,6 +103,14 @@ name = "interfaces_traits"
 version = "0.1.0"
 
 [[package]]
+name = "l1_l2_token_bridge"
+version = "0.1.0"
+dependencies = [
+ "openzeppelin",
+ "snforge_std",
+]
+
+[[package]]
 name = "library_calls"
 version = "0.1.0"
 

@@ -66,6 +66,7 @@ Summary
 - [Crowdfunding Campaign](./applications/crowdfunding.md)
 - [AdvancedFactory: Crowdfunding](./applications/advanced_factory.md)
 - [Random Number Generator](./applications/random_number_generator.md)
+- [L1 <> L2 Token Bridge](./applications/l1_l2_token_bridge.md)
 
 <!-- advanced-concepts -->
 
