@@ -15,4 +15,3 @@ snforge_std.workspace = true
 test.workspace = true
 
 [[target.starknet-contract]]
-build-external-contracts = ["openzeppelin_presets::erc20::ERC20Upgradeable"]
