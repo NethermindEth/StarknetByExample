@@ -1,44 +1,124 @@
-use l1_l2_token_bridge::contract::{
-    TokenBridge, ITokenBridgeDispatcher,
-    ITokenBridgeDispatcherTrait,
-};
-use starknet::{ContractAddress, contract_address_const};
+use starknet::{ContractAddress, EthAddress, contract_address_const};
+use starknet::storage::StoragePointerWriteAccess;
 use snforge_std::{
-    declare, start_cheat_caller_address, stop_cheat_caller_address, spy_events,
-    EventSpyAssertionsTrait, DeclareResultTrait, ContractClassTrait
+    declare, start_cheat_caller_address, spy_events, spy_messages_to_l1, test_address,
+    MessageToL1SpyAssertionsTrait, MessageToL1, EventSpyAssertionsTrait, DeclareResultTrait,
+    ContractClassTrait
 };
-use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
 
-// fn deploy() -> (
-//     ITokenBridgeDispatcher, IERC20Dispatcher, ContractAddress
-// ) { // deploy mock ETH token
-// let eth_contract = declare("ERC20Upgradeable").unwrap().contract_class();
-// let eth_name: ByteArray = "Ethereum";
-// let eth_symbol: ByteArray = "ETH";
-// let eth_supply: u256 = CALLBACK_FEE_LIMIT.into() * 100;
-// let mut eth_ctor_calldata = array![];
-// let deployer = contract_address_const::<'deployer'>();
-// ((eth_name, eth_symbol, eth_supply, deployer), deployer).serialize(ref eth_ctor_calldata);
-// let eth_address = eth_contract.precalculate_address(@eth_ctor_calldata);
-// start_cheat_caller_address(eth_address, deployer);
-// eth_contract.deploy(@eth_ctor_calldata).unwrap();
-// stop_cheat_caller_address(eth_address);
+use l1_l2_token_bridge::contract::{
+    TokenBridge, ITokenBridgeDispatcher, ITokenBridgeDispatcherTrait
+};
+use l1_l2_token_bridge::mocks::MintableTokenMock;
 
-// // deploy MockRandomness
-// let mock_randomness = declare("MockRandomness").unwrap().contract_class();
-// let mut randomness_calldata: Array<felt252> = array![];
-// (eth_address).serialize(ref randomness_calldata);
-// let (randomness_address, _) = mock_randomness.deploy(@randomness_calldata).unwrap();
+fn CALLER() -> ContractAddress {
+    contract_address_const::<'CALLER'>()
+}
 
-// // deploy the actual TokenBridge contract
-// let coin_flip_contract = declare("TokenBridge").unwrap().contract_class();
-// let mut coin_flip_ctor_calldata: Array<felt252> = array![];
-// (randomness_address, eth_address).serialize(ref coin_flip_ctor_calldata);
-// let (coin_flip_address, _) = coin_flip_contract.deploy(@coin_flip_ctor_calldata).unwrap();
+fn deploy() -> (ContractAddress, EthAddress, ContractAddress) {
+    let l1_bridge = 0x2137;
+    let contract = declare("MintableTokenMock").unwrap().contract_class();
+    let (l2_token_address, _) = contract.deploy(@array![]).unwrap();
 
-// let eth_dispatcher = IERC20Dispatcher { contract_address: eth_address };
-// let randomness_dispatcher = IRandomnessDispatcher { contract_address: randomness_address };
-// let coin_flip_dispatcher = ITokenBridgeDispatcher { contract_address: coin_flip_address };
+    let contract = declare("TokenBridge").unwrap().contract_class();
+    let (contract_address, _) = contract
+        .deploy(@array![l1_bridge, l2_token_address.into()])
+        .unwrap();
 
-// (coin_flip_dispatcher, randomness_dispatcher, eth_dispatcher, deployer)
-// }
+    let l1_bridge: EthAddress = l1_bridge.try_into().unwrap();
+
+    (contract_address, l1_bridge, l2_token_address)
+}
+
+#[test]
+fn initiate_withdraw() {
+    let mut spy_l1 = spy_messages_to_l1();
+
+    let (contract_address, l1_bridge, l2_token_address) = deploy();
+    let contract = ITokenBridgeDispatcher { contract_address };
+
+    let mut spy = spy_events();
+
+    let l1_recipient = 0x123;
+    let amount = 100;
+
+    start_cheat_caller_address(contract_address, CALLER());
+    contract.initiate_withdraw(l1_recipient.try_into().unwrap(), amount);
+
+    let expected_payload = array![l1_recipient, 100, 0];
+    let l1_recipient: EthAddress = l1_recipient.try_into().unwrap();
+
+    spy_l1
+        .assert_sent(
+            @array![
+                (contract_address, MessageToL1 { to_address: l1_bridge, payload: expected_payload })
+            ]
+        );
+
+    spy
+        .assert_emitted(
+            @array![
+                (
+                    l2_token_address,
+                    MintableTokenMock::Event::Burned(
+                        MintableTokenMock::Burned { account: CALLER(), amount }
+                    )
+                ),
+            ]
+        );
+    spy
+        .assert_emitted(
+            @array![
+                (
+                    contract_address,
+                    TokenBridge::Event::WithdrawInitiated(
+                        TokenBridge::WithdrawInitiated {
+                            l1_recipient, amount, caller_address: CALLER()
+                        }
+                    )
+                ),
+            ]
+        );
+}
+
+#[test]
+fn handle_deposit() {
+    let l1_bridge = 0x2137;
+    let contract = declare("MintableTokenMock").unwrap().contract_class();
+    let (l2_token_address, _) = contract.deploy(@array![]).unwrap();
+
+    let token_bridge_address = test_address();
+    let mut state = TokenBridge::contract_state_for_testing();
+    state.l1_bridge.write(l1_bridge);
+    state.l2_token.write(l2_token_address);
+
+    let mut spy = spy_events();
+
+    let recipient_account = contract_address_const::<'RECIPIENT'>();
+    let amount = 100;
+
+    TokenBridge::handle_deposit(ref state, l1_bridge, recipient_account, amount);
+
+    spy
+        .assert_emitted(
+            @array![
+                (
+                    l2_token_address,
+                    MintableTokenMock::Event::Minted(
+                        MintableTokenMock::Minted { account: recipient_account, amount }
+                    )
+                ),
+            ]
+        );
+    spy
+        .assert_emitted(
+            @array![
+                (
+                    token_bridge_address,
+                    TokenBridge::Event::DepositHandled(
+                        TokenBridge::DepositHandled { account: recipient_account, amount, }
+                    )
+                ),
+            ]
+        );
+}
