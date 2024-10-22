@@ -17,7 +17,7 @@ contract TokenBridge {
     IStarknetMessaging private _snMessaging;
     uint256 private _l2Bridge;
 
-    uint256 constant L2_HANDLE_DEPOSIT_SELECTOR =
+    uint256 public constant L2_HANDLE_DEPOSIT_SELECTOR =
         0x2D757788A8D8D6F21D1CD40BCE38A8222D70654214E96FF95D8086E684FBEE5;
 
     /**
@@ -47,7 +47,7 @@ contract TokenBridge {
         uint256 recipientAddress,
         uint256 amount
     ) external payable {
-        uint256[] memory payload = new uint256[](1);
+        uint256[] memory payload = new uint256[](2);
         payload[0] = recipientAddress;
         payload[1] = amount;
 
