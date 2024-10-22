@@ -23,6 +23,7 @@ contract TokenBridgeTest is
         snMessaging = new StarknetMessagingLocal();
         mintableTokenMock = new MintableTokenMock();
         tokenBridge = new TokenBridge(
+            address(this),
             address(snMessaging),
             address(mintableTokenMock)
         );

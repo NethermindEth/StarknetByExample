@@ -1,9 +1,9 @@
 use starknet::{ContractAddress, EthAddress, contract_address_const};
 use starknet::storage::StoragePointerWriteAccess;
 use snforge_std::{
-    declare, start_cheat_caller_address, spy_events, spy_messages_to_l1, test_address,
-    MessageToL1SpyAssertionsTrait, MessageToL1, EventSpyAssertionsTrait, DeclareResultTrait,
-    ContractClassTrait
+    declare, start_cheat_caller_address, stop_cheat_caller_address, spy_events, spy_messages_to_l1,
+    test_address, MessageToL1SpyAssertionsTrait, MessageToL1, EventSpyAssertionsTrait,
+    DeclareResultTrait, ContractClassTrait
 };
 use l1_l2_token_bridge::contract::{
     TokenBridge, ITokenBridgeDispatcher, ITokenBridgeDispatcherTrait
@@ -20,12 +20,16 @@ fn deploy() -> (ITokenBridgeDispatcher, EthAddress, ContractAddress) {
     let (l2_token_address, _) = contract.deploy(@array![]).unwrap();
 
     let contract = declare("TokenBridge").unwrap().contract_class();
-    let (contract_address, _) = contract.deploy(@array![l2_token_address.into()]).unwrap();
+    let (contract_address, _) = contract
+        .deploy(@array![CALLER().into(), l2_token_address.into()])
+        .unwrap();
 
     let l1_bridge: EthAddress = l1_bridge.try_into().unwrap();
 
     let contract = ITokenBridgeDispatcher { contract_address };
+    start_cheat_caller_address(contract_address, CALLER());
     contract.set_l1_bridge(l1_bridge);
+    stop_cheat_caller_address(contract_address);
 
     (contract, l1_bridge, l2_token_address)
 }

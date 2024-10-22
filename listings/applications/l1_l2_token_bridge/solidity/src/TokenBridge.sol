@@ -5,6 +5,7 @@ pragma solidity ^0.8.0;
 import "./IMintableToken.sol";
 import "./IStarknetMessaging.sol";
 
+error InvalidAddress(string);
 error OnlyGovernor();
 error UninitializedL2Bridge();
 
@@ -15,10 +16,10 @@ contract TokenBridge {
     event L2BridgeSet(uint256 l2Bridge);
     event TokenSet(address token);
 
-    address private _governor;
-    IMintableToken private _mintableToken;
-    IStarknetMessaging private _snMessaging;
-    uint256 private _l2Bridge;
+    address public governor;
+    IMintableToken public mintableToken;
+    IStarknetMessaging public snMessaging;
+    uint256 public l2Bridge;
 
     uint256 public constant L2_HANDLE_DEPOSIT_SELECTOR =
         0x2D757788A8D8D6F21D1CD40BCE38A8222D70654214E96FF95D8086E684FBEE5;
@@ -26,36 +27,52 @@ contract TokenBridge {
     /**
        @notice Constructor.
 
-       @param snMessaging The address of Starknet Core contract, responsible for messaging.
-       @param token The address of token to be briged.
+       @param _governor The address of the governor.
+       @param _snMessaging The address of Starknet Core contract, responsible for messaging.
+       @param _token The address of token to be briged.
     */
-    constructor(address snMessaging, address token) {
-        _governor = msg.sender;
-        _snMessaging = IStarknetMessaging(snMessaging);
-        _mintableToken = IMintableToken(token);
+    constructor(address _governor, address _snMessaging, address _token) {
+        if (_governor == address(0)) {
+            revert InvalidAddress("_governor");
+        }
+        if (_snMessaging == address(0)) {
+            revert InvalidAddress("_snMessaging");
+        }
+        if (_token == address(0)) {
+            revert InvalidAddress("_token");
+        }
+        governor = _governor;
+        snMessaging = IStarknetMessaging(_snMessaging);
+        mintableToken = IMintableToken(_token);
     }
 
     modifier onlyGovernor() {
-        if (_governor != msg.sender) {
+        if (governor != msg.sender) {
             revert OnlyGovernor();
         }
         _;
     }
 
     modifier onlyl2BridgeInitialized() {
-        if (_l2Bridge == 0) {
+        if (l2Bridge == 0) {
             revert UninitializedL2Bridge();
         }
         _;
     }
 
     function setL2Bridge(uint256 newL2Bridge) external onlyGovernor {
-        _l2Bridge = newL2Bridge;
+        if (newL2Bridge == 0) {
+            revert InvalidAddress("newL2Bridge");
+        }
+        l2Bridge = newL2Bridge;
         emit L2BridgeSet(newL2Bridge);
     }
 
     function setToken(address newToken) external onlyGovernor {
-        _mintableToken = IMintableToken(newToken);
+        if (newToken == address(0)) {
+            revert InvalidAddress("newToken");
+        }
+        mintableToken = IMintableToken(newToken);
         emit TokenSet(newToken);
     }
 
@@ -77,10 +94,10 @@ contract TokenBridge {
         payload[0] = recipientAddress;
         payload[1] = amount;
 
-        _mintableToken.burn(msg.sender, amount);
+        mintableToken.burn(msg.sender, amount);
 
-        _snMessaging.sendMessageToL2{value: msg.value}(
-            _l2Bridge,
+        snMessaging.sendMessageToL2{value: msg.value}(
+            l2Bridge,
             L2_HANDLE_DEPOSIT_SELECTOR,
             payload
         );
@@ -111,10 +128,10 @@ contract TokenBridge {
         payload[2] = uint256(high);
 
         // Will revert if the message is not consumable.
-        _snMessaging.consumeMessageFromL2(fromAddress, payload);
+        snMessaging.consumeMessageFromL2(fromAddress, payload);
 
         // recreate amount from 128-bit halves
         uint256 amount = (uint256(high) << 128) | uint256(low);
-        _mintableToken.mint(msg.sender, amount);
+        mintableToken.mint(msg.sender, amount);
     }
 }

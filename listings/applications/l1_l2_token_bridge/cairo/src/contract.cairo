@@ -17,6 +17,9 @@ pub trait ITokenBridge<TContractState> {
     fn bridge_to_l1(ref self: TContractState, l1_recipient: EthAddress, amount: u256);
     fn set_l1_bridge(ref self: TContractState, l1_bridge_address: EthAddress);
     fn set_l2_token(ref self: TContractState, l2_token_address: ContractAddress);
+    fn governor(self: @TContractState) -> ContractAddress;
+    fn l1_bridge(self: @TContractState) -> felt252;
+    fn l2_token(self: @TContractState) -> ContractAddress;
 }
 
 #[starknet::contract]
@@ -89,9 +92,10 @@ pub mod TokenBridge {
     }
 
     #[constructor]
-    fn constructor(ref self: ContractState, l2_token: ContractAddress,) {
+    fn constructor(ref self: ContractState, governor: ContractAddress, l2_token: ContractAddress,) {
+        assert(governor.is_non_zero(), Errors::INVALID_ADDRESS);
         assert(l2_token.is_non_zero(), Errors::INVALID_ADDRESS);
-        self.governor.write(get_caller_address());
+        self.governor.write(governor);
         self.l2_token.write(l2_token);
     }
 
@@ -130,6 +134,18 @@ pub mod TokenBridge {
 
             self.l2_token.write(l2_token_address);
             self.emit(L2TokenSet { l2_token_address });
+        }
+
+        fn governor(self: @ContractState) -> ContractAddress {
+            self.governor.read()
+        }
+
+        fn l1_bridge(self: @ContractState) -> felt252 {
+            self.l1_bridge.read()
+        }
+
+        fn l2_token(self: @ContractState) -> ContractAddress {
+            self.l2_token.read()
         }
     }
 
