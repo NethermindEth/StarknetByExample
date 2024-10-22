@@ -43,13 +43,15 @@ contract TokenBridge {
        So the serialization on solidity must be adjusted. For instance, a uint256
        must be split in two uint256 with low and high part to be understood by Cairo.
     */
-    function initiate_withdraw(
+    function bridgeToL2(
         uint256 recipientAddress,
         uint256 amount
     ) external payable {
         uint256[] memory payload = new uint256[](1);
         payload[0] = recipientAddress;
         payload[1] = amount;
+
+        _mintableToken.burn(msg.sender, amount);
 
         _snMessaging.sendMessageToL2{value: msg.value}(
             _l2Bridge,
@@ -62,26 +64,31 @@ contract TokenBridge {
        @notice Manually consumes a message that was received from L2.
 
        @param fromAddress L2 contract (account) that has sent the message.
-       @param payload Payload of the message used to verify the hash.
+       @param recipient account to withdraw to.
+       @param low lower half of the uint256.
+       @param high higher half of the uint256.
 
        @dev A message "receive" means that the message hash is registered as consumable.
        One must provide the message content, to let Starknet Core contract verify the hash
        and validate the message content before being consumed.
     */
-    function consumeMessage(
+    function consumeWithdrawal(
         uint256 fromAddress,
-        uint256[] calldata payload
+        address recipient,
+        uint128 low,
+        uint128 high
     ) external {
+        // recreate payload
+        uint256[] memory payload = new uint256[](3);
+        payload[0] = uint256(uint160(recipient));
+        payload[1] = uint256(low);
+        payload[2] = uint256(high);
+
         // Will revert if the message is not consumable.
         _snMessaging.consumeMessageFromL2(fromAddress, payload);
 
-        // We expect the payload to contain field `a` and `b` from `MyData`.
-        if (payload.length != 3) {
-            revert InvalidPayload();
-        }
-
-        address recipient = address(uint160(payload[0]));
-        uint128 low = uint128(payload[1]);
-        uint128 high = uint128(payload[2]);
+        // recreate amount from 128-bit halves
+        uint256 amount = (uint256(high) << 128) | uint256(low);
+        _mintableToken.mint(msg.sender, amount);
     }
 }
