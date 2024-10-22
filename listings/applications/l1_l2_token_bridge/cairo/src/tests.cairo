@@ -14,27 +14,28 @@ fn CALLER() -> ContractAddress {
     contract_address_const::<'CALLER'>()
 }
 
-fn deploy() -> (ContractAddress, EthAddress, ContractAddress) {
+fn deploy() -> (ITokenBridgeDispatcher, EthAddress, ContractAddress) {
     let l1_bridge = 0x2137;
     let contract = declare("MintableTokenMock").unwrap().contract_class();
     let (l2_token_address, _) = contract.deploy(@array![]).unwrap();
 
     let contract = declare("TokenBridge").unwrap().contract_class();
-    let (contract_address, _) = contract
-        .deploy(@array![l1_bridge, l2_token_address.into()])
-        .unwrap();
+    let (contract_address, _) = contract.deploy(@array![l2_token_address.into()]).unwrap();
 
     let l1_bridge: EthAddress = l1_bridge.try_into().unwrap();
 
-    (contract_address, l1_bridge, l2_token_address)
+    let contract = ITokenBridgeDispatcher { contract_address };
+    contract.set_l1_bridge(l1_bridge);
+
+    (contract, l1_bridge, l2_token_address)
 }
 
 #[test]
 fn bridge_to_l1() {
     let mut spy_l1 = spy_messages_to_l1();
 
-    let (contract_address, l1_bridge, l2_token_address) = deploy();
-    let contract = ITokenBridgeDispatcher { contract_address };
+    let (contract, l1_bridge, l2_token_address) = deploy();
+    let contract_address = contract.contract_address;
 
     let mut spy = spy_events();
 
