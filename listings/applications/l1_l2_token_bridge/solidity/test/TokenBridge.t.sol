@@ -13,19 +13,20 @@ contract TokenBridgeTest is
     IStarknetMessagingEvents,
     IMintableTokenEvents
 {
-    address constant L2_BRIDGE_ADDRESS = address(uint160(0x543d));
     TokenBridge tokenBridge;
     MintableTokenMock mintableTokenMock;
     StarknetMessagingLocal snMessaging;
+
+    uint256 constant L2_BRIDGE_ADDRESS = 0x543d;
 
     function setUp() public {
         snMessaging = new StarknetMessagingLocal();
         mintableTokenMock = new MintableTokenMock();
         tokenBridge = new TokenBridge(
             address(snMessaging),
-            L2_BRIDGE_ADDRESS,
             address(mintableTokenMock)
         );
+        tokenBridge.setL2Bridge(L2_BRIDGE_ADDRESS);
     }
 
     function test_bridgeToL2() public {
@@ -44,7 +45,7 @@ contract TokenBridgeTest is
         // The event we expect
         emit LogMessageToL2(
             address(tokenBridge),
-            uint256(uint160(L2_BRIDGE_ADDRESS)),
+            L2_BRIDGE_ADDRESS,
             tokenBridge.L2_HANDLE_DEPOSIT_SELECTOR(),
             expectedPayload,
             0,
@@ -55,7 +56,7 @@ contract TokenBridgeTest is
     }
 
     function test_consumeWithdrawal() public {
-        uint256 fromAddress = uint256(uint160(L2_BRIDGE_ADDRESS));
+        uint256 fromAddress = L2_BRIDGE_ADDRESS;
         address recipient = address(0x123);
         uint128 low = 1000;
         uint128 high = 0;

@@ -5,14 +5,17 @@ pragma solidity ^0.8.0;
 import "./IMintableToken.sol";
 import "./IStarknetMessaging.sol";
 
-// Define some custom error as an example.
-// It saves a lot's of space to use those custom error instead of strings.
-error InvalidPayload();
+error OnlyGovernor();
+error UninitializedL2Bridge();
 
 /**
    @title Test contract to receive / send messages to starknet.
 */
 contract TokenBridge {
+    event L2BridgeSet(uint256 l2Bridge);
+    event TokenSet(address token);
+
+    address private _governor;
     IMintableToken private _mintableToken;
     IStarknetMessaging private _snMessaging;
     uint256 private _l2Bridge;
@@ -24,13 +27,36 @@ contract TokenBridge {
        @notice Constructor.
 
        @param snMessaging The address of Starknet Core contract, responsible for messaging.
-       @param l2Bridge The address of Starknet bridge contract.
        @param token The address of token to be briged.
     */
-    constructor(address snMessaging, address l2Bridge, address token) {
+    constructor(address snMessaging, address token) {
+        _governor = msg.sender;
         _snMessaging = IStarknetMessaging(snMessaging);
         _mintableToken = IMintableToken(token);
-        _l2Bridge = uint256(uint160(l2Bridge));
+    }
+
+    modifier onlyGovernor() {
+        if (_governor != msg.sender) {
+            revert OnlyGovernor();
+        }
+        _;
+    }
+
+    modifier onlyl2BridgeInitialized() {
+        if (_l2Bridge == 0) {
+            revert UninitializedL2Bridge();
+        }
+        _;
+    }
+
+    function setL2Bridge(uint256 newL2Bridge) external onlyGovernor {
+        _l2Bridge = newL2Bridge;
+        emit L2BridgeSet(newL2Bridge);
+    }
+
+    function setToken(address newToken) external onlyGovernor {
+        _mintableToken = IMintableToken(newToken);
+        emit TokenSet(newToken);
     }
 
     /**
@@ -46,7 +72,7 @@ contract TokenBridge {
     function bridgeToL2(
         uint256 recipientAddress,
         uint256 amount
-    ) external payable {
+    ) external payable onlyl2BridgeInitialized {
         uint256[] memory payload = new uint256[](2);
         payload[0] = recipientAddress;
         payload[1] = amount;
