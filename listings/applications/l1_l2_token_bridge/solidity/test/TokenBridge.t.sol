@@ -34,9 +34,10 @@ contract TokenBridgeTest is
         uint256 msgValue = 1000;
         uint256 recipientAddress = 123;
         uint256 amount = 1000;
-        uint256[] memory expectedPayload = new uint256[](2);
+        uint256[] memory expectedPayload = new uint256[](3);
         expectedPayload[0] = recipientAddress;
-        expectedPayload[1] = amount;
+        expectedPayload[1] = amount; // low
+        expectedPayload[2] = 0; // high
 
         vm.expectEmit(true, false, false, true, address(mintableTokenMock));
         // The event we expect

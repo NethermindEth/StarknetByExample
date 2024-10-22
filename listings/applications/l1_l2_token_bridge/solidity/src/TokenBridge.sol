@@ -90,9 +90,11 @@ contract TokenBridge {
         uint256 recipientAddress,
         uint256 amount
     ) external payable onlyl2BridgeInitialized {
-        uint256[] memory payload = new uint256[](2);
+        (uint128 low, uint128 high) = splitUint256(amount);
+        uint256[] memory payload = new uint256[](3);
         payload[0] = recipientAddress;
-        payload[1] = amount;
+        payload[1] = low;
+        payload[2] = high;
 
         mintableToken.burn(msg.sender, amount);
 
@@ -133,5 +135,15 @@ contract TokenBridge {
         // recreate amount from 128-bit halves
         uint256 amount = (uint256(high) << 128) | uint256(low);
         mintableToken.mint(msg.sender, amount);
+    }
+
+    function splitUint256(
+        uint256 value
+    ) private pure returns (uint128 low, uint128 high) {
+        // Extract the lower 128 bits by masking with 128 ones (0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF)
+        low = uint128(value & 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF);
+
+        // Extract the upper 128 bits by shifting right by 128 bits
+        high = uint128(value >> 128);
     }
 }

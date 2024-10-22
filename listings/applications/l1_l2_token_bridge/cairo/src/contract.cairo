@@ -151,7 +151,7 @@ pub mod TokenBridge {
 
     #[l1_handler]
     pub fn handle_deposit(
-        ref self: ContractState, from_address: felt252, account: ContractAddress, amount: u256
+        ref self: ContractState, from_address: felt252, account: ContractAddress, amount: u256,
     ) {
         assert(from_address == self.l1_bridge.read(), Errors::EXPECTED_FROM_BRIDGE_ONLY);
         assert(account.is_non_zero(), Errors::INVALID_ADDRESS);

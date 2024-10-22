@@ -85,7 +85,6 @@ fn bridge_to_l1() {
         );
 }
 
-
 #[test]
 fn handle_deposit() {
     let l1_bridge = 0x2137;
