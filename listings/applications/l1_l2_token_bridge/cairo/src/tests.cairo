@@ -5,7 +5,6 @@ use snforge_std::{
     MessageToL1SpyAssertionsTrait, MessageToL1, EventSpyAssertionsTrait, DeclareResultTrait,
     ContractClassTrait
 };
-
 use l1_l2_token_bridge::contract::{
     TokenBridge, ITokenBridgeDispatcher, ITokenBridgeDispatcherTrait
 };
@@ -31,7 +30,7 @@ fn deploy() -> (ContractAddress, EthAddress, ContractAddress) {
 }
 
 #[test]
-fn initiate_withdraw() {
+fn bridge_to_l1() {
     let mut spy_l1 = spy_messages_to_l1();
 
     let (contract_address, l1_bridge, l2_token_address) = deploy();
@@ -43,7 +42,7 @@ fn initiate_withdraw() {
     let amount = 100;
 
     start_cheat_caller_address(contract_address, CALLER());
-    contract.initiate_withdraw(l1_recipient.try_into().unwrap(), amount);
+    contract.bridge_to_l1(l1_recipient.try_into().unwrap(), amount);
 
     let expected_payload = array![l1_recipient, 100, 0];
     let l1_recipient: EthAddress = l1_recipient.try_into().unwrap();
@@ -80,6 +79,7 @@ fn initiate_withdraw() {
             ]
         );
 }
+
 
 #[test]
 fn handle_deposit() {

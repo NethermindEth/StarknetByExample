@@ -1,9 +1,9 @@
 use starknet::{ContractAddress, EthAddress};
 
 #[starknet::interface]
-trait IMintableToken<T> {
-    fn mint(ref self: T, account: ContractAddress, amount: u256);
-    fn burn(ref self: T, account: ContractAddress, amount: u256);
+pub trait IMintableToken<TContractState> {
+    fn mint(ref self: TContractState, account: ContractAddress, amount: u256);
+    fn burn(ref self: TContractState, account: ContractAddress, amount: u256);
 }
 
 #[starknet::interface]
@@ -14,7 +14,7 @@ pub trait ITokenBridge<TContractState> {
     ///
     /// * `l1_recipient` - Contract address on L1.
     /// * `amount` - Amount of tokens to withdraw.
-    fn initiate_withdraw(ref self: TContractState, l1_recipient: EthAddress, amount: u256);
+    fn bridge_to_l1(ref self: TContractState, l1_recipient: EthAddress, amount: u256);
 }
 
 #[starknet::contract]
@@ -25,11 +25,11 @@ pub mod TokenBridge {
     use super::{IMintableTokenDispatcher, IMintableTokenDispatcherTrait};
 
     #[storage]
-    struct Storage {
+    pub struct Storage {
         // The L1 bridge address. Zero when unset.
-        l1_bridge: felt252,
+        pub l1_bridge: felt252,
         // The L2 token contract address. Zero when unset.
-        l2_token: ContractAddress,
+        pub l2_token: ContractAddress,
     }
 
     #[event]
@@ -39,24 +39,24 @@ pub mod TokenBridge {
         DepositHandled: DepositHandled,
     }
 
-    // An event that is emitted when initiate_withdraw is called.
+    // An event that is emitted when bridge_to_l1 is called.
     // * l1_recipient is the l1 recipient address.
     // * amount is the amount to withdraw.
     // * caller_address is the address from which the call was made.
     #[derive(Drop, starknet::Event)]
-    struct WithdrawInitiated {
-        l1_recipient: EthAddress,
-        amount: u256,
-        caller_address: ContractAddress,
+    pub struct WithdrawInitiated {
+        pub l1_recipient: EthAddress,
+        pub amount: u256,
+        pub caller_address: ContractAddress,
     }
 
     // An event that is emitted when handle_deposit is called.
     // * account is the recipient address.
     // * amount is the amount to deposit.
     #[derive(Drop, starknet::Event)]
-    struct DepositHandled {
-        account: ContractAddress,
-        amount: u256,
+    pub struct DepositHandled {
+        pub account: ContractAddress,
+        pub amount: u256,
     }
 
     pub mod Errors {
@@ -75,7 +75,7 @@ pub mod TokenBridge {
 
     #[abi(embed_v0)]
     impl TokenBridge of super::ITokenBridge<ContractState> {
-        fn initiate_withdraw(ref self: ContractState, l1_recipient: EthAddress, amount: u256) {
+        fn bridge_to_l1(ref self: ContractState, l1_recipient: EthAddress, amount: u256) {
             assert(l1_recipient.is_non_zero(), Errors::INVALID_ADDRESS);
             assert(amount.is_non_zero(), Errors::INVALID_AMOUNT);
 
@@ -96,7 +96,7 @@ pub mod TokenBridge {
     }
 
     #[l1_handler]
-    fn handle_deposit(
+    pub fn handle_deposit(
         ref self: ContractState, from_address: felt252, account: ContractAddress, amount: u256
     ) {
         assert(from_address == self.l1_bridge.read(), Errors::EXPECTED_FROM_BRIDGE_ONLY);
