@@ -13,7 +13,7 @@ import "starknet/IStarknetMessaging.sol";
  */
 contract TokenBridge {
     address public governor;
-    IMintableToken public mintableToken;
+    IMintableToken public token;
     IStarknetMessaging public snMessaging;
     uint256 public l2Bridge;
     // In our case the value for the `handle_deposit` method on Starknet will be:
@@ -112,7 +112,7 @@ contract TokenBridge {
      * @dev Throws if the L2 bridge address is not set.
      */
     modifier onlyWhenTokenInitialized() {
-        if (address(mintableToken) == address(0)) {
+        if (address(token) == address(0)) {
             revert UninitializedToken();
         }
         _;
@@ -140,7 +140,7 @@ contract TokenBridge {
         if (newToken == address(0)) {
             revert InvalidAddress("newToken");
         }
-        mintableToken = IMintableToken(newToken);
+        token = IMintableToken(newToken);
         emit TokenSet(newToken);
     }
 
@@ -184,7 +184,7 @@ contract TokenBridge {
         payload[1] = low;
         payload[2] = high;
 
-        mintableToken.burn(msg.sender, amount);
+        token.burn(msg.sender, amount);
 
         snMessaging.sendMessageToL2{value: msg.value}(
             l2Bridge,
@@ -222,7 +222,7 @@ contract TokenBridge {
 
         // recreate amount from 128-bit halves
         uint256 amount = (uint256(high) << 128) | uint256(low);
-        mintableToken.mint(recipient, amount);
+        token.mint(recipient, amount);
     }
 
     /**
