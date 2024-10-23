@@ -29,6 +29,7 @@ fn deploy() -> (ITokenBridgeDispatcher, EthAddress, ContractAddress) {
     let contract = ITokenBridgeDispatcher { contract_address };
     start_cheat_caller_address(contract_address, CALLER());
     contract.set_l1_bridge(l1_bridge);
+    contract.set_token(l2_token_address);
     stop_cheat_caller_address(contract_address);
 
     (contract, l1_bridge, l2_token_address)

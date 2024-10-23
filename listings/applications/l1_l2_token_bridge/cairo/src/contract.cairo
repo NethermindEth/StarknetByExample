@@ -84,11 +84,12 @@ pub mod TokenBridge {
     }
 
     pub mod Errors {
-        pub const EXPECTED_FROM_BRIDGE_ONLY: felt252 = 'EXPECTED_FROM_BRIDGE_ONLY';
+        pub const EXPECTED_FROM_BRIDGE_ONLY: felt252 = 'Expected from bridge only';
         pub const INVALID_ADDRESS: felt252 = 'Invalid address';
         pub const INVALID_AMOUNT: felt252 = 'Invalid amount';
-        pub const GOVERNOR_ONLY: felt252 = 'GOVERNOR_ONLY';
-        pub const ZERO_BRIDGE_ADDRESS: felt252 = 'ZERO_BRIDGE_ADDRESS';
+        pub const UNAUTHORIZED: felt252 = 'Unauthorized';
+        pub const TOKEN_NOT_SET: felt252 = 'Token not set';
+        pub const L1_BRIDGE_NOT_SET: felt252 = 'L1 bridge address not set';
     }
 
     #[constructor]
@@ -104,6 +105,8 @@ pub mod TokenBridge {
         fn bridge_to_l1(ref self: ContractState, l1_recipient: EthAddress, amount: u256) {
             assert(l1_recipient.is_non_zero(), Errors::INVALID_ADDRESS);
             assert(amount.is_non_zero(), Errors::INVALID_AMOUNT);
+            self._assert_l1_bridge_set();
+            self._assert_token_set();
 
             // burn tokens on L2
             let caller_address = get_caller_address();
@@ -121,15 +124,15 @@ pub mod TokenBridge {
         }
 
         fn set_l1_bridge(ref self: ContractState, l1_bridge_address: EthAddress) {
-            assert(get_caller_address() == self.governor.read(), Errors::GOVERNOR_ONLY);
-            assert(l1_bridge_address.is_non_zero(), Errors::ZERO_BRIDGE_ADDRESS);
+            self._assert_only_governor();
+            assert(l1_bridge_address.is_non_zero(), Errors::INVALID_ADDRESS);
 
             self.l1_bridge.write(l1_bridge_address.into());
             self.emit(L1BridgeSet { l1_bridge_address });
         }
 
         fn set_l2_token(ref self: ContractState, l2_token_address: ContractAddress) {
-            assert(get_caller_address() == self.governor.read(), Errors::GOVERNOR_ONLY);
+            self._assert_only_governor();
             assert(l2_token_address.is_non_zero(), Errors::INVALID_ADDRESS);
 
             self.l2_token.write(l2_token_address);
@@ -149,6 +152,21 @@ pub mod TokenBridge {
         }
     }
 
+    #[generate_trait]
+    impl Private of PrivateTrait {
+        fn _assert_only_governor(self: @ContractState) {
+            assert(get_caller_address() == self.governor.read(), Errors::UNAUTHORIZED);
+        }
+
+        fn _assert_token_set(self: @ContractState) {
+            assert(self.l2_token.read().is_non_zero(), Errors::TOKEN_NOT_SET);
+        }
+
+        fn _assert_l1_bridge_set(self: @ContractState) {
+            assert(self.l1_bridge.read().is_non_zero(), Errors::L1_BRIDGE_NOT_SET);
+        }
+    }
+
     #[l1_handler]
     pub fn handle_deposit(
         ref self: ContractState, from_address: felt252, account: ContractAddress, amount: u256,
@@ -156,6 +174,7 @@ pub mod TokenBridge {
         assert(from_address == self.l1_bridge.read(), Errors::EXPECTED_FROM_BRIDGE_ONLY);
         assert(account.is_non_zero(), Errors::INVALID_ADDRESS);
         assert(amount.is_non_zero(), Errors::INVALID_AMOUNT);
+        self._assert_token_set();
 
         // Call mint on l2_token contract.
         IMintableTokenDispatcher { contract_address: self.l2_token.read() }.mint(account, amount);
