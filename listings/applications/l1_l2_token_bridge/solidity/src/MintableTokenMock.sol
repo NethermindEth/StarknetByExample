@@ -14,7 +14,7 @@ contract MintableTokenMock is IMintableToken {
     /**
      * @dev The sender is not the bridge.
      */
-    error OnlyBridge();
+    error Unauthorized();
 
     /**
        @dev Constructor.
@@ -33,7 +33,7 @@ contract MintableTokenMock is IMintableToken {
      */
     modifier onlyBridge() {
         if (bridge != msg.sender) {
-            revert OnlyBridge();
+            revert Unauthorized();
         }
         _;
     }
