@@ -8,12 +8,18 @@ title = "Starknet by Example"
 [build]
 extra-watch-dirs = ["listings", "po"]
 
-[preprocessor.gettext]
+[preprocessor.cairo]
 after = ["links"]
+
+[preprocessor.gettext]
+after = ["cairo"]
 
 [preprocessor.last-changed]
 command = "mdbook-last-changed"
 renderer = ["html"]
+
+[output.html.code.hidelines]
+cairo = "# "
 
 [output.html]
 git-repository-url = "https://github.com/NethermindEth/StarknetByExample"

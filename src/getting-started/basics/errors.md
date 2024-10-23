@@ -17,7 +17,7 @@ The `assert_eq!`, `assert_ne!`, `assert_lt!`, `assert_le!`, `assert_gt!` and `as
 
 Here's a simple example that demonstrates the use of these functions:
 
-```rust
+```cairo
 {{#rustdoc_include ../../../listings/getting-started/errors/src/simple_errors.cairo:contract}}
 ```
 
@@ -25,7 +25,7 @@ Here's a simple example that demonstrates the use of these functions:
 
 You can make error handling easier by defining your error codes in a specific module.
 
-```rust
+```cairo
 {{#rustdoc_include ../../../listings/getting-started/errors/src/custom_errors.cairo:contract}}
 ```
 
@@ -33,6 +33,6 @@ You can make error handling easier by defining your error codes in a specific mo
 
 Here's another example that demonstrates the use of errors in a more complex contract:
 
-```rust
+```cairo
 {{#rustdoc_include ../../../listings/getting-started/errors/src/vault_errors.cairo:contract}}
 ```
