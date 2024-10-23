@@ -5,6 +5,6 @@
 
 For example:
 
-```rust
+```cairo
 {{#include ../../../listings/getting-started/cairo_cheatsheet/src/felt_example.cairo:sheet}}
 ```

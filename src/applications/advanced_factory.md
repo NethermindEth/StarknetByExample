@@ -8,6 +8,6 @@ Key Features
 3. **Upgrade Mechanism**: The factory owner can update the implementation of the campaign contract, ensuring that all campaigns benefit from improvements and bug fixes.
     - the factory only updates it's `Campaign` class hash and emits an event to notify any listeners, but the `Campaign` creators are in the end responsible for actually upgrading their contracts.
 
-```rust
+```cairo
 {{#include ../../listings/applications/advanced_factory/src/contract.cairo:contract}}
 ```

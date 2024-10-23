@@ -61,6 +61,6 @@ If we were to `verify` the `hash 6`, the merkle proof would need to contain the 
 
 The following implementation is the Cairo adaptation of the [Solidity by Example - Merkle Tree contract](https://solidity-by-example.org/app/merkle-tree/).
 
-```rust
+```cairo
 {{#include ../../listings/applications/merkle_tree/src/contract.cairo}}
 ```
