@@ -14,13 +14,13 @@ Crowdfunding is a method of raising capital through the collective effort of man
 
 Because contract upgrades need to be able to refund all of the pledges, we need to be able to iterate over all of the pledgers and their amounts. Since iteration is not supported by `Map`, we need to create a custom storage type that will encompass pledge management. We use a component for this purpose.
 
-```rust
+```cairo
 {{#include ../../listings/applications/crowdfunding/src/campaign/pledgeable.cairo:component}}
 ```
 
 Now we can create the `Campaign` contract. 
 
 
-```rust
+```cairo
 {{#include ../../listings/applications/crowdfunding/src/campaign.cairo:contract}}
 ```

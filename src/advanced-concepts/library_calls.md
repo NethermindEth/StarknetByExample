@@ -8,6 +8,6 @@ Contract dispatcher call is synonymous to external calls in Solidity, while libr
 
 For further reading: [Cairo book](https://book.cairo-lang.org/ch15-03-executing-code-from-another-class.html#library-calls)
 
-```rust
+```cairo
 {{#rustdoc_include ../../listings/advanced-concepts/library_calls/src/library_call.cairo:library_dispatcher}}
 ```
