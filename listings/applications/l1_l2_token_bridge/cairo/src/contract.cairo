@@ -1,5 +1,8 @@
 use starknet::{ContractAddress, EthAddress};
 
+/// Represents any time of token that can be minted/burned
+/// In a real contract this would probably be an ERC20 contract,
+/// but here it's represented as a generic token for simplicity.
 #[starknet::interface]
 pub trait IMintableToken<TContractState> {
     fn mint(ref self: TContractState, account: ContractAddress, amount: u256);
@@ -8,12 +11,6 @@ pub trait IMintableToken<TContractState> {
 
 #[starknet::interface]
 pub trait ITokenBridge<TContractState> {
-    /// Initiates a withdrawal of tokens on the L1 contract.
-    ///
-    /// # Arguments
-    ///
-    /// * `l1_recipient` - Contract address on L1.
-    /// * `amount` - Amount of tokens to withdraw.
     fn bridge_to_l1(ref self: TContractState, l1_recipient: EthAddress, amount: u256);
     fn set_l1_bridge(ref self: TContractState, l1_bridge_address: EthAddress);
     fn set_token(ref self: TContractState, l2_token_address: ContractAddress);
@@ -100,6 +97,7 @@ pub mod TokenBridge {
 
     #[abi(embed_v0)]
     impl TokenBridge of super::ITokenBridge<ContractState> {
+        /// Initiates a withdrawal of tokens on the L1 contract.
         fn bridge_to_l1(ref self: ContractState, l1_recipient: EthAddress, amount: u256) {
             assert(l1_recipient.is_non_zero(), Errors::INVALID_ADDRESS);
             assert(amount.is_non_zero(), Errors::INVALID_AMOUNT);
@@ -111,7 +109,7 @@ pub mod TokenBridge {
             IMintableTokenDispatcher { contract_address: self.l2_token.read() }
                 .burn(caller_address, amount);
 
-            // Send the message to L1.
+            // Send the message to L1 to mint tokens there.
             let mut payload: Array<felt252> = array![
                 l1_recipient.into(), amount.low.into(), amount.high.into()
             ];
@@ -136,6 +134,8 @@ pub mod TokenBridge {
             self.l2_token.write(l2_token_address);
             self.emit(L2TokenSet { l2_token_address });
         }
+
+        // Getters
 
         fn governor(self: @ContractState) -> ContractAddress {
             self.governor.read()
