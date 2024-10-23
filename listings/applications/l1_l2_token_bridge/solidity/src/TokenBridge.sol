@@ -8,8 +8,6 @@ import "starknet/IStarknetMessaging.sol";
 /**
  * @title Contract to bridge tokens to and from Starknet. Has basic access control
  * with the `governor` being the only one able to set other storage variables.
- *
- * @author 0xNeshi
  */
 contract TokenBridge {
     address public governor;
