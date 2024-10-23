@@ -5,17 +5,13 @@ pragma solidity ^0.8.0;
 import "./IMintableToken.sol";
 import "./IStarknetMessaging.sol";
 
-error InvalidAddress(string);
-error OnlyGovernor();
-error UninitializedL2Bridge();
-
 /**
-   @title Test contract to receive / send messages to starknet.
-*/
+ * @title Contract to bridge tokens to and from Starknet. Has basic access control
+ * with the `governor` being the only one able to set other storage variables.
+ *
+ * @author 0xNeshi
+ */
 contract TokenBridge {
-    event L2BridgeSet(uint256 l2Bridge);
-    event TokenSet(address token);
-
     address public governor;
     IMintableToken public mintableToken;
     IStarknetMessaging public snMessaging;
@@ -25,27 +21,58 @@ contract TokenBridge {
         0x2D757788A8D8D6F21D1CD40BCE38A8222D70654214E96FF95D8086E684FBEE5;
 
     /**
-       @notice Constructor.
+     * @dev The amount is zero.
+     */
+    error InvalidAmount();
+
+    /**
+     * @dev The address is invalid (e.g. `address(0)`).
+     */
+    error InvalidAddress(string);
+
+    /**
+     * @dev The Starknet address is invalid (e.g. `0`).
+     */
+    error InvalidRecipient();
+
+    /**
+     * @dev The sender is not the governor.
+     */
+    error OnlyGovernor();
+
+    /**
+     * @dev The L2 bridge address is not set.
+     */
+    error UninitializedL2Bridge();
+
+    /**
+     * @dev The L1 token address is not set.
+     */
+    error UninitializedToken();
+
+    event L2BridgeSet(uint256 l2Bridge);
+    event TokenSet(address token);
+
+    /**
+       @dev Constructor.
 
        @param _governor The address of the governor.
        @param _snMessaging The address of Starknet Core contract, responsible for messaging.
-       @param _token The address of token to be briged.
     */
-    constructor(address _governor, address _snMessaging, address _token) {
+    constructor(address _governor, address _snMessaging) {
         if (_governor == address(0)) {
             revert InvalidAddress("_governor");
         }
         if (_snMessaging == address(0)) {
             revert InvalidAddress("_snMessaging");
         }
-        if (_token == address(0)) {
-            revert InvalidAddress("_token");
-        }
         governor = _governor;
         snMessaging = IStarknetMessaging(_snMessaging);
-        mintableToken = IMintableToken(_token);
     }
 
+    /**
+     * @dev Throws if the sender is not the governor.
+     */
     modifier onlyGovernor() {
         if (governor != msg.sender) {
             revert OnlyGovernor();
@@ -53,13 +80,31 @@ contract TokenBridge {
         _;
     }
 
-    modifier onlyl2BridgeInitialized() {
+    /**
+     * @dev Throws if the L2 bridge address is not set.
+     */
+    modifier onlyWhenL2BridgeInitialized() {
         if (l2Bridge == 0) {
             revert UninitializedL2Bridge();
         }
         _;
     }
 
+    /**
+     * @dev Throws if the L2 bridge address is not set.
+     */
+    modifier onlyWhenTokenInitialized() {
+        if (address(mintableToken) == address(0)) {
+            revert UninitializedToken();
+        }
+        _;
+    }
+
+    /**
+     * @dev Sets a new L2 (Starknet) bridge address.
+     *
+     * @param newL2Bridge New bridge address.
+     */
     function setL2Bridge(uint256 newL2Bridge) external onlyGovernor {
         if (newL2Bridge == 0) {
             revert InvalidAddress("newL2Bridge");
@@ -68,6 +113,11 @@ contract TokenBridge {
         emit L2BridgeSet(newL2Bridge);
     }
 
+    /**
+     * @dev Sets a new L1 address for the bridge token.
+     *
+     * @param newToken New token address.
+     */
     function setToken(address newToken) external onlyGovernor {
         if (newToken == address(0)) {
             revert InvalidAddress("newToken");
@@ -77,19 +127,26 @@ contract TokenBridge {
     }
 
     /**
-       @notice Sends a message to Starknet contract.
+       @dev Bridges tokens to Starknet.
 
        @param recipientAddress The contract's address on starknet.
-       @param amount The l1_handler function of the contract to call.
+       @param amount Token amount to bridge.
 
-       @dev Consider that Cairo only understands felts252.
+       @notice Consider that Cairo only understands felts252.
        So the serialization on solidity must be adjusted. For instance, a uint256
-       must be split in two uint256 with low and high part to be understood by Cairo.
+       must be split into two uint128 parts, and Starknet will be able to 
+       deserialize the low and high part as a single u256 value.
     */
     function bridgeToL2(
         uint256 recipientAddress,
         uint256 amount
-    ) external payable onlyl2BridgeInitialized {
+    ) external payable onlyWhenL2BridgeInitialized onlyWhenTokenInitialized {
+        if (recipientAddress == 0) {
+            revert InvalidRecipient();
+        }
+        if (amount == 0) {
+            revert InvalidAmount();
+        }
         (uint128 low, uint128 high) = splitUint256(amount);
         uint256[] memory payload = new uint256[](3);
         payload[0] = recipientAddress;
@@ -106,23 +163,23 @@ contract TokenBridge {
     }
 
     /**
-       @notice Manually consumes a message that was received from L2.
+       @dev Manually consumes the bridge token request that was received from L2.
 
        @param fromAddress L2 contract (account) that has sent the message.
        @param recipient account to withdraw to.
-       @param low lower half of the uint256.
-       @param high higher half of the uint256.
+       @param low lower 128-bit half of the uint256.
+       @param high higher 128-bit half of the uint256.
 
-       @dev A message "receive" means that the message hash is registered as consumable.
-       One must provide the message content, to let Starknet Core contract verify the hash
-       and validate the message content before being consumed.
+       @notice There's no need to validate any of the input parameters, because
+       the message hash from "invalid" data simply won't be found by the
+       StarknetMessaging contract.
     */
     function consumeWithdrawal(
         uint256 fromAddress,
         address recipient,
         uint128 low,
         uint128 high
-    ) external {
+    ) external onlyWhenTokenInitialized {
         // recreate payload
         uint256[] memory payload = new uint256[](3);
         payload[0] = uint256(uint160(recipient));
@@ -134,9 +191,17 @@ contract TokenBridge {
 
         // recreate amount from 128-bit halves
         uint256 amount = (uint256(high) << 128) | uint256(low);
-        mintableToken.mint(msg.sender, amount);
+        mintableToken.mint(recipient, amount);
     }
 
+    /**
+     * @dev Splits the 256-bit integer into 128-bit halves that can be
+     * deserialized by Starknet as a single u256 value.
+     *
+     * @param value 256-bit integer value
+     * @return low lower/rightmost 128 bits of the integer
+     * @return high upper/leftmost 128 bits of the integer
+     */
     function splitUint256(
         uint256 value
     ) private pure returns (uint128 low, uint128 high) {

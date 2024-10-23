@@ -21,13 +21,11 @@ contract TokenBridgeTest is
 
     function setUp() public {
         snMessaging = new StarknetMessagingLocal();
-        mintableTokenMock = new MintableTokenMock();
-        tokenBridge = new TokenBridge(
-            address(this),
-            address(snMessaging),
-            address(mintableTokenMock)
-        );
+        tokenBridge = new TokenBridge(address(this), address(snMessaging));
+        mintableTokenMock = new MintableTokenMock(address(tokenBridge));
+
         tokenBridge.setL2Bridge(L2_BRIDGE_ADDRESS);
+        tokenBridge.setToken(address(mintableTokenMock));
     }
 
     function test_bridgeToL2() public {
@@ -91,7 +89,7 @@ contract TokenBridgeTest is
 
         vm.expectEmit(true, false, false, true, address(mintableTokenMock));
         // The event we expect
-        emit Minted(address(this), amount);
+        emit Minted(recipient, amount);
 
         tokenBridge.consumeWithdrawal(fromAddress, recipient, low, high);
     }
