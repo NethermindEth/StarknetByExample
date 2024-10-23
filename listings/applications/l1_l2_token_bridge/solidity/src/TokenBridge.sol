@@ -3,7 +3,7 @@
 pragma solidity ^0.8.0;
 
 import "./IMintableToken.sol";
-import "./IStarknetMessaging.sol";
+import "starknet/IStarknetMessaging.sol";
 
 /**
  * @title Contract to bridge tokens to and from Starknet. Has basic access control

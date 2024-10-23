@@ -2,10 +2,11 @@
 pragma solidity ^0.8.13;
 
 import {Test} from "forge-std/Test.sol";
+import "starknet/IStarknetMessagingEvents.sol";
+
 import "../src/TokenBridge.sol";
 import "../src/MintableTokenMock.sol";
 import "../src/StarknetMessagingLocal.sol";
-import "../src/IStarknetMessagingEvents.sol";
 import "../src/IMintableTokenEvents.sol";
 
 contract TokenBridgeTest is
