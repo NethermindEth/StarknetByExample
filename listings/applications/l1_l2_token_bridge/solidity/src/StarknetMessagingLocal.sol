@@ -1,4 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0.
+// This contract is taken from the following original Solidity code:
+// https://github.com/glihm/starknet-messaging-dev/blob/75ce67d6e634436d0a4094ee557c8d8fce715877/solidity/src/StarknetMessagingLocal.sol
+
 pragma solidity ^0.8.0;
 
 import "starknet/StarknetMessaging.sol";
