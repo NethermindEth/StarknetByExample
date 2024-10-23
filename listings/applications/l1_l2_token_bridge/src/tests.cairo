@@ -15,14 +15,13 @@ fn CALLER() -> ContractAddress {
 }
 
 fn deploy() -> (ITokenBridgeDispatcher, EthAddress, ContractAddress) {
-    let l1_bridge = 0x2137;
-
     let contract = declare("TokenBridge").unwrap().contract_class();
     let (contract_address, _) = contract.deploy(@array![CALLER().into()]).unwrap();
 
+    let l1_bridge: EthAddress = 0x2137.try_into().unwrap();
+
     let contract = declare("MintableTokenMock").unwrap().contract_class();
     let (l2_token_address, _) = contract.deploy(@array![contract_address.into()]).unwrap();
-    let l1_bridge: EthAddress = l1_bridge.try_into().unwrap();
 
     let contract = ITokenBridgeDispatcher { contract_address };
     start_cheat_caller_address(contract_address, CALLER());
