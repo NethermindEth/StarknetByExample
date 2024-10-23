@@ -1,5 +1,5 @@
 mod contract;
-mod mocks;
+mod mintable_token_mock;
 
 #[cfg(test)]
 mod tests;
