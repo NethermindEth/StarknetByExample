@@ -16,14 +16,12 @@ fn CALLER() -> ContractAddress {
 
 fn deploy() -> (ITokenBridgeDispatcher, EthAddress, ContractAddress) {
     let l1_bridge = 0x2137;
-    let contract = declare("MintableTokenMock").unwrap().contract_class();
-    let (l2_token_address, _) = contract.deploy(@array![]).unwrap();
 
     let contract = declare("TokenBridge").unwrap().contract_class();
-    let (contract_address, _) = contract
-        .deploy(@array![CALLER().into(), l2_token_address.into()])
-        .unwrap();
+    let (contract_address, _) = contract.deploy(@array![CALLER().into()]).unwrap();
 
+    let contract = declare("MintableTokenMock").unwrap().contract_class();
+    let (l2_token_address, _) = contract.deploy(@array![contract_address.into()]).unwrap();
     let l1_bridge: EthAddress = l1_bridge.try_into().unwrap();
 
     let contract = ITokenBridgeDispatcher { contract_address };
@@ -88,12 +86,13 @@ fn bridge_to_l1() {
 
 #[test]
 fn handle_deposit() {
-    let l1_bridge = 0x2137;
-    let contract = declare("MintableTokenMock").unwrap().contract_class();
-    let (l2_token_address, _) = contract.deploy(@array![]).unwrap();
-
     let token_bridge_address = test_address();
     let mut state = TokenBridge::contract_state_for_testing();
+
+    let l1_bridge = 0x2137;
+    let contract = declare("MintableTokenMock").unwrap().contract_class();
+    let (l2_token_address, _) = contract.deploy(@array![token_bridge_address.into()]).unwrap();
+
     state.l1_bridge.write(l1_bridge);
     state.l2_token.write(l2_token_address);
 

@@ -16,7 +16,7 @@ pub trait ITokenBridge<TContractState> {
     /// * `amount` - Amount of tokens to withdraw.
     fn bridge_to_l1(ref self: TContractState, l1_recipient: EthAddress, amount: u256);
     fn set_l1_bridge(ref self: TContractState, l1_bridge_address: EthAddress);
-    fn set_l2_token(ref self: TContractState, l2_token_address: ContractAddress);
+    fn set_token(ref self: TContractState, l2_token_address: ContractAddress);
     fn governor(self: @TContractState) -> ContractAddress;
     fn l1_bridge(self: @TContractState) -> felt252;
     fn l2_token(self: @TContractState) -> ContractAddress;
@@ -76,7 +76,7 @@ pub mod TokenBridge {
         l1_bridge_address: EthAddress,
     }
 
-    // An event that is emitted when set_l2_token is called.
+    // An event that is emitted when set_token is called.
     // * l2_token_address is the new l2 token address.
     #[derive(Drop, starknet::Event)]
     struct L2TokenSet {
@@ -93,11 +93,9 @@ pub mod TokenBridge {
     }
 
     #[constructor]
-    fn constructor(ref self: ContractState, governor: ContractAddress, l2_token: ContractAddress,) {
+    fn constructor(ref self: ContractState, governor: ContractAddress) {
         assert(governor.is_non_zero(), Errors::INVALID_ADDRESS);
-        assert(l2_token.is_non_zero(), Errors::INVALID_ADDRESS);
         self.governor.write(governor);
-        self.l2_token.write(l2_token);
     }
 
     #[abi(embed_v0)]
@@ -131,7 +129,7 @@ pub mod TokenBridge {
             self.emit(L1BridgeSet { l1_bridge_address });
         }
 
-        fn set_l2_token(ref self: ContractState, l2_token_address: ContractAddress) {
+        fn set_token(ref self: ContractState, l2_token_address: ContractAddress) {
             self._assert_only_governor();
             assert(l2_token_address.is_non_zero(), Errors::INVALID_ADDRESS);
 
@@ -153,7 +151,7 @@ pub mod TokenBridge {
     }
 
     #[generate_trait]
-    impl Private of PrivateTrait {
+    impl Internal of InternalTrait {
         fn _assert_only_governor(self: @ContractState) {
             assert(get_caller_address() == self.governor.read(), Errors::UNAUTHORIZED);
         }
