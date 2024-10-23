@@ -19,10 +19,16 @@ contract TokenBridgeTest is
     StarknetMessagingLocal snMessaging;
 
     uint256 constant L2_BRIDGE_ADDRESS = 0x543d;
+    uint256 constant L2_HANDLER_SELECTOR =
+        0x2D757788A8D8D6F21D1CD40BCE38A8222D70654214E96FF95D8086E684FBEE5;
 
     function setUp() public {
         snMessaging = new StarknetMessagingLocal();
-        tokenBridge = new TokenBridge(address(this), address(snMessaging));
+        tokenBridge = new TokenBridge(
+            address(this),
+            address(snMessaging),
+            L2_HANDLER_SELECTOR
+        );
         mintableTokenMock = new MintableTokenMock(address(tokenBridge));
 
         tokenBridge.setL2Bridge(L2_BRIDGE_ADDRESS);
@@ -47,7 +53,7 @@ contract TokenBridgeTest is
         emit LogMessageToL2(
             address(tokenBridge),
             L2_BRIDGE_ADDRESS,
-            tokenBridge.L2_HANDLE_DEPOSIT_SELECTOR(),
+            tokenBridge.l2HandlerSelector(),
             expectedPayload,
             0,
             msgValue

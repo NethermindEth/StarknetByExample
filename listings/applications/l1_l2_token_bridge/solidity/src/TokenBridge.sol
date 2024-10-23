@@ -16,9 +16,9 @@ contract TokenBridge {
     IMintableToken public mintableToken;
     IStarknetMessaging public snMessaging;
     uint256 public l2Bridge;
-
-    uint256 public constant L2_HANDLE_DEPOSIT_SELECTOR =
-        0x2D757788A8D8D6F21D1CD40BCE38A8222D70654214E96FF95D8086E684FBEE5;
+    // In our case the value for the `handle_deposit` method on Starknet will be:
+    // `0x2D757788A8D8D6F21D1CD40BCE38A8222D70654214E96FF95D8086E684FBEE5`
+    uint256 public l2HandlerSelector;
 
     /**
      * @dev The amount is zero.
@@ -34,6 +34,11 @@ contract TokenBridge {
      * @dev The Starknet address is invalid (e.g. `0`).
      */
     error InvalidRecipient();
+
+    /**
+     * @dev The L2 handler selector on Starknet is invalid (e.g. `0`).
+     */
+    error InvalidSelector();
 
     /**
      * @dev The sender is not the governor.
@@ -52,22 +57,35 @@ contract TokenBridge {
 
     event L2BridgeSet(uint256 l2Bridge);
     event TokenSet(address token);
+    event SelectorSet(uint256 selector);
 
     /**
        @dev Constructor.
 
        @param _governor The address of the governor.
        @param _snMessaging The address of Starknet Core contract, responsible for messaging.
+       @param _l2HandlerSelector The selector of Starknet contract's #[l1_handler], responsible handling the L1 bridge request.
+       
+       @notice To read how Starknet selectors are calculated, see docs:
+       https://docs.starknet.io/architecture-and-concepts/cryptography/hash-functions/#starknet_keccak
     */
-    constructor(address _governor, address _snMessaging) {
+    constructor(
+        address _governor,
+        address _snMessaging,
+        uint256 _l2HandlerSelector
+    ) {
         if (_governor == address(0)) {
             revert InvalidAddress("_governor");
         }
         if (_snMessaging == address(0)) {
             revert InvalidAddress("_snMessaging");
         }
+        if (_l2HandlerSelector == 0) {
+            revert InvalidSelector();
+        }
         governor = _governor;
         snMessaging = IStarknetMessaging(_snMessaging);
+        l2HandlerSelector = _l2HandlerSelector;
     }
 
     /**
@@ -127,6 +145,19 @@ contract TokenBridge {
     }
 
     /**
+     * @dev Sets a new Starknet contract's #[l1_handler] selector.
+     *
+     * @param newSelector New selector value.
+     */
+    function setL2HandlerSelector(uint256 newSelector) external onlyGovernor {
+        if (newSelector == 0) {
+            revert InvalidSelector();
+        }
+        l2HandlerSelector = newSelector;
+        emit SelectorSet(newSelector);
+    }
+
+    /**
        @dev Bridges tokens to Starknet.
 
        @param recipientAddress The contract's address on starknet.
@@ -157,7 +188,7 @@ contract TokenBridge {
 
         snMessaging.sendMessageToL2{value: msg.value}(
             l2Bridge,
-            L2_HANDLE_DEPOSIT_SELECTOR,
+            l2HandlerSelector,
             payload
         );
     }
