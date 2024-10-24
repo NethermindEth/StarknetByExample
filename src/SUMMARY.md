@@ -74,6 +74,7 @@ Summary
 - [Writing to any storage slot](./advanced-concepts/write_to_any_slot.md)
 - [Struct as mapping key](./advanced-concepts/struct-mapping-key.md)
 - [Hashing](./advanced-concepts/hashing.md)
+- [Commit-Reveal](./advanced-concepts/commit-reveal.md)
   <!-- Hidden until #123 is solved -->
   <!-- - [Hash Solidity Compatible](./ch02/hash-solidity-compatible.md) -->
 - [Optimisations](./advanced-concepts/optimisations/optimisations.md)
