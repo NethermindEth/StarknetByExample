@@ -30,6 +30,6 @@ liquidity from the pool.
    liquidity, users receive back tokens proportional to the number of shares
    they burn.
 
-```rust
+```cairo
 {{#include ../../listings/applications/constant_product_amm/src/contracts.cairo:ConstantProductAmmContract}}
 ```

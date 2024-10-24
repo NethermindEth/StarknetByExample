@@ -17,7 +17,7 @@ It contains a storage variable `switchable_value`, a function `switch` and an ev
 
 > It is a good practice to prefix the component storage variables with the component name to [avoid collisions](./collisions.md).
 
-```rust
+```cairo
 {{#include ../../listings/applications/components/src/switchable.cairo:component}}
 ```
 
@@ -41,7 +41,7 @@ It doesn't have a constructor, but you can create an `_init` internal function a
 Now that we have a component, we can use it in a contract.
 The following contract incorporates the `Switchable` component:
 
-```rust
+```cairo
 {{#include ../../listings/applications/components/src/switchable.cairo:contract}}
 ```
 
@@ -52,7 +52,7 @@ A common practice is to declare a `Mock` contract that has the only purpose of t
 
 To test the `Switchable` component, we can use the previous `SwitchableContract`:
 
-```rust
+```cairo
 {{#include ../../listings/applications/components/src/switchable.cairo:tests}}
 ```
 

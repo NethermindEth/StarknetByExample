@@ -13,7 +13,7 @@ Since Cairo 1, the community has adopted a [Rust-like documentation style](https
 In smart contracts, you will often have a trait that defines the contract's interface (with `#[starknet::interface]`).
 This is the perfect place to include detailed documentation explaining the purpose and functionality of the contract entry points. You can follow this template:
 
-```rust
+```cairo
 #[starknet::interface]
 trait IContract<TContractState> {
     /// High-level description of the function

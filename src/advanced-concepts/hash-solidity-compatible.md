@@ -4,6 +4,6 @@ This contract demonstrates Keccak hashing in Cairo to match Solidity's keccak256
 
 For example:
 
-```rust
+```cairo
 {{#include ../../listings/advanced-concepts/hash_solidity_compatible/src/contract.cairo}}
 ```
