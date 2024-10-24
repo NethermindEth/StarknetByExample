@@ -23,6 +23,15 @@ name = "calling_other_contracts"
 version = "0.1.0"
 
 [[package]]
+name = "coin_flip"
+version = "0.1.0"
+dependencies = [
+ "openzeppelin",
+ "pragma_lib",
+ "snforge_std",
+]
+
+[[package]]
 name = "commit_reveal"
 version = "0.1.0"
 
