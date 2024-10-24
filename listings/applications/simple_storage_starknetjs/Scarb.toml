@@ -1,9 +1,7 @@
 [package]
 name = "simple_storage"
 version.workspace = true
-edition = "2024_07"
-
-[lib]
+edition.workspace = true
 
 [dependencies]
 starknet.workspace = true
