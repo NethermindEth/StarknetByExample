@@ -112,7 +112,6 @@ version.workspace = true
 
 [dependencies]
 starknet.workspace = true
-snforge_std.workspace = true
 # Uncomment the following lines if you want to use additional dependencies:
 # OpenZeppelin:
 # openzeppelin.workspace = true
@@ -122,6 +121,7 @@ snforge_std.workspace = true
 
 [dev-dependencies]
 assert_macros.workspace = true
+snforge_std.workspace = true
 
 [scripts]
 test.workspace = true
@@ -200,7 +200,7 @@ c
 Then, in the markdown file, you can use the following syntax to include only the code between the delimiting comments:
 
 ````markdown
-````rust
+````cairo
 {{#include ../../listings/path/to/listing/src/contract.cairo:anchor_name}}
 \```
 ````
@@ -215,7 +215,7 @@ b
 Using `#rustdoc_include` you can have the same result, but users can expand the code in the book to see the whole file (used for showing tests):
 
 ````markdown
-````rust
+````cairo
 {{#rustdoc_include ../../listings/path/to/listing/src/contract.cairo:anchor_name}}
 \```
 ````

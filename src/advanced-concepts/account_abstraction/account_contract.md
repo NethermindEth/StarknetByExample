@@ -5,7 +5,7 @@ In practice, this means that the contract must implement the `SRC6` and `SRC5` i
 
 ## SNIP-6: SRC6 + SRC5
 
-```rust
+```cairo
 /// @title Represents a call to a target contract
 /// @param to The target contract address
 /// @param selector The target function selector
@@ -19,7 +19,7 @@ struct Call {
 
 The `Call` struct is used to represent a call to a function (`selector`) in a target contract (`to`) with parameters (`calldata`). It is available under the `starknet::account` module.
 
-```rust
+```cairo
 /// @title SRC-6 Standard Account
 trait ISRC6 {
     /// @notice Execute a transaction through the account
@@ -52,7 +52,7 @@ Both `__execute__` and `__validate__` functions are exclusively called by the St
 
  <!-- TODO replace with link to SRC5 example #109 -->
 
-```rust
+```cairo
 /// @title SRC-5 Standard Interface Detection
 trait ISRC5 {
     /// @notice Query if a contract implements an interface
@@ -68,6 +68,6 @@ The interface identifiers of both `SRC5` and `SRC6` must be published with `supp
 
 In this example, we will implement a minimal account contract that can validate and execute transactions.
 
-```rust
+```cairo
 {{#rustdoc_include ../../../listings/advanced-concepts/simple_account/src/simple_account.cairo}}
 ```
