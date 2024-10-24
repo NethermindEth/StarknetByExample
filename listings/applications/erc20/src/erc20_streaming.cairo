@@ -10,7 +10,7 @@ pub mod erc20_streaming {
 
     #[storage]
     struct Storage {
-        streams: LegacyMap<(ContractAddress, ContractAddress), Stream>,
+        streams: LegacyMap<u64, Stream>,
         next_stream_id: u64,  
        
     }
@@ -77,9 +77,9 @@ pub mod erc20_streaming {
             assert(end_time > start_time, Errors::END_TIME_INVALID); // Assert end_time > start_time
             assert(start_time >= get_block_timestamp(), Errors::START_TIME_INVALID);
 
-            let stream_key = (caller, to);
-            assert(self.streams.read(stream_key).start_time == 0, Errors::STREAM_ALREADY_EXISTS);
-
+            let stream_key = self.next_stream_id;
+            self.next_stream_id.write(stream_key + 1);
+           
             // Call the ERC20 contract to transfer tokens
             let erc20 = self.erc20_token.read();
             erc20.call("transfer_from", (caller, self.contract_address(), total_amount));
@@ -101,7 +101,6 @@ pub mod erc20_streaming {
 
         fn release_tokens(ref self: ContractState, stream_id: u64) {
             let caller = get_caller_address();
-            let stream_id = (caller, to);
             let stream = self.streams.read(stream_id);
             assert(caller == stream.to, Errors::STREAM_UNAUTHORIZED);
 

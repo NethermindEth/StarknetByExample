@@ -12,6 +12,7 @@ test = "$(git rev-parse --show-toplevel)/scripts/test_resolver.sh"
 [workspace.tool.snforge]
 
 [workspace.dependencies]
+snforge = { git = "https://github.com/foundry-rs/starknet-foundry" }
 starknet = ">=2.6.4"
 openzeppelin = { git = "https://github.com/OpenZeppelin/cairo-contracts.git", tag="v0.14.0" }
 components = { path = "listings/applications/components" }
