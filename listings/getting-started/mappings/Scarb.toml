@@ -1,13 +1,13 @@
 [package]
 name = "mappings"
 version.workspace = true
-edition = "2024_07"
+edition.workspace = true
 
 [dependencies]
 starknet.workspace = true
 
 [dev-dependencies]
-cairo_test = "2.7.1"
+cairo_test.workspace = true
 
 [scripts]
 test.workspace = true
