@@ -8,3 +8,7 @@ node_modules
 # Others
 .snfoundry_cache
 .vscode/settings.json
+
+# From previous mdbook build
+book/*
+target/*
