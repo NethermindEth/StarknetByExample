@@ -15,134 +15,134 @@ export default defineConfig({
       items: [
         {
           text: "1. Basics of a Starknet contract",
-          link: "/ch00/basics/introduction",
+          link: "/getting-started/basics/introduction",
           collapsed: false,
           items: [
             {
               text: "1.1. Storage",
-              link: "/ch00/basics/storage",
+              link: "/getting-started/basics/storage",
             },
             {
               text: "1.2. Constructor",
-              link: "/ch00/basics/constructor",
+              link: "/getting-started/basics/constructor",
             },
             {
               text: "1.3. Variables",
-              link: "/ch00/basics/variables",
+              link: "/getting-started/basics/variables",
             },
             {
               text: "1.4. Visibility and Mutability",
-              link: "/ch00/basics/visibility-mutability",
+              link: "/getting-started/basics/visibility-mutability",
             },
             {
               text: "1.5. Counter Example",
-              link: "/ch00/basics/counter",
+              link: "/getting-started/basics/counter",
             },
             {
               text: "1.6. Mappings",
-              link: "/ch00/basics/mappings",
+              link: "/getting-started/basics/mappings",
             },
             {
               text: "1.7. Errors",
-              link: "/ch00/basics/errors",
+              link: "/getting-started/basics/errors",
             },
             {
               text: "1.8. Events",
-              link: "/ch00/basics/events",
+              link: "/getting-started/basics/events",
             },
             {
               text: "1.9. Syscalls",
-              link: "/ch00/basics/syscalls",
+              link: "/getting-started/basics/syscalls",
             },
             {
               text: "1.10. Strings and ByteArrays",
-              link: "/ch00/basics/bytearrays-strings",
+              link: "/getting-started/basics/bytearrays-strings",
             },
             {
               text: "1.11. Storing Custom Types",
-              link: "/ch00/basics/storing-custom-types",
+              link: "/getting-started/basics/storing-custom-types",
             },
             {
               text: "1.12. Custom types in entrypoints",
-              link: "/ch00/basics/custom-types-in-entrypoints",
+              link: "/getting-started/basics/custom-types-in-entrypoints",
             },
             {
               text: "1.13. Documentation",
-              link: "/ch00/basics/documentation",
+              link: "/getting-started/basics/documentation",
             },
           ],
         },
         {
           text: "2. Deploy and interact with contracts",
-          link: "/ch00/interacting/interacting",
+          link: "/getting-started/interacting/interacting",
           collapsed: true,
           items: [
             {
               text: "2.1. Contract interfaces and Traits generation",
-              link: "/ch00/interacting/interfaces-traits",
+              link: "/getting-started/interacting/interfaces-traits",
             },
             {
               text: "2.2. Calling other contracts",
-              link: "/ch00/interacting/calling_other_contracts",
+              link: "/getting-started/interacting/calling_other_contracts",
             },
             {
               text: "2.3. Factory pattern",
-              link: "/ch00/interacting/factory",
+              link: "/getting-started/interacting/factory",
             },
           ],
         },
         {
           text: "3. Testing contracts",
-          link: "/ch00/testing/contract-testing",
+          link: "/getting-started/testing/contract-testing",
         },
         {
           text: "4. Cairo cheatsheet",
-          link: "/ch00/cairo_cheatsheet/cairo_cheatsheet",
+          link: "/getting-started/cairo_cheatsheet/cairo_cheatsheet",
           collapsed: true,
           items: [
             {
               text: "4.1. Felt",
-              link: "/ch00/cairo_cheatsheet/felt",
+              link: "/getting-started/cairo_cheatsheet/felt",
             },
             {
               text: "4.2. LegacyMap",
-              link: "/ch00/cairo_cheatsheet/mapping",
+              link: "/getting-started/cairo_cheatsheet/mapping",
             },
             {
               text: "4.3. Arrays",
-              link: "/ch00/cairo_cheatsheet/arrays",
+              link: "/getting-started/cairo_cheatsheet/arrays",
             },
             {
               text: "4.4. loop",
-              link: "/ch00/cairo_cheatsheet/loop",
+              link: "/getting-started/cairo_cheatsheet/loop",
             },
             {
               text: "4.5. while",
-              link: "/ch00/cairo_cheatsheet/while",
+              link: "/getting-started/cairo_cheatsheet/while",
             },
             {
               text: "4.6. if let",
-              link: "/ch00/cairo_cheatsheet/if_let",
+              link: "/getting-started/cairo_cheatsheet/if_let",
             },
             {
               text: "4.7. while let",
-              link: "/ch00/cairo_cheatsheet/while_let",
+              link: "/getting-started/cairo_cheatsheet/while_let",
             },
             {
               text: "4.8. Match",
-              link: "/ch00/cairo_cheatsheet/match",
+              link: "/getting-started/cairo_cheatsheet/match",
             },
             {
               text: "4.9. Tuples",
-              link: "/ch00/cairo_cheatsheet/tuples",
+              link: "/getting-started/cairo_cheatsheet/tuples",
             },
             {
               text: "4.10. Struct",
-              link: "/ch00/cairo_cheatsheet/struct",
+              link: "/getting-started/cairo_cheatsheet/struct",
             },
             {
               text: "4.11. Type casting",
-              link: "/ch00/cairo_cheatsheet/type_casting",
+              link: "/getting-started/cairo_cheatsheet/type_casting",
             },
           ],
         },
@@ -174,19 +174,19 @@ export default defineConfig({
       items: [
         {
           text: "9. Upgradeable Contract",
-          link: "/ch01/upgradeable_contract",
+          link: "/applications/upgradeable_contract",
         },
         {
           text: "10. Defi Vault",
-          link: "/ch01/simple_vault",
+          link: "/applications/simple_vault",
         },
         {
           text: "11. ERC20 Token",
-          link: "/ch01/erc20",
+          link: "/applications/erc20",
         },
         {
           text: "12. Constant Product AMM",
-          link: "/ch01/constant-product-amm",
+          link: "/applications/constant-product-amm",
         },
       ],
     },
@@ -195,42 +195,42 @@ export default defineConfig({
       items: [
         {
           text: "13. Writing to any storage slot",
-          link: "/ch02/write_to_any_slot",
+          link: "/advanced-concepts/write_to_any_slot",
         },
-        {
-          text: "14. Storing Arrays",
-          link: "/ch02/storing_arrays",
-        },
+        // {
+        //   text: "14. Storing Arrays",
+        //   link: "/advanced-concepts/storing_arrays",
+        // },
         {
           text: "15. Struct as mapping key",
-          link: "/ch02/struct-mapping-key",
+          link: "/advanced-concepts/struct-mapping-key",
         },
         {
           text: "16. Hashing",
-          link: "/ch02/hashing",
+          link: "/advanced-concepts/hashing",
         },
         {
           text: "17. Optimisations",
-          link: "/ch02/optimisations/optimisations",
+          link: "/advanced-concepts/optimisations/optimisations",
           collapsed: false,
           items: [
             {
               text: "17.1. Storage Optimisations",
-              link: "/ch02/optimisations/store_using_packing",
+              link: "/advanced-concepts/optimisations/store_using_packing",
             },
           ],
         },
-        {
-          text: "18. List",
-          link: "/ch02/list",
-        },
+        // {
+        //   text: "18. List",
+        //   link: "/advanced-concepts/list",
+        // },
         {
           text: "19. Plugins",
-          link: "/ch02/plugins",
+          link: "/advanced-concepts/plugins",
         },
         {
           text: "20. Signature Verification",
-          link: "/ch02/signature_verification",
+          link: "/advanced-concepts/signature_verification",
         },
       ],
     },
