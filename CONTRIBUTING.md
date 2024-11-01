@@ -177,9 +177,9 @@ mod contract;
 And in the `contract.cairo` file:
 
 ```cairo
-// ANCHOR: contract
+// [!region contract]
 // Write your contract here
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod tests {

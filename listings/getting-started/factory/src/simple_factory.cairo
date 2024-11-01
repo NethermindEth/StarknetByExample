@@ -67,7 +67,6 @@ pub mod CounterFactory {
 }
 // [!endregion contract]
 
-// [!region tests]
 #[cfg(test)]
 mod tests {
     use super::{CounterFactory, ICounterFactoryDispatcher, ICounterFactoryDispatcherTrait};
@@ -189,4 +188,3 @@ mod tests {
         assert_eq!(counter_2.get_current_count(), argument_value);
     }
 }
-// [!endregion tests]

@@ -1,4 +1,3 @@
-// [!region hash]
 #[starknet::interface]
 pub trait IHashTrait<T> {
     fn save_user_with_poseidon(
@@ -9,6 +8,7 @@ pub trait IHashTrait<T> {
     ) -> felt252;
 }
 
+// [!region hash]
 #[starknet::contract]
 pub mod HashTraits {
     use starknet::storage::StoragePointerWriteAccess;
@@ -62,7 +62,6 @@ pub mod HashTraits {
 }
 // [!endregion hash]
 
-// [!region tests]
 #[cfg(test)]
 mod tests {
     use starknet::SyscallResultTrait;
@@ -104,4 +103,3 @@ mod tests {
         assert_eq!(test_hash, 0x4d165e1d398ae4864854518d3c58c3d7a21ed9c1f8f3618fbb0031d208aab7b);
     }
 }
-// [!endregion tests]

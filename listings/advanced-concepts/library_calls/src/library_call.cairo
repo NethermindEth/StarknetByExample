@@ -1,4 +1,4 @@
-// ANCHOR: library_dispatcher
+// [!region library_dispatcher]
 #[starknet::interface]
 pub trait IMathUtils<T> {
     fn add(ref self: T, x: u32, y: u32) -> u32;
@@ -46,6 +46,6 @@ pub mod MathUtilsLibraryCall {
         }
     }
 }
-// ANCHOR_END: library_dispatcher
+// [!endregion library_dispatcher]
 
 

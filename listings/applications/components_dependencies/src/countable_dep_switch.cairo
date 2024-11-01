@@ -27,7 +27,8 @@ pub mod countable_component {
     }
     // [!endregion impl]
 }
-// [!endregion contract]
+
+//ANCHOR_END: contract
 
 #[starknet::contract]
 mod MockContract {
@@ -60,6 +61,7 @@ mod MockContract {
         }
     }
 }
+
 
 #[cfg(test)]
 mod test {

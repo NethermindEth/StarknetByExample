@@ -6,7 +6,6 @@ pub mod Contract {
 }
 // [!endregion contract]
 
-// [!region tests]
 #[cfg(test)]
 mod test {
     use super::Contract;
@@ -21,4 +20,4 @@ mod test {
         // Not much to test
     }
 }
-// [!endregion tests]
+

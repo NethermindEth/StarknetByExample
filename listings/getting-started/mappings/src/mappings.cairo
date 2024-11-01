@@ -1,4 +1,3 @@
-// [!region contract]
 use starknet::ContractAddress;
 
 #[starknet::interface]
@@ -7,6 +6,7 @@ pub trait IMapContract<TContractState> {
     fn get(self: @TContractState, key: ContractAddress) -> felt252;
 }
 
+// [!region contract]
 #[starknet::contract]
 pub mod MapContract {
     use starknet::ContractAddress;
@@ -30,7 +30,6 @@ pub mod MapContract {
 }
 // [!endregion contract]
 
-// [!region tests]
 #[cfg(test)]
 mod test {
     use super::{MapContract, IMapContractDispatcher, IMapContractDispatcherTrait};
@@ -53,5 +52,3 @@ mod test {
         assert(read_value == 1, 'wrong value read');
     }
 }
-
-// [!endregion tests]

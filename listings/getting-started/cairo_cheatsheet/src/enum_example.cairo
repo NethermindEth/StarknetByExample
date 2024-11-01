@@ -1,4 +1,4 @@
-// ANCHOR: enums
+// [!region enums]
 #[derive(Drop, Serde, Copy, starknet::Store)]
 struct Position {
     x: u32,
@@ -20,9 +20,9 @@ enum Action {
     ChangeAvatarColor: (u8, u8, u8),
     ProfileState: UserCommand
 }
-// ANCHOR_END: enums
+// [!endregion enums]
 
-// ANCHOR: enum_contract
+// [!region enum_contract]
 #[starknet::interface]
 trait IEnumContract<TContractState> {
     fn register_action(ref self: TContractState, action: Action);
@@ -77,6 +77,6 @@ mod EnumContract {
         }
     }
 }
-// ANCHOR_END: enum_contract
+// [!endregion enum_contract]
 
 

@@ -1,10 +1,10 @@
-// [!region contract]
 #[starknet::interface]
 pub trait IErrorsExample<TContractState> {
     fn test_assert(self: @TContractState, i: u256);
     fn test_panic(self: @TContractState, i: u256);
 }
 
+// [!region contract]
 #[starknet::contract]
 pub mod ErrorsExample {
     #[storage]
@@ -28,7 +28,6 @@ pub mod ErrorsExample {
 }
 // [!endregion contract]
 
-// [!region tests]
 #[cfg(test)]
 mod test {
     use super::{ErrorsExample, IErrorsExampleDispatcher, IErrorsExampleDispatcherTrait};
@@ -56,4 +55,3 @@ mod test {
         contract.test_assert(0);
     }
 }
-// [!endregion tests]

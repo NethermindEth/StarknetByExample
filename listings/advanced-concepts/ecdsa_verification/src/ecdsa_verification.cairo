@@ -1,4 +1,4 @@
-// [!endregion contract]
+// [!region contract]
 use core::starknet::eth_address::EthAddress;
 use starknet::secp256_trait::{Signature};
 
@@ -7,7 +7,6 @@ use starknet::secp256_trait::{Signature};
 // 1. Create message to sign
 // 2. Hash the message
 // 3. Sign the hash (off chain, keep your private key secret)
-// [!region contract]
 #[starknet::interface]
 trait IVerifySignature<TContractState> {
     fn get_signature(self: @TContractState, r: u256, s: u256, v: u32,) -> Signature;

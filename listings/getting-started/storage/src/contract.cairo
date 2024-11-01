@@ -10,7 +10,6 @@ pub mod Contract {
 }
 // [!endregion contract]
 
-// [!region tests]
 #[cfg(test)]
 mod test {
     use super::Contract;
@@ -33,4 +32,3 @@ mod test {
         assert_eq!(state.c.read(), 0_u256);
     }
 }
-// [!endregion tests]

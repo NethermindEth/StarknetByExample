@@ -1,10 +1,10 @@
-// [!region contract]
 #[starknet::interface]
 pub trait ICustomErrorsExample<TContractState> {
     fn test_assert(self: @TContractState, i: u256);
     fn test_panic(self: @TContractState, i: u256);
 }
 
+// [!region contract]
 pub mod Errors {
     pub const NOT_POSITIVE: felt252 = 'must be greater than 0';
     pub const NOT_NULL: felt252 = 'must not be null';
@@ -32,7 +32,6 @@ pub mod CustomErrorsExample {
 }
 // [!endregion contract]
 
-// [!region tests]
 #[cfg(test)]
 mod test {
     use super::{
@@ -62,4 +61,3 @@ mod test {
         contract.test_assert(0);
     }
 }
-// [!endregion tests]

@@ -24,7 +24,6 @@ pub mod ImplicitInterfaceContract {
 }
 // [!endregion contract]
 
-// [!region tests]
 #[cfg(test)]
 mod tests {
     use super::{ImplicitInterfaceContract, ImplicitInterfaceContract::IImplicitInterfaceContract};
@@ -49,4 +48,3 @@ mod tests {
         assert_eq!(read_value, value);
     }
 }
-// [!endregion tests]

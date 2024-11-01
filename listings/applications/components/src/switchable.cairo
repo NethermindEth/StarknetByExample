@@ -50,7 +50,7 @@ pub mod switchable_component {
 }
 // [!endregion component]
 
-// ANCHOR: contract
+// [!region contract]
 #[starknet::contract]
 pub mod SwitchContract {
     use super::switchable_component;
@@ -81,9 +81,9 @@ pub mod SwitchContract {
         self.switch._off();
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
-// ANCHOR: tests
+// [!region tests]
 #[cfg(test)]
 mod test {
     use super::SwitchContract; // Used as a mock contract
@@ -128,6 +128,6 @@ mod test {
         assert_eq!(switchable.is_on(), true);
     }
 }
-// ANCHOR_END: tests
+// [!endregion tests]
 
 

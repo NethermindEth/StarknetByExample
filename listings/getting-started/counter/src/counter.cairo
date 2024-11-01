@@ -1,4 +1,3 @@
-// [!region contract]
 #[starknet::interface]
 pub trait ISimpleCounter<TContractState> {
     fn get_current_count(self: @TContractState) -> u128;
@@ -6,6 +5,7 @@ pub trait ISimpleCounter<TContractState> {
     fn decrement(ref self: TContractState);
 }
 
+// [!region contract]
 #[starknet::contract]
 pub mod SimpleCounter {
     use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
@@ -43,7 +43,6 @@ pub mod SimpleCounter {
 }
 // [!endregion contract]
 
-// [!region tests]
 #[cfg(test)]
 mod test {
     use super::{SimpleCounter, ISimpleCounterDispatcher, ISimpleCounterDispatcherTrait};
@@ -109,4 +108,3 @@ mod test {
         assert_eq!(contract.get_current_count(), init_value);
     }
 }
-// [!endregion tests]

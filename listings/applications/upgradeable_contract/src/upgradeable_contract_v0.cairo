@@ -36,6 +36,7 @@ pub mod UpgradeableContract_V0 {
             self.emit(Event::Upgraded(Upgraded { implementation: impl_hash }))
         }
         // [!endregion upgrade]
+
         fn version(self: @ContractState) -> u8 {
             0
         }

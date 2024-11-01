@@ -1,4 +1,4 @@
-// ANCHOR: sheet
+// [!region sheet]
 use core::dict::Felt252Dict;
 
 fn dict() {
@@ -13,6 +13,6 @@ fn dict() {
     let maria_balance = Auctions.get('Maria');
     assert!(maria_balance == 40, "Maria balance should be 40");
 }
-// ANCHOR_END: sheet
+// [!endregion sheet]
 
 

@@ -1,9 +1,9 @@
-// [!region contract]
 #[starknet::interface]
 pub trait IEventCounter<TContractState> {
     fn increment(ref self: TContractState, amount: u128);
 }
 
+// [!region contract]
 #[starknet::contract]
 pub mod EventCounter {
     use starknet::{get_caller_address, ContractAddress};
@@ -61,7 +61,6 @@ pub mod EventCounter {
 }
 // [!endregion contract]
 
-// [!region tests]
 #[cfg(test)]
 mod tests {
     use super::{
@@ -98,7 +97,6 @@ mod tests {
             Option::Some(Event::CounterIncreased(CounterIncreased { amount }))
         );
         // [!endregion test_events]
-
         assert_eq!(
             starknet::testing::pop_log(contract_address),
             Option::Some(
@@ -107,4 +105,3 @@ mod tests {
         );
     }
 }
-// [!endregion tests]

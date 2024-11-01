@@ -42,7 +42,6 @@ mod CountableContract {
 }
 // [!endregion contract]
 
-// [!region tests]
 #[cfg(test)]
 mod tests {
     use super::CountableContract;
@@ -113,4 +112,3 @@ mod tests {
         assert_eq!(counter.get(), 6);
     }
 }
-// [!endregion tests]

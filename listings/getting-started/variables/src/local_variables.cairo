@@ -1,9 +1,9 @@
-// [!region contract]
 #[starknet::interface]
 pub trait ILocalVariablesExample<TContractState> {
     fn do_something(self: @TContractState, value: u32) -> u32;
 }
 
+// [!region contract]
 #[starknet::contract]
 pub mod LocalVariablesExample {
     #[storage]
@@ -28,7 +28,6 @@ pub mod LocalVariablesExample {
 }
 // [!endregion contract]
 
-// [!region tests]
 #[cfg(test)]
 mod test {
     use super::{
@@ -50,4 +49,3 @@ mod test {
         assert_eq!(res, value + 10);
     }
 }
-// [!endregion tests]

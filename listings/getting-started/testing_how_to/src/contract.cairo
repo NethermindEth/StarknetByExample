@@ -118,7 +118,8 @@ mod tests {
     fn test_deploy_gas() {
         deploy(10);
     }
-}// [!endregion tests]
+}
+// [!endregion tests]
 
 // [!region tests_with_state]
 #[cfg(test)]
@@ -217,5 +218,6 @@ mod tests_with_states {
         assert_eq!(contract.get_value(), new_value);
     }
 }
-}// [!endregion tests_with_state]
+// [!endregion tests]
+
 

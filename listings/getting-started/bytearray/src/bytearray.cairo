@@ -1,10 +1,10 @@
-// [!region contract]
 #[starknet::interface]
 pub trait IMessage<TContractState> {
     fn append(ref self: TContractState, str: ByteArray);
     fn prepend(ref self: TContractState, str: ByteArray);
 }
 
+// [!region contract]
 #[starknet::contract]
 pub mod MessageContract {
     use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
@@ -32,7 +32,6 @@ pub mod MessageContract {
 }
 // [!endregion contract]
 
-// [!region tests]
 #[cfg(test)]
 mod tests {
     use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
@@ -54,4 +53,3 @@ mod tests {
         assert(state.message.read() == "Hello, World! Good day, sir!", 'wrong message (prepend)');
     }
 }
-// [!endregion tests]
