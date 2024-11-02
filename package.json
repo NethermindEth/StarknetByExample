@@ -12,6 +12,6 @@
     "react": "latest",
     "react-dom": "latest",
     "typescript": "latest",
-    "vocs": "latest"
+    "vocs": "^1.0.0-alpha.62"
   }
 }
