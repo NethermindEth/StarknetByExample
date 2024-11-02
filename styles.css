@@ -1,3 +1,5 @@
-section.vocs_Sidebar_level > .vocs_Sidebar_sectionHeader .vocs_Sidebar_sectionTitleLink[data-active="true"] {
-  color: #202020 !important;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 }
