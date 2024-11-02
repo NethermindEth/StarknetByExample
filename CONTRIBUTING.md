@@ -63,7 +63,7 @@ All Markdown files (\*.md) MUST be edited in English. Follow these steps to work
 
 Be sure to check for typos with `typos`:
 
-```shell
+```bash [Terminal]
 cargo install typos-cli
 typos src/
 ```
@@ -169,14 +169,14 @@ You should add the tests in the same file as the contract, using the `#[cfg(test
 
 Here's a sample `lib.cairo` file:
 
-```cairo
+```rust
 mod contract;
 // any other modules you want
 ```
 
 And in the `contract.cairo` file:
 
-```cairo
+```rust
 // [!region contract]
 // Write your contract here
 // [!endregion contract]
@@ -193,7 +193,7 @@ You can use Starknet Foundry to write and run your tests.
 
 You can add delimiting comments to select part of the code in the book.
 
-```cairo
+```rust
 file.cairo:
 
 a
@@ -206,14 +206,14 @@ c
 Then, in the markdown file, you can use the following syntax to include only the code between the delimiting comments:
 
 ````markdown
-    ```cairo
+    ```rust
     // [!include ~/listings/src/contract.cairo:region_name]
     ```
 ````
 
 This will result in the following code being included in the book:
 
-```cairo
+```rust
 b
 ```
 
@@ -222,11 +222,11 @@ To render code in tabs format you can use `:::code-group`. Example you can rende
 ````
     :::code-group
 
-    ```cairo [contract]
+    ```rust [contract]
     // [!include ~/listings/src/contract.cairo:contract]
     ```
 
-    ```cairo [tests]
+    ```rust [tests]
     // [!include ~/listings/src/contract.cairo:tests]
     ```
 

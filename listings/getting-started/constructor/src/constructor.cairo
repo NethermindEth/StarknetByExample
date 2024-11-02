@@ -18,6 +18,7 @@ pub mod ExampleConstructor {
 }
 // [!endregion contract]
 
+// [!region tests]
 #[cfg(test)]
 mod tests {
     use super::ExampleConstructor;
@@ -45,3 +46,6 @@ mod tests {
         assert_eq!(name, 'bob');
     }
 }
+// [!endregion tests]
+
+

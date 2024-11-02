@@ -3,7 +3,7 @@ members = [
   "listings/getting-started/*",
   "listings/applications/*",
   "listings/advanced-concepts/*",
-  "listings/templates/*",
+  "listings/cairo_cheatsheet",
 ]
 
 [workspace.scripts]
