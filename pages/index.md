@@ -38,5 +38,5 @@ The current version this book uses:
 cairo 2.8.2
 edition 2024_07
 sierra 1.6.0
-// [!include ~/../.tool-versions]
+// [!include ~/.tool-versions]
 ```
