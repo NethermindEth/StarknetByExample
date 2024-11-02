@@ -2,4 +2,92 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Remove external link arrow */
+.vocs_ExternalLink::after {
+  width: 0;
+  margin: 0;
+}
+
+/* Remove sidebar dividers */
+.vocs_Sidebar_divider {
+  display: none;
+}
+
+:not(.vocs_Header) + .vocs_H2:not(:only-child),
+.vocs_Sidebar_navigation
+  > .vocs_Sidebar_group
+  > .vocs_Sidebar_section
+  + .vocs_Sidebar_section {
+  border-top: none;
+}
+
+/* Remove title divider */
+/* Remove title padding for more compact page */
+.vocs_Header {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* Ensure top section sidebar element are never active */
+section.vocs_Sidebar_level
+  > .vocs_Sidebar_sectionHeader
+  .vocs_Sidebar_sectionTitleLink[data-active="true"] {
+  color: var(--vocs-color_title) !important;
+}
+
+/* Remove border of codeblock for flat look */
+.vocs_CodeBlock {
+  border: none;
+}
+
+/* Remove footer divider */
+.vocs_Footer_container {
+  border-bottom: none;
+}
+
+/* Remove footer padding, managed in footer.tsx */
+.vocs_Footer {
+  padding-bottom: 0;
+}
+
+.footer_text span {
+  color: var(--vocs-color_text3);
+}
+
+/* Hide all outlines */
+.vocs_DocsLayout_gutterRight {
+  display: none;
+}
+
+/* Put searchbar on righ */
+.vocs_DesktopTopNav {
+  justify-content: end;
+  gap: var(--vocs-space_12);
+}
+
+/* Sidebar modification */
+.vocs_DocsLayout_gutterLeft {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+}
+
+/* .vocs_DocsLayout_gutterLeft {
+  background: transparent;
+  border-right: 1px solid var(--vocs-color_border);
+}
+.vocs_Sidebar_logoWrapper {
+  background-color: var(--vocs-color_background);
+} */
+
+/* Center content relative to sidebar not page */
+.vocs_DocsLayout_content {
+  max-width: unset;
+}
+
+.vocs_Content,
+.vocs_Footer {
+  margin: auto;
+  /* max-width: 75%; */
 }
