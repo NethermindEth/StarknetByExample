@@ -11,6 +11,8 @@
     "@types/react": "latest",
     "react": "latest",
     "react-dom": "latest",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0",
     "typescript": "latest",
     "vocs": "1.0.0-alpha.62"
   },

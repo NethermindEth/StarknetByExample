@@ -91,3 +91,14 @@ section.vocs_Sidebar_level
   margin: auto;
   /* max-width: 75%; */
 }
+
+/* Math styling */
+.katex {
+  font-size: var(--vocs-fontSize_18);
+}
+
+.katex math[display="block"] {
+  font-size: var(--vocs-fontSize_20);
+  padding-bottom: 0.875em;
+}
+

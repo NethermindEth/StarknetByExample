@@ -1,5 +1,7 @@
 import { defineConfig } from "vocs";
 import { routes } from "./routes";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
 
 export default defineConfig({
   rootDir: ".",
@@ -7,6 +9,19 @@ export default defineConfig({
   // Theme configuration
   font: {
       google: "DM Sans",
+  },
+  markdown: {
+    remarkPlugins: [remarkMath],
+    rehypePlugins: [
+      [
+        rehypeKatex,
+        {
+          strict: false,
+          displayMode: false,
+          output: "mathml",
+        },
+      ],
+    ],
   },
   editLink: {
     text: "Contribute",
@@ -77,11 +92,11 @@ export default defineConfig({
           {
             name: "Starknet Remix Plugin",
             link: "https://remix.ethereum.org/?#activate=Starknet",
-            image: "/collaborators/Starknet_Remix_Plugin.svg"
-          }
+            image: "/collaborators/Starknet_Remix_Plugin.svg",
+          },
         ],
       ],
     },
   ],
-  sidebar: routes
+  sidebar: routes,
 });

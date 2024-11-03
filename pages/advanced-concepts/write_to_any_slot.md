@@ -1,6 +1,6 @@
 # Writing to any storage slot
 
-On Starknet, a contract's storage is a map with \\( 2^{251} \\) slots, where each slot is a `felt252` which is initialized to 0.
+On Starknet, a contract's storage is a map with $( 2^{251} )$ slots, where each slot is a `felt252` which is initialized to 0.
 The address of storage variables is computed at compile time using the formula: `storage variable address := pedersen(keccak(variable name), keys)`. Interactions with storage variables are commonly performed using the `self.var.read()` and `self.var.write()` functions.
 
 Nevertheless, we can use the `storage_write_syscall` and `storage_read_syscall` syscalls, to write to and read from any storage slot.

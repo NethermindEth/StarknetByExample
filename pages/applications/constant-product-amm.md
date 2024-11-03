@@ -1,10 +1,11 @@
 # Constant Product AMM
 
-This is the Cairo adaptation of the [Solidity by Example - Constant Product AMM](https://solidity-by-example.org/defi/constant-product-amm/).
+This is the Cairo adaptation of the 
+[Solidity by Example - Constant Product AMM](https://solidity-by-example.org/defi/constant-product-amm/).
 
 In this contract, we implement a simple Automated Market Maker (AMM) following
-the **constant product formula**: \\( x \cdot y = k \\). This formula ensures
-that the product of the two token reserves (`x` and `y` representing the tokens
+the **constant product formula**: $( x \cdot y = k )$. This formula ensures
+that the product of the two token reserves ($x$ and $y$ representing the tokens
 being swapper) remains constant, regardless of trades. Here, we provide
 liquidity pools that allow users to trade between two tokens or add and remove
 liquidity from the pool.
@@ -18,8 +19,8 @@ liquidity from the pool.
    AMM to transfer the required tokens on behalf of the user.
 
 2. **Constant Product Formula for Swaps**:
-   The swap function operates based on the constant product formula \\( x \cdot
-   y = k \\), where `x` and `y` are the token reserves. When a user swaps one
+   The swap function operates based on the constant product formula $( x \cdot
+   y = k )$, where $x$ and $y$ are the token reserves. When a user swaps one
    token for another, the product of the reserves remains constant, which
    determines how much of the other token the user will receive.
 
