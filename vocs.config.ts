@@ -3,8 +3,11 @@ import { routes } from "./routes";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 
+// Shiki currently does not support cairo
+// We temporarily use shiki fine grained bundle with custom cairo grammar
+// This require custom highlighter, and patch of vocs to remove initial shiki instance
+
 export default defineConfig({
-  rootDir: ".",
   title: "Starknet by Example",
   // Theme configuration
   font: {

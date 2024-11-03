@@ -7,6 +7,6 @@ Here's how it works:
 
 - When a user withdraws, the contract burns their shares, calculates the yield, and withdraws both the yield and the initial amount of tokens deposited.
 
-```rust
+```cairo
 // [!include ~/listings/applications/simple_vault/src/simple_vault.cairo]
 ```

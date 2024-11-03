@@ -30,6 +30,6 @@ The reward mechanism ensures that rewards are distributed fairly based on the am
 
 The following implementation is the Cairo adaptation of the [Solidity by Example - Staking Rewards contract](https://solidity-by-example.org/defi/staking-rewards/). It includes a small adaptation to keep track of the amount of total distributed reward tokens and emit an event when the remaining reward token amount reaches 0.
 
-```rust
+```cairo
 // [!include ~/listings/applications/staking/src/contract.cairo]
 ```

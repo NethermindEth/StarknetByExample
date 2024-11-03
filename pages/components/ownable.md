@@ -4,12 +4,12 @@ The following `Ownable` component is a simple component that allows the contract
 
 It can also be used to renounce ownership of a contract, meaning that no one will be able to satisfy the `_assert_is_owner` function.
 
-```rust
+```cairo
 // [!include ~/listings/applications/components/src/ownable.cairo:component]
 ```
 
 A mock contract that uses the `Ownable` component:
 
-```rust
+```cairo
 // [!include ~/listings/applications/components/src/ownable.cairo:contract]
 ```

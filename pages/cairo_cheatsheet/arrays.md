@@ -3,7 +3,7 @@
 Arrays are collections of elements of the same type.
 The possible operations on arrays are defined with the `array::ArrayTrait` of the corelib:
 
-```rust
+```cairo
 trait ArrayTrait<T> {
     fn new() -> Array<T>;
     fn append(ref self: Array<T>, value: T);
@@ -19,6 +19,6 @@ trait ArrayTrait<T> {
 
 For example:
 
-```rust
+```cairo
 // [!include ~/listings/cairo_cheatsheet/src/array_example.cairo]
 ```

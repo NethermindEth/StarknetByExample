@@ -4,7 +4,7 @@ Just like other programming languages, enums (enumerations) are used in cairo to
 
 In cairo, `enum variants` can hold different data types (the unit type, structs, other enums, tuples, default core library types, arrays, dictionaries, ...), as shown in the code snippet below. Furthermore, as a quick reminder, enums are expressions, meaning they can return values.
 
-```rust
+```cairo
 // [!include ~/listings/cairo_cheatsheet/src/enum_example.cairo:enums]
 ```
 
@@ -23,6 +23,6 @@ Enums can be declared both inside and outside a contract. If declared outside, t
 
 Here is an example of a contract illustrating the above statements :
 
-```rust
+```cairo
 // [!include ~/listings/cairo_cheatsheet/src/enum_example.cairo:enum_contract]
 ```

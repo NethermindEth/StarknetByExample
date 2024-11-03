@@ -8,7 +8,7 @@ The SimpleStorage contract has only one purpose: storing a number. We want the u
 
 We will use the following SimpleStorage contract. In the [Storage Variables](/getting-started/basics/variables) page, you can find explanations for each component of the contract:
 
-```rust
+```cairo
 // [!include ~/listings/applications/simple_storage_starknetjs/src/storage.cairo:contract]
 ```
 

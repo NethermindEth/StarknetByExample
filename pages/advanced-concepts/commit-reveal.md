@@ -24,12 +24,12 @@ Some use cases:
 
 ## Minimal commit-reveal contract:
 
-```rust
+```cairo
 // [!include ~/listings/advanced-concepts/commit_reveal/src/commit_reveal.cairo:contract]
 ```
 
 Usage example:
-```rust
+```cairo
 // [!include ~/listings/advanced-concepts/commit_reveal/src/commit_reveal.cairo:offchain]
 ```
 

@@ -15,13 +15,13 @@ In summary, there's two ways to handle interfaces:
 
 ## Explicit interface
 
-```rust
+```cairo
 // [!include ~/listings/getting-started/interfaces_traits/src/explicit.cairo:contract]
 ```
 
 ## Implicit interface
 
-```rust
+```cairo
 // [!include ~/listings/getting-started/interfaces_traits/src/implicit.cairo:contract]
 ```
 
@@ -34,6 +34,6 @@ You can import an implicitly generated contract interface with `use contract::{G
 You can also use `#[generate_trait]` for your internal functions.
 Since this trait is generated in the context of the contract, you can define pure functions as well (functions without the `self` parameter).
 
-```rust
+```cairo
 // [!include ~/listings/getting-started/interfaces_traits/src/implicit_internal.cairo:contract]
 ```

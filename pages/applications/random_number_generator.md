@@ -61,6 +61,6 @@ Below is an implementation of a `CoinFlip` contract that utilizes a [Pragma Veri
 - Randomness is generated off-chain, and then submitted to the contract using the `receive_random_words` callback
 - Based on this random value, the contract determines whether the coin "landed" on `Heads` or on `Tails`, and the `Landed` event is emitted
 
-```rust
+```cairo
 // [!include ~/listings/applications/coin_flip/src/contract.cairo]
 ```

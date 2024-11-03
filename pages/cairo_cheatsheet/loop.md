@@ -4,7 +4,7 @@ A `loop` specifies a block of code that will run repetitively until a halting co
 
 For example:
 
-```rust
+```cairo
 // [!include ~/listings/cairo_cheatsheet/src/loop_example.cairo:sheet]
 ```
 

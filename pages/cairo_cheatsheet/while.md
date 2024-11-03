@@ -2,7 +2,7 @@
 
 A `while` loop allows you to specify a condition that must be true for the loop to continue.
 
-```rust
+```cairo
 // [!include ~/listings/cairo_cheatsheet/src/while_example.cairo:sheet]
 ```
 

@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  vocs:
+    hash: f22scsh7lgnajnns7o3cnx2rfi
+    path: patches/vocs.patch
+
 importers:
 
   .:
@@ -28,7 +33,7 @@ importers:
         version: 5.6.3
       vocs:
         specifier: 1.0.0-alpha.62
-        version: 1.0.0-alpha.62(@types/node@22.8.6)(@types/react@18.3.12)(acorn@8.14.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.3)(typescript@5.6.3)
+        version: 1.0.0-alpha.62(patch_hash=f22scsh7lgnajnns7o3cnx2rfi)(@types/node@22.8.6)(@types/react@18.3.12)(acorn@8.14.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.3)(typescript@5.6.3)
     devDependencies:
       autoprefixer:
         specifier: ^10.4.20
@@ -5734,7 +5739,7 @@ snapshots:
       '@types/node': 22.8.6
       fsevents: 2.3.3
 
-  vocs@1.0.0-alpha.62(@types/node@22.8.6)(@types/react@18.3.12)(acorn@8.14.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.3)(typescript@5.6.3):
+  vocs@1.0.0-alpha.62(patch_hash=f22scsh7lgnajnns7o3cnx2rfi)(@types/node@22.8.6)(@types/react@18.3.12)(acorn@8.14.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.24.3)(typescript@5.6.3):
     dependencies:
       '@floating-ui/react': 0.26.27(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@hono/node-server': 1.13.4(hono@3.12.12)

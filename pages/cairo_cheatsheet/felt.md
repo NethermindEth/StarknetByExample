@@ -5,6 +5,6 @@
 
 For example:
 
-```rust
+```cairo
 // [!include ~/listings/cairo_cheatsheet/src/felt_example.cairo:sheet]
 ```

@@ -14,7 +14,7 @@ For example, if we want to store two `u8` values, we can use the first 8 bits of
 
 Cairo provides a built-in store using packing that you can use with the `StorePacking` trait.
 
-```rust
+```cairo
 trait StorePacking<T, PackedT> {
     fn pack(value: T) -> PackedT;
     fn unpack(value: PackedT) -> T;
@@ -25,6 +25,6 @@ This allows us to store the type `T` by first packing it into the type `PackedT`
 
 Here's an example of storing a `Time` struct with two `u8` values using the `StorePacking` trait:
 
-```rust
+```cairo
 // [!include ~/listings/advanced-concepts/store_using_packing/src/contract.cairo]
 ```

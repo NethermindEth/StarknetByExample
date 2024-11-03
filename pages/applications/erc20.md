@@ -4,7 +4,7 @@ Contracts that follow the [ERC20 Standard](https://eips.ethereum.org/EIPS/eip-20
 
 To create an ERC20 contract, it must implement the following interface:
 
-```rust
+```cairo
 // [!include ~/listings/applications/erc20/src/token.cairo:interface]
 ```
 
@@ -13,7 +13,7 @@ The Starknet ERC20 interface is therefore slightly different from the Solidity E
 
 Here's an implementation of the ERC20 interface in Cairo:
 
-```rust
+```cairo
 // [!include ~/listings/applications/erc20/src/token.cairo:erc20]
 ```
 

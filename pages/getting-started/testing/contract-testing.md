@@ -4,13 +4,13 @@ Testing plays a crucial role in software development, especially for smart contr
 
 Let's start with a simple smart contract as an example:
 
-```rust
+```cairo
 // [!include ~/listings/getting-started/testing_how_to/src/contract.cairo:contract]
 ```
 
 Now, take a look at the tests for this contract:
 
-```rust
+```cairo
 // [!include ~/listings/getting-started/testing_how_to/src/contract.cairo:tests]
 ```
 
@@ -41,7 +41,7 @@ This can be useful for testing internal functions, or specific state mutations t
 
 Here is an example of how to do the same previous test using the contract state:
 
-```rust
+```cairo
 // [!include ~/listings/getting-started/testing_how_to/src/contract.cairo:tests_with_state]
 ```
 
@@ -51,7 +51,7 @@ In order to test events, you need to use the `starknet::pop_log` function. If th
 
 See the test for the [Events](/getting-started/basics/events) section:
 
-```rust
+```cairo
 // [!include ~/listings/getting-started/events/src/counter.cairo:test_events]
 ```
 

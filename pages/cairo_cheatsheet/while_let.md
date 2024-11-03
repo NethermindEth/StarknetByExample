@@ -2,7 +2,7 @@
 
 A `while let` loop is a combination of a `while` loop and a `let` statement. It allows you to execute the loop body only if the pattern matches.
 
-```rust
+```cairo
 // [!include ~/listings/cairo_cheatsheet/src/while_let_example.cairo:sheet]
 ```
 
