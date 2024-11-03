@@ -165,7 +165,8 @@ Every listing needs to have atleast integration tests:
 
 Add your contract in a specific file, you can name it `contract.cairo` or anything else. You can also add other files if needed.
 
-You should add the tests in the same file as the contract, using the `#[cfg(test)]` flag and a `tests` module. With the usage of ANCHOR, the tests will not be displayed in the book but can be optionally be displayed by using the `{{#rustdoc_include ...}}` syntax.
+You should add the tests in the same file as the contract, using the `#[cfg(test)]` flag and a `tests` module.
+<!-- With the usage of ANCHOR, the tests will not be displayed in the book but can be optionally be displayed by using the `{{#rustdoc_include ...}}` syntax. -->
 
 Here's a sample `lib.cairo` file:
 
