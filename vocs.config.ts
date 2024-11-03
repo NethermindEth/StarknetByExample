@@ -9,23 +9,8 @@ import rehypeKatex from "rehype-katex";
 
 export default defineConfig({
   title: "Starknet by Example",
-  // Theme configuration
-  font: {
-      google: "DM Sans",
-  },
-  markdown: {
-    remarkPlugins: [remarkMath],
-    rehypePlugins: [
-      [
-        rehypeKatex,
-        {
-          strict: false,
-          displayMode: false,
-          output: "mathml",
-        },
-      ],
-    ],
-  },
+  rootDir: ".",
+  sidebar: routes,
   editLink: {
     text: "Contribute",
     pattern:
@@ -101,5 +86,33 @@ export default defineConfig({
       ],
     },
   ],
-  sidebar: routes,
+  // Theme configuration
+  theme: {
+    accentColor: {
+      dark: "#ff4b01",
+      light: "#ff4b01",
+    },
+  },
+  font: {
+    google: "DM Sans",
+  },
+  markdown: {
+    code: {
+      themes: {
+        light: "min-light",
+        dark: "min-dark",
+      },
+    },
+    remarkPlugins: [remarkMath],
+    rehypePlugins: [
+      [
+        rehypeKatex,
+        {
+          strict: false,
+          displayMode: false,
+          output: "mathml",
+        },
+      ],
+    ],
+  },
 });

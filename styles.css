@@ -61,24 +61,27 @@ section.vocs_Sidebar_level
 
 /* Make sidebar collapsible */
 .vocs_DocsLayout_gutterLeft {
-  position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
 }
-.vocs_DocsLayout_gutterLeft,
-.vocs_DesktopTopNav_logoWrapper {
-  transition: transform 0.3s;
+.vocs_DocsLayout_gutterLeft {
+/* .vocs_DesktopTopNav_logoWrapper { */
+  margin-left: 0;
+  transition: margin-left 0.3s ease;
 }
-.sidebar_hidden .vocs_DocsLayout_gutterLeft,
-.sidebar_hidden .vocs_DesktopTopNav_logoWrapper {
-  width: 0;
-}
+.sidebar_hidden .vocs_DocsLayout_gutterLeft {
+/* .sidebar_hidden .vocs_DesktopTopNav_logoWrapper { */
+  /* width: 0; */
+  margin-left: calc(var(--vocs_DocsLayout_leftGutterWidth) * -1);
+};
 .vocs_DocsLayout_content_withSidebar {
-  transition: margin-left 0.3s ease, transform 0.3s ease;
+  margin-left: 0;
+  padding-left: var(--vocs_DocsLayout_leftGutterWidth);
+  transition: padding-left 0.3s ease;
 }
 .sidebar_hidden .vocs_DocsLayout_content_withSidebar {
-  margin-left: 0;
+  padding-left: 0;
 }
 
 /* Center content relative to sidebar not page */
@@ -88,7 +91,7 @@ section.vocs_Sidebar_level
 .vocs_Content,
 .vocs_Footer {
   margin: auto;
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 /* Math styling */
