@@ -8,11 +8,10 @@
   margin: 0;
 }
 
-/* Remove sidebar dividers */
+/* Remove dividers */
 .vocs_Sidebar_divider {
   display: none;
 }
-
 :not(.vocs_Header) + .vocs_H2:not(:only-child),
 .vocs_Sidebar_navigation
   > .vocs_Sidebar_group
@@ -20,11 +19,15 @@
   + .vocs_Sidebar_section {
   border-top: none;
 }
-
-/* Remove title divider */
-/* Remove title padding for more compact page */
 .vocs_Header {
   border-bottom: none;
+}
+.vocs_Footer_container {
+  border-bottom: none;
+}
+
+/* Remove title padding for more compact page */
+.vocs_Header {
   padding-bottom: 0;
 }
 
@@ -35,26 +38,17 @@ section.vocs_Sidebar_level
   color: var(--vocs-color_title) !important;
 }
 
-/* Remove border of codeblock for flat look */
-.vocs_CodeBlock {
-  border: none;
-}
-
-/* Remove footer divider */
-.vocs_Footer_container {
-  border-bottom: none;
-}
-
 /* Remove footer padding, managed in footer.tsx */
 .vocs_Footer {
   padding-bottom: 0;
 }
 
+/* Set footer text color */
 .footer_text span {
   color: var(--vocs-color_text3);
 }
 
-/* Hide all outlines */
+/* Hide page outlines */
 .vocs_DocsLayout_gutterRight {
   display: none;
 }
@@ -65,40 +59,43 @@ section.vocs_Sidebar_level
   gap: var(--vocs-space_12);
 }
 
-/* Sidebar modification */
+/* Make sidebar collapsible */
 .vocs_DocsLayout_gutterLeft {
   position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
 }
-
-/* .vocs_DocsLayout_gutterLeft {
-  background: transparent;
-  border-right: 1px solid var(--vocs-color_border);
+.vocs_DocsLayout_gutterLeft,
+.vocs_DesktopTopNav_logoWrapper {
+  transition: transform 0.3s;
 }
-.vocs_Sidebar_logoWrapper {
-  background-color: var(--vocs-color_background);
-} */
+.sidebar_hidden .vocs_DocsLayout_gutterLeft,
+.sidebar_hidden .vocs_DesktopTopNav_logoWrapper {
+  width: 0;
+}
+.vocs_DocsLayout_content_withSidebar {
+  transition: margin-left 0.3s ease, transform 0.3s ease;
+}
+.sidebar_hidden .vocs_DocsLayout_content_withSidebar {
+  margin-left: 0;
+}
 
 /* Center content relative to sidebar not page */
-.vocs_DocsLayout_content {
+.vocs_DocsLayout_content_withSidebar {
   max-width: unset;
 }
-
 .vocs_Content,
 .vocs_Footer {
   margin: auto;
-  /* max-width: 75%; */
+  font-size: 1.1rem;
 }
 
 /* Math styling */
 .katex {
   font-size: var(--vocs-fontSize_18);
 }
-
 .katex math[display="block"] {
   font-size: var(--vocs-fontSize_20);
   padding-bottom: 0.875em;
 }
-
