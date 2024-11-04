@@ -9,5 +9,5 @@ This replaces EOA with Account Contracts, which are smart contracts that impleme
 
 On Starknet, Account Abstraction is natively supported, and all accounts are Account Contracts.
 
-In this section we will how to implement an Account.
+In this section we will show how to implement an Account.
  <!-- and common customizations that can be done to it. -->
