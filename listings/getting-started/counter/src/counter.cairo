@@ -8,10 +8,12 @@ pub trait ISimpleCounter<TContractState> {
 // ANCHOR: contract
 #[starknet::contract]
 pub mod SimpleCounter {
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
+
     #[storage]
     struct Storage {
         // Counter variable
-        counter: u128,
+        pub counter: u128,
     }
 
     #[constructor]
@@ -44,7 +46,7 @@ pub mod SimpleCounter {
 #[cfg(test)]
 mod test {
     use super::{SimpleCounter, ISimpleCounterDispatcher, ISimpleCounterDispatcherTrait};
-    use starknet::{ContractAddress, SyscallResultTrait, syscalls::deploy_syscall};
+    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
 
     fn deploy(init_value: u128) -> ISimpleCounterDispatcher {
         let (contract_address, _) = deploy_syscall(

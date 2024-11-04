@@ -1,6 +1,7 @@
 // ANCHOR: contract
 #[starknet::contract]
 mod CountableContract {
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
     use components_dependencies::countable_dep_switch::countable_component;
     use components::switchable::ISwitchable;
 
@@ -44,10 +45,9 @@ mod CountableContract {
 #[cfg(test)]
 mod tests {
     use super::CountableContract;
-    use components::countable::{ICountable, ICountableDispatcher, ICountableDispatcherTrait};
-    use components::switchable::{ISwitchable, ISwitchableDispatcher, ISwitchableDispatcherTrait};
+    use components::countable::{ICountableDispatcher, ICountableDispatcherTrait};
+    use components::switchable::{ISwitchableDispatcher, ISwitchableDispatcherTrait};
 
-    use starknet::storage::StorageMemberAccessTrait;
     use starknet::SyscallResultTrait;
     use starknet::syscalls::deploy_syscall;
 
@@ -61,38 +61,34 @@ mod tests {
     }
 
     #[test]
-    #[available_gas(2000000)]
     fn test_init() {
         let (mut counter, mut switch) = deploy();
 
-        assert(counter.get() == 0, 'Counter != 0');
-        assert(switch.is_on() == false, 'Switch != false');
+        assert_eq!(counter.get(), 0);
+        assert_eq!(switch.is_on(), false);
     }
 
     #[test]
-    #[available_gas(2000000)]
     fn test_increment_switch_off() {
         let (mut counter, mut switch) = deploy();
 
         counter.increment();
-        assert(counter.get() == 0, 'Counter incremented');
-        assert(switch.is_on() == false, 'Switch != false');
+        assert_eq!(counter.get(), 0);
+        assert_eq!(switch.is_on(), false);
     }
 
     #[test]
-    #[available_gas(2000000)]
     fn test_increment_switch_on() {
         let (mut counter, mut switch) = deploy();
 
         switch.switch();
-        assert(switch.is_on() == true, 'Switch != true');
+        assert_eq!(switch.is_on(), true);
 
         counter.increment();
-        assert(counter.get() == 1, 'Counter did not increment');
+        assert_eq!(counter.get(), 1);
     }
 
     #[test]
-    #[available_gas(2000000)]
     fn test_increment_multiple_switches() {
         let (mut counter, mut switch) = deploy();
 
@@ -101,7 +97,7 @@ mod tests {
         counter.increment();
         counter.increment();
         counter.increment();
-        assert(counter.get() == 3, 'Counter did not increment');
+        assert_eq!(counter.get(), 3);
 
         switch.switch();
         counter.increment();
@@ -113,6 +109,6 @@ mod tests {
         counter.increment();
         counter.increment();
         counter.increment();
-        assert(counter.get() == 6, 'Counter did not increment');
+        assert_eq!(counter.get(), 6);
     }
 }

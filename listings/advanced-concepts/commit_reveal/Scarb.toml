@@ -1,11 +1,13 @@
 [package]
-name = "using_lists"
+name = "commit_reveal"
 version.workspace = true
-edition = '2023_11'
+edition.workspace = true
 
 [dependencies]
 starknet.workspace = true
-alexandria_storage.workspace = true
+
+[dev-dependencies]
+cairo_test.workspace = true
 
 [scripts]
 test.workspace = true

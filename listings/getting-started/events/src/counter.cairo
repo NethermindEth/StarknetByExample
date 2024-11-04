@@ -7,11 +7,12 @@ pub trait IEventCounter<TContractState> {
 #[starknet::contract]
 pub mod EventCounter {
     use starknet::{get_caller_address, ContractAddress};
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
 
     #[storage]
     struct Storage {
         // Counter value
-        counter: u128,
+        pub counter: u128,
     }
 
     #[event]
@@ -54,7 +55,7 @@ pub mod EventCounter {
                         }
                     )
                 );
-        // ANCHOR_END: emit
+            // ANCHOR_END: emit
         }
     }
 }
@@ -63,16 +64,12 @@ pub mod EventCounter {
 #[cfg(test)]
 mod tests {
     use super::{
-        EventCounter,
-        EventCounter::{
-            counterContractMemberStateTrait, Event, CounterIncreased, UserIncreaseCounter
-        },
+        EventCounter, EventCounter::{Event, CounterIncreased, UserIncreaseCounter},
         IEventCounterDispatcherTrait, IEventCounterDispatcher
     };
-    use starknet::{
-        ContractAddress, contract_address_const, SyscallResultTrait, syscalls::deploy_syscall
-    };
-    use starknet::testing::{set_contract_address, set_account_contract_address};
+    use starknet::{contract_address_const, SyscallResultTrait, syscalls::deploy_syscall};
+    use starknet::testing::set_contract_address;
+    use starknet::storage::StoragePointerReadAccess;
 
     #[test]
     fn test_increment_events() {
@@ -81,7 +78,7 @@ mod tests {
         )
             .unwrap_syscall();
         let mut contract = IEventCounterDispatcher { contract_address };
-        let state = EventCounter::contract_state_for_testing();
+        let state = @EventCounter::contract_state_for_testing();
 
         let amount = 10;
         let caller = contract_address_const::<'caller'>();

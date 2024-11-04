@@ -10,11 +10,11 @@ pub trait IConstantProductAmm<TContractState> {
 
 #[starknet::contract]
 pub mod ConstantProductAmm {
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
-    use starknet::{
-        ContractAddress, get_caller_address, get_contract_address, contract_address_const
-    };
-    use core::integer::u256_sqrt;
+    use starknet::{ContractAddress, get_caller_address, get_contract_address};
+    use starknet::storage::{Map, StorageMapReadAccess, StorageMapWriteAccess};
+    use core::num::traits::Sqrt;
 
     #[storage]
     struct Storage {
@@ -23,7 +23,7 @@ pub mod ConstantProductAmm {
         reserve0: u256,
         reserve1: u256,
         total_supply: u256,
-        balance_of: LegacyMap::<ContractAddress, u256>,
+        balance_of: Map::<ContractAddress, u256>,
         // Fee 0 - 1000 (0% - 100%, 1 decimal places)
         // E.g. 3 = 0.3%
         fee: u16,
@@ -193,7 +193,7 @@ pub mod ConstantProductAmm {
 
             let total_supply = self.total_supply.read();
             let shares = if (total_supply == 0) {
-                u256_sqrt(amount0 * amount1).into()
+                (amount0 * amount1).sqrt().into()
             } else {
                 PrivateFunctions::min(
                     amount0 * total_supply / reserve0, amount1 * total_supply / reserve1

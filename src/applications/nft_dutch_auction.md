@@ -10,6 +10,6 @@ Here's how it works:
 - Participants can purchase NFTs at any time as long as the totalSupply has not been reached.
 - The auction ends when either the totalSupply is reached or the duration has elapsed.
 
-```rust
+```cairo
 {{#rustdoc_include ../../listings/applications/nft_dutch_auction/src/nft_dutch_auction.cairo:contract}}
 ```

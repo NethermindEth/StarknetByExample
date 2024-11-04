@@ -11,6 +11,7 @@ pub trait IHashTrait<T> {
 // ANCHOR: hash
 #[starknet::contract]
 pub mod HashTraits {
+    use starknet::storage::StoragePointerWriteAccess;
     use core::hash::{HashStateTrait, HashStateExTrait};
     use core::{pedersen::PedersenTrait, poseidon::PoseidonTrait};
 
@@ -65,9 +66,6 @@ pub mod HashTraits {
 mod tests {
     use starknet::SyscallResultTrait;
     use super::{HashTraits, IHashTraitDispatcher, IHashTraitDispatcherTrait};
-
-    use core::hash::{HashStateTrait, HashStateExTrait};
-    use core::{pedersen::PedersenTrait, poseidon::PoseidonTrait};
     use starknet::syscalls::deploy_syscall;
 
     fn deploy() -> IHashTraitDispatcher {
@@ -81,7 +79,6 @@ mod tests {
 
 
     #[test]
-    #[available_gas(20000000)]
     fn test_pedersen_hash() {
         let mut contract = deploy();
 
@@ -90,14 +87,10 @@ mod tests {
         let password = 'password.stark';
         let test_hash = contract.save_user_with_pedersen(id, username, password);
 
-        assert(
-            test_hash == 0x6da4b4d0489989f5483d179643dafb3405b0e3b883a6c8efe5beb824ba9055a,
-            'Incorrect hash output'
-        );
+        assert_eq!(test_hash, 0x6da4b4d0489989f5483d179643dafb3405b0e3b883a6c8efe5beb824ba9055a);
     }
 
     #[test]
-    #[available_gas(20000000)]
     fn test_poseidon_hash() {
         let mut contract = deploy();
 
@@ -107,9 +100,6 @@ mod tests {
 
         let test_hash = contract.save_user_with_poseidon(id, username, password);
 
-        assert(
-            test_hash == 0x4d165e1d398ae4864854518d3c58c3d7a21ed9c1f8f3618fbb0031d208aab7b,
-            'Incorrect hash output'
-        );
+        assert_eq!(test_hash, 0x4d165e1d398ae4864854518d3c58c3d7a21ed9c1f8f3618fbb0031d208aab7b);
     }
 }

@@ -65,7 +65,7 @@ Class hash declared:
 ```
 
 Check the [Voyager Class Page](https://sepolia.voyager.online/class/0x05c8c21062a74e3c8f2015311d7431e820a08a6b0a9571422b607429112d2eb4).
-Now, it's time to deploy the contract. Add the clash hash given above after `--watch`:
+Now, it's time to deploy the contract. Add the class hash given above after `--watch`:
 
 ```console
 $ starkli deploy \

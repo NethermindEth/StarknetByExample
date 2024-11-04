@@ -22,7 +22,7 @@ pub mod LocalVariablesExample {
                 let sum = value + increment;
                 sum
             }
-        // We can't access the variable `sum` here, as it's out of scope.
+            // We can't access the variable `sum` here, as it's out of scope.
         }
     }
 }

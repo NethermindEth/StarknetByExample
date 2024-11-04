@@ -4,5 +4,5 @@ fn felt() {
     let felt_as_str = 'Hello Starknet!';
 
     let _felt = felt + felt_as_str;
-// ANCHOR_END: sheet
+    // ANCHOR_END: sheet
 }

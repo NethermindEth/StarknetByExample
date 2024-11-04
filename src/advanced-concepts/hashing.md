@@ -11,6 +11,6 @@ In Cairo, it's possible to hash all types that can be converted to `felt252` sin
 
 To hash a value, you first need to initialize a hash state with the `new` method of the `HashStateTrait`. Then, you can update the hash state with the `update` method. You can accumulate multiple updates if necessary. Finally, the `finalize` method returns the final hash value as a `felt252`.
 
-```rust
+```cairo
 {{#rustdoc_include ../../listings/advanced-concepts/hash_trait/src/hash_trait.cairo:hash}}
 ```

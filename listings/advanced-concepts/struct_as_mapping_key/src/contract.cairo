@@ -13,12 +13,12 @@ pub trait IPetRegistry<TContractState> {
 
 #[starknet::contract]
 pub mod PetRegistry {
-    use core::hash::{HashStateTrait, Hash};
     use super::Pet;
+    use starknet::storage::{Map, StorageMapReadAccess, StorageMapWriteAccess};
 
     #[storage]
     struct Storage {
-        registration_time: LegacyMap::<Pet, u64>,
+        registration_time: Map::<Pet, u64>,
     }
 
     #[abi(embed_v0)]

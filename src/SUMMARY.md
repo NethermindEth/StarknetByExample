@@ -30,7 +30,7 @@ Summary
 - [Testing contracts](./getting-started/testing/contract-testing.md)
 - [Cairo cheatsheet](./getting-started/cairo_cheatsheet/cairo_cheatsheet.md)
   - [Felt](./getting-started/cairo_cheatsheet/felt.md)
-  - [LegacyMap](./getting-started/cairo_cheatsheet/mapping.md)
+  - [Map](./getting-started/cairo_cheatsheet/mapping.md)
   - [Arrays](./getting-started/cairo_cheatsheet/arrays.md)
   - [loop](./getting-started/cairo_cheatsheet/loop.md)
   - [while](./getting-started/cairo_cheatsheet/while.md)
@@ -61,25 +61,26 @@ Summary
 - [Constant Product AMM](./applications/constant-product-amm.md)
 - [TimeLock](./applications/timelock.md)
 - [Staking](./applications/staking.md)
+- [Merkle Tree](./applications/merkle_tree.md)
 - [Simple Storage with Starknet-js](./applications/simple_storage_starknetjs.md)
 - [Crowdfunding Campaign](./applications/crowdfunding.md)
 - [AdvancedFactory: Crowdfunding](./applications/advanced_factory.md)
+- [Random Number Generator](./applications/random_number_generator.md)
 
 <!-- advanced-concepts -->
 
 # Advanced concepts
 
 - [Writing to any storage slot](./advanced-concepts/write_to_any_slot.md)
-- [Storing Arrays](./advanced-concepts/storing_arrays.md)
 - [Struct as mapping key](./advanced-concepts/struct-mapping-key.md)
 - [Hashing](./advanced-concepts/hashing.md)
+- [Commit-Reveal](./advanced-concepts/commit-reveal.md)
   <!-- Hidden until #123 is solved -->
   <!-- - [Hash Solidity Compatible](./ch02/hash-solidity-compatible.md) -->
 - [Optimisations](./advanced-concepts/optimisations/optimisations.md)
   - [Storage Optimisations](./advanced-concepts/optimisations/store_using_packing.md)
 - [Account Abstraction](./advanced-concepts/account_abstraction/index.md)
   - [Account Contract](./advanced-concepts/account_abstraction/account_contract.md)
-- [List](./advanced-concepts/list.md)
 - [Library Calls](./advanced-concepts/library_calls.md)
 - [Plugins](./advanced-concepts/plugins.md)
 - [Signature Verification](./advanced-concepts/signature_verification.md)

@@ -37,7 +37,7 @@ mod test {
     use super::{
         CustomErrorsExample, ICustomErrorsExampleDispatcher, ICustomErrorsExampleDispatcherTrait
     };
-    use starknet::{ContractAddress, SyscallResultTrait, syscalls::deploy_syscall};
+    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
 
     fn deploy() -> ICustomErrorsExampleDispatcher {
         let (contract_address, _) = deploy_syscall(

@@ -10,11 +10,11 @@ pub trait IMapContract<TContractState> {
 #[starknet::contract]
 pub mod MapContract {
     use starknet::ContractAddress;
+    use starknet::storage::{Map, StorageMapReadAccess, StorageMapWriteAccess};
 
     #[storage]
     struct Storage {
-        // The `LegacyMap` type is only available inside the `Storage` struct.
-        map: LegacyMap::<ContractAddress, felt252>,
+        map: Map::<ContractAddress, felt252>,
     }
 
     #[abi(embed_v0)]
@@ -33,7 +33,7 @@ pub mod MapContract {
 #[cfg(test)]
 mod test {
     use super::{MapContract, IMapContractDispatcher, IMapContractDispatcherTrait};
-    use starknet::{ContractAddress, SyscallResultTrait, syscalls::deploy_syscall};
+    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
 
     #[test]
     fn test_deploy_and_set_get() {

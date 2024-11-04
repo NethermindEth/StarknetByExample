@@ -15,6 +15,7 @@ mod simpleAccount {
     use starknet::account::Call;
     use core::num::traits::Zero;
     use core::ecdsa::check_ecdsa_signature;
+    use starknet::storage::{StoragePointerWriteAccess, StoragePointerReadAccess};
 
     // Implement SRC5 with openzeppelin
     use openzeppelin::account::interface;

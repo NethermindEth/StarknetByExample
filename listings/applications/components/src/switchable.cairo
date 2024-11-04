@@ -9,8 +9,10 @@ pub trait ISwitchable<TContractState> {
 
 #[starknet::component]
 pub mod switchable_component {
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
+
     #[storage]
-    struct Storage {
+    pub struct Storage {
         switchable_value: bool,
     }
 
@@ -85,9 +87,9 @@ pub mod SwitchContract {
 #[cfg(test)]
 mod test {
     use super::SwitchContract; // Used as a mock contract
-    use super::switchable_component::{Event, SwitchEvent};
+    use super::switchable_component::SwitchEvent;
     use super::{ISwitchableDispatcher, ISwitchableDispatcherTrait};
-    use starknet::{syscalls::deploy_syscall, contract_address_const, ContractAddress};
+    use starknet::{syscalls::deploy_syscall, ContractAddress};
     use starknet::SyscallResultTrait;
 
     fn deploy() -> (ISwitchableDispatcher, ContractAddress) {

@@ -1,6 +1,8 @@
 // ANCHOR: contract
 #[starknet::contract]
 pub mod ImplicitInterfaceContract {
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
+
     #[storage]
     struct Storage {
         value: u32
@@ -24,13 +26,8 @@ pub mod ImplicitInterfaceContract {
 
 #[cfg(test)]
 mod tests {
-    use super::{
-        ImplicitInterfaceContract, ImplicitInterfaceContract::valueContractMemberStateTrait,
-        ImplicitInterfaceContract::IImplicitInterfaceContract
-    };
-    use starknet::{
-        ContractAddress, SyscallResultTrait, syscalls::deploy_syscall, testing::set_contract_address
-    };
+    use super::{ImplicitInterfaceContract, ImplicitInterfaceContract::IImplicitInterfaceContract};
+    use starknet::{SyscallResultTrait, syscalls::deploy_syscall, testing::set_contract_address};
 
     #[test]
     fn test_interface() {

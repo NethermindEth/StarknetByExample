@@ -4,7 +4,7 @@ Just like other programming languages, enums (enumerations) are used in cairo to
 
 In cairo, `enum variants` can hold different data types (the unit type, structs, other enums, tuples, default core library types, arrays, dictionaries, ...), as shown in the code snippet below. Furthermore, as a quick reminder, enums are expressions, meaning they can return values.
 
-```rust
+```cairo
 {{#include ../../../listings/getting-started/cairo_cheatsheet/src/enum_example.cairo:enums}}
 ```
 
@@ -18,10 +18,10 @@ Enums can be declared both inside and outside a contract. If declared outside, t
 
 2. Enums as parameters and return values to entrypoints
 
-    - It is possible to pass `enums` to contract entrypoints as parameters, as well as return them from entrypoints. For that purpose, the enum needs to be serializable and dropable, hence the derivation of traits `Serde` and `Drop` in the above code snippet.
+    - It is possible to pass `enums` to contract entrypoints as parameters, as well as return them from entrypoints. For that purpose, the enum needs to be serializable and droppable, hence the derivation of traits `Serde` and `Drop` in the above code snippet.
 
 Here is an example of a contract illustrating the above statements :
 
-```rust
+```cairo
 {{#include ../../../listings/getting-started/cairo_cheatsheet/src/enum_example.cairo:enum_contract}}
 ```

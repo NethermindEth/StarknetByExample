@@ -1,11 +1,12 @@
 #[starknet::contract]
 pub mod MockUpgrade {
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
     use components::ownable::ownable_component::OwnableInternalTrait;
     use core::num::traits::Zero;
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
     use starknet::{
-        ClassHash, ContractAddress, SyscallResultTrait, get_block_timestamp, contract_address_const,
-        get_caller_address, get_contract_address, class_hash::class_hash_const
+        ClassHash, ContractAddress, SyscallResultTrait, get_block_timestamp, get_caller_address,
+        get_contract_address
     };
     use components::ownable::ownable_component;
     use crowdfunding::campaign::pledgeable::pledgeable_component;
@@ -95,7 +96,7 @@ pub mod MockUpgrade {
         pub implementation: ClassHash
     }
 
-    const NINETY_DAYS: u64 = consteval_int!(90 * 24 * 60 * 60);
+    const NINETY_DAYS: u64 = 90 * 24 * 60 * 60;
 
     #[constructor]
     fn constructor(

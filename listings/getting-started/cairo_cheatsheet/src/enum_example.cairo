@@ -31,7 +31,7 @@ trait IEnumContract<TContractState> {
 
 #[starknet::contract]
 mod EnumContract {
-    use core::clone::Clone;
+    use starknet::storage::StoragePointerWriteAccess;
     use super::IEnumContract;
     use super::{Action, Position, UserCommand};
 

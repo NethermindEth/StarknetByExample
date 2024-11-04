@@ -39,12 +39,16 @@ pub trait ISimpleVault<TContractState> {
 pub mod SimpleVault {
     use super::{IERC20Dispatcher, IERC20DispatcherTrait};
     use starknet::{ContractAddress, get_caller_address, get_contract_address};
+    use starknet::storage::{
+        Map, StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess,
+        StoragePointerWriteAccess
+    };
 
     #[storage]
     struct Storage {
         token: IERC20Dispatcher,
         total_supply: u256,
-        balance_of: LegacyMap<ContractAddress, u256>
+        balance_of: Map<ContractAddress, u256>
     }
 
     #[constructor]
@@ -81,7 +85,7 @@ pub mod SimpleVault {
             // T = total supply
             // s = shares to mint
             //
-            // (T + s) / T = (a + B) / B 
+            // (T + s) / T = (a + B) / B
             //
             // s = aT / B
             let caller = get_caller_address();
@@ -107,7 +111,7 @@ pub mod SimpleVault {
             // T = total supply
             // s = shares to burn
             //
-            // (T - s) / T = (B - a) / B 
+            // (T - s) / T = (B - a) / B
             //
             // a = sB / T
             let caller = get_caller_address();
@@ -125,19 +129,14 @@ pub mod SimpleVault {
 
 #[cfg(test)]
 mod tests {
-    use super::{
-        SimpleVault, ISimpleVaultDispatcher, ISimpleVaultDispatcherTrait, IERC20Dispatcher,
-        IERC20DispatcherTrait
-    };
+    use super::{SimpleVault, ISimpleVaultDispatcher, ISimpleVaultDispatcherTrait,};
     use erc20::token::{
         IERC20DispatcherTrait as IERC20DispatcherTrait_token,
         IERC20Dispatcher as IERC20Dispatcher_token
     };
-    use core::num::traits::Zero;
     use starknet::testing::{set_contract_address, set_account_contract_address};
     use starknet::{
-        ContractAddress, SyscallResultTrait, syscalls::deploy_syscall, get_caller_address,
-        contract_address_const
+        ContractAddress, SyscallResultTrait, syscalls::deploy_syscall, contract_address_const
     };
 
     const token_name: felt252 = 'myToken';

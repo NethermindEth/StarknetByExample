@@ -1,12 +1,13 @@
 [package]
 name = "simple_storage"
 version.workspace = true
-edition = "2023_11"
-
-[lib]
+edition.workspace = true
 
 [dependencies]
 starknet.workspace = true
+
+[dev-dependencies]
+cairo_test.workspace = true
 
 [scripts]
 test.workspace = true

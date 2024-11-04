@@ -25,8 +25,8 @@ pub mod MathUtils {
 // contract B to make library call to the class of contract A
 #[starknet::contract]
 pub mod MathUtilsLibraryCall {
-    use starknet::{class_hash::class_hash_const, ContractAddress};
     use super::{IMathUtilsDispatcherTrait, IMathUtilsLibraryDispatcher};
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
 
     #[storage]
     struct Storage {

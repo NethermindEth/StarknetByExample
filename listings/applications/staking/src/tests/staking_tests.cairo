@@ -1,27 +1,19 @@
 mod tests {
-    use staking::contract::StakingContract::__member_module_unclaimed_rewards::InternalContractMemberStateTrait as UncRewInt;
-    use staking::contract::StakingContract::__member_module_last_updated_at::InternalContractMemberStateTrait as LastUpInt;
-    use staking::contract::StakingContract::__member_module_finish_at::InternalContractMemberStateTrait as FinInt;
-    use staking::contract::StakingContract::__member_module_reward_rate::InternalContractMemberStateTrait as RewRateInt;
-    use staking::contract::StakingContract::__member_module_total_supply::InternalContractMemberStateTrait as TotSupInt;
-    use staking::contract::StakingContract::__member_module_balance_of::InternalContractMemberStateTrait as BalInt;
-    use staking::contract::StakingContract::__member_module_staking_token::InternalContractMemberStateTrait as StakeTokInt;
-    use staking::contract::StakingContract::__member_module_reward_token::InternalContractMemberStateTrait as RewardTokInt;
     use openzeppelin::token::erc20::interface::IERC20DispatcherTrait;
     use openzeppelin::token::erc20::erc20::ERC20Component::InternalTrait;
     use staking::contract::IStakingContractDispatcherTrait;
     use staking::tests::tokens::{RewardToken, StakingToken};
     use staking::contract::{
-        StakingContract, IStakingContractDispatcher, StakingContract::ownerContractMemberStateTrait,
-        StakingContract::Event, StakingContract::Deposit, StakingContract::Withdrawal,
-        StakingContract::RewardsFinished
+        StakingContract, IStakingContractDispatcher, StakingContract::Event,
+        StakingContract::Deposit, StakingContract::Withdrawal, StakingContract::RewardsFinished
     };
     use openzeppelin::token::erc20::{interface::IERC20Dispatcher};
     use starknet::syscalls::deploy_syscall;
     use starknet::SyscallResultTrait;
     use core::serde::Serde;
-    use starknet::testing::{set_caller_address, set_contract_address, set_block_timestamp, pop_log};
-    use starknet::{contract_address_const, ContractAddress, get_contract_address};
+    use starknet::testing::{set_contract_address, set_block_timestamp, pop_log};
+    use starknet::{contract_address_const, ContractAddress};
+    use starknet::storage::{StoragePointerReadAccess, StorageMapReadAccess};
 
     #[derive(Copy, Drop)]
     struct Deployment {
@@ -107,7 +99,6 @@ mod tests {
     }
 
     #[test]
-    #[available_gas(20000000)]
     fn should_deploy() {
         /// setup
         let owner = contract_address_const::<'owner'>();
@@ -118,24 +109,21 @@ mod tests {
 
         // "link" a new StakingContract struct to the deployed StakingContract contract
         // in order to access its internal state fields for assertions
-        let state = StakingContract::contract_state_for_testing();
+        let state = @StakingContract::contract_state_for_testing();
         // pretend as if we were in the deployed contract
         set_contract_address(deploy.contract.contract_address);
 
         /// then
-        assert(state.owner.read() == owner, 'wrong owner');
-        assert(
-            state.staking_token.read().contract_address == deploy.staking_token.contract_address,
-            'wrong staking token contract'
+        assert_eq!(state.owner.read(), owner);
+        assert_eq!(
+            state.staking_token.read().contract_address, deploy.staking_token.contract_address
         );
-        assert(
-            state.reward_token.read().contract_address == deploy.reward_token.contract_address,
-            'wrong reward token contract'
+        assert_eq!(
+            state.reward_token.read().contract_address, deploy.reward_token.contract_address
         );
     }
 
     #[test]
-    #[available_gas(20000000)]
     fn stake_and_withdraw_succeed() {
         /// set up
 
@@ -156,14 +144,11 @@ mod tests {
 
         /// then
         // so far the user has 60 tokens left and staked 40 tokens
-        let state = StakingContract::contract_state_for_testing();
+        let state = @StakingContract::contract_state_for_testing();
         set_contract_address(deploy.contract.contract_address);
-        assert(state.balance_of.read(user) == stake_amount, '1- wrong user staking balance');
-        assert(state.total_supply.read() == stake_amount, '1- wrong total supply');
-        assert(
-            deploy.staking_token.balance_of(user) == amount_tokens_minted - stake_amount,
-            '1- wrong staking token balance'
-        );
+        assert_eq!(state.balance_of.read(user), stake_amount);
+        assert_eq!(state.total_supply.read(), stake_amount);
+        assert_eq!(deploy.staking_token.balance_of(user), amount_tokens_minted - stake_amount);
 
         // check 1st & 2nd event - when user stakes
         assert_eq!(
@@ -182,20 +167,13 @@ mod tests {
 
         /// then
         // at the end the user has 80 tokens left and 20 tokens staked
-        let state = StakingContract::contract_state_for_testing();
+        let state = @StakingContract::contract_state_for_testing();
         set_contract_address(deploy.contract.contract_address);
-        assert(
-            state.balance_of.read(user) == stake_amount - withdrawal_amount,
-            '2- wrong user staking balance'
-        );
-        assert(
-            state.total_supply.read() == stake_amount - withdrawal_amount, '2- wrong total supply'
-        );
-        assert(
-            deploy.staking_token.balance_of(user) == amount_tokens_minted
-                - stake_amount
-                + withdrawal_amount,
-            '2- wrong staking token balance'
+        assert_eq!(state.balance_of.read(user), stake_amount - withdrawal_amount);
+        assert_eq!(state.total_supply.read(), stake_amount - withdrawal_amount);
+        assert_eq!(
+            deploy.staking_token.balance_of(user),
+            amount_tokens_minted - stake_amount + withdrawal_amount
         );
 
         // check 3rd & 4th events - when user withdraws
@@ -210,7 +188,6 @@ mod tests {
     }
 
     #[test]
-    #[available_gas(20000000)]
     fn claim_rewards_3_users_scenario() {
         /// set up
 
@@ -231,21 +208,18 @@ mod tests {
         let block_timestamp: u256 = 1000;
         set_block_timestamp(block_timestamp.try_into().unwrap());
         let reward_duration = 100;
-        // have to set again the contract_address because it got changed in mint_reward_tokens_to function
+        // have to set again the contract_address because it got changed in mint_reward_tokens_to
+        // function
         set_contract_address(owner);
         deploy.contract.set_reward_duration(reward_duration);
         deploy.contract.set_reward_amount(reward_tokens_amount);
 
         // check reward rate, last updated at and finish dates
-        let state = StakingContract::contract_state_for_testing();
+        let state = @StakingContract::contract_state_for_testing();
         set_contract_address(deploy.contract.contract_address);
-        assert(
-            state.reward_rate.read() == reward_tokens_amount / reward_duration, 'Wrong reward rate'
-        );
-        assert(
-            state.finish_at.read() == block_timestamp + reward_duration, 'Wrong reward finish date'
-        );
-        assert(state.last_updated_at.read() == block_timestamp, 'Wrong reward last updated date');
+        assert_eq!(state.reward_rate.read(), reward_tokens_amount / reward_duration);
+        assert_eq!(state.finish_at.read(), block_timestamp + reward_duration);
+        assert_eq!(state.last_updated_at.read(), block_timestamp);
 
         // mint staking tokens to alice
         let alice = contract_address_const::<'alice'>();
@@ -370,9 +344,11 @@ mod tests {
         // timestamp = 1110
         // r6 = r5 + 10 * (1100 - 1090) / 10 = 15 + 10 = 25
         // last updated at = 1100 (becomes same as finish_at)
-        // alice rewards = 600 + staked_tokens * (r6 - r5) = 600 + 0 * (25 - 15) = 600 -> 0 (claimed)
+        // alice rewards = 600 + staked_tokens * (r6 - r5) = 600 + 0 * (25 - 15) = 600 -> 0
+        // (claimed)
         // bob rewards = 40 + staked_tokens * (r6 - r3) = 40 + 0 * (25 - 9) = 40 -> 0 (claimed)
-        // john rewards = 180 + staked_tokens * (r6 - r4) = 180 + 10 * (25 - 13) = 300 -> 0 (claimed)
+        // john rewards = 180 + staked_tokens * (r6 - r4) = 180 + 10 * (25 - 13) = 300 -> 0
+        // (claimed)
         // last RPST for alice = r6 = 25
         // last RPST for bob = r6 = 25
         // last RPST for john = r6 = 25
@@ -380,7 +356,7 @@ mod tests {
 
         /// then
 
-        let state = StakingContract::contract_state_for_testing();
+        let state = @StakingContract::contract_state_for_testing();
         set_contract_address(deploy.contract.contract_address);
 
         // check amount of unclaimed reward tokens for each user
@@ -400,27 +376,22 @@ mod tests {
         let deployed_contract_rewards = deploy
             .reward_token
             .balance_of(deploy.contract.contract_address);
-        assert(alice_rewards == 600, 'Alice: wrong amount of rewards');
-        assert(bob_rewards == 40, 'Bob: wrong amount of rewards');
-        assert(john_rewards == 300, 'John: wrong amount of rewards');
+        assert_eq!(alice_rewards, 600);
+        assert_eq!(bob_rewards, 40);
+        assert_eq!(john_rewards, 300);
         // 1000 - 600 - 40 - 300 = 60
-        assert(deployed_contract_rewards == 60, 'Contract: wrong rewards');
+        assert_eq!(deployed_contract_rewards, 60);
 
         // check amount of staking tokens each user has back in their balance
         let alice_staking_tokens = deploy.staking_token.balance_of(alice);
         let bob_staking_tokens = deploy.staking_token.balance_of(bob);
         let john_staking_tokens = deploy.staking_token.balance_of(john);
-        assert(
-            alice_staking_tokens == alice_amount_tokens_minted, 'Alice: wrong amount of staking'
-        );
-        assert(bob_staking_tokens == bob_amount_tokens_minted, 'Bob: wrong amount of staking');
-        assert(
-            john_staking_tokens == john_amount_tokens_minted - 10, 'John: wrong amount of staking'
-        );
+        assert_eq!(alice_staking_tokens, alice_amount_tokens_minted);
+        assert_eq!(bob_staking_tokens, bob_amount_tokens_minted);
+        assert_eq!(john_staking_tokens, john_amount_tokens_minted - 10);
     }
 
     #[test]
-    #[available_gas(20000000)]
     fn all_rewards_distributed_event() {
         /// set up
 
@@ -441,7 +412,8 @@ mod tests {
         let block_timestamp: u256 = 1000;
         set_block_timestamp(block_timestamp.try_into().unwrap());
         let reward_duration = 100;
-        // have to set again the contract_address because it got changed in mint_reward_tokens_to function
+        // have to set again the contract_address because it got changed in mint_reward_tokens_to
+        // function
         set_contract_address(owner);
         deploy.contract.set_reward_duration(reward_duration);
         deploy.contract.set_reward_amount(reward_tokens_amount);
@@ -496,7 +468,6 @@ mod tests {
     }
 
     #[test]
-    #[available_gas(20000000)]
     fn set_up_reward_complex() {
         /// Set up
 
@@ -518,22 +489,23 @@ mod tests {
         set_block_timestamp(block_timestamp.try_into().unwrap());
         let reward_duration = 100;
         let initial_reward = 400;
-        // have to set again the contract_address because it got changed in mint_reward_tokens_to function
+        // have to set again the contract_address because it got changed in mint_reward_tokens_to
+        // function
         set_contract_address(owner);
         deploy.contract.set_reward_duration(reward_duration);
         deploy.contract.set_reward_amount(initial_reward);
 
         // middle check
-        let state = StakingContract::contract_state_for_testing();
+        let state = @StakingContract::contract_state_for_testing();
         set_contract_address(deploy.contract.contract_address);
 
         // timestamp = 1000
         // finish_at = 1100
         // reward_rate = 400 / 100 = 4 tokens/timestamp_unit
 
-        assert(state.finish_at.read() == block_timestamp + reward_duration, '1- Wrong finish date');
-        assert(state.last_updated_at.read() == block_timestamp, '1- Wrong last update date');
-        assert(state.reward_rate.read() == 4, '1- Wrong reward rate');
+        assert_eq!(state.finish_at.read(), block_timestamp + reward_duration);
+        assert_eq!(state.last_updated_at.read(), block_timestamp);
+        assert_eq!(state.reward_rate.read(), 4);
 
         /// When
 
@@ -553,14 +525,12 @@ mod tests {
         // new_reward_rate = (200 + 300) / 100 = 5
         // new_finish_at = 1050 + 100 = 1150
 
-        let state = StakingContract::contract_state_for_testing();
+        let state = @StakingContract::contract_state_for_testing();
         set_contract_address(deploy.contract.contract_address);
 
         // the finish_at date is reset
-        assert(
-            state.finish_at.read() == middle_timestamp + reward_duration, '2- Wrong finish date'
-        );
-        assert(state.last_updated_at.read() == middle_timestamp, '2- Wrong last update date');
-        assert(state.reward_rate.read() == 5, '');
+        assert_eq!(state.finish_at.read(), middle_timestamp + reward_duration);
+        assert_eq!(state.last_updated_at.read(), middle_timestamp);
+        assert_eq!(state.reward_rate.read(), 5);
     }
 }

@@ -7,6 +7,8 @@ trait ISimpleStorage<T> {
 
 #[starknet::contract]
 mod SimpleStorage {
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
+
     #[storage]
     struct Storage {
         stored_data: u128

@@ -19,6 +19,7 @@ pub trait ICounterFactory<TContractState> {
 #[starknet::contract]
 pub mod CounterFactory {
     use starknet::{ContractAddress, ClassHash, SyscallResultTrait, syscalls::deploy_syscall};
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
 
     #[storage]
     struct Storage {
@@ -38,7 +39,7 @@ pub mod CounterFactory {
     impl Factory of super::ICounterFactory<ContractState> {
         // ANCHOR: deploy
         fn create_counter_at(ref self: ContractState, init_value: u128) -> ContractAddress {
-            // Contructor arguments
+            // Constructor arguments
             let mut constructor_calldata: Array::<felt252> = array![init_value.into()];
 
             // Contract deployment
@@ -69,10 +70,7 @@ pub mod CounterFactory {
 #[cfg(test)]
 mod tests {
     use super::{CounterFactory, ICounterFactoryDispatcher, ICounterFactoryDispatcherTrait};
-    use starknet::{
-        SyscallResultTrait, ContractAddress, ClassHash, contract_address_const,
-        syscalls::deploy_syscall
-    };
+    use starknet::{SyscallResultTrait, ClassHash, syscalls::deploy_syscall};
 
     // Define a target contract to deploy
     mod target {
@@ -85,6 +83,8 @@ mod tests {
 
         #[starknet::contract]
         pub mod SimpleCounter {
+            use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
+
             #[storage]
             struct Storage {
                 // Counter variable
@@ -116,7 +116,7 @@ mod tests {
             }
         }
     }
-    use target::{ISimpleCounterDispatcher, ISimpleCounterDispatcherTrait};
+    use target::ISimpleCounterDispatcherTrait;
 
     /// Deploy a counter factory contract
     fn deploy_factory(

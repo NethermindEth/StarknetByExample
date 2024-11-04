@@ -4,7 +4,7 @@ A component with a dependency on a trait `T` can be used in a contract as long a
 
 We will use a new `Countable` component as an example:
 
-```rust
+```cairo
 {{#rustdoc_include ../../listings/applications/components/src/countable.cairo:component}}
 ```
 
@@ -16,19 +16,19 @@ Instead, we add the trait `Switchable` as a dependency to the `Countable` compon
 
 First, we import the `ISwitchable` trait defined in chapter ["Components How-To"](./how_to.md):
 
-```rust
+```cairo
 {{#include ../../listings/applications/components/src/switchable.cairo:interface}}
 ```
 
 Then we can modify the implementation of the `Countable` component to depend on the `ISwitchable` trait:
 
-```rust
+```cairo
 {{#rustdoc_include ../../listings/applications/components_dependencies/src/countable_dep_switch.cairo:impl}}
 ```
 
 A contract that uses the `Countable` component must implement the `ISwitchable` trait:
 
-```rust
+```cairo
 {{#rustdoc_include ../../listings/applications/components_dependencies/src/contract_countable.cairo:contract}}
 ```
 
@@ -39,7 +39,7 @@ In the previous example, we implemented the `ISwitchable` trait in the contract.
 We already implemented a [`Switchable`](./how_to.md) component that provides an implementation of the `ISwitchable` trait.
 By using the `Switchable` component in a contract, we can embed the implementation of the `ISwitchable` trait in the contract and resolve the dependency on the `ISwitchable` trait.
 
-```rust
+```cairo
 {{#rustdoc_include ../../listings/applications/components_dependencies/src/contract_countable_switchable.cairo:contract}}
 ```
 
@@ -54,7 +54,7 @@ We can't embed `SwitchableInternalImpl`, but we can add `switchable::HasComponen
 We make the `Countable` component depend on the `Switchable` component.
 This will allow to do `switchable::ComponentState<TContractState>` -> `TContractState` -> `countable::ComponentState<TcontractState>` and access the internal functions of the `Switchable` component inside the `Countable` component:
 
-```rust
+```cairo
 {{#rustdoc_include ../../listings/applications/components_dependencies/src/countable_internal_dep_switch.cairo:contract}}
 ```
 

@@ -36,7 +36,8 @@ For more resources, check [Awesome Starknet](https://github.com/keep-starknet-st
 The current version this book uses:
 
 ```
-cairo 2.6.3
-edition = '2023_11'
+cairo 2.8.2
+edition = "2024_07"
+sierra: 1.6.0
 {{#include ../.tool-versions}}
 ```

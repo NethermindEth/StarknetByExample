@@ -1,4 +1,3 @@
-use starknet::ContractAddress;
 use starknet::account::Call;
 
 #[starknet::interface]
@@ -12,12 +11,11 @@ pub trait ITimeLock<TState> {
 #[starknet::contract]
 pub mod TimeLock {
     use core::poseidon::{PoseidonTrait, poseidon_hash_span};
-    use core::hash::{HashStateTrait, HashStateExTrait};
-    use starknet::{
-        ContractAddress, get_caller_address, get_block_timestamp, SyscallResultTrait, syscalls
-    };
+    use core::hash::HashStateTrait;
+    use starknet::{get_caller_address, get_block_timestamp, SyscallResultTrait, syscalls};
     use starknet::account::Call;
     use components::ownable::ownable_component;
+    use starknet::storage::{Map, StorageMapReadAccess, StorageMapWriteAccess};
 
     component!(path: ownable_component, storage: ownable, event: OwnableEvent);
 
@@ -30,7 +28,7 @@ pub mod TimeLock {
     struct Storage {
         #[substorage(v0)]
         ownable: ownable_component::Storage,
-        queued: LegacyMap::<felt252, bool>,
+        queued: Map::<felt252, bool>,
     }
 
     #[event]

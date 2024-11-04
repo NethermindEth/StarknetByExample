@@ -11,12 +11,12 @@ In order to call other contracts using dispatchers, you will need to define the 
 
 Here's the `Callee` contract interface and implementation:
 
-```rust
+```cairo
 {{#rustdoc_include ../../../listings/getting-started/calling_other_contracts/src/caller.cairo:callee_contract}}
 ```
 
 The following `Caller` contract uses the `Callee` dispatcher to call the `Callee` contract:
 
-```rust
+```cairo
 {{#rustdoc_include ../../../listings/getting-started/calling_other_contracts/src/caller.cairo:caller_contract}}
 ```
