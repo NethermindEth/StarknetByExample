@@ -10,3 +10,5 @@ output
 .snfoundry_cache
 .vscode/settings.json
 **/starkli-wallet
+
+node_modules
