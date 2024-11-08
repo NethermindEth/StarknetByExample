@@ -89,7 +89,7 @@ export default defineConfig({
   // Theme configuration
   theme: {
     accentColor: {
-      dark: "#ff4b01",
+      dark: "#F69D50",
       light: "#ff4b01",
     },
   },
@@ -99,8 +99,8 @@ export default defineConfig({
   markdown: {
     code: {
       themes: {
-        light: "min-light",
-        dark: "min-dark",
+        light: "github-light",
+        dark: "github-dark-dimmed",
       },
     },
     remarkPlugins: [remarkMath],

@@ -20,7 +20,7 @@ starkli signer keystore new ./starkli-wallet/keystore.json
 
 After this command, the path of the encrypted keystore file is shown which will be needed during the declaration and deployment of the contract.
 
-Export the keystore path in order not to call `--keystore` in every command:
+Export the keystore path in order not to call `--keystore{:bash}` in every command:
 
 ```bash [Terminal]
 export STARKNET_KEYSTORE="./starkli-wallet/keystore.json"
@@ -44,7 +44,7 @@ Once the transaction is confirmed on the faucet page, press ENTER, and the accou
 
 ### Declaring & Deploying your Contract:
 
-Firstly, you need to declare your contract which will create a class on Starknet Sepolia. Note that we will use the Sierra program in `./target/ProjectName_ContractName.contract_class.json` in your Scarb folder.
+Firstly, you need to declare your contract which will create a class on Starknet Sepolia. Note that we will use the Sierra program in `./target/ProjectName_ContractName.contract_class.json{:bash}` in your Scarb folder.
 
 :::info
 If you are deploying a contract code that is already used, you can skip the declaration step because the class hash is already declared on the network. One example of this is when you are deploying common contract instances such as ERC20 or ERC721 contracts.
@@ -67,7 +67,7 @@ Class hash declared:
 ```
 
 Check the [Voyager Class Page](https://sepolia.voyager.online/class/0x05c8c21062a74e3c8f2015311d7431e820a08a6b0a9571422b607429112d2eb4).
-Now, it's time to deploy the contract. Add the class hash given above after `--watch`:
+Now, it's time to deploy the contract. Add the class hash given above after `--watch{:bash}`:
 
 ```bash [Terminal]
 starkli deploy \

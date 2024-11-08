@@ -51,11 +51,11 @@ The above diagram represents a merkle tree.\
 Each leaf node is the hash of some data.\
 Each other node is the hash of the combination of both children nodes.
 
-If we were to `verify` the `hash 6`, the merkle proof would need to contain the `hash 5`, `hash 12`and `hash 13`:
-  1. The `hash 5` would be combined with the `hash 6` to re-compute the `hash 11`.
-  2. The newly computed `hash 11` in step 1 would be combined with `hash 12` to re-compute `hash 14`.
-  3. The `hash 13` would be combined with the newly computed `hash 14` in step 2 to re-compute the merkle root.
-  4. We can then compare the computed resultant merkle root with the one provided to the `verify` function.
+If we were to `verify{:md}` the `hash 6{:md}`, the merkle proof would need to contain the `hash 5{:md}`, `hash 12{:md}`and `hash 13{:md}`:
+  1. The `hash 5{:md}` would be combined with the `hash 6{:md}` to re-compute the `hash 11{:md}`.
+  2. The newly computed `hash 11{:md}` in step 1 would be combined with `hash 12{:md}` to re-compute `hash 14{:md}`.
+  3. The `hash 13{:md}` would be combined with the newly computed `hash 14{:md}` in step 2 to re-compute the merkle root.
+  4. We can then compare the computed resultant merkle root with the one provided to the `verify{:md}` function.
 
 ### Code
 

@@ -24,7 +24,7 @@ We will interact with the SimpleStorage contract using Starknet-js. Firstly, cre
 npm init
 ```
 
-Now, `package.json` file is created. Change the type of the package to a module.
+Now, `package.json{:md}` file is created. Change the type of the package to a module.
 
 ```json
 "type": "module"
@@ -36,7 +36,7 @@ Let's add Starknet-js as a dependency:
 npm install starknet@next
 ```
 
-Create a file named `index.js` where we will write JavaScript code to interact with our contract. Let's start our code by importing from Starknet-js, and from other libraries we will need:
+Create a file named `index.js{:md}` where we will write JavaScript code to interact with our contract. Let's start our code by importing from Starknet-js, and from other libraries we will need:
 
 ```js
 // [!include ~/listings/applications/simple_storage_starknetjs/index.js:imports]
@@ -55,14 +55,14 @@ The next step is creating an `Account` object that will be used to sign transact
 starkli signer keystore inspect-private /path/to/starkli-wallet/keystore.json --raw
 ```
 
-Create a `.env` file in your project folder, and paste your private key as shown in the following line:
+Create a `.env{:md}` file in your project folder, and paste your private key as shown in the following line:
 
 ```bash [Terminal]
 // [!include ~/listings/applications/simple_storage_starknetjs/.env.example]
 ```
 
 :::warning
-Using `.env` files is not recommended for production environments, please use `.env` files only for development purposes! It is HIGHLY recommended to add `.gitignore`, and include your .env file there if you will be pushing your project to GitHub.
+Using `.env{:md}` files is not recommended for production environments, please use `.env{:md}` files only for development purposes! It is HIGHLY recommended to add `.gitignore{:md}`, and include your .env file there if you will be pushing your project to GitHub.
 :::
 
 Now, import your private key from the environment variables and create your Account object.
@@ -73,13 +73,13 @@ const accountAddress = // 'PASTE_ACCOUNT_PUBLIC_ADDRESS_HERE';
 
 Now, let's create a Contract object in order to interact with our contract. In order to create the Contract object, we need the ABI and the address of our contract. The ABI contains information about what kind of data structures and functions there are in our contract so that we can interact with them using SDKs like Starknet-js. 
 
-We will copy `./target/simple_storage_SimpleStorage.contract_class.json` to `abi.json` in the Scarb project folder. The beginning of the content of the ABI file should look like this: 
+We will copy `./target/simple_storage_SimpleStorage.contract_class.json{:md}` to `abi.json{:md}` in the Scarb project folder. The beginning of the content of the ABI file should look like this: 
 
 ```json
 {"sierra_program":["0x1","0x5","0x0","0x2","0x6","0x3","0x98","0x68","0x18", //...
 ```
 
-We can then create the Account object and the Contract object in our `index.js` file:
+We can then create the Account object and the Contract object in our `index.js{:md}` file:
 
 ```js
 const contractAddress = 'PASTE_CONTRACT_ADDRESS_HERE';
@@ -92,9 +92,9 @@ The setup is finished! By calling the `fn get(self: @ContractState) -> u128` fun
 // [!include ~/listings/applications/simple_storage_starknetjs/index.js:get]
 ```
 
-In order to run your code, run the command `node index.js` in your project directory. After a short amount of time, you should see a "0" as the stored data.
+In order to run your code, run the command `node index.js{:md}` in your project directory. After a short amount of time, you should see a "0" as the stored data.
 
-Now, we will set a new number to the `stored_data` variable by calling the `fn set(self: @mut ContractState, new_data: u128)` function. This is an `INVOKE` transaction, so we need to sign the transaction with our account's private key and pass along the calldata.
+Now, we will set a new number to the `stored_data` variable by calling the `fn set(self: @mut ContractState, new_data: u128)` function. This is an `INVOKE:{md}` transaction, so we need to sign the transaction with our account's private key and pass along the calldata.
 
 The transaction is signed and broadcasted to the network and it can takes a few seconds for the transaction to be confirmed.
 

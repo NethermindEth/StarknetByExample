@@ -1,6 +1,6 @@
 # Strings and ByteArrays
 
-In Cairo, there's no native type for strings. Instead, you can use a single `felt252` to store a `short string` or a `ByteArray` for strings of arbitrary length.
+In Cairo, there's no native type for strings. Instead, you can use a single `felt252` to store a short string or a `ByteArray` for strings of arbitrary length.
 
 ## Short strings
 
@@ -42,4 +42,4 @@ Additionally, there are some operations that can be called as static functions:
 
 - `concat(left: @ByteArray, right: @ByteArray)` - Concatenate two ByteArrays.
 
-Concatenation of `ByteArray` (`append(mut other: @ByteArray)`) can also be done with the `+` and `+=` operators directly, and access to a specific index can be done with the `[]` operator (with the maximum index being `len() - 1`).
+Concatenation of `ByteArray` (with `append(mut other: @ByteArray)`) can also be done with the `+` and `+=` operators directly, and access to a specific index can be done with the `[]` operator (with the maximum index being `len() - 1`).

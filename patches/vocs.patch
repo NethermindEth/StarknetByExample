@@ -1001,10 +1001,10 @@ index 0000000000000000000000000000000000000000..9078642c2c1dc8b472469c269619b189
 +  }
 +}
 diff --git a/_lib/vite/plugins/mdx.js b/_lib/vite/plugins/mdx.js
-index 09d02d1576a72dc43dffd76803f4a16054ebbe18..e3216e93efa5a872a23a3bd035aaa76f8df4b8bc 100644
+index 09d02d1576a72dc43dffd76803f4a16054ebbe18..b2a2769561f95e2966ded2810df3fbb842155081 100644
 --- a/_lib/vite/plugins/mdx.js
 +++ b/_lib/vite/plugins/mdx.js
-@@ -1,136 +1,181 @@
+@@ -1,136 +1,180 @@
 -import mdxPlugin from '@mdx-js/rollup';
 -import rehypeShiki, {} from '@shikijs/rehype';
 -import { transformerNotationDiff, transformerNotationFocus, transformerNotationHighlight, transformerNotationWordHighlight, } from '@shikijs/transformers';
@@ -1091,25 +1091,23 @@ index 09d02d1576a72dc43dffd76803f4a16054ebbe18..e3216e93efa5a872a23a3bd035aaa76f
 +import rehypeShikiFromHighlighter from "@shikijs/rehype/core";
 +import { createHighlighterCore } from "shiki/core";
 +import * as cairo from "./cairo.json" with { type: "json" };
++const langs = [
++  cairo,
++  import("shiki/langs/solidity.mjs"),
++  import("shiki/langs/rust.mjs"),
++  import("shiki/langs/markdown.mjs"),
++  import("shiki/langs/json.mjs"),
++  import("shiki/langs/bash.mjs"),
++  import("shiki/langs/shell.mjs"),
++  import("shiki/langs/javascript.mjs"),
++  import("shiki/langs/typescript.mjs"),
++]
 +const highlighter = await createHighlighterCore({
 +  themes: [
 +    import("shiki/themes/github-dark-dimmed.mjs"),
 +    import("shiki/themes/github-light.mjs"),
-+    import("shiki/themes/min-dark.mjs"),
-+    import("shiki/themes/min-light.mjs"),
 +  ],
-+  langs: [
-+    cairo,
-+    import("shiki/langs/solidity.mjs"),
-+    import("shiki/langs/rust.mjs"),
-+    import("shiki/langs/markdown.mjs"),
-+    import("shiki/langs/json.mjs"),
-+    import("shiki/langs/bash.mjs"),
-+    import("shiki/langs/shell.mjs"),
-+    import("shiki/langs/javascript.mjs"),
-+    import("shiki/langs/typescript.mjs"),
-+    // md etc ...
-+  ],
++  langs,
 +  langAlias: {
 +    'cairo': 'Cairo'
 +  },
@@ -1272,6 +1270,7 @@ index 09d02d1576a72dc43dffd76803f4a16054ebbe18..e3216e93efa5a872a23a3bd035aaa76f
 +  [
 +    rehypeInlineShiki,
 +    {
++      langs,
 +      themes: defaultThemes,
 +      ...markdown?.code,
 +    },
@@ -1313,3 +1312,83 @@ index 09d02d1576a72dc43dffd76803f4a16054ebbe18..e3216e93efa5a872a23a3bd035aaa76f
 +  ];
  }
  //# sourceMappingURL=mdx.js.map
+diff --git a/_lib/vite/plugins/rehype/inline-shiki.js b/_lib/vite/plugins/rehype/inline-shiki.js
+index 1e2a7426a5a80afa1bdff24388a8849b49e04f2e..20332be7836e5ca932f59747c3de697430b1d711 100644
+--- a/_lib/vite/plugins/rehype/inline-shiki.js
++++ b/_lib/vite/plugins/rehype/inline-shiki.js
+@@ -1,30 +1,51 @@
+-import { bundledLanguages, getSingletonHighlighter } from 'shiki';
+-import { visit } from 'unist-util-visit';
++import { bundledLanguages, getSingletonHighlighter } from "shiki";
++import { visit } from "unist-util-visit";
+ const inlineShikiRegex = /(.*){:(.*)}$/;
+ let promise;
+ export const rehypeInlineShiki = function (options = {}) {
+-    const themeNames = ('themes' in options ? Object.values(options.themes) : [options.theme]).filter(Boolean);
+-    const langs = options.langs || Object.keys(bundledLanguages);
+-    return async function (tree) {
+-        if (!promise)
+-            promise = getSingletonHighlighter({
+-                themes: themeNames,
+-                langs,
+-            });
+-        const highlighter = await promise;
+-        return visit(tree, 'element', (node, index, parent) => {
+-            if (node.tagName !== 'code')
+-                return;
+-            const match = node.children[0]?.value?.match(inlineShikiRegex);
+-            if (!match)
+-                return;
+-            const [, code, lang] = match;
+-            const hast = highlighter.codeToHast(code, { ...options, lang });
+-            const inlineCode = hast.children[0].children[0];
+-            if (!inlineCode)
+-                return;
+-            parent?.children.splice(index ?? 0, 1, inlineCode);
++  const themeNames = (
++    "themes" in options ? Object.values(options.themes) : [options.theme]
++  ).filter(Boolean);
++  const langs = options.langs || Object.keys(bundledLanguages);
++  return async function (tree) {
++    if (!promise)
++      promise = getSingletonHighlighter({
++        themes: themeNames,
++        langs,
++      });
++    const highlighter = await promise;
++    return visit(tree, "element", (node, index, parent) => {
++      if (node.tagName !== "code") return;
++      // ignore math
++      const classes = Array.isArray(node.properties.className)
++        ? node.properties.className
++        : [];
++      const languageMath = classes.includes("language-math");
++      const mathDisplay = classes.includes("math-display");
++      const mathInline = classes.includes("math-inline");
++      if (languageMath || mathDisplay || mathInline) {
++        return;
++      }
++
++      const match = node.children[0]?.value?.match(inlineShikiRegex);
++      if (match) {
++        const [, code, lang] = match;
++        const hast = highlighter.codeToHast(code, { ...options, lang });
++        const inlineCode = hast.children[0].children[0];
++        if (!inlineCode) return;
++        parent?.children.splice(index ?? 0, 1, inlineCode);
++      } else {
++        if (!node.children[0] || node.children[0].type !== "text") return;
++        const code = node.children[0].value;
++        const hast = highlighter.codeToHast(code, {
++          ...options,
++          lang: "Cairo",
+         });
+-    };
++        const inlineCode = hast.children[0].children[0];
++        if (!inlineCode) return;
++        parent?.children.splice(index ?? 0, 1, inlineCode);
++      }
++    });
++  };
+ };
+ //# sourceMappingURL=inline-shiki.js.map

@@ -8,7 +8,7 @@ Some additional notes:
 
 - More complex key-value mappings are possible, for example we could use `Map::<(ContractAddress, ContractAddress), felt252>` to create an allowance on an ERC20 token contract.
 
-- In mappings, the address of the value at key `k_1,...,k_n` is `h(...h(h(sn_keccak(variable_name),k_1),k_2),...,k_n)` where `ℎ` is the Pedersen hash and the final value is taken $( \bmod {2^{251}} - 256 )$. You can learn more about the contract storage layout in the [Starknet Documentation](https://docs.starknet.io/documentation/architecture_and_concepts/Smart_Contracts/contract-storage/#storage_variables).
+- In mappings, the address of the value at key $k_1,...,k_n$ is $\text{h}(...\text{h}(\text{h}(\text{sn\_keccak}(name),k_1),k_2),...,k_n)$ where $\text{h}$ is the Pedersen hash and the final value is taken $(\bmod {2^{251}} - 256~)$. You can learn more about the contract storage layout in the [Starknet Documentation](https://docs.starknet.io/documentation/architecture_and_concepts/Smart_Contracts/contract-storage/#storage_variables).
 
 ```cairo
 // [!include ~/listings/getting-started/mappings/src/mappings.cairo:contract]

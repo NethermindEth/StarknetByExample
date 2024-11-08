@@ -1,6 +1,6 @@
 # Contract Testing
 
-Testing plays a crucial role in software development, especially for smart contracts. In this section, we'll guide you through the basics of testing a smart contract on Starknet with `scarb`.
+Testing plays a crucial role in software development, especially for smart contracts. In this section, we'll guide you through the basics of testing a smart contract on Starknet with `scarb:{bash}`.
 
 Let's start with a simple smart contract as an example:
 
@@ -14,7 +14,7 @@ Now, take a look at the tests for this contract:
 // [!include ~/listings/getting-started/testing_how_to/src/contract.cairo:tests]
 ```
 
-To define our test, we use scarb, which allows us to create a separate module guarded with `#[cfg(test)]`. This ensures that the test module is only compiled when running tests using `scarb test`.
+To define our test, we use scarb, which allows us to create a separate module guarded with `#[cfg(test)]`. This ensures that the test module is only compiled when running tests using `scarb test{:bash}`.
 
 Each test is defined as a function with the `#[test]` attribute. You can also check if a test panics using the `#[should_panic]` attribute.
 
@@ -88,8 +88,8 @@ You can find the full list of functions in the [Starknet Corelib repo](https://g
 
 ## Starknet Foundry
 
-Starknet Foundry is a powerful toolkit for developing smart contracts on Starknet. It offers support for testing Starknet smart contracts on top of `scarb` with the `Forge` tool.
+Starknet Foundry is a powerful toolkit for developing smart contracts on Starknet. It offers support for testing Starknet smart contracts on top of `scarb{:bash}` with the `snforge{:bash}` tool.
 
-Testing with `snforge` is similar to the process we just described, but simplified. Moreover, additional features are on the way, including cheatcodes and parallel test execution. We highly recommend exploring Starknet Foundry and incorporating it into your projects.
+Testing with `snforge{:bash}` is similar to the process we just described, but simplified. Moreover, additional features are on the way, including cheatcodes and parallel test execution. We highly recommend exploring Starknet Foundry and incorporating it into your projects.
 
 For more detailed information about testing contracts with Starknet Foundry, check out the [Starknet Foundry Book - Testing Contracts](https://foundry-rs.github.io/starknet-foundry/testing/contracts.html).
