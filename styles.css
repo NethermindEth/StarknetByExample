@@ -66,28 +66,46 @@ section.vocs_Sidebar_level
   bottom: 0;
 }
 .vocs_DocsLayout_gutterLeft {
-/* .vocs_DesktopTopNav_logoWrapper { */
   margin-left: 0;
-  transition: margin-left 0.3s ease;
+  transition: margin 0.3s ease;
 }
 .sidebar_hidden .vocs_DocsLayout_gutterLeft {
-/* .sidebar_hidden .vocs_DesktopTopNav_logoWrapper { */
-  /* width: 0; */
   margin-left: calc(var(--vocs_DocsLayout_leftGutterWidth) * -1);
 };
+
 .vocs_DocsLayout_content_withSidebar {
-  margin-left: 0;
-  padding-left: var(--vocs_DocsLayout_leftGutterWidth);
-  transition: padding-left 0.3s ease;
+  margin-left: var(--vocs_DocsLayout_leftGutterWidth)
 }
 .sidebar_hidden .vocs_DocsLayout_content_withSidebar {
-  padding-left: 0;
+  margin-left: 0 !important;
 }
-
-/* Center content relative to sidebar not page */
 .vocs_DocsLayout_content_withSidebar {
+  transition: margin 300ms ease !important;
   max-width: unset;
 }
+
+.vocs_DesktopTopNav_logo a {
+  margin-top: 2px !important;
+}
+
+.vocs_Sidebar_logo {
+  padding-top: 0px !important;
+}
+
+.sidebar_toggle {
+  position: absolute;
+  top: 0;
+  right: calc(var(--vocs-topNav_height) * -1);
+  height: var(--vocs-topNav_height);
+  width: var(--vocs-topNav_height);
+}
+
+.sidebar_toggle button {
+  padding: var(--vocs-space_8);
+}
+
+/* END sidebar */
+
 .vocs_Content,
 .vocs_Footer {
   margin: auto;
