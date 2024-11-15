@@ -1,4 +1,4 @@
-// ANCHOR: component
+// [!region component]
 use starknet::ContractAddress;
 
 #[starknet::interface]
@@ -95,9 +95,9 @@ pub mod ownable_component {
         }
     }
 }
-// ANCHOR_END: component
+// [!endregion component]
 
-// ANCHOR: contract
+// [!region contract]
 #[starknet::contract]
 pub mod OwnedContract {
     use super::{ownable_component, ownable_component::OwnableInternalTrait};
@@ -124,7 +124,7 @@ pub mod OwnedContract {
         OwnableEvent: ownable_component::Event,
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod test {

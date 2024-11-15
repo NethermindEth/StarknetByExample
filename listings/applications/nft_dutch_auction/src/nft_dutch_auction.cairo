@@ -1,4 +1,4 @@
-// ANCHOR: contract
+// [!region contract]
 use starknet::ContractAddress;
 
 #[starknet::interface]
@@ -135,7 +135,7 @@ pub mod NFTDutchAuction {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod tests {

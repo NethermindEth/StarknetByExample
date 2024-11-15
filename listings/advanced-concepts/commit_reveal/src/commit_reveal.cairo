@@ -4,7 +4,7 @@ pub trait ICommitmentRevealTrait<T> {
     fn reveal(self: @T, secret: felt252) -> bool;
 }
 
-// ANCHOR: contract
+// [!region contract]
 #[starknet::contract]
 pub mod CommitmentRevealTraits {
     use starknet::storage::{StoragePointerWriteAccess, StoragePointerReadAccess};
@@ -28,7 +28,7 @@ pub mod CommitmentRevealTraits {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod tests {
@@ -54,7 +54,7 @@ mod tests {
     fn commit_and_reveal() {
         let mut contract = deploy();
 
-        // ANCHOR: offchain
+        // [!region offchain]
         // Off-chain, compute the commitment hash for secret
         let secret = 'My secret';
         let offchain_commitment = PedersenTrait::new(secret).finalize();
@@ -64,7 +64,7 @@ mod tests {
 
         // Reveal on-chain and assert the result
         let reveal_result = contract.reveal(secret);
-        // ANCHOR_END: offchain
+        // [!endregion offchain]
         assert_eq!(reveal_result, true);
     }
 }

@@ -1,6 +1,6 @@
 pub mod pledgeable;
 
-// ANCHOR: contract
+// [!region contract]
 use starknet::{ClassHash, ContractAddress};
 
 #[derive(Drop, Serde)]
@@ -348,6 +348,6 @@ pub mod Campaign {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 

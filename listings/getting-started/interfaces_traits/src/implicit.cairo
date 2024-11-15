@@ -1,4 +1,4 @@
-// ANCHOR: contract
+// [!region contract]
 #[starknet::contract]
 pub mod ImplicitInterfaceContract {
     use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
@@ -22,7 +22,7 @@ pub mod ImplicitInterfaceContract {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod tests {

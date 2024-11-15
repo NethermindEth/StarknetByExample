@@ -1,6 +1,6 @@
-book
-target
-output
+node_modules
+.env
+dist/*
 
 # Editors tmp files.
 *~
@@ -11,4 +11,10 @@ output
 .vscode/settings.json
 **/starkli-wallet
 
+# From previous mdbook build
+book/*
+target/*
+src/**/*.md
+
 node_modules
+

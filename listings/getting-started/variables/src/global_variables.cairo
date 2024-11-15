@@ -3,7 +3,7 @@ pub trait IGlobalExample<TContractState> {
     fn foo(ref self: TContractState);
 }
 
-// ANCHOR: contract
+// [!region contract]
 #[starknet::contract]
 pub mod GlobalExample {
     // import the required functions from the starknet core library
@@ -21,7 +21,7 @@ pub mod GlobalExample {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod test {

@@ -1,4 +1,4 @@
-// ANCHOR: contract
+// [!region contract]
 #[starknet::interface]
 pub trait IImplicitInternalContract<TContractState> {
     fn add(ref self: TContractState, nb: u32);
@@ -46,7 +46,7 @@ pub mod ImplicitInternalContract {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod tests {

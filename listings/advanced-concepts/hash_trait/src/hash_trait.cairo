@@ -8,7 +8,7 @@ pub trait IHashTrait<T> {
     ) -> felt252;
 }
 
-// ANCHOR: hash
+// [!region hash]
 #[starknet::contract]
 pub mod HashTraits {
     use starknet::storage::StoragePointerWriteAccess;
@@ -60,7 +60,7 @@ pub mod HashTraits {
         }
     }
 }
-// ANCHOR_END: hash
+// [!endregion hash]
 
 #[cfg(test)]
 mod tests {

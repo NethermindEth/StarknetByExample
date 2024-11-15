@@ -1,4 +1,4 @@
-//ANCHOR: contract
+// [!region contract]
 #[starknet::component]
 pub mod countable_component {
     use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
@@ -59,6 +59,6 @@ pub mod countable_component {
         }
     }
 }
-//ANCHOR_END: contract
+// [!endregion contract]
 
 

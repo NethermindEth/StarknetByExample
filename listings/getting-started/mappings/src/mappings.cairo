@@ -6,7 +6,7 @@ pub trait IMapContract<TContractState> {
     fn get(self: @TContractState, key: ContractAddress) -> felt252;
 }
 
-// ANCHOR: contract
+// [!region contract]
 #[starknet::contract]
 pub mod MapContract {
     use starknet::ContractAddress;
@@ -28,7 +28,7 @@ pub mod MapContract {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod test {

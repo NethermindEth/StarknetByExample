@@ -1,4 +1,4 @@
-// ANCHOR: contract
+// [!region contract]
 #[starknet::contract]
 mod CountableContract {
     use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
@@ -40,7 +40,7 @@ mod CountableContract {
         CountableEvent: countable_component::Event,
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod tests {

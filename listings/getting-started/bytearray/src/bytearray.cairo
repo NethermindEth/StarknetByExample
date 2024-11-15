@@ -4,7 +4,7 @@ pub trait IMessage<TContractState> {
     fn prepend(ref self: TContractState, str: ByteArray);
 }
 
-// ANCHOR: contract
+// [!region contract]
 #[starknet::contract]
 pub mod MessageContract {
     use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
@@ -30,7 +30,7 @@ pub mod MessageContract {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod tests {

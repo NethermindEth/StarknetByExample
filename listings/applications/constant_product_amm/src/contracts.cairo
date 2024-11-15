@@ -1,4 +1,4 @@
-// ANCHOR: ConstantProductAmmContract
+// [!region ConstantProductAmmContract]
 use starknet::ContractAddress;
 
 #[starknet::interface]
@@ -264,6 +264,6 @@ pub mod ConstantProductAmm {
         }
     }
 }
-// ANCHOR_END: ConstantProductAmmContract
+// [!endregion ConstantProductAmmContract]
 
 

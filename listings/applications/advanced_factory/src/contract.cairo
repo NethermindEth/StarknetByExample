@@ -1,4 +1,4 @@
-// ANCHOR: contract
+// [!region contract]
 pub use starknet::{ContractAddress, ClassHash};
 
 #[starknet::interface]
@@ -149,6 +149,6 @@ pub mod CampaignFactory {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 

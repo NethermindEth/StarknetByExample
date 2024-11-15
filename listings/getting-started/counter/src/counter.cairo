@@ -5,7 +5,7 @@ pub trait ISimpleCounter<TContractState> {
     fn decrement(ref self: TContractState);
 }
 
-// ANCHOR: contract
+// [!region contract]
 #[starknet::contract]
 pub mod SimpleCounter {
     use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
@@ -41,7 +41,7 @@ pub mod SimpleCounter {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod test {
