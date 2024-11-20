@@ -1,10 +1,13 @@
 [package]
 name = "storing_custom_types"
 version.workspace = true
-edition = '2023_11'
+edition.workspace = true
 
 [dependencies]
 starknet.workspace = true
+
+[dev-dependencies]
+cairo_test.workspace = true
 
 [scripts]
 test.workspace = true

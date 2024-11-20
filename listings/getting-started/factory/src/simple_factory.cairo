@@ -1,4 +1,4 @@
-// ANCHOR: contract
+// [!region contract]
 pub use starknet::{ContractAddress, ClassHash};
 
 #[starknet::interface]
@@ -19,6 +19,7 @@ pub trait ICounterFactory<TContractState> {
 #[starknet::contract]
 pub mod CounterFactory {
     use starknet::{ContractAddress, ClassHash, SyscallResultTrait, syscalls::deploy_syscall};
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
 
     #[storage]
     struct Storage {
@@ -36,9 +37,9 @@ pub mod CounterFactory {
 
     #[abi(embed_v0)]
     impl Factory of super::ICounterFactory<ContractState> {
-        // ANCHOR: deploy
+        // [!region deploy]
         fn create_counter_at(ref self: ContractState, init_value: u128) -> ContractAddress {
-            // Contructor arguments
+            // Constructor arguments
             let mut constructor_calldata: Array::<felt252> = array![init_value.into()];
 
             // Contract deployment
@@ -49,7 +50,7 @@ pub mod CounterFactory {
 
             deployed_address
         }
-        // ANCHOR_END: deploy
+        // [!endregion deploy]
 
         fn create_counter(ref self: ContractState) -> ContractAddress {
             self.create_counter_at(self.init_value.read())
@@ -64,15 +65,12 @@ pub mod CounterFactory {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod tests {
     use super::{CounterFactory, ICounterFactoryDispatcher, ICounterFactoryDispatcherTrait};
-    use starknet::{
-        SyscallResultTrait, ContractAddress, ClassHash, contract_address_const,
-        syscalls::deploy_syscall
-    };
+    use starknet::{SyscallResultTrait, ClassHash, syscalls::deploy_syscall};
 
     // Define a target contract to deploy
     mod target {
@@ -85,6 +83,8 @@ mod tests {
 
         #[starknet::contract]
         pub mod SimpleCounter {
+            use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
+
             #[storage]
             struct Storage {
                 // Counter variable
@@ -116,7 +116,7 @@ mod tests {
             }
         }
     }
-    use target::{ISimpleCounterDispatcher, ISimpleCounterDispatcherTrait};
+    use target::ISimpleCounterDispatcherTrait;
 
     /// Deploy a counter factory contract
     fn deploy_factory(

@@ -4,12 +4,14 @@ pub trait IExampleContract<TContractState> {
     fn get(self: @TContractState) -> u32;
 }
 
-// ANCHOR: contract
+// [!region contract]
 #[starknet::contract]
 pub mod ExampleContract {
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
+
     #[storage]
     struct Storage {
-        value: u32
+        pub value: u32
     }
 
     // The `#[abi(embed_v0)]` attribute indicates that all
@@ -50,16 +52,15 @@ pub mod ExampleContract {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod test {
     use super::{ExampleContract, IExampleContractDispatcher, IExampleContractDispatcherTrait};
-    use starknet::{ContractAddress, SyscallResultTrait, syscalls::deploy_syscall};
+    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
 
     // These imports will allow us to directly access and set the contract state:
-    // - for `value` storage variable access
-    use super::ExampleContract::valueContractMemberStateTrait;
     // - for `PrivateFunctionsTrait` internal functions access
     //   implementation need to be public to be able to access it
     use super::ExampleContract::PrivateFunctionsTrait;
@@ -95,7 +96,7 @@ mod test {
         assert_eq!(24, state.value.read());
         assert_eq!(24, contract.get());
 
-        // We can also acces internal functions from the state
+        // We can also access internal functions from the state
         assert_eq!(state._read_value(), state.value.read());
         assert_eq!(state._read_value(), contract.get());
     }

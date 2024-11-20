@@ -1,12 +1,8 @@
-use core::clone::Clone;
-use core::result::ResultTrait;
-use starknet::{
-    ContractAddress, ClassHash, get_block_timestamp, contract_address_const, get_caller_address,
-};
+use starknet::{ContractAddress, get_block_timestamp, contract_address_const,};
 use snforge_std::{
     declare, ContractClass, ContractClassTrait, start_cheat_caller_address,
-    stop_cheat_caller_address, spy_events, SpyOn, EventSpy, EventAssertions, get_class_hash,
-    cheat_block_timestamp_global
+    stop_cheat_caller_address, spy_events, EventSpyAssertionsTrait, get_class_hash,
+    DeclareResultTrait, start_cheat_block_timestamp_global
 };
 
 use crowdfunding::campaign::{Campaign, ICampaignDispatcher, ICampaignDispatcherTrait};
@@ -92,7 +88,7 @@ fn deploy_with_token(
 fn test_deploy() {
     let start_time = get_block_timestamp();
     let end_time = start_time + 60;
-    let contract = declare("Campaign").unwrap();
+    let contract = *declare("Campaign").unwrap().contract_class();
     let campaign = deploy(
         contract,
         "title 1",
@@ -122,8 +118,8 @@ fn test_deploy() {
 
 #[test]
 fn test_successful_campaign() {
-    let token_class = declare("ERC20Upgradeable").unwrap();
-    let contract_class = declare("Campaign").unwrap();
+    let token_class = *declare("ERC20Upgradeable").unwrap().contract_class();
+    let contract_class = *declare("Campaign").unwrap().contract_class();
     let (campaign, token) = deploy_with_token(contract_class, token_class);
 
     let creator = contract_address_const::<'creator'>();
@@ -131,7 +127,7 @@ fn test_successful_campaign() {
     let pledger_2 = contract_address_const::<'pledger_2'>();
     let pledger_3 = contract_address_const::<'pledger_3'>();
 
-    let mut spy = spy_events(SpyOn::One(campaign.contract_address));
+    let mut spy = spy_events();
 
     // 1st donation
     start_cheat_caller_address(campaign.contract_address, pledger_1);
@@ -193,8 +189,8 @@ fn test_successful_campaign() {
             ]
         );
 
-    // claim 
-    cheat_block_timestamp_global(campaign.get_details().end_time);
+    // claim
+    start_cheat_block_timestamp_global(campaign.get_details().end_time);
     start_cheat_caller_address(campaign.contract_address, creator);
     prev_balance = token.balance_of(creator);
     campaign.claim();
@@ -214,14 +210,14 @@ fn test_successful_campaign() {
 
 #[test]
 fn test_upgrade_class_hash() {
-    let new_class_hash = declare("MockUpgrade").unwrap().class_hash;
+    let new_class_hash = *(declare("MockUpgrade").unwrap().contract_class()).class_hash;
     let owner = contract_address_const::<'owner'>();
 
     // test pending campaign
-    let contract_class = declare("Campaign").unwrap();
-    let token_class = declare("ERC20Upgradeable").unwrap();
+    let contract_class = *declare("Campaign").unwrap().contract_class();
+    let token_class = *declare("ERC20Upgradeable").unwrap().contract_class();
     let (campaign, _) = deploy_with_token(contract_class, token_class);
-    let mut spy = spy_events(SpyOn::One(campaign.contract_address));
+    let mut spy = spy_events();
 
     start_cheat_caller_address(campaign.contract_address, owner);
     campaign.upgrade(new_class_hash, Option::None);
@@ -241,7 +237,7 @@ fn test_upgrade_class_hash() {
 
     // test active campaign
     let (campaign, token) = deploy_with_token(contract_class, token_class);
-    let mut spy = spy_events(SpyOn::One(campaign.contract_address));
+    let mut spy = spy_events();
     let duration: u64 = 60;
     let pledger_1 = contract_address_const::<'pledger_1'>();
     let pledger_2 = contract_address_const::<'pledger_2'>();
@@ -286,12 +282,12 @@ fn test_upgrade_class_hash() {
 
 #[test]
 fn test_cancel() {
-    let contract_class = declare("Campaign").unwrap();
-    let token_class = declare("ERC20Upgradeable").unwrap();
+    let contract_class = *declare("Campaign").unwrap().contract_class();
+    let token_class = *declare("ERC20Upgradeable").unwrap().contract_class();
 
     // test canceled campaign
     let (campaign, token) = deploy_with_token(contract_class, token_class);
-    let mut spy = spy_events(SpyOn::One(campaign.contract_address));
+    let mut spy = spy_events();
     let creator = contract_address_const::<'creator'>();
     let pledger_1 = contract_address_const::<'pledger_1'>();
     let pledger_2 = contract_address_const::<'pledger_2'>();
@@ -340,7 +336,7 @@ fn test_cancel() {
 
     // test failed campaign
     let (campaign, token) = deploy_with_token(contract_class, token_class);
-    let mut spy = spy_events(SpyOn::One(campaign.contract_address));
+    let mut spy = spy_events();
     let creator = contract_address_const::<'creator'>();
     let pledger_1 = contract_address_const::<'pledger_1'>();
     let pledger_2 = contract_address_const::<'pledger_2'>();
@@ -363,7 +359,7 @@ fn test_cancel() {
     assert_eq!(token.balance_of(pledger_2), prev_balance_pledger_2 - pledge_2);
     assert_eq!(token.balance_of(pledger_3), prev_balance_pledger_3 - pledge_3);
 
-    cheat_block_timestamp_global(campaign.get_details().end_time);
+    start_cheat_block_timestamp_global(campaign.get_details().end_time);
 
     start_cheat_caller_address(campaign.contract_address, creator);
     campaign.cancel("testing");
@@ -394,9 +390,10 @@ fn test_cancel() {
 fn test_refund() {
     // setup
     let (campaign, token) = deploy_with_token(
-        declare("Campaign").unwrap(), declare("ERC20Upgradeable").unwrap()
+        *declare("Campaign").unwrap().contract_class(),
+        *declare("ERC20Upgradeable").unwrap().contract_class()
     );
-    let mut spy = spy_events(SpyOn::One(campaign.contract_address));
+    let mut spy = spy_events();
     let creator = contract_address_const::<'creator'>();
     let pledger_1 = contract_address_const::<'pledger_1'>();
     let pledger_2 = contract_address_const::<'pledger_2'>();
@@ -445,9 +442,10 @@ fn test_refund() {
 fn test_unpledge() {
     // setup
     let (campaign, token) = deploy_with_token(
-        declare("Campaign").unwrap(), declare("ERC20Upgradeable").unwrap()
+        *declare("Campaign").unwrap().contract_class(),
+        *declare("ERC20Upgradeable").unwrap().contract_class()
     );
-    let mut spy = spy_events(SpyOn::One(campaign.contract_address));
+    let mut spy = spy_events();
     let pledger = contract_address_const::<'pledger_1'>();
     let amount: u256 = 3000;
     let prev_balance = token.balance_of(pledger);

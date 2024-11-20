@@ -1,6 +1,7 @@
-//ANCHOR: contract
+// [!region contract]
 #[starknet::component]
 pub mod countable_component {
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
     use components::countable::ICountable;
     use components::switchable::ISwitchable;
 
@@ -9,7 +10,7 @@ pub mod countable_component {
     use switchable_component::{SwitchableInternalImpl, SwitchableInternalTrait};
 
     #[storage]
-    struct Storage {
+    pub struct Storage {
         countable_value: u32,
     }
 
@@ -58,6 +59,6 @@ pub mod countable_component {
         }
     }
 }
-//ANCHOR_END: contract
+// [!endregion contract]
 
 

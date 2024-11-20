@@ -5,16 +5,10 @@ version = 1
 name = "advanced_factory"
 version = "0.1.0"
 dependencies = [
- "alexandria_storage",
  "components",
  "crowdfunding",
  "snforge_std",
 ]
-
-[[package]]
-name = "alexandria_storage"
-version = "0.3.0"
-source = "git+https://github.com/keep-starknet-strange/alexandria.git?rev=800f5ad#800f5ad217847b5ded63c0302a444161766ee9d6"
 
 [[package]]
 name = "bytearray"
@@ -26,6 +20,19 @@ version = "0.1.0"
 
 [[package]]
 name = "calling_other_contracts"
+version = "0.1.0"
+
+[[package]]
+name = "coin_flip"
+version = "0.1.0"
+dependencies = [
+ "openzeppelin",
+ "pragma_lib",
+ "snforge_std",
+]
+
+[[package]]
+name = "commit_reveal"
 version = "0.1.0"
 
 [[package]]
@@ -112,6 +119,10 @@ name = "mappings"
 version = "0.1.0"
 
 [[package]]
+name = "merkle_tree"
+version = "0.1.0"
+
+[[package]]
 name = "nft_dutch_auction"
 version = "0.1.0"
 dependencies = [
@@ -121,12 +132,105 @@ dependencies = [
 
 [[package]]
 name = "openzeppelin"
-version = "0.14.0"
-source = "git+https://github.com/OpenZeppelin/cairo-contracts.git?tag=v0.14.0#f091c4f51ddeb10297db984acae965328c5a4e5b"
+version = "0.16.0"
+source = "registry+https://scarbs.xyz/"
+checksum = "sha256:5dc87a71f0f5d045e02e5bc5ea7a9b0360bbbc3f388b846006280d266feac192"
+dependencies = [
+ "openzeppelin_merkle_tree",
+ "openzeppelin_presets",
+ "openzeppelin_security",
+ "openzeppelin_token",
+ "openzeppelin_upgrades",
+]
 
 [[package]]
-name = "scarb"
-version = "0.1.0"
+name = "openzeppelin_access"
+version = "0.16.0"
+source = "registry+https://scarbs.xyz/"
+checksum = "sha256:b9139449e53d715992b2d9e887c0c723d886419bee7ceb5561648c70bd6d3174"
+dependencies = [
+ "openzeppelin_introspection",
+ "openzeppelin_utils",
+]
+
+[[package]]
+name = "openzeppelin_account"
+version = "0.16.0"
+source = "registry+https://scarbs.xyz/"
+checksum = "sha256:841bb881adbe98b64fee1dc1329f6e3fbabdfbd9fa65c66ffb54c55f13764bce"
+dependencies = [
+ "openzeppelin_introspection",
+ "openzeppelin_utils",
+]
+
+[[package]]
+name = "openzeppelin_governance"
+version = "0.16.0"
+source = "registry+https://scarbs.xyz/"
+checksum = "sha256:a9d9c983cfd4369e7bbb69433fb264edf376805ed873b1f70a287825a6bd1eaf"
+dependencies = [
+ "openzeppelin_access",
+ "openzeppelin_introspection",
+]
+
+[[package]]
+name = "openzeppelin_introspection"
+version = "0.16.0"
+source = "registry+https://scarbs.xyz/"
+checksum = "sha256:312bc2e531f036480ad7392dbb31042c38d875ef9dbb5578ea8de5c05e35b7d8"
+
+[[package]]
+name = "openzeppelin_merkle_tree"
+version = "0.16.0"
+source = "registry+https://scarbs.xyz/"
+checksum = "sha256:8e264c8d5f0591262a235a445b8ca78dd5580c251707b218b829b6b4d6f84a34"
+
+[[package]]
+name = "openzeppelin_presets"
+version = "0.16.0"
+source = "registry+https://scarbs.xyz/"
+checksum = "sha256:7bc9db7563e434535ebd06c7598ba0f8494e791c5f80401389b356a3ebd65a08"
+dependencies = [
+ "openzeppelin_access",
+ "openzeppelin_account",
+ "openzeppelin_introspection",
+ "openzeppelin_token",
+ "openzeppelin_upgrades",
+]
+
+[[package]]
+name = "openzeppelin_security"
+version = "0.16.0"
+source = "registry+https://scarbs.xyz/"
+checksum = "sha256:b7497f5e55c6d9f1d7606ad0d12719e3c04765e266fb91fb72740e0af41d03f3"
+
+[[package]]
+name = "openzeppelin_token"
+version = "0.16.0"
+source = "registry+https://scarbs.xyz/"
+checksum = "sha256:7074c23fbc300b3cccff1037264dfdbe976fb11ae42ce687f4a8ce469adc552a"
+dependencies = [
+ "openzeppelin_account",
+ "openzeppelin_governance",
+ "openzeppelin_introspection",
+]
+
+[[package]]
+name = "openzeppelin_upgrades"
+version = "0.16.0"
+source = "registry+https://scarbs.xyz/"
+checksum = "sha256:4de95a7fb8955e63711f34bb954676f6cef127b44b570c0535d7781297821b44"
+
+[[package]]
+name = "openzeppelin_utils"
+version = "0.16.0"
+source = "registry+https://scarbs.xyz/"
+checksum = "sha256:a494aeb5f1371db7f22e922196aa41d1d1698877a766a838350c0b6ffe49fda2"
+
+[[package]]
+name = "pragma_lib"
+version = "1.0.0"
+source = "git+https://github.com/astraly-labs/pragma-lib#86d7ccdc15b349b8b48d9796fc8464c947bea6e1"
 
 [[package]]
 name = "simple_account"
@@ -147,9 +251,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "snforge_scarb_plugin"
+version = "0.2.0"
+source = "registry+https://scarbs.xyz/"
+checksum = "sha256:2e4ce3ebe3f49548bd26908391b5d78537a765d827df0d96c32aeb88941d0d67"
+
+[[package]]
 name = "snforge_std"
-version = "0.25.0"
-source = "git+https://github.com/foundry-rs/starknet-foundry.git?tag=v0.25.0#5b366e24821e530fea97f11b211d220e8493fbea"
+version = "0.30.0"
+source = "registry+https://scarbs.xyz/"
+checksum = "sha256:2f3c4846881813ac0f5d1460981249c9f5e2a6831e752beedf9b70975495b4ec"
+dependencies = [
+ "snforge_scarb_plugin",
+]
 
 [[package]]
 name = "staking"
@@ -164,10 +278,6 @@ version = "0.1.0"
 
 [[package]]
 name = "store_using_packing"
-version = "0.1.0"
-
-[[package]]
-name = "storing_arrays"
 version = "0.1.0"
 
 [[package]]
@@ -194,13 +304,6 @@ dependencies = [
 [[package]]
 name = "upgradeable_contract"
 version = "0.1.0"
-
-[[package]]
-name = "using_lists"
-version = "0.1.0"
-dependencies = [
- "alexandria_storage",
-]
 
 [[package]]
 name = "variables"

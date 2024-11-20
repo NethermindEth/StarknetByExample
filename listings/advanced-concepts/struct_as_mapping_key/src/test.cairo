@@ -10,7 +10,6 @@ mod tests {
     }
 
     #[test]
-    #[available_gas(20000000)]
     fn test_e2e() {
         // Set up.
         let mut calldata: Array<felt252> = array![];
@@ -27,6 +26,6 @@ mod tests {
 
         // Read the array.
         let registration_date = contract.get_registration_date(pet);
-        assert(registration_date == 1234, 'registration_date');
+        assert_eq!(registration_date, 1234);
     }
 }

@@ -1,4 +1,4 @@
-// ANCHOR: contract
+// [!region contract]
 #[starknet::interface]
 pub trait IImplicitInternalContract<TContractState> {
     fn add(ref self: TContractState, nb: u32);
@@ -8,6 +8,8 @@ pub trait IImplicitInternalContract<TContractState> {
 
 #[starknet::contract]
 pub mod ImplicitInternalContract {
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
+
     #[storage]
     struct Storage {
         value: u32
@@ -44,15 +46,15 @@ pub mod ImplicitInternalContract {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod tests {
     use super::{
-        IImplicitInternalContract, ImplicitInternalContract, IImplicitInternalContractDispatcher,
+        ImplicitInternalContract, IImplicitInternalContractDispatcher,
         IImplicitInternalContractDispatcherTrait
     };
-    use starknet::{ContractAddress, SyscallResultTrait, syscalls::deploy_syscall};
+    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
 
     #[test]
     fn test_interface() {

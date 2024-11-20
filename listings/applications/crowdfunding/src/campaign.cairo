@@ -1,6 +1,6 @@
 pub mod pledgeable;
 
-// ANCHOR: contract
+// [!region contract]
 use starknet::{ClassHash, ContractAddress};
 
 #[derive(Drop, Serde)]
@@ -32,12 +32,13 @@ pub trait ICampaign<TContractState> {
 
 #[starknet::contract]
 pub mod Campaign {
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
     use components::ownable::ownable_component::OwnableInternalTrait;
     use core::num::traits::Zero;
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
     use starknet::{
-        ClassHash, ContractAddress, SyscallResultTrait, get_block_timestamp, contract_address_const,
-        get_caller_address, get_contract_address, class_hash::class_hash_const
+        ClassHash, ContractAddress, SyscallResultTrait, get_block_timestamp, get_caller_address,
+        get_contract_address
     };
     use components::ownable::ownable_component;
     use super::pledgeable::pledgeable_component;
@@ -148,13 +149,13 @@ pub mod Campaign {
         pub const TRANSFER_FAILED: felt252 = 'Transfer failed';
         pub const ZERO_ADDRESS_CALLER: felt252 = 'Caller address zero';
         pub const ZERO_ADDRESS_PLEDGER: felt252 = 'Pledger address zero';
-        pub const ZERO_ADDRESS_TOKEN: felt252 = 'Token address zerp';
+        pub const ZERO_ADDRESS_TOKEN: felt252 = 'Token address zero';
         pub const ZERO_DONATION: felt252 = 'Donation must be > 0';
         pub const ZERO_GOAL: felt252 = 'Goal must be > 0';
         pub const ZERO_PLEDGES: felt252 = 'No pledges to claim';
     }
 
-    const NINETY_DAYS: u64 = consteval_int!(90 * 24 * 60 * 60);
+    const NINETY_DAYS: u64 = 90 * 24 * 60 * 60;
 
     #[constructor]
     fn constructor(
@@ -347,6 +348,6 @@ pub mod Campaign {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 

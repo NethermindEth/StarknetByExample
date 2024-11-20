@@ -4,7 +4,7 @@ pub trait ISerdeCustomType<TContractState> {
     fn person_output(self: @TContractState) -> Person;
 }
 
-// ANCHOR: contract
+// [!region contract]
 // Deriving the `Serde` trait allows us to use
 // the `Person` type as an entrypoint parameter and as a return value
 #[derive(Drop, Serde)]
@@ -29,14 +29,14 @@ pub mod SerdeCustomType {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod tests {
     use super::{
         SerdeCustomType, Person, ISerdeCustomTypeDispatcher, ISerdeCustomTypeDispatcherTrait
     };
-    use starknet::{ContractAddress, syscalls::deploy_syscall, SyscallResultTrait};
+    use starknet::{syscalls::deploy_syscall, SyscallResultTrait};
 
     fn deploy() -> ISerdeCustomTypeDispatcher {
         let (contract_address, _) = deploy_syscall(

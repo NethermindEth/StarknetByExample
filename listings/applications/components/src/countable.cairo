@@ -1,4 +1,4 @@
-// ANCHOR: component
+// [!region component]
 #[starknet::interface]
 pub trait ICountable<TContractState> {
     fn get(self: @TContractState) -> u32;
@@ -7,8 +7,10 @@ pub trait ICountable<TContractState> {
 
 #[starknet::component]
 pub mod countable_component {
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
+
     #[storage]
-    struct Storage {
+    pub struct Storage {
         countable_value: u32,
     }
 
@@ -25,7 +27,7 @@ pub mod countable_component {
         }
     }
 }
-// ANCHOR_END: component
+// [!endregion component]
 
 #[starknet::contract]
 mod CountableContract {

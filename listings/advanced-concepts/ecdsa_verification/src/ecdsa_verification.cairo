@@ -1,4 +1,4 @@
-// ANCHOR: contract
+// [!region contract]
 use core::starknet::eth_address::EthAddress;
 use starknet::secp256_trait::{Signature};
 
@@ -22,14 +22,8 @@ trait IVerifySignature<TContractState> {
 mod verifySignature {
     use super::IVerifySignature;
     use core::starknet::eth_address::EthAddress;
-    use starknet::get_caller_address;
-    use starknet::secp256_trait;
-    use starknet::secp256k1::{Secp256k1Point};
-    use starknet::{SyscallResult, SyscallResultTrait};
-    use starknet::secp256_trait::{
-        Secp256Trait, Secp256PointTrait, Signature, signature_from_vrs, recover_public_key,
-        is_signature_entry_valid
-    };
+    use starknet::secp256k1::Secp256k1Point;
+    use starknet::secp256_trait::{Signature, signature_from_vrs, recover_public_key,};
     use starknet::eth_signature::{verify_eth_signature, public_key_point_to_eth_address};
 
     #[storage]
@@ -74,7 +68,8 @@ mod verifySignature {
             verify_eth_signature(:msg_hash, :signature, :eth_address);
         }
 
-        /// Recovers the public key from an Ethereum signature and verifies that it matches the given Ethereum address.
+        /// Recovers the public key from an Ethereum signature and verifies that it matches the
+        /// given Ethereum address.
         ///
         /// # Arguments
         ///
@@ -94,14 +89,11 @@ mod verifySignature {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod tests {
-    use starknet::secp256_trait::{
-        Secp256Trait, Secp256PointTrait, Signature, signature_from_vrs, recover_public_key,
-        is_signature_entry_valid
-    };
+    use starknet::secp256_trait::{Signature, signature_from_vrs, recover_public_key,};
     use starknet::EthAddress;
     use starknet::secp256k1::{Secp256k1Point};
     use starknet::eth_signature::{verify_eth_signature, public_key_point_to_eth_address};
@@ -121,14 +113,14 @@ mod tests {
     #[test]
     fn test_verify_eth_signature() {
         let (msg_hash, signature, eth_address) = get_message_and_signature();
-        verify_eth_signature(:msg_hash, :signature, :eth_address);
+        verify_eth_signature(msg_hash, signature, eth_address);
     }
 
     #[test]
     fn test_secp256k1_recover_public_key() {
         let (msg_hash, signature, eth_address) = get_message_and_signature();
         let public_key_point = recover_public_key::<Secp256k1Point>(msg_hash, signature).unwrap();
-        let calculated_eth_address = public_key_point_to_eth_address(:public_key_point);
+        let calculated_eth_address = public_key_point_to_eth_address(public_key_point);
         assert_eq!(calculated_eth_address, eth_address);
     }
 }

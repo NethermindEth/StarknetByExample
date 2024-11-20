@@ -1,4 +1,4 @@
-// ANCHOR: callee_contract
+// [!region callee_contract]
 // This will automatically generate ICalleeDispatcher and ICalleeDispatcherTrait
 #[starknet::interface]
 pub trait ICallee<TContractState> {
@@ -7,9 +7,11 @@ pub trait ICallee<TContractState> {
 
 #[starknet::contract]
 pub mod Callee {
+    use starknet::storage::StoragePointerWriteAccess;
+
     #[storage]
     struct Storage {
-        value: u128,
+        pub value: u128,
     }
 
     #[abi(embed_v0)]
@@ -20,7 +22,7 @@ pub mod Callee {
         }
     }
 }
-// ANCHOR_END: callee_contract
+// [!endregion callee_contract]
 
 #[starknet::interface]
 pub trait ICaller<TContractState> {
@@ -29,7 +31,7 @@ pub trait ICaller<TContractState> {
     );
 }
 
-// ANCHOR: caller_contract
+// [!region caller_contract]
 #[starknet::contract]
 pub mod Caller {
     // We need to import the dispatcher of the callee contract
@@ -47,18 +49,13 @@ pub mod Caller {
         }
     }
 }
-// ANCHOR_END: caller_contract
+// [!endregion caller_contract]
 
 #[cfg(test)]
 mod tests {
-    use super::{
-        Callee, ICalleeDispatcher, ICalleeDispatcherTrait, Callee::valueContractMemberStateTrait,
-        Caller, ICallerDispatcher, ICallerDispatcherTrait
-    };
-    use starknet::{
-        ContractAddress, contract_address_const, testing::set_contract_address,
-        syscalls::deploy_syscall, SyscallResultTrait
-    };
+    use super::{Callee, ICalleeDispatcher, Caller, ICallerDispatcher, ICallerDispatcherTrait};
+    use starknet::{testing::set_contract_address, syscalls::deploy_syscall, SyscallResultTrait};
+    use starknet::storage::StoragePointerReadAccess;
 
     fn deploy() -> (ICalleeDispatcher, ICallerDispatcher) {
         let (address_callee, _) = deploy_syscall(
@@ -82,7 +79,7 @@ mod tests {
         let (callee, caller) = deploy();
         caller.set_value_from_address(callee.contract_address, init_value);
 
-        let state = Callee::contract_state_for_testing();
+        let state = @Callee::contract_state_for_testing();
         set_contract_address(callee.contract_address);
 
         let value_read: u128 = state.value.read();

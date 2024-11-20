@@ -3,7 +3,7 @@ pub trait ILocalVariablesExample<TContractState> {
     fn do_something(self: @TContractState, value: u32) -> u32;
 }
 
-// ANCHOR: contract
+// [!region contract]
 #[starknet::contract]
 pub mod LocalVariablesExample {
     #[storage]
@@ -22,11 +22,11 @@ pub mod LocalVariablesExample {
                 let sum = value + increment;
                 sum
             }
-        // We can't access the variable `sum` here, as it's out of scope.
+            // We can't access the variable `sum` here, as it's out of scope.
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod test {

@@ -3,15 +3,16 @@ pub trait IEventCounter<TContractState> {
     fn increment(ref self: TContractState, amount: u128);
 }
 
-// ANCHOR: contract
+// [!region contract]
 #[starknet::contract]
 pub mod EventCounter {
     use starknet::{get_caller_address, ContractAddress};
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
 
     #[storage]
     struct Storage {
         // Counter value
-        counter: u128,
+        pub counter: u128,
     }
 
     #[event]
@@ -44,7 +45,7 @@ pub mod EventCounter {
         fn increment(ref self: ContractState, amount: u128) {
             self.counter.write(self.counter.read() + amount);
             // Emit event
-            // ANCHOR: emit
+            // [!region emit]
             self.emit(Event::CounterIncreased(CounterIncreased { amount }));
             self
                 .emit(
@@ -54,25 +55,21 @@ pub mod EventCounter {
                         }
                     )
                 );
-        // ANCHOR_END: emit
+            // [!endregion emit]
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod tests {
     use super::{
-        EventCounter,
-        EventCounter::{
-            counterContractMemberStateTrait, Event, CounterIncreased, UserIncreaseCounter
-        },
+        EventCounter, EventCounter::{Event, CounterIncreased, UserIncreaseCounter},
         IEventCounterDispatcherTrait, IEventCounterDispatcher
     };
-    use starknet::{
-        ContractAddress, contract_address_const, SyscallResultTrait, syscalls::deploy_syscall
-    };
-    use starknet::testing::{set_contract_address, set_account_contract_address};
+    use starknet::{contract_address_const, SyscallResultTrait, syscalls::deploy_syscall};
+    use starknet::testing::set_contract_address;
+    use starknet::storage::StoragePointerReadAccess;
 
     #[test]
     fn test_increment_events() {
@@ -81,7 +78,7 @@ mod tests {
         )
             .unwrap_syscall();
         let mut contract = IEventCounterDispatcher { contract_address };
-        let state = EventCounter::contract_state_for_testing();
+        let state = @EventCounter::contract_state_for_testing();
 
         let amount = 10;
         let caller = contract_address_const::<'caller'>();
@@ -94,12 +91,12 @@ mod tests {
         assert_eq!(state.counter.read(), amount);
 
         // Notice the order: the first event emitted is the first to be popped.
-        /// ANCHOR: test_events
+        // [!region test_events]
         assert_eq!(
             starknet::testing::pop_log(contract_address),
             Option::Some(Event::CounterIncreased(CounterIncreased { amount }))
         );
-        // ANCHOR_END: test_events
+        // [!endregion test_events]
         assert_eq!(
             starknet::testing::pop_log(contract_address),
             Option::Some(

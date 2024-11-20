@@ -1,14 +1,15 @@
-// ANCHOR: interface
+// [!region interface]
 #[starknet::interface]
 pub trait ISwitchCollision<TContractState> {
     fn set(ref self: TContractState, value: bool);
     fn get(ref self: TContractState) -> bool;
 }
-// ANCHOR_END: interface
+// [!endregion interface]
 
 #[starknet::contract]
 pub mod SwitchCollisionContract {
     use components::switchable::switchable_component;
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
 
     component!(path: switchable_component, storage: switch, event: SwitchableEvent);
 
@@ -16,14 +17,14 @@ pub mod SwitchCollisionContract {
     impl SwitchableImpl = switchable_component::Switchable<ContractState>;
     impl SwitchableInternalImpl = switchable_component::SwitchableInternalImpl<ContractState>;
 
-    // ANCHOR: storage
+    // [!region storage]
     #[storage]
     struct Storage {
         switchable_value: bool,
         #[substorage(v0)]
         switch: switchable_component::Storage,
     }
-    // ANCHOR_END: storage
+    // [!endregion storage]
 
     #[constructor]
     fn constructor(ref self: ContractState) {
@@ -50,12 +51,10 @@ pub mod SwitchCollisionContract {
 
 #[cfg(test)]
 mod switch_collision_tests {
-    use components::switchable::switchable_component::SwitchableInternalTrait;
-    use components::switchable::{ISwitchable, ISwitchableDispatcher, ISwitchableDispatcherTrait};
+    use components::switchable::{ISwitchableDispatcher, ISwitchableDispatcherTrait};
     use super::{
         SwitchCollisionContract, ISwitchCollisionDispatcher, ISwitchCollisionDispatcherTrait
     };
-    use starknet::storage::StorageMemberAccessTrait;
     use starknet::SyscallResultTrait;
     use starknet::syscalls::deploy_syscall;
 
@@ -72,7 +71,7 @@ mod switch_collision_tests {
     }
 
     #[test]
-    // ANCHOR: collision
+    // [!region collision]
     fn test_collision() {
         let (mut contract, mut contract_iswitch) = deploy();
 
@@ -89,5 +88,5 @@ mod switch_collision_tests {
         contract.set(false);
         assert_eq!(contract.get(), contract_iswitch.is_on());
     }
-// ANCHOR_END: collision
+    // [!endregion collision]
 }

@@ -4,7 +4,7 @@ pub trait IErrorsExample<TContractState> {
     fn test_panic(self: @TContractState, i: u256);
 }
 
-// ANCHOR: contract
+// [!region contract]
 #[starknet::contract]
 pub mod ErrorsExample {
     #[storage]
@@ -26,12 +26,12 @@ pub mod ErrorsExample {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod test {
     use super::{ErrorsExample, IErrorsExampleDispatcher, IErrorsExampleDispatcherTrait};
-    use starknet::{ContractAddress, SyscallResultTrait, syscalls::deploy_syscall};
+    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
 
     fn deploy() -> IErrorsExampleDispatcher {
         let (contract_address, _) = deploy_syscall(

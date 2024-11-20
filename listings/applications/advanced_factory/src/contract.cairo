@@ -1,4 +1,4 @@
-// ANCHOR: contract
+// [!region contract]
 pub use starknet::{ContractAddress, ClassHash};
 
 #[starknet::interface]
@@ -23,12 +23,14 @@ pub trait ICampaignFactory<TContractState> {
 pub mod CampaignFactory {
     use core::num::traits::Zero;
     use starknet::{
-        ContractAddress, ClassHash, SyscallResultTrait, syscalls::deploy_syscall,
-        get_caller_address, get_contract_address
+        ContractAddress, ClassHash, SyscallResultTrait, syscalls::deploy_syscall, get_caller_address
     };
-    use alexandria_storage::list::{List, ListTrait};
     use crowdfunding::campaign::{ICampaignDispatcher, ICampaignDispatcherTrait};
     use components::ownable::ownable_component;
+    use starknet::storage::{
+        Map, StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess,
+        StoragePointerWriteAccess
+    };
 
     component!(path: ownable_component, storage: ownable, event: OwnableEvent);
 
@@ -40,8 +42,8 @@ pub mod CampaignFactory {
     struct Storage {
         #[substorage(v0)]
         ownable: ownable_component::Storage,
-        /// Store all of the created campaign instances' addresses and thei class hashes
-        campaigns: LegacyMap<(ContractAddress, ContractAddress), ClassHash>,
+        /// Store all of the created campaign instances' addresses and their class hashes
+        campaigns: Map<(ContractAddress, ContractAddress), ClassHash>,
         /// Store the class hash of the contract to deploy
         campaign_class_hash: ClassHash,
     }
@@ -100,7 +102,7 @@ pub mod CampaignFactory {
         ) -> ContractAddress {
             let creator = get_caller_address();
 
-            // Create contructor arguments
+            // Create constructor arguments
             let mut constructor_calldata: Array::<felt252> = array![];
             ((creator, title, description, goal), start_time, end_time, token_address)
                 .serialize(ref constructor_calldata);
@@ -147,6 +149,6 @@ pub mod CampaignFactory {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 

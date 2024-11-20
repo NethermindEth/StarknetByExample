@@ -1,4 +1,4 @@
-// ANCHOR: contract
+// [!region contract]
 #[starknet::interface]
 trait ISimpleStorage<T> {
     fn set(ref self: T, x: u128);
@@ -7,6 +7,8 @@ trait ISimpleStorage<T> {
 
 #[starknet::contract]
 mod SimpleStorage {
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
+
     #[storage]
     struct Storage {
         stored_data: u128
@@ -23,6 +25,6 @@ mod SimpleStorage {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 

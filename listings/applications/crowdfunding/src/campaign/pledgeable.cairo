@@ -1,4 +1,4 @@
-// ANCHOR: component
+// [!region component]
 use starknet::ContractAddress;
 
 #[starknet::interface]
@@ -14,13 +14,17 @@ pub trait IPledgeable<TContractState> {
 #[starknet::component]
 pub mod pledgeable_component {
     use core::array::ArrayTrait;
-    use starknet::{ContractAddress};
     use core::num::traits::Zero;
+    use starknet::ContractAddress;
+    use starknet::storage::{
+        Map, StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess,
+        StoragePointerWriteAccess
+    };
 
     #[storage]
-    struct Storage {
-        index_to_pledger: LegacyMap<u32, ContractAddress>,
-        pledger_to_amount: LegacyMap<ContractAddress, u256>,
+    pub struct Storage {
+        index_to_pledger: Map<u32, ContractAddress>,
+        pledger_to_amount: Map<ContractAddress, u256>,
         pledger_count: u32,
         total_amount: u256,
     }
@@ -111,7 +115,7 @@ pub mod pledgeable_component {
         }
     }
 }
-// ANCHOR_END: component
+// [!endregion component]
 
 #[cfg(test)]
 mod tests {
@@ -137,8 +141,8 @@ mod tests {
         impl Pledgeable = pledgeable_component::Pledgeable<ContractState>;
     }
 
-    use super::{pledgeable_component, IPledgeableDispatcher, IPledgeableDispatcherTrait};
-    use super::pledgeable_component::{PledgeableImpl};
+    use super::pledgeable_component;
+    use super::pledgeable_component::PledgeableImpl;
     use starknet::{ContractAddress, contract_address_const};
     use core::num::traits::Zero;
 
@@ -209,10 +213,9 @@ mod tests {
         assert_eq!(pledgeable.get_pledger_count(), expected_pledger_count);
         assert_eq!(pledgeable.get_total(), expected_total);
 
-        while let Option::Some((pledger, expected_amount)) = pledgers
-            .pop_front() {
-                assert_eq!(pledgeable.get(pledger), expected_amount);
-            }
+        while let Option::Some((pledger, expected_amount)) = pledgers.pop_front() {
+            assert_eq!(pledgeable.get(pledger), expected_amount);
+        }
     }
 
     #[test]
@@ -466,7 +469,7 @@ mod tests {
             i -= 1;
         };
 
-        // add last pledger        
+        // add last pledger
         pledgeable.add(last_pledger, last_amount);
         expected_total += last_amount;
 
@@ -528,13 +531,12 @@ mod tests {
         assert_eq!(pledgers_arr.len(), pledgers.len());
 
         let mut i = 1000;
-        while let Option::Some(expected_pledger) = pledgers
-            .pop_front() {
-                i -= 1;
-                // pledgers are fetched in reversed order
-                let actual_pledger: ContractAddress = *pledgers_arr.at(i);
-                assert_eq!(expected_pledger, actual_pledger);
-            }
+        while let Option::Some(expected_pledger) = pledgers.pop_front() {
+            i -= 1;
+            // pledgers are fetched in reversed order
+            let actual_pledger: ContractAddress = *pledgers_arr.at(i);
+            assert_eq!(expected_pledger, actual_pledger);
+        }
     }
 
     #[test]

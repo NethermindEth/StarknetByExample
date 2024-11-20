@@ -1,6 +1,6 @@
 use starknet::ContractAddress;
 
-// ANCHOR: interface
+// [!region interface]
 #[starknet::interface]
 pub trait IERC20<TContractState> {
     fn get_name(self: @TContractState) -> felt252;
@@ -24,15 +24,19 @@ pub trait IERC20<TContractState> {
         ref self: TContractState, spender: ContractAddress, subtracted_value: felt252
     );
 }
-// ANCHOR_END: interface
+// [!endregion interface]
 
-// ANCHOR: erc20
+// [!region erc20]
 #[starknet::contract]
 pub mod erc20 {
     use core::num::traits::Zero;
     use starknet::get_caller_address;
     use starknet::contract_address_const;
     use starknet::ContractAddress;
+    use starknet::storage::{
+        Map, StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess,
+        StoragePointerWriteAccess
+    };
 
     #[storage]
     struct Storage {
@@ -40,8 +44,8 @@ pub mod erc20 {
         symbol: felt252,
         decimals: u8,
         total_supply: felt252,
-        balances: LegacyMap::<ContractAddress, felt252>,
-        allowances: LegacyMap::<(ContractAddress, ContractAddress), felt252>,
+        balances: Map::<ContractAddress, felt252>,
+        allowances: Map::<(ContractAddress, ContractAddress), felt252>,
     }
 
     #[event]
@@ -210,19 +214,18 @@ pub mod erc20 {
         }
     }
 }
-// ANCHOR_END: erc20
+// [!endregion erc20]
 
 #[cfg(test)]
 mod tests {
     use super::{erc20, IERC20Dispatcher, IERC20DispatcherTrait, erc20::{Event, Transfer, Approval}};
 
     use starknet::{
-        ContractAddress, SyscallResultTrait, syscalls::deploy_syscall, get_caller_address,
-        contract_address_const
+        ContractAddress, SyscallResultTrait, syscalls::deploy_syscall, contract_address_const
     };
     use core::num::traits::Zero;
 
-    use starknet::testing::{set_contract_address, set_account_contract_address};
+    use starknet::testing::set_contract_address;
 
     const token_name: felt252 = 'myToken';
     const decimals: u8 = 18;
@@ -230,7 +233,7 @@ mod tests {
     const symbols: felt252 = 'mtk';
 
     fn deploy() -> (IERC20Dispatcher, ContractAddress) {
-        let recipient: ContractAddress = contract_address_const::<'initialzed_recipient'>();
+        let recipient: ContractAddress = contract_address_const::<'initialized_recipient'>();
 
         let (contract_address, _) = deploy_syscall(
             erc20::TEST_CLASS_HASH.try_into().unwrap(),
@@ -259,7 +262,7 @@ mod tests {
     }
     #[test]
     fn test_deploy_success() {
-        let recipient = contract_address_const::<'initialzed_recipient'>();
+        let recipient = contract_address_const::<'initialized_recipient'>();
         let (_, contract_address) = deploy();
         assert_eq!(
             starknet::testing::pop_log(contract_address),
@@ -299,7 +302,7 @@ mod tests {
 
     #[test]
     fn test_balance_of_recipient_deployed() {
-        let recipient = contract_address_const::<'initialzed_recipient'>();
+        let recipient = contract_address_const::<'initialized_recipient'>();
         let (dispatcher, _) = deploy();
         assert(
             dispatcher.balance_of(recipient) == initial_supply, 'incorrect balance of recipient'
@@ -337,7 +340,7 @@ mod tests {
 
     #[test]
     fn test_approval_success() {
-        let recipient = contract_address_const::<'initialzed_recipient'>();
+        let recipient = contract_address_const::<'initialized_recipient'>();
         let spender = contract_address_const::<'spender'>();
         let value = 100;
         let (dispatcher, contract_address) = deploy();
@@ -373,7 +376,7 @@ mod tests {
     #[test]
     fn test_should_increase_allowance() {
         let caller = contract_address_const::<'caller'>();
-        let recipient = contract_address_const::<'initialzed_recipient'>();
+        let recipient = contract_address_const::<'initialized_recipient'>();
         let spender = contract_address_const::<'spender'>();
         let amount = 100;
         let (dispatcher, contract_address) = deploy();
@@ -420,7 +423,7 @@ mod tests {
     #[test]
     fn test_should_decrease_allowance() {
         let caller = contract_address_const::<'caller'>();
-        let recipient = contract_address_const::<'initialzed_recipient'>();
+        let recipient = contract_address_const::<'initialized_recipient'>();
         let spender = contract_address_const::<'spender'>();
         let amount = 100;
         let (dispatcher, contract_address) = deploy();
@@ -459,10 +462,10 @@ mod tests {
     #[test]
     #[should_panic(expected: ('ERC20: transfer from 0', 'ENTRYPOINT_FAILED'))]
     fn test_transfer_when_sender_is_address_zero() {
-        let reciever = contract_address_const::<'spender'>();
+        let receiver = contract_address_const::<'spender'>();
         let amount = 100;
         let (dispatcher, _) = deploy();
-        dispatcher.transfer(reciever, amount);
+        dispatcher.transfer(receiver, amount);
     }
 
     #[test]
@@ -470,22 +473,22 @@ mod tests {
     #[should_panic]
     fn test_transfer_when_recipient_is_address_zero() {
         let caller = contract_address_const::<'caller'>();
-        let reciever = Zero::zero();
+        let receiver = Zero::zero();
         let amount = 100;
         let (dispatcher, _) = deploy();
         set_contract_address(caller);
-        dispatcher.transfer(reciever, amount);
+        dispatcher.transfer(receiver, amount);
     }
 
     #[test]
     fn test_transfer_success() {
-        let caller = contract_address_const::<'initialzed_recipient'>();
-        let reciever = contract_address_const::<'receiver'>();
+        let caller = contract_address_const::<'initialized_recipient'>();
+        let receiver = contract_address_const::<'receiver'>();
         let amount = 100;
         let (dispatcher, contract_address) = deploy();
         set_contract_address(caller);
-        dispatcher.transfer(reciever, amount);
-        assert_eq!(dispatcher.balance_of(reciever), amount);
+        dispatcher.transfer(receiver, amount);
+        assert_eq!(dispatcher.balance_of(receiver), amount);
 
         // emits two transfer events
         assert_eq!(
@@ -497,7 +500,7 @@ mod tests {
 
         assert_eq!(
             starknet::testing::pop_log(contract_address),
-            Option::Some(Event::Transfer(Transfer { from: caller, to: reciever, value: amount }))
+            Option::Some(Event::Transfer(Transfer { from: caller, to: receiver, value: amount }))
         );
     }
 
@@ -508,9 +511,9 @@ mod tests {
     fn test_transferFrom_when_sender_is_address_zero() {
         let sender = Zero::zero();
         let amount = 100;
-        let reciever = contract_address_const::<'spender'>();
+        let receiver = contract_address_const::<'spender'>();
         let (dispatcher, _) = deploy();
-        dispatcher.transfer_from(sender, reciever, amount);
+        dispatcher.transfer_from(sender, receiver, amount);
     }
 
     #[test]
@@ -518,22 +521,22 @@ mod tests {
     #[should_panic]
     fn test_transferFrom_when_recipient_is_address_zero() {
         let caller = contract_address_const::<'caller'>();
-        let reciever = Zero::zero();
+        let receiver = Zero::zero();
         let amount = 100;
         let (dispatcher, _) = deploy();
         set_contract_address(caller);
-        dispatcher.transfer_from(caller, reciever, amount);
+        dispatcher.transfer_from(caller, receiver, amount);
     }
 
     #[test]
     fn test_transferFrom_success() {
-        let caller = contract_address_const::<'initialzed_recipient'>();
-        let reciever = contract_address_const::<'receiver'>();
+        let caller = contract_address_const::<'initialized_recipient'>();
+        let receiver = contract_address_const::<'receiver'>();
         let amount = 100;
         let (dispatcher, contract_address) = deploy();
         set_contract_address(caller);
-        dispatcher.transfer_from(caller, reciever, amount);
-        assert_eq!(dispatcher.balance_of(reciever), amount);
+        dispatcher.transfer_from(caller, receiver, amount);
+        assert_eq!(dispatcher.balance_of(receiver), amount);
 
         // emits two transfer events
 
@@ -546,7 +549,7 @@ mod tests {
 
         assert_eq!(
             starknet::testing::pop_log(contract_address),
-            Option::Some(Event::Transfer(Transfer { from: caller, to: reciever, value: amount }))
+            Option::Some(Event::Transfer(Transfer { from: caller, to: receiver, value: amount }))
         );
     }
 }

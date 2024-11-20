@@ -1,4 +1,4 @@
-// ANCHOR: contract
+// [!region contract]
 #[starknet::interface]
 pub trait IExplicitInterfaceContract<TContractState> {
     fn get_value(self: @TContractState) -> u32;
@@ -7,6 +7,8 @@ pub trait IExplicitInterfaceContract<TContractState> {
 
 #[starknet::contract]
 pub mod ExplicitInterfaceContract {
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
+
     #[storage]
     struct Storage {
         value: u32
@@ -23,15 +25,15 @@ pub mod ExplicitInterfaceContract {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod tests {
     use super::{
-        IExplicitInterfaceContract, ExplicitInterfaceContract, IExplicitInterfaceContractDispatcher,
+        ExplicitInterfaceContract, IExplicitInterfaceContractDispatcher,
         IExplicitInterfaceContractDispatcherTrait
     };
-    use starknet::{ContractAddress, SyscallResultTrait, syscalls::deploy_syscall};
+    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
 
     #[test]
     fn test_interface() {

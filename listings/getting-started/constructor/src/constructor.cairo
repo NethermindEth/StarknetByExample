@@ -1,11 +1,12 @@
-// ANCHOR: contract
+// [!region contract]
 #[starknet::contract]
 pub mod ExampleConstructor {
     use starknet::ContractAddress;
+    use starknet::storage::{Map, StorageMapWriteAccess};
 
     #[storage]
     struct Storage {
-        names: LegacyMap::<ContractAddress, felt252>,
+        pub names: Map::<ContractAddress, felt252>,
     }
 
     // The constructor is decorated with a `#[constructor]` attribute.
@@ -15,13 +16,15 @@ pub mod ExampleConstructor {
         self.names.write(address, name);
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
+// [!region tests]
 #[cfg(test)]
 mod tests {
-    use super::{ExampleConstructor, ExampleConstructor::namesContractMemberStateTrait};
+    use super::ExampleConstructor;
     use starknet::{ContractAddress, SyscallResultTrait, syscalls::deploy_syscall};
     use starknet::{contract_address_const, testing::{set_contract_address}};
+    use starknet::storage::StorageMapReadAccess;
 
     #[test]
     fn should_deploy_with_constructor_init_value() {
@@ -36,10 +39,13 @@ mod tests {
         )
             .unwrap_syscall();
 
-        let state = ExampleConstructor::contract_state_for_testing();
+        let state = @ExampleConstructor::contract_state_for_testing();
         set_contract_address(contract_address);
 
         let name = state.names.read(address);
         assert_eq!(name, 'bob');
     }
 }
+// [!endregion tests]
+
+

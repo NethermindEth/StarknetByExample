@@ -1,0 +1,15 @@
+[package]
+name = "merkle_tree"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+starknet.workspace = true
+
+[dev-dependencies]
+cairo_test.workspace = true
+
+[scripts]
+test.workspace = true
+
+[[target.starknet-contract]]

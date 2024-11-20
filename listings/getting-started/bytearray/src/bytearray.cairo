@@ -4,12 +4,14 @@ pub trait IMessage<TContractState> {
     fn prepend(ref self: TContractState, str: ByteArray);
 }
 
-// ANCHOR: contract
+// [!region contract]
 #[starknet::contract]
 pub mod MessageContract {
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
+
     #[storage]
     struct Storage {
-        message: ByteArray
+        pub message: ByteArray
     }
 
     #[constructor]
@@ -28,13 +30,12 @@ pub mod MessageContract {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod tests {
-    use bytearray::bytearray::{
-        MessageContract::messageContractMemberStateTrait, MessageContract, IMessage
-    };
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
+    use bytearray::bytearray::{MessageContract, IMessage};
 
     #[test]
     #[available_gas(2000000000)]

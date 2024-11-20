@@ -34,7 +34,7 @@ mod tests {
         )
     }
 
-    //  deploy v1 contract 
+    //  deploy v1 contract
     fn deploy_v1() -> (IUpgradeableContractDispatcher_v1, ContractAddress, ClassHash) {
         let (contract_address, _) = deploy_syscall(
             UpgradeableContract_V1::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
@@ -71,7 +71,7 @@ mod tests {
     }
 
     #[test]
-    fn test_succesful_upgrade_from_v0_to_v1() {
+    fn test_successful_upgrade_from_v0_to_v1() {
         let (dispatcher_v0, contract_address, _) = deploy_v0();
         let (_, _, class_hash) = deploy_v1();
         dispatcher_v0.upgrade(class_hash);
