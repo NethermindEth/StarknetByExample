@@ -43,27 +43,34 @@ pnpm i
 pnpm dev
 ```
 
+## Repository Structure
+
+There's both a `listings` and a `pages` directory in the repository. The `listings` directory contains all the Cairo programs used in the book, while the `pages` directory contains the Markdown files that make up the book's content.
+The whole repository is a Next.js project, and the `listings` directory is a scarb project.
+
 ## Working with Markdown Files
 
-All Markdown files (\*.md) MUST be edited in English. Follow these steps to work locally with Markdown files:
+All Markdown files (in `/pages`, \*.md/\*mdx) MUST be edited in English. Follow these steps to work locally with Markdown files:
 
-- Make changes to the desired .md files in your preferred text editor.
+- Make changes to the desired Markdown files in your preferred text editor.
 - Save the changes, and your browser window should automatically refresh to reflect the updates.
 - Once you've finished making your changes, build the application to ensure everything works as expected:
-  ```
-  pnpm build
-  ```
+
+```
+pnpm build
+```
+
 - If everything looks good, commit your changes and open a pull request with your modifications.
 
 ## Adding a new chapter
 
-- To add a new chapter, create a new markdown file in the `pages` directory. All the Markdown files **MUST** be edited in english. In order to add them to the book, you need to add in the `vocs.config.ts` file.
+- To add a new chapter, create a new markdown file in the `pages` directory. All the Markdown files **MUST** be edited in english. In order to add them to the book, you need to edit the `route.ts` file.
 
 - Do not write directly Cairo program inside the markdown files. Instead, use code blocks that import the Cairo programs from the `listings` directory. These programs are bundled into scarb projects, which makes it easier to test and build all programs. See the next section for more details.
 
 Be sure to check for typos with `typos`:
 
-```bash [Terminal]
+```bash
 cargo install typos-cli
 typos src/
 ```
@@ -71,13 +78,12 @@ typos src/
 ## Adding a new Cairo program
 
 You can add or modify examples in the `listings` directory. Each listing is a scarb project.
-You can find a template of a blank scarb project in the `listings/template` directory.
-(You can also use `scarb init` to create a new scarb project, but be sure to remove the generated git repository)
+You can use `scarb init` to create a new scarb project, but be sure to remove the generated git repository with `rm -rf .git` and follow the instructions below for the correct `Scarb.toml` configuration.
 
 You can choose to use standard cairo with `cairo-test` or Starknet Foundry with `snforge_std`.
 Please use the appropriate `Scarb.toml` configuration. `scarb test` will automatically resolve to `snforge test` if `snforge_std` is in the dependencies.
 
-Here's the required `Scarb.toml` configuration for **Cairo test**:
+Here's the required `Scarb.toml` configuration for **cairo-test**:
 
 ```toml
 [package]
@@ -103,7 +109,6 @@ cairo_test.workspace = true
 test.workspace = true
 
 [[target.starknet-contract]]
-casm = true
 ```
 
 Here's the required `Scarb.toml` configuration for **Starknet Foundry**:
@@ -133,13 +138,12 @@ snforge_std.workspace = true
 test.workspace = true
 
 [[target.starknet-contract]]
-casm = true
 ```
 
 You also NEED to do the following:
 
 - Remove the generated git repository, `rm -rf .git` (this is important!)
-- Double check that the `pkg_name` is the same as the name of the directory
+- Double check that the package name is the same as the name of the directory
 
 ### Verification script
 
@@ -149,7 +153,7 @@ These programs are bundled into scarb packages, which makes it easier to test an
 
 To run the script locally, ensure that you are at the root of the repository, and run:
 
-`bash scripts/cairo_programs_verifier.sh`
+`./scripts/cairo_programs_verifier.sh`
 
 This will check that all the Cairo programs in the book compile successfully using `scarb build`, that every tests passes using `scarb test`, and that the `scarb fmt -c` command does not identify any formatting issues.
 
@@ -166,7 +170,6 @@ Every listing needs to have atleast integration tests:
 Add your contract in a specific file, you can name it `contract.cairo` or anything else. You can also add other files if needed.
 
 You should add the tests in the same file as the contract, using the `#[cfg(test)]` flag and a `tests` module.
-<!-- With the usage of ANCHOR, the tests will not be displayed in the book but can be optionally be displayed by using the `{{#rustdoc_include ...}}` syntax. -->
 
 Here's a sample `lib.cairo` file:
 
@@ -182,10 +185,12 @@ And in the `contract.cairo` file:
 // Write your contract here
 // [!endregion contract]
 
+// [!region test]
 #[cfg(test)]
 mod tests {
   // Write your tests for the contract here
 }
+// [!endregion test]
 ```
 
 You can use Starknet Foundry to write and run your tests.
