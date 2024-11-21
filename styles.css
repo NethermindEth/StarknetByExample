@@ -120,3 +120,8 @@ section.vocs_Sidebar_level
   font-size: var(--vocs-fontSize_20);
   padding-bottom: 0.875em;
 }
+
+.vocs_DesktopTopNav_logoWrapper {
+  left: 22px;
+  justify-content: start;
+}
