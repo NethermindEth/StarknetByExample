@@ -2,6 +2,14 @@
 version = 1
 
 [[package]]
+name = "account_spending_limits"
+version = "0.1.0"
+dependencies = [
+ "openzeppelin",
+ "snforge_std",
+]
+
+[[package]]
 name = "advanced_factory"
 version = "0.1.0"
 dependencies = [
