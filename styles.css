@@ -68,18 +68,20 @@ section.vocs_Sidebar_level
 .vocs_DocsLayout_gutterLeft {
   margin-left: 0;
   transition: margin 0.3s ease;
+  width: var(--vocs-sidebar_width);
 }
 .sidebar_hidden .vocs_DocsLayout_gutterLeft {
-  margin-left: calc(var(--vocs_DocsLayout_leftGutterWidth) * -1);
+  margin-left: calc(var(--vocs-sidebar_width) * -1);
 };
 
 .vocs_DocsLayout_content_withSidebar {
-  margin-left: var(--vocs_DocsLayout_leftGutterWidth)
+  margin-left: var(--vocs-sidebar_width);
 }
 .sidebar_hidden .vocs_DocsLayout_content_withSidebar {
   margin-left: 0 !important;
 }
 .vocs_DocsLayout_content_withSidebar {
+  margin-left: var(--vocs-sidebar_width);
   transition: margin 300ms ease !important;
   max-width: unset;
 }
