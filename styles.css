@@ -124,10 +124,3 @@ section.vocs_Sidebar_level
   left: 22px;
   justify-content: start;
 }
-
-/* Force show theme switcher */
-@media screen and (max-width: 1280px) {
-  .vocs_DesktopTopNav_hideCompact {
-    display: block;
-  }
-}
