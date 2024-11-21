@@ -60,50 +60,47 @@ section.vocs_Sidebar_level
 }
 
 /* Make sidebar collapsible */
-.vocs_DocsLayout_gutterLeft {
-  top: 0;
-  left: 0;
-  bottom: 0;
-}
-.vocs_DocsLayout_gutterLeft {
-  margin-left: 0;
-  transition: margin 0.3s ease;
-  width: var(--vocs-sidebar_width);
-}
-.sidebar_hidden .vocs_DocsLayout_gutterLeft {
-  margin-left: calc(var(--vocs-sidebar_width) * -1);
-};
+@media screen and (min-width: 1080px) {
+  .vocs_DocsLayout_gutterLeft {
+    margin-left: 0;
+    transition: margin 0.3s ease;
+    width: var(--vocs-sidebar_width);
+  }
+  .sidebar_hidden .vocs_DocsLayout_gutterLeft {
+    margin-left: calc(var(--vocs-sidebar_width) * -1);
+  }
 
-.vocs_DocsLayout_content_withSidebar {
-  margin-left: var(--vocs-sidebar_width);
-}
-.sidebar_hidden .vocs_DocsLayout_content_withSidebar {
-  margin-left: 0 !important;
-}
-.vocs_DocsLayout_content_withSidebar {
-  margin-left: var(--vocs-sidebar_width);
-  transition: margin 300ms ease !important;
-  max-width: unset;
-}
+  .vocs_DocsLayout_content_withSidebar {
+    margin-left: var(--vocs-sidebar_width);
+  }
+  .sidebar_hidden .vocs_DocsLayout_content_withSidebar {
+    margin-left: 0 !important;
+  }
+  .vocs_DocsLayout_content_withSidebar {
+    margin-left: var(--vocs-sidebar_width);
+    transition: margin 300ms ease !important;
+    max-width: unset;
+  }
 
-.vocs_DesktopTopNav_logo a {
-  margin-top: 2px !important;
-}
+  .vocs_DesktopTopNav_logo a {
+    margin-top: 2px !important;
+  }
 
-.vocs_Sidebar_logo {
-  padding-top: 0px !important;
-}
+  .vocs_Sidebar_logo {
+    padding-top: 0px !important;
+  }
 
-.sidebar_toggle {
-  position: absolute;
-  top: 0;
-  right: calc(var(--vocs-topNav_height) * -1);
-  height: var(--vocs-topNav_height);
-  width: var(--vocs-topNav_height);
-}
+  .sidebar_toggle {
+    position: absolute;
+    top: 0;
+    right: calc(var(--vocs-topNav_height) * -1);
+    height: var(--vocs-topNav_height);
+    width: var(--vocs-topNav_height);
+  }
 
-.sidebar_toggle button {
-  padding: var(--vocs-space_8);
+  .sidebar_toggle button {
+    padding: var(--vocs-space_8);
+  }
 }
 
 /* END sidebar */
@@ -126,4 +123,11 @@ section.vocs_Sidebar_level
 .vocs_DesktopTopNav_logoWrapper {
   left: 22px;
   justify-content: start;
+}
+
+/* Force show theme switcher */
+@media screen and (max-width: 1280px) {
+  .vocs_DesktopTopNav_hideCompact {
+    display: block;
+  }
 }
