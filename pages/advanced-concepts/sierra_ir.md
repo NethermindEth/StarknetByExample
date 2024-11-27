@@ -30,19 +30,19 @@ With Cairo 1.0:
 
 ## The Compilation Pipeline
 
-	```
-	Cairo 1.0 Source (High-level)
-	      ↓
-	Cairo-to-Sierra Compiler
-	      ↓
-	Sierra IR (Safe, Provable Code)
-	      ↓
-	Sierra-to-CASM Compiler (Run by Sequencer)
-	      ↓
-	CASM (Cairo Assembly)
-	      ↓
-	STARK Proofs (Proof Generation)
-	```
+    ```
+    Cairo 1.0 Source (High-level)
+          ↓
+    Cairo-to-Sierra Compiler
+          ↓
+    Sierra IR (Safe, Provable Code)
+          ↓
+    Sierra-to-CASM Compiler (Run by Sequencer)
+          ↓
+    CASM (Cairo Assembly)
+          ↓
+    STARK Proofs (Proof Generation)
+    ```
 
 ### Why CASM?
 
@@ -117,24 +117,24 @@ Control flow in Sierra is represented through:
 - Loop structures with invariant checking
 
 ## Compilation Process Deep Dive
-	```
-	Cairo Source Code
-	       ↓
-	AST Generation
-	       ↓
-	Semantic Analysis
-	       ↓
-	Sierra IR Generation
-	       ↓
-	Sierra Optimization
-	       ↓
-	CASM Generation
-	       ↓
-	Proof Generation
-	```
 
+    ```
+    Cairo Source Code
+           ↓
+    AST Generation
+           ↓
+    Semantic Analysis
+           ↓
+    Sierra IR Generation
+           ↓
+    Sierra Optimization
+           ↓
+    CASM Generation
+           ↓
+    Proof Generation
+    ```
 
-### 1. Source to AST(Abstract Syntax Tree) 
+### 1. Source to AST(Abstract Syntax Tree)
 
 ```cairo
 // Original Cairo code
@@ -146,37 +146,37 @@ fn add_numbers(a: felt252, b: felt252) -> felt252 {
 
 Transforms into AST representation (conceptual):
 
-		```rust
-		FunctionDefinition {
-		    name: "add_numbers",
-		    params: [
-		        Parameter { name: "a", type: Felt252 },
-		        Parameter { name: "b", type: Felt252 }
-		    ],
-		    return_type: Felt252,
-		    body: Block {
-		        statements: [
-		            LetStatement {
-		                pattern: "sum",
-		                value: BinaryOperation {
-		                    left: Identifier("a"),
-		                    operator: Add,
-		                    right: Identifier("b")
-		                }
-		            },
-		            ExpressionStatement {
-		                expression: Identifier("sum")
-		            }
-		        ]
-		    }
-		}
-		```
+    	```rust
+    	FunctionDefinition {
+    	    name: "add_numbers",
+    	    params: [
+    	        Parameter { name: "a", type: Felt252 },
+    	        Parameter { name: "b", type: Felt252 }
+    	    ],
+    	    return_type: Felt252,
+    	    body: Block {
+    	        statements: [
+    	            LetStatement {
+    	                pattern: "sum",
+    	                value: BinaryOperation {
+    	                    left: Identifier("a"),
+    	                    operator: Add,
+    	                    right: Identifier("b")
+    	                }
+    	            },
+    	            ExpressionStatement {
+    	                expression: Identifier("sum")
+    	            }
+    	        ]
+    	    }
+    	}
+    	```
 
 ### 2. Semantic Analysis
 
 During this phase, the compiler:
 
-#### 1. Type Checking: 
+#### 1. Type Checking:
 
 ```cairo
 // This passes semantic analysis
@@ -209,14 +209,14 @@ fn complex_calculation() -> felt252 {
 
 #### 3. Sierra IR Generation
 
-The process transforms high-level constructs into sierra's intermediate representation: 
+The process transforms high-level constructs into sierra's intermediate representation:
 
 ```cairo
 // Original Cairo code
 fn process_array(arr: Array<felt252>) -> felt252 {
     let mut sum = 0;
     let len = arr.len();
-    
+
     let mut i = 0;
     loop {
         if i >= len {
@@ -276,58 +276,58 @@ process_array(arr: Array<felt252>) -> felt252 {
 
 The optimizer performs several passes:
 
-	1. Dead Code Elimination:
+    1. Dead Code Elimination:
 
-	```
-	// Before optimization
-	temp0 = felt252_const<1>()
-	temp1 = felt252_const<2>()
-	temp2 = felt252_add(temp0, temp1)
-	temp3 = felt252_const<5>()  // Unused
-	ret(temp2)
+    ```
+    // Before optimization
+    temp0 = felt252_const<1>()
+    temp1 = felt252_const<2>()
+    temp2 = felt252_add(temp0, temp1)
+    temp3 = felt252_const<5>()  // Unused
+    ret(temp2)
 
-	// After optimization
-	temp0 = felt252_const<1>()
-	temp1 = felt252_const<2>()
-	temp2 = felt252_add(temp0, temp1)
-	ret(temp2)
-	```
+    // After optimization
+    temp0 = felt252_const<1>()
+    temp1 = felt252_const<2>()
+    temp2 = felt252_add(temp0, temp1)
+    ret(temp2)
+    ```
 
-	2. Constant Folding:
+    2. Constant Folding:
 
-	```
-	// Before optimization
-	temp0 = felt252_const<3>()
-	temp1 = felt252_const<4>()
-	temp2 = felt252_add(temp0, temp1)
+    ```
+    // Before optimization
+    temp0 = felt252_const<3>()
+    temp1 = felt252_const<4>()
+    temp2 = felt252_add(temp0, temp1)
 
-	// After optimization
-	temp0 = felt252_const<7>()  // Computed at compile time
-	```
+    // After optimization
+    temp0 = felt252_const<7>()  // Computed at compile time
+    ```
 
-	3. Instruction Combining: 
-	```
-	// Before optimization
-	temp0 = felt252_mul(x, felt252_const<1>())
-	temp1 = felt252_add(temp0, felt252_const<0>())
+    3. Instruction Combining:
+    ```
+    // Before optimization
+    temp0 = felt252_mul(x, felt252_const<1>())
+    temp1 = felt252_add(temp0, felt252_const<0>())
 
-	// After optimization
-	temp0 = x  // Unnecessary operations removed
-	```
+    // After optimization
+    temp0 = x  // Unnecessary operations removed
+    ```
 
 #### 5. CASM Generation
 
-The final stage generates CASM instructions: 
+The final stage generates CASM instructions:
 
-	```
-	// Sierra IR
-	temp0 = felt252_add(a, b)
-	ret(temp0)
+    ```
+    // Sierra IR
+    temp0 = felt252_add(a, b)
+    ret(temp0)
 
-	// Generated CASM
-	[ap] = [fp - 3] + [fp - 4]  # Add values
-	ret                         # Return
-	```
+    // Generated CASM
+    [ap] = [fp - 3] + [fp - 4]  # Add values
+    ret                         # Return
+    ```
 
 ### Special Handling Cases
 
@@ -364,9 +364,9 @@ generic_swap<T>(a: T, b: T) -> (T, T) {
 }
 ```
 
-3. Error Handling 
+3. Error Handling
 
-```cairo 
+```cairo
 // Cairo Result type
 fn divide(a: felt252, b: felt252) -> Result<felt252, felt252> {
     if b == 0 {
@@ -417,7 +417,7 @@ process_data(data: Array<felt252>) -> felt252 {
         const<u64>(GAS_PER_ITEM) -> (gas_per_item)
         mul_gas_requirement(len, gas_per_item) -> (required_gas)
         check_gas(required_gas) -> ()
-        
+
         // Continue with actual processing
         // ...
 }
@@ -430,3 +430,11 @@ Memory safety in the generated code
 Proper gas metering
 Optimized performance
 Deterministic execution
+
+## Further Reading
+
+- [Cairo and Sierra](https://docs.starknet.io/architecture-and-concepts/smart-contracts/cairo-and-sierra/)
+
+- [Sierra - Deep Dive](https://www.starknet.io/blog/sierra-deep-dive-video/)
+
+- [Under the hood of Cairo 1.0: Exploring Sierra](https://medium.com/nethermind-eth/under-the-hood-of-cairo-1-0-exploring-sierra-7f32808421f5)
