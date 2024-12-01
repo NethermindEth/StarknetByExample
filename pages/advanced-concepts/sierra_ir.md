@@ -2,439 +2,314 @@
 
 ## Introduction
 
-Sierra (Safe Intermediate RepresentAtion) is a critical intermediate language in the Cairo compilation pipeline, designed to bridge the gap between high-level Cairo and low-level CASM (Cairo Assembly). Its primary purpose is to provide memory safety guarantees while maintaining the expressive power needed for zero-knowledge proof generation.
+Sierra (Safe Intermediate RepresentAtion) is a critical intermediate language in the Cairo compilation pipeline, designed to bridge the gap between high-level Cairo and low-level CASM (Cairo Assembly). Its  primary purpose is mostly to be able to compile to a subset of casm that we call safe casm that ensure that any transaction sent is provable, while being able to have a high-level language (cairo1) with high memory safety.
 
-## Historical Context and Evolution
+## From Cairo 1(High-level)  to Sierra: Evolution and Problem Solving in Starknet
 
-### Transition from Cairo 0 to Cairo 1.0
+Before Starknet Alpha v0.11.0, developers wrote contracts in Cairo 0 which compiled directly to Cairo assembly (CASM), and the contract class was submitted to the Starknet sequencer via `DECLARE` transaction. This approach had risks of unprovable transactions and potential sequencer attacks, with limited safety guarantees at compile time.
 
-Before Starknet Alpha v0.11.0:
+Cairo 1.0 transformed this landscape by introducing Sierra as an intermediate representation, where contract classes no longer include CASM directly. Instead, the sequencer performs Sierra → CASM compilation before the CASM code is executed by the Starknet OS. This shift ensures every transaction (including failed ones) must be provable, sequencers can charge fees for all transactions, and the system enforces strict memory safety and ownership rules.
 
-- Developers wrote contracts in Cairo 0
-- Contracts were compiled directly to Cairo assembly (CASM)
-- Contract class was submitted to Starknet sequencer via DECLARE transaction
+This evolution solved critical issues through:
+- Guaranteed transaction provability for both successful and failed executions
+- Protected sequencers through guaranteed compensation and DoS attack prevention
+- Enhanced safety through compile-time checks and strong type system enforcement
+- Robust memory safety with strict ownership rules and reliable resource cleanup
 
-With Cairo 1.0:
-
-- Contract class no longer includes CASM directly
-- Introduces Sierra as an intermediate representation
-- Sequencer performs Sierra → CASM compilation
-- CASM code is executed by the Starknet OS
-
-### Key Problems Solved
-
-1. Transaction Provability: Every transaction execution must be provable, even failed transactions.
-2. Sequencer Protection: Ensures sequencers can charge fees for all transactions, including failed ones.
-3. Safety Guarantees: Prevents runtime errors through compile-time checks
-4. Memory Safety: Enforces strict ownership rules and prevents invalid memory access
+This comprehensive transition maintains backward compatibility while significantly improving both security and the development experience in the Starknet ecosystem.
 
 ## The Compilation Pipeline
-
-    ```
+```
     Cairo 1.0 Source (High-level)
           ↓
-    Cairo-to-Sierra Compiler
+    	  ↓	with Cairo-to-Sierra Compiler
           ↓
     Sierra IR (Safe, Provable Code)
           ↓
-    Sierra-to-CASM Compiler (Run by Sequencer)
+    	  ↓	with Sierra-to-CASM Compiler (Run by Sequencer)
           ↓
     CASM (Cairo Assembly)
           ↓
+		  ↓ with CairoVM Execution
+		  ↓
     STARK Proofs (Proof Generation)
-    ```
-
-### Why CASM?
-
-CASM serves a fundamental role because:
-
-- Starknet requires STARK proofs for block validity
-- STARK proofs work with polynomial constraints
-- CASM instructions translate directly to these constraints
-- Enables formulation of "This Starknet block is valid" in provable form
-
-### Why Sierra?
-
-Sierra addresses several critical needs:
-
-1. **Provability Guarantees**:
-
-   - Ensures all generated CASM is provable
-   - Prevents unprovable code patterns
-   - Handles transaction reverts safely
-
-2. **Security Considerations**:
-
-   - Protects against DoS attacks
-   - Ensures sequencer compensation
-   - Manages transaction failures gracefully
-
-3. **Technical Benefits**:
-
-   - Memory Safety
-   - Type Safety
-   - Optimization opportunities
-   - Verification layer for smart contracts
-
-4. **Gas Metering**:
-   - Predictable execution costs
-   - Protection against gas-based attacks
-   - Pre-execution gas requirement calculations
+```
+At its core, Sierra's compilation process is all about safety and efficiency. It carefully checks types at every step of the transformation, makes sure memory is handled safely in the final code, and keeps track of gas usage with precision. The compiler also focuses on generating optimized code while ensuring that every operation will run the same way each time - something crucial for smart contracts. If you're interested in really understanding how the compilation works under the hood, check out [cairo-compiler-workshop](https://github.com/software-mansion-labs/cairo-compiler-workshop).
 
 ## Key Concepts in Sierra
 
 ### 1. Type System
 
-Sierra implements a robust type system with:
-
-- Concrete types (felt252, u256, etc.)
-- Generic types with constraints
-- User-defined types
-- References and boxing mechanisms
-
-The type system ensures that:
-
-- Memory access is always valid
-- No uninitialized variables are used
-- Type constraints are properly enforced
+Sierra implements a powerful linear type system, where each value must be used exactly once. This "use-once" principle is fundamental to Sierra's safety guarantees, preventing both resource leaks and double-use errors. The system includes concrete types like felt252 and u256, which form the foundation of Sierra's type hierarchy. These are complemented by generic types with constraints, enabling flexible but safe abstractions. User-defined types extend the system's capabilities while maintaining safety guarantees. The type system employs references and boxing mechanisms to manage memory safely, ensuring all memory access is valid, variables are properly initialized before use, and type constraints are consistently enforced throughout the program's execution.
 
 ### 2. Memory Model
 
-Sierra's memory model is designed for safety:
-
-- Linear memory management
-- Explicit deallocation
-- No implicit copies
-- Reference counting for complex data structures
+Sierra's memory model prioritizes safety through deliberate design choices. It implements linear memory management, requiring explicit tracking of resource ownership and lifecycle. Memory operations are handled through explicit deallocation, preventing memory leaks and use-after-free errors. The model prohibits implicit copies, making data movement explicit and traceable. For complex data structures, Sierra employs reference counting to manage shared resources safely, ensuring proper cleanup when resources are no longer needed. This careful approach to memory management forms a cornerstone of Sierra's safety guarantees.
 
 ### 3. Control Flow
 
-Control flow in Sierra is represented through:
+Control flow in Sierra is structured through a clear, explicit model that maintains safety while enabling complex program logic. Basic blocks serve as the fundamental units of execution, with explicit branch instructions managing program flow between them. Function calls are handled with explicit stack management, ensuring resource safety across function boundaries. Loop structures incorporate invariant checking, maintaining safety properties throughout iterations. This explicit control flow model enables comprehensive static analysis while preventing common control flow errors.
 
-- Basic blocks
-- Branch instructions
-- Function calls with explicit stack management
-- Loop structures with invariant checking
 
-## Compilation Process Deep Dive
+## Sierra Code Explanation for a simple cairo program
+### original cairo program
+```cairo
+// [!include ~/listings/advanced-concepts/sierra_ir/simple_cairo.cairo:contract]
+```
 
-    ```
-    Cairo Source Code
-           ↓
-    AST Generation
-           ↓
-    Semantic Analysis
-           ↓
-    Sierra IR Generation
-           ↓
-    Sierra Optimization
-           ↓
-    CASM Generation
-           ↓
-    Proof Generation
-    ```
+### compiled sierra
+The above program compiled [sierra code](~/listings/advanced-concepts/sierra_ir/simple_program.sierra)
 
-### 1. Source to AST(Abstract Syntax Tree)
+Sierra (Safe Intermediate Representation and Execution) is a critical intermediate representation in Starknet's Cairo contract compilation process. For the simple add_numbers function, here's a detailed breakdown:
+
+1. Type Declarations defines the fundamental data types and their attributes used in the Sierra code.
+- `felt252`: Represents the field element type
+- Attributes:
+	- `storable: true`: this attributecan be stored
+	- `drop: true`: this attribute can be discarded
+	- `dup: true`: this attributes can be duplicated
+	- `zero_sized: false`: this attributes has a non-zero memory footprint
+
+2. Libfunc Declarations specify the library functions available for performing operations on these types.
+	- `felt252_add`: Performs addition on field elements
+	- `store_temp<felt252>`: Temporarily stores the result
+
+3. Compilation Steps show the actual sequence of operations that happen during code execution.
+	- Line 0: `felt252_add([0], [1]) -> ([2]): Add input parameters
+	- Line 1: `store_temp<felt252>([2]) -> ([2]): Store the temporary result
+	- Line 2: `return([2]): Return the computed value
+
+4. Libfunc Restrictions:
+- Starknet uses an allowed [list](https://github.com/starkware-libs/cairo/tree/main/crates/cairo-lang-starknet-classes/src/allowed_libfuncs_lists) of libfuncs to ensure: 
+	- Security:
+		Sierra enforces security by allowing only whitelisted operations with predefined behaviors, while maintaining strict control over memory operations and eliminating arbitrary pointer arithmetic to prevent vulnerabilities.
+	- Predictability:
+		The restricted libfunc approach ensures deterministic execution across all operations, enabling precise gas cost calculations and well-defined state transitions, while keeping all side effects explicitly managed and traceable.
+	- Verifiability:
+		By limiting library functions, Sierra simplifies the proof generation process and makes constraint system generation more efficient, which reduces verification complexity and ensures consistent behavior across different implementations.
+	- Error Prevention
+		The restricted library functions eliminate undefined behavior by catching potential runtime errors at compile time, while enforcing explicit resource management and maintaining type safety throughout the entire execution process.
+The restricted libfunc approach helps maintain the safety and efficiency of smart contracts on the Starknet platform. 
+
+
+## Sierra Code Explanation for Storage Smart Contract
 
 ```cairo
-// Original Cairo code
-fn add_numbers(a: felt252, b: felt252) -> felt252 {
-    let sum = a + b;
-    sum
-}
+// [!include ~/listings/advanced-concepts/sierra_ir/storage_variable.cairo:contract]
 ```
 
-Transforms into AST representation (conceptual):
+### compiled sierra
+The Storage smart contract compiled [sierra code](~/listings/advanced-concepts/sierra_ir/storage_variable.sierra)
 
-    	```rust
-    	FunctionDefinition {
-    	    name: "add_numbers",
-    	    params: [
-    	        Parameter { name: "a", type: Felt252 },
-    	        Parameter { name: "b", type: Felt252 }
-    	    ],
-    	    return_type: Felt252,
-    	    body: Block {
-    	        statements: [
-    	            LetStatement {
-    	                pattern: "sum",
-    	                value: BinaryOperation {
-    	                    left: Identifier("a"),
-    	                    operator: Add,
-    	                    right: Identifier("b")
-    	                }
-    	            },
-    	            ExpressionStatement {
-    	                expression: Identifier("sum")
-    	            }
-    	        ]
-    	    }
-    	}
-    	```
+### 1. Type Decalarations:
+This section defines the fundamental types that Sierra uses to ensure type safety and memory management.
 
-### 2. Semantic Analysis
+- System and Base Types
+	```cairo
+	type RangeCheck = RangeCheck [storable: true, drop: false, dup: false, zero_sized: false];
+	type felt252 = felt252 [storable: true, drop: true, dup: true, zero_sized: false];
+	type u32 = u32 [storable: true, drop: true, dup: true, zero_sized: false];
+	type GasBuiltin = GasBuiltin [storable: true, drop: false, dup: false, zero_sized: false];
+	```
+	What This Means:
 
-During this phase, the compiler:
+	- `RangeCheck`: A type used for validating numeric ranges. It can't be dropped or duplicated, ensuring that range checks are always properly handled.
+	- `felt252`: Field element type, the basic numeric type in Cairo. It's flexible - can be stored, dropped, and duplicated.
+	- `u32`: 32-bit unsigned integer, with similar properties to felt252.
+	- `GasBuiltin`: Tracks gas consumption. Can't be dropped or duplicated to prevent gas accounting errors.
 
-#### 1. Type Checking:
+- Storage-Related Types
+	```cairo
+	type StorageBaseAddress = StorageBaseAddress [storable: true, drop: true, dup: true, zero_sized: false];
+	type core::starknet::storage::StoragePointer0Offset::<core::integer::u32> = 
+	    Struct<ut@[...], StorageBaseAddress>;
+	type StorageAddress = StorageAddress [storable: true, drop: true, dup: true, zero_sized: false];
+	```
+	What This Means:
+
+	- `StorageBaseAddress`: Represents the base location in contract storage.
+	- `StoragePointer0Offset`: A structured type that points to u32 values in storage.
+	- `StorageAddress`: The actual address used for storage operations.
+
+### 2. Library Functions(libfunc)
+Sierra provides a set of built-in functions (libfuncs) for handling memory, storage, and gas operations.
+- Memory Management
+	```cairo
+	libfunc revoke_ap_tracking = revoke_ap_tracking;
+	libfunc enable_ap_tracking = enable_ap_tracking;
+	libfunc disable_ap_tracking = disable_ap_tracking;
+
+	
+	libfunc store_temp<T> = store_temp<T>;
+	libfunc drop<T> = drop<T>;
+	```
+	#### Purpose:
+	These functions control the allocation pointer (ap) tracking system, which is crucial for memory safety:
+
+	- Enable/disable tracking when needed
+	- Prevent memory leaks
+	- Ensure proper memory allocation
+
+
+
+- Storage Operations
+	```cairo
+	libfunc storage_base_address_const<...> = storage_base_address_const<...>;
+	libfunc storage_address_from_base = storage_address_from_base;
+	libfunc storage_write_syscall = storage_write_syscall;
+	libfunc storage_read_syscall = storage_read_syscall;
+	```
+	#### Purpose:
+	These functions handle all storage interactions:
+
+	- Computing storage addresses
+	- Reading from storage
+	- Writing to storage
+	- Managing storage layout
+
+
+- Gas Management
+	```cairo
+	libfunc withdraw_gas = withdraw_gas;
+	libfunc withdraw_gas_all = withdraw_gas_all;
+	libfunc get_builtin_costs = get_builtin_costs;
+	```
+	#### Purpose:
+	These functions handle all aspects of gas accounting:
+
+	- Track gas consumption
+	- Withdraw gas for operations
+	- Calculate operation costs
+	- Prevent out-of-gas scenarios
+
+### 3. Execution Flow Analysis
+
+- Initialization and Gas Management Phase
+This phase marks the beginning of contract execution where Sierra prepares the execution environment and handles initial gas costs. First, it disables the allocation pointer tracking, which is a safety measure to prevent memory tracking overhead during gas calculations. Then, it performs a critical gas withdrawal check - this ensures the contract has sufficient gas to execute, with fallback paths for both successful and failed gas checks. After gas validation, it aligns the execution branch for consistent memory layout and finally deconstructs the input parameters into their base components for further processing.
+The phase is crucial for:
+
+	- Setting up memory safety mechanisms
+	- Ensuring gas availability
+	- Preparing input parameters
+	- Establishing execution paths
+	```cairo
+	// The actual code implementation
+	revoke_ap_tracking() -> (); // 0
+	withdraw_gas([0], [1]) { fallthrough([4], [5]) 114([6], [7]) }; // 1
+	branch_align() -> (); // 2
+	struct_deconstruct<core::array::Span::<core::felt252>>([3]) -> ([8]); // 3
+	```
+
+- Parameter Processing Phase
+In this phase, Sierra handles the processing and validation of input parameters. It reactivates the allocation pointer tracking, which was disabled during gas calculations, to ensure memory safety during parameter processing. The range check pointer is stored for numeric validations, crucial for ensuring values are within acceptable ranges. The system then processes array inputs through snapshots - a mechanism that provides safe, immutable views of array data. Finally, it handles option types, which are essential for representing potentially null or invalid values. This phase is fundamental for type safety and memory integrity.
 
 ```cairo
-// This passes semantic analysis
-fn safe_add(a: u256, b: u256) -> Result<u256, felt252> {
-    match check_overflow(a, b) {
-        Option::Some(sum) => Result::Ok(sum),
-        Option::None => Result::Err('overflow')
-    }
-}
-
-// This fails semantic analysis
-fn unsafe_add(a: u256, b: felt252) -> u256 {
-    a + b  // Type mismatch error
-}
+enable_ap_tracking() -> (); // 4
+store_temp<RangeCheck>([4]) -> ([4]); // 5
+array_snapshot_pop_front<felt252>([8]) { fallthrough([9], [10]) 12([11]) }; // 6
+enum_init<core::option::Option::<core::box::Box::<@core::felt252>>, 0>([10]) -> ([12]); // 8
 ```
 
-#### 2. Variable Resolution:
+- Storage Operation Phase
+The storage operation phase is where Sierra manages contract storage interactions. It begins by computing the storage base address - a unique identifier for the storage variable. This address is derived from contract-specific constants and variable positions. The system then converts this base address into a concrete storage address that can be used for actual storage operations. During write operations, the system includes multiple checks and fallback paths to handle potential failures, ensuring storage consistency even in error cases.
 
 ```cairo
-// Semantic analysis tracks variable scope and usage
-fn complex_calculation() -> felt252 {
-    let x = 5;
-    {
-        let x = 10;  // New scope, shadows outer x
-        // Semantic analyzer tracks both x variables
-    }
-    x  // Analyzer knows this refers to outer x
-}
+storage_base_address_const<...>() -> ([38]); // 50
+storage_address_from_base([38]) -> ([40]); // 52
+storage_write_syscall([35], [2], [41], [40], [39]) {
+    fallthrough([42], [43]) 70([44], [45], [46])
+}; // 57
 ```
 
-#### 3. Sierra IR Generation
-
-The process transforms high-level constructs into sierra's intermediate representation:
+- Value Processing Phase
+During value processing, Sierra handles type conversions and validations of data. This phase is critical for ensuring type safety and data integrity. The system attempts to convert between different numeric types (like felt252 to u32) with built-in overflow checks. Temporary storage is used to maintain values during processing, with careful management of memory resources. Each conversion includes fallback paths for handling potential failures.
 
 ```cairo
-// Original Cairo code
-fn process_array(arr: Array<felt252>) -> felt252 {
-    let mut sum = 0;
-    let len = arr.len();
-
-    let mut i = 0;
-    loop {
-        if i >= len {
-            break;
-        }
-        sum += arr[i];
-        i += 1;
-    }
-    sum
-}
+u32_try_from_felt252([4], [20]) { fallthrough([21], [22]) 93([23]) }; // 22
+store_temp<felt252>([20]) -> ([20]); // 21
 ```
 
-#### Transforms into Sierra IR:
-
-```
-type Array<felt252> = Array<felt252>
-type felt252 = felt252
-type usize = usize
-
-libfunc array_len = array_len
-libfunc felt252_add = felt252_add
-libfunc usize_add = usize_add
-libfunc array_get = array_get
-libfunc branch_align = branch_align
-libfunc jump = jump
-libfunc store_temp = store_temp
-libfunc felt252_const = felt252_const
-
-process_array(arr: Array<felt252>) -> felt252 {
-    entrance:
-        felt252_const<0>() -> (sum)  // Initialize sum
-        array_len(arr) -> (len)      // Get array length
-        felt252_const<0>() -> (i)    // Initialize counter
-        jump(loop_start)             // Jump to loop
-
-    loop_start:
-        store_temp(i) -> (i_temp)    // Store loop variables
-        store_temp(sum) -> (sum_temp)
-        branch_align() -> ()
-        usize_lt(i_temp, len) -> (should_continue)
-        jump_nz(should_continue, loop_body, loop_end)
-
-    loop_body:
-        array_get(arr, i) -> (element)
-        felt252_add(sum_temp, element) -> (new_sum)
-        usize_add(i_temp, 1) -> (new_i)
-        store_temp(new_sum) -> (sum)
-        store_temp(new_i) -> (i)
-        jump(loop_start)
-
-    loop_end:
-        ret(sum_temp)
-}
-```
-
-#### 4. Sierra Optimization Phase
-
-The optimizer performs several passes:
-
-    1. Dead Code Elimination:
-
-    ```
-    // Before optimization
-    temp0 = felt252_const<1>()
-    temp1 = felt252_const<2>()
-    temp2 = felt252_add(temp0, temp1)
-    temp3 = felt252_const<5>()  // Unused
-    ret(temp2)
-
-    // After optimization
-    temp0 = felt252_const<1>()
-    temp1 = felt252_const<2>()
-    temp2 = felt252_add(temp0, temp1)
-    ret(temp2)
-    ```
-
-    2. Constant Folding:
-
-    ```
-    // Before optimization
-    temp0 = felt252_const<3>()
-    temp1 = felt252_const<4>()
-    temp2 = felt252_add(temp0, temp1)
-
-    // After optimization
-    temp0 = felt252_const<7>()  // Computed at compile time
-    ```
-
-    3. Instruction Combining:
-    ```
-    // Before optimization
-    temp0 = felt252_mul(x, felt252_const<1>())
-    temp1 = felt252_add(temp0, felt252_const<0>())
-
-    // After optimization
-    temp0 = x  // Unnecessary operations removed
-    ```
-
-#### 5. CASM Generation
-
-The final stage generates CASM instructions:
-
-    ```
-    // Sierra IR
-    temp0 = felt252_add(a, b)
-    ret(temp0)
-
-    // Generated CASM
-    [ap] = [fp - 3] + [fp - 4]  # Add values
-    ret                         # Return
-    ```
-
-### Special Handling Cases
-
-1. Complex Data Structures
+- Error Handling Phase
+The error handling phase implements Sierra's robust error management system. It constructs panic results for error cases, ensuring that failures are handled gracefully and securely. The system creates structured error information including panic details and relevant error data. This phase is crucial for maintaining contract reliability and providing meaningful error feedback. All error states are carefully packaged into result types that can be safely returned and handled by the calling context.
 
 ```cairo
-// Cairo struct
-struct Point {
-    x: felt252,
-    y: felt252
-}
-
-// Sierra handling
-type Point = Struct<felt252, felt252>
-libfunc point_construct = struct_construct<Point>
-libfunc point_deconstruct = struct_deconstruct<Point>
+struct_construct<core::panics::Panic>() -> ([30]); // 35
+struct_construct<Tuple<core::panics::Panic, Array<felt252>>>([30], [29]) -> ([31]); // 36
+enum_init<core::panics::PanicResult::<(core::array::Span::<core::felt252>,)>, 1>([31]) -> ([32]); // 37
 ```
 
-2. Generic Functions
+- Return Phase
+The return phase is responsible for finalizing the execution and preparing the return values. It ensures all resources are properly accounted for by storing final values for range checking, gas tracking, and system state. The phase carefully packages all return values, maintaining type safety and memory integrity. This phase is critical for ensuring the contract's state is consistent after execution.
 
 ```cairo
-// Cairo generic function
-fn swap<T>(a: T, b: T) -> (T, T) {
-    (b, a)
-}
-
-// Sierra representation
-generic_swap<T>(a: T, b: T) -> (T, T) {
-    enter:
-        store_temp(b) -> (temp_b)
-        store_temp(a) -> (temp_a)
-        struct_construct<Tuple<T,T>>(temp_b, temp_a) -> (result)
-        ret(result)
-}
+store_temp<RangeCheck>([21]) -> ([21]); // 38
+store_temp<GasBuiltin>([5]) -> ([5]); // 39
+store_temp<System>([2]) -> ([2]); // 40
+return([21], [5], [2], [32]); // 42
 ```
 
-3. Error Handling
+- Storage Read Flow
+The storage read operation is a specialized flow that handles retrieving values from contract storage. It begins with a storage address computation, followed by a syscall to read the storage value. The read value is then processed and converted to the appropriate type with necessary validations. This operation includes comprehensive error handling for cases like invalid storage addresses or type conversion failures.
 
-```cairo
-// Cairo Result type
-fn divide(a: felt252, b: felt252) -> Result<felt252, felt252> {
-    if b == 0 {
-        Result::Err('Division by zero')
-    } else {
-        Result::Ok(a / b)
-    }
-}
-
-// Sierra error handling
-divide(a: felt252, b: felt252) -> Result<felt252, felt252> {
-    entrance:
-        felt252_is_zero(b) -> (is_zero)
-        branch_align() -> ()
-        jump_nz(is_zero, error_path, success_path)
-
-    error_path:
-        felt252_const<'Division by zero'>() -> (err_msg)
-        enum_init<Result, Err>(err_msg) -> (result)
-        ret(result)
-
-    success_path:
-        felt252_div(a, b) -> (quotient)
-        enum_init<Result, Ok>(quotient) -> (result)
-        ret(result)
-}
+```cairo 
+storage_read_syscall([20], [2], [30], [29]) {
+    fallthrough([31], [32], [33]) 196([34], [35], [36])
+}; // 166
+store_temp<felt252>([33]) -> ([33]); // 168
+u32_try_from_felt252([19], [33]); // 171
 ```
 
-### Gas Calculation During Compilation
+- Storage Write Flow
+The storage write operation manages a secure and atomic process for updating contract state in Sierra. It begins with precise gas calculations and withdrawals to ensure sufficient resources for the complete operation. The system then computes a unique storage address through a two-step process: generating a base address from contract-specific constants and transforming it into a concrete storage location. Finally, it executes the atomic write operation through a system call, with comprehensive error handling to maintain storage integrity. The entire process ensures consistent state updates, prevents data corruption, and handles failures gracefully.
+	
+	```cairo
+	withdraw_gas([0], [1]) { fallthrough([4], [5]) 114([6], [7]) };
+	
+	storage_base_address_const<...>() -> ([38]);
+	storage_address_from_base([38]) -> ([40]);
+	
+	storage_write_syscall([35], [2], [41], [40], [39]);
+	```
 
-The compiler calculates gas costs during compilation:
+### 4. Function Implementation Analysis
+- Set Function Implementation
+	```cairo
+	// Function wrapper
+	storage_variables::storage_variables::StorageVariablesExample::__wrapper__StorageVariablesExample__set@0(
+	    [0]: RangeCheck,  // For numeric checks
+	    [1]: GasBuiltin,  // For gas tracking
+	    [2]: System,      // For system calls
+	    [3]: core::array::Span::<core::felt252>  // Input parameters
+	)
+	```
+	Key Operations:
+	1. `Gas` withdrawal and checks
+	2. `Parameter` validation
+	3. `Storage` address computation
+	4. `Value` writing to storage
+	5. `Return` handling with panic checks
 
-```cairo
-// Original function
-fn process_data(data: Array<felt252>) -> felt252 {
-    let mut sum = 0;
-    for item in data {
-        sum += item;
-    }
-    sum
-}
+- Get Function Implementation
+	storage_variables::storage_variables::StorageVariablesExample::__wrapper__StorageVariablesExample__get@128(
+	    // Similar parameters as set
+	)
 
-// Sierra with gas tracking
-process_data(data: Array<felt252>) -> felt252 {
-    entrance:
-        // Calculate required gas
-        array_len(data) -> (len)
-        const<u64>(GAS_PER_ITEM) -> (gas_per_item)
-        mul_gas_requirement(len, gas_per_item) -> (required_gas)
-        check_gas(required_gas) -> ()
-
-        // Continue with actual processing
-        // ...
-}
-```
-
-### This detailed compilation process ensures:
-
-Type safety throughout the transformation
-Memory safety in the generated code
-Proper gas metering
-Optimized performance
-Deterministic execution
+	Key Operations:
+	1. `Gas` checks
+	2. `Storage` address computation
+	3. `Value` reading from storage
+	4. `Type` conversion and validation
+	5. `Result` packaging and return
 
 ## Further Reading
+
+- [Under the hood of Cairo 1.0: Exploring Sierra](https://www.nethermind.io/blog/under-the-hood-of-cairo-1-0-exploring-sierra-part-1)
+
+- [Under the hood of Cairo 2.0: Exploring Sierra](https://www.nethermind.io/blog/under-the-hood-of-cairo-1-0-exploring-sierra-part-2)
+
+- [Under the hood of Cairo 1.0: Exploring Sierra](https://www.nethermind.io/blog/under-the-hood-of-cairo-1-0-exploring-sierra-part-3)
 
 - [Cairo and Sierra](https://docs.starknet.io/architecture-and-concepts/smart-contracts/cairo-and-sierra/)
 
 - [Sierra - Deep Dive](https://www.starknet.io/blog/sierra-deep-dive-video/)
 
-- [Under the hood of Cairo 1.0: Exploring Sierra](https://medium.com/nethermind-eth/under-the-hood-of-cairo-1-0-exploring-sierra-7f32808421f5)
