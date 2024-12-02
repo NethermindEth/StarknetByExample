@@ -1,0 +1,15 @@
+[package]
+name = "proof_of_age"
+version = "0.1.0"
+edition = "2024_07"
+
+[dependencies]
+garaga = { git = "https://github.com/keep-starknet-strange/garaga.git", tag = "v0.14.0" }
+starknet = "2.8.4"
+
+[cairo]
+sierra-replace-ids = false
+
+[[target.starknet-contract]]
+casm = true
+casm-add-pythonic-hints = true
