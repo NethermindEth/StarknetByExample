@@ -1,5 +1,5 @@
 [package]
-name = "zksnark_groth16"
+name = "snarkjs"
 version.workspace = true
 edition.workspace = true
 

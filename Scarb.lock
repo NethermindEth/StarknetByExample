@@ -319,7 +319,7 @@ name = "write_to_any_slot"
 version = "0.1.0"
 
 [[package]]
-name = "zksnark_groth16"
+name = "snarkjs"
 version = "0.1.0"
 dependencies = [
  "garaga",
