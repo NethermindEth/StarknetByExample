@@ -37,13 +37,17 @@ This specific use case is about granting access to tokens after having proven yo
 
 ## How it works:
 
+In this section, the example workflow is explained. As this repository consists of examples, each command is briefly explained to give a gist of it. If you wish to learn about those, please refer to the documentation of those technologies:
+- [Circom](https://docs.circom.io/)
+- [Snarkjs](https://github.com/iden3/snarkjs)
+- [Garaga](https://garaga.gitbook.io/garaga)
 
 1. Write a circuit using `Circom` that will correspond to the program you are proving. In the circuit, you can set constraints (aka assertions) that the program needs to respect. Otherwise, the proof generation will fail.
 
 - 1.1. Circuit
 
 ```circom
-// [!include ~/listings/applications/zksnark_groth16/src/circuit/circuit.circom]
+// [!include ~/listings/advanced-concepts/verify_proofs/snarkjs/src/circuit/circuit.circom]
 ```
 
 This circuit takes 3 inputs:
@@ -56,7 +60,7 @@ The circuit computes the hash of the plain text password and compares the result
 - 1.2. Circuit inputs
 
 ```json
-// [!include ~/listings/applications/zksnark_groth16/src/circuit/input.json]
+// [!include ~/listings/advanced-concepts/verify_proofs/snarkjs/src/circuit/input.json]
 ```
 > In my example, the secret password is 2468. You should input the same user address with which you will submit your proof to the ZkERC20Token to mint free tokens.
 
@@ -154,7 +158,7 @@ This above command will generate a cairo project with the verifier contract, wit
 Here is the generated starknet contract:
 
 ```cairo
-// [!include ~/listings/applications/zksnark_groth16/src/verifier/groth16_verifier.cairo]
+// [!include ~/listings/advanced-concepts/verify_proofs/snarkjs/src/verifier/groth16_verifier.cairo]
 ```
 
 7. Generate calldata & call on-chain verifier contract
@@ -176,6 +180,6 @@ Here is the address of this contract (on Sepolia testnet) : 0x00375cf5081763e1f2
 Here is the code of this ZkERC20Token contract :
 
 ```cairo
-// [!include ~/listings/applications/zksnark_groth16/src/contract.cairo]
+// [!include ~/listings/advanced-concepts/verify_proofs/snarkjs/src/contract.cairo]
 ```
 

@@ -238,7 +238,11 @@ const config: Sidebar = [
       {
         text: "Sierra IR",
         link: "/advanced-concepts/sierra_ir",
-      }
+      },
+      {
+        text: "Zk-Snarks",
+        link: "/advanced-concepts/verify_proofs/snarkjs",
+      },
     ],
   },
   {
