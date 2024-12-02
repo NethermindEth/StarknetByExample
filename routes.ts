@@ -152,6 +152,10 @@ const config: Sidebar = [
         link: "/applications/merkle_tree",
       },
       {
+        text: "Zk-Snarks",
+        link: "/applications/zksnark_groth16",
+      },
+      {
         text: "Simple Storage with Starknet-js",
         link: "/applications/simple_storage_starknetjs",
       },

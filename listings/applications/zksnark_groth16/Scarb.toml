@@ -1,0 +1,19 @@
+[package]
+name = "zksnark_groth16"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+starknet.workspace = true
+snforge_std.workspace = true
+openzeppelin.workspace = true
+garaga = { git = "https://github.com/keep-starknet-strange/garaga.git" }
+
+[dev-dependencies]
+cairo_test.workspace = true
+
+[scripts]
+test.workspace = true
+
+[[target.starknet-contract]]
+sierra = true
