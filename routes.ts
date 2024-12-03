@@ -223,6 +223,10 @@ const config: Sidebar = [
         text: "Signature Verification",
         link: "/advanced-concepts/signature_verification",
       },
+      {
+        text: "SRC5 Interface Detection",
+        link: "/advanced-concepts/SRC5-interface-detection",
+      },
     ],
   },
   {
