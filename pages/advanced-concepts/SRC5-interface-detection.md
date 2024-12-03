@@ -17,12 +17,9 @@ SRC5 is a standard that enables smart contracts to:
 
 ## How it Works
 
-The SRC5 standard defines two main functions:
+The SRC5 standard defines one main function:
 
-1. `supports_interface`: Returns `true` if the contract implements the specified
-   interface
-2. `get_implementation`: Returns the class hash that implements the specified
-   interface
+1. `supports_interface`: Returns `true` if the contract implements the specified interface
 
 ### Interface ID Calculation
 
@@ -32,45 +29,10 @@ the function signature.
 
 ## Implementation Example
 
-Here's a basic example of how to implement SRC5:
+Here's an openzeppelin example of how to implement SRC5:
 
 ```cairo
-#[starknet::interface]
-trait ISRC5<TContractState> {
-    fn supports_interface(self: @TContractState, interface_id: felt252) -> bool;
-    fn get_implementation(self: @TContractState, interface_id: felt252) -> Option<ClassHash>;
-}
-
-#[starknet::contract]
-mod MySRC5Contract {
-    use starknet::ClassHash;
-
-    #[storage]
-    struct Storage {
-        supported_interfaces: LegacyMap<felt252, bool>,
-    }
-
-    #[constructor]
-    fn constructor(ref self: ContractState) {
-        // Register the SRC5 interface ID
-        self.supported_interfaces.write(0x3f918d17e5ee77373, true);
-    }
-
-    #[external(v0)]
-    impl ISRC5Impl of ISRC5<ContractState> {
-        fn supports_interface(self: @ContractState, interface_id: felt252) -> bool {
-            self.supported_interfaces.read(interface_id)
-        }
-
-        fn get_implementation(self: @ContractState, interface_id: felt252) -> Option<ClassHash> {
-            if self.supports_interface(interface_id) {
-                Option::Some(starknet::get_class_hash())
-            } else {
-                Option::None
-            }
-        }
-    }
-}
+// [!include ~/listings/advanced-concepts/src5_interface_detection/src/src5.cairo:contract]
 ```
 
 
@@ -79,25 +41,7 @@ mod MySRC5Contract {
 Here's how to query if a contract supports a specific interface:
 
 ```cairo
-#[starknet::interface]
-trait IContractA<TContractState> {
-    fn check_interface(self: @TContractState, target: ContractAddress, interface_id: felt252) -> bool;
-}
-
-#[starknet::contract]
-mod ContractA {
-    use super::ISRC5DispatcherTrait;
-    use super::ISRC5Dispatcher;
-
-    #[external(v0)]
-    fn check_interface(self: @ContractState, target: ContractAddress, interface_id: felt252) -> bool {
-        // Create a dispatcher to interact with the target contract
-        let src5_dispatcher = ISRC5Dispatcher { contract_address: target };
-        // Query if the target contract supports the interface
-        src5_dispatcher.supports_interface(interface_id)
-    }
-}
-
+// [!include ~/listings/advanced-concepts/src5_interface_detection/src/src5.cairo:offchain]
 ```
 
 ## Common Use Cases
