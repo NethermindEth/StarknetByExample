@@ -1,19 +1,17 @@
 [package]
 name = "src5_interface_detection"
-version = "0.1.0"
-edition = "2023_11"
+version.workspace = true
+edition.workspace = true
 
 # See more keys and their definitions at https://docs.swmansion.com/scarb/docs/reference/manifest.html
 
 [dependencies]
-starknet = "2.9.1"
+starknet.workspace = true
 
 [dev-dependencies]
-# snforge_std = { git = "https://github.com/foundry-rs/starknet-foundry", tag = "v0.31.0" }
-assert_macros = "2.9.1"
-
-[[target.starknet-contract]]
-sierra = true
+cairo_test.workspace = true
 
 [scripts]
-test = "snforge test"
+test.workspace = true
+
+[[target.starknet-contract]]

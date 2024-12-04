@@ -35,7 +35,6 @@ Here's an openzeppelin example of how to implement SRC5:
 // [!include ~/listings/advanced-concepts/src5_interface_detection/src/src5.cairo:contract]
 ```
 
-
 ## Usage Example
 
 Here's how to query if a contract supports a specific interface:
