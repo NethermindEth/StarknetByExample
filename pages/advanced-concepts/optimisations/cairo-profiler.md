@@ -146,6 +146,20 @@ Storage Reads: 1
 Storage Writes: 101
 ```
 
+## Resources and Tools
+
+1. **pprof visualization**:
+
+```cairo
+go tool pprof -http=:8080 profile.pb.gz
+```
+
+2. **Flame graph generation**:
+
+```cairo
+cairo-profiler trace.bin --output-path flame.svg --format=flamegraph
+```
+
 ## Advanced Profiling Features
 
 1. **Inlined Function Analysis**
@@ -266,17 +280,3 @@ cairo-profiler optimized_trace.bin --output-path optimized.pb.gz
 - Compare step counts and resource usage
 - Verify optimization doesn't introduce new inefficiencies
 - Document performance gains
-
-## Resources and Tools
-
-1. **pprof visualization**:
-
-```cairo
-go tool pprof -http=:8080 profile.pb.gz
-```
-
-2. **Flame graph generation**:
-
-```cairo
-cairo-profiler trace.bin --output-path flame.svg --format=flamegraph
-```
