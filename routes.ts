@@ -209,6 +209,10 @@ const config: Sidebar = [
             text: "Account Contract",
             link: "/advanced-concepts/account_abstraction/account_contract",
           },
+          {
+            text: "Account with Spending Limits",
+            link: "/advanced-concepts/account_abstraction/account_spending_limits",
+          }
         ],
       },
       {
