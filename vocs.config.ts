@@ -14,7 +14,7 @@ export default defineConfig({
   editLink: {
     text: "Contribute",
     pattern:
-      "https://github.com/NethermindEth/StarknetByExample/edit/vocs/pages/:path",
+      "https://github.com/NethermindEth/StarknetByExample/blob/dev/CONTRIBUTING.md",
   },
   socials: [
     {
