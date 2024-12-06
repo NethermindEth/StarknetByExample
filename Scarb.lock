@@ -262,6 +262,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "src5_interface_detection"
+version = "0.1.0"
+
+[[package]]
 name = "staking"
 version = "0.1.0"
 dependencies = [
