@@ -223,6 +223,10 @@ const config: Sidebar = [
         text: "Signature Verification",
         link: "/advanced-concepts/signature_verification",
       },
+      {
+        text: "Zk-Snarks",
+        link: "/advanced-concepts/verify_proofs/snarkjs",
+      },
     ],
   },
   {

@@ -95,6 +95,11 @@ name = "factory"
 version = "0.1.0"
 
 [[package]]
+name = "garaga"
+version = "0.14.0"
+source = "git+https://github.com/keep-starknet-strange/garaga.git#eb9be301d0cd61df8ffa546742e092b5e67e1505"
+
+[[package]]
 name = "hash_solidity_compatible"
 version = "0.1.0"
 
@@ -312,3 +317,12 @@ version = "0.1.0"
 [[package]]
 name = "write_to_any_slot"
 version = "0.1.0"
+
+[[package]]
+name = "snarkjs"
+version = "0.1.0"
+dependencies = [
+ "garaga",
+ "openzeppelin",
+ "snforge_std",
+]
