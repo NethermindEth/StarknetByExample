@@ -1,0 +1,1 @@
+{"version":1,"contracts":[{"id":"1k55jnbhira6e","package_name":"proof_of_age","contract_name":"Groth16VerifierBN254","module_path":"proof_of_age::groth16_verifier::Groth16VerifierBN254","artifacts":{"sierra":"proof_of_age_Groth16VerifierBN254.contract_class.json","casm":"proof_of_age_Groth16VerifierBN254.compiled_contract_class.json"}}]}
