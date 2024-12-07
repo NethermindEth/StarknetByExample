@@ -7,6 +7,7 @@ pub mod ERC721 {
     use openzeppelin_introspection::interface::{ISRC5Dispatcher, ISRC5DispatcherTrait};
     use erc721::interfaces::{
         IERC721, IERC721ReceiverDispatcher, IERC721ReceiverDispatcherTrait, IERC721_RECEIVER_ID,
+        IERC721Mintable, IERC721Burnable,
     };
 
     #[storage]
@@ -133,9 +134,23 @@ pub mod ERC721 {
         }
     }
 
+    #[abi(embed_v0)]
+    pub impl ERC721Burnable of IERC721Burnable<ContractState> {
+        fn burn(ref self: ContractState, token_id: u256) {
+            self._burn(token_id)
+        }
+    }
+
+    #[abi(embed_v0)]
+    pub impl ERC721Mintable of IERC721Mintable<ContractState> {
+        fn mint(ref self: ContractState, to: ContractAddress, token_id: u256) {
+            self._mint(to, token_id)
+        }
+    }
+
     #[generate_trait]
     pub impl InternalImpl of InternalTrait {
-        fn mint(ref self: ContractState, to: ContractAddress, token_id: u256) {
+        fn _mint(ref self: ContractState, to: ContractAddress, token_id: u256) {
             assert(!to.is_zero(), Errors::INVALID_RECEIVER);
             assert(self.owners.read(token_id).is_zero(), Errors::ALREADY_MINTED);
 
@@ -145,7 +160,7 @@ pub mod ERC721 {
             self.emit(Transfer { from: Zero::zero(), to, token_id });
         }
 
-        fn burn(ref self: ContractState, token_id: u256) {
+        fn _burn(ref self: ContractState, token_id: u256) {
             let owner = self._require_owned(token_id);
 
             self.balances.write(owner, self.balances.read(owner) - 1);

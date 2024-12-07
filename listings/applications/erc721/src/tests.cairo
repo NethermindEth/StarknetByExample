@@ -1,5 +1,9 @@
 use core::num::traits::Zero;
-use erc721::interfaces::{IERC721, IERC721Dispatcher, IERC721DispatcherTrait,};
+use erc721::interfaces::{
+    IERC721, IERC721Dispatcher, IERC721DispatcherTrait, IERC721Mintable, IERC721MintableDispatcher,
+    IERC721MintableDispatcherTrait, IERC721Burnable, IERC721BurnableDispatcher,
+    IERC721BurnableDispatcherTrait
+};
 use erc721::erc721::{ERC721, ERC721::{Event, Transfer, Approval, ApprovalForAll, InternalTrait},};
 use snforge_std::{
     declare, test_address, DeclareResultTrait, ContractClassTrait, start_cheat_caller_address,
@@ -69,21 +73,12 @@ fn deploy_non_receiver() -> ContractAddress {
     contract_address
 }
 
-fn setup() -> (IERC721Dispatcher, ContractAddress) {
-    _setup_optional_mint(true)
-}
-
-fn setup_no_mint() -> (IERC721Dispatcher, ContractAddress) {
-    _setup_optional_mint(false)
-}
-
-fn _setup_optional_mint(should_mint: bool) -> (IERC721Dispatcher, ContractAddress) {
+fn setup(mint_to: ContractAddress) -> (IERC721Dispatcher, ContractAddress) {
     let contract = declare("ERC721").unwrap().contract_class();
     let (contract_address, _) = contract.deploy(@array![]).unwrap();
+    let contract = IERC721MintableDispatcher { contract_address };
+    contract.mint(mint_to, TOKEN_ID);
     let contract = IERC721Dispatcher { contract_address };
-    if should_mint {
-        contract.mint(OWNER(), TOKEN_ID);
-    }
     (contract, contract_address)
 }
 
@@ -99,33 +94,33 @@ fn setup_internals() -> ERC721::ContractState {
 
 #[test]
 fn test_balance_of() {
-    let (contract, _) = setup();
+    let (contract, _) = setup(OWNER());
     assert_eq!(contract.balance_of(OWNER()), 1);
 }
 
 #[test]
 #[should_panic(expected: ('ERC721: invalid account',))]
 fn test_balance_of_zero() {
-    let (contract, _) = setup();
+    let (contract, _) = setup(OWNER());
     contract.balance_of(ZERO());
 }
 
 #[test]
 fn test_owner_of() {
-    let (contract, _) = setup();
+    let (contract, _) = setup(OWNER());
     assert_eq!(contract.owner_of(TOKEN_ID), OWNER());
 }
 
 #[test]
 #[should_panic(expected: ('ERC721: invalid token ID',))]
 fn test_owner_of_non_minted() {
-    let (contract, _) = setup();
+    let (contract, _) = setup(OWNER());
     contract.owner_of(NONEXISTENT_TOKEN_ID);
 }
 
 #[test]
 fn test_get_approved() {
-    let (mut contract, contract_address) = setup();
+    let (mut contract, contract_address) = setup(OWNER());
     let spender = SPENDER();
     let token_id = TOKEN_ID;
 
@@ -139,7 +134,7 @@ fn test_get_approved() {
 #[test]
 #[should_panic(expected: ('ERC721: invalid token ID',))]
 fn test_get_approved_nonexistent() {
-    let (contract, _) = setup();
+    let (contract, _) = setup(OWNER());
     contract.get_approved(NONEXISTENT_TOKEN_ID);
 }
 
@@ -149,7 +144,7 @@ fn test_get_approved_nonexistent() {
 
 #[test]
 fn test_approve_from_owner() {
-    let (mut contract, contract_address) = setup();
+    let (mut contract, contract_address) = setup(OWNER());
     let mut spy = spy_events();
 
     start_cheat_caller_address(contract_address, OWNER());
@@ -173,7 +168,7 @@ fn test_approve_from_owner() {
 
 #[test]
 fn test_approve_from_operator() {
-    let (mut contract, contract_address) = setup();
+    let (mut contract, contract_address) = setup(OWNER());
 
     start_cheat_caller_address(contract_address, OWNER());
     contract.set_approval_for_all(OPERATOR(), true);
@@ -201,7 +196,7 @@ fn test_approve_from_operator() {
 #[test]
 #[should_panic(expected: ('ERC721: unauthorized caller',))]
 fn test_approve_from_unauthorized() {
-    let (mut contract, contract_address) = setup();
+    let (mut contract, contract_address) = setup(OWNER());
 
     start_cheat_caller_address(contract_address, OTHER());
     contract.approve(SPENDER(), TOKEN_ID);
@@ -210,13 +205,13 @@ fn test_approve_from_unauthorized() {
 #[test]
 #[should_panic(expected: ('ERC721: invalid token ID',))]
 fn test_approve_nonexistent() {
-    let (mut contract, _) = setup();
+    let (mut contract, _) = setup(OWNER());
     contract.approve(SPENDER(), NONEXISTENT_TOKEN_ID);
 }
 
 #[test]
 fn test_approve_auth_is_approved_for_all() {
-    let (mut contract, contract_address) = setup();
+    let (mut contract, contract_address) = setup(OWNER());
     let auth = CALLER();
 
     start_cheat_caller_address(contract_address, OWNER());
@@ -248,7 +243,7 @@ fn test_approve_auth_is_approved_for_all() {
 
 #[test]
 fn test_set_approval_for_all() {
-    let (mut contract, contract_address) = setup();
+    let (mut contract, contract_address) = setup(OWNER());
     let mut spy = spy_events();
 
     start_cheat_caller_address(contract_address, OWNER());
@@ -291,7 +286,7 @@ fn test_set_approval_for_all() {
 #[test]
 #[should_panic(expected: ('ERC721: invalid operator',))]
 fn test_set_approval_for_all_invalid_operator() {
-    let (mut contract, _) = setup();
+    let (mut contract, _) = setup(OWNER());
     contract.set_approval_for_all(ZERO(), true);
 }
 
@@ -301,40 +296,39 @@ fn test_set_approval_for_all_invalid_operator() {
 
 #[test]
 fn test_transfer_from_owner() {
-    let (mut contract, contract_address) = setup();
-    let token_id = TOKEN_ID;
     let owner = OWNER();
     let recipient = RECIPIENT();
+    let (mut contract, contract_address) = setup(owner);
 
     // set approval to check reset
     start_cheat_caller_address(contract_address, owner);
-    contract.approve(OTHER(), token_id);
+    contract.approve(OTHER(), TOKEN_ID);
 
-    assert_state_before_transfer(contract, owner, recipient, token_id);
+    assert_state_before_transfer(contract, owner, recipient, TOKEN_ID);
 
-    let approved = contract.get_approved(token_id);
+    let approved = contract.get_approved(TOKEN_ID);
     assert_eq!(approved, OTHER());
 
     let mut spy = spy_events();
 
-    contract.transfer_from(owner, recipient, token_id);
+    contract.transfer_from(owner, recipient, TOKEN_ID);
     spy
         .assert_emitted(
             @array![
                 (
                     contract_address,
-                    Event::Transfer(Transfer { from: owner, to: recipient, token_id })
+                    Event::Transfer(Transfer { from: owner, to: recipient, token_id: TOKEN_ID })
                 )
             ]
         );
 
-    assert_state_after_transfer(contract, owner, recipient, token_id);
+    assert_state_after_transfer(contract, owner, recipient, TOKEN_ID);
 }
 
 #[test]
 #[should_panic(expected: ('ERC721: invalid token ID',))]
 fn test_transfer_from_nonexistent() {
-    let (mut contract, contract_address) = setup();
+    let (mut contract, contract_address) = setup(OWNER());
     start_cheat_caller_address(contract_address, OWNER());
     contract.transfer_from(ZERO(), RECIPIENT(), NONEXISTENT_TOKEN_ID);
 }
@@ -342,41 +336,42 @@ fn test_transfer_from_nonexistent() {
 #[test]
 #[should_panic(expected: ('ERC721: invalid receiver',))]
 fn test_transfer_from_to_zero() {
-    let (mut contract, contract_address) = setup();
+    let (mut contract, contract_address) = setup(OWNER());
     start_cheat_caller_address(contract_address, OWNER());
     contract.transfer_from(OWNER(), ZERO(), TOKEN_ID);
 }
 
 #[test]
 fn test_transfer_from_to_owner() {
-    let (mut contract, contract_address) = setup();
+    let owner = OWNER();
+    let (mut contract, contract_address) = setup(owner);
     let mut spy = spy_events();
 
-    assert_eq!(contract.owner_of(TOKEN_ID), OWNER());
-    assert_eq!(contract.balance_of(OWNER()), 1);
+    assert_eq!(contract.owner_of(TOKEN_ID), owner);
+    assert_eq!(contract.balance_of(owner), 1);
 
-    start_cheat_caller_address(contract_address, OWNER());
-    contract.transfer_from(OWNER(), OWNER(), TOKEN_ID);
+    start_cheat_caller_address(contract_address, owner);
+    contract.transfer_from(owner, owner, TOKEN_ID);
     spy
         .assert_emitted(
             @array![
                 (
                     contract_address,
-                    Event::Transfer(Transfer { from: OWNER(), to: OWNER(), token_id: TOKEN_ID })
+                    Event::Transfer(Transfer { from: owner, to: owner, token_id: TOKEN_ID })
                 )
             ]
         );
 
-    assert_eq!(contract.owner_of(TOKEN_ID), OWNER());
-    assert_eq!(contract.balance_of(OWNER()), 1);
+    assert_eq!(contract.owner_of(TOKEN_ID), owner);
+    assert_eq!(contract.balance_of(owner), 1);
 }
 
 #[test]
 fn test_transfer_from_approved() {
-    let (mut contract, contract_address) = setup();
     let token_id = TOKEN_ID;
     let owner = OWNER();
     let recipient = RECIPIENT();
+    let (mut contract, contract_address) = setup(owner);
 
     assert_state_before_transfer(contract, owner, recipient, token_id);
 
@@ -402,10 +397,10 @@ fn test_transfer_from_approved() {
 
 #[test]
 fn test_transfer_from_approved_for_all() {
-    let (mut contract, contract_address) = setup();
     let token_id = TOKEN_ID;
     let owner = OWNER();
     let recipient = RECIPIENT();
+    let (mut contract, contract_address) = setup(owner);
 
     assert_state_before_transfer(contract, owner, recipient, token_id);
 
@@ -432,7 +427,7 @@ fn test_transfer_from_approved_for_all() {
 #[test]
 #[should_panic(expected: ('ERC721: unauthorized caller',))]
 fn test_transfer_from_unauthorized() {
-    let (mut contract, contract_address) = setup();
+    let (mut contract, contract_address) = setup(OWNER());
     start_cheat_caller_address(contract_address, OTHER());
     contract.transfer_from(OWNER(), RECIPIENT(), TOKEN_ID);
 }
@@ -443,80 +438,79 @@ fn test_transfer_from_unauthorized() {
 
 #[test]
 fn test_safe_transfer_from_to_account() {
-    let (mut contract, contract_address) = setup();
     let account = deploy_account();
     let mut spy = spy_events();
-    let token_id = TOKEN_ID;
     let owner = OWNER();
+    let (mut contract, contract_address) = setup(owner);
 
-    assert_state_before_transfer(contract, owner, account, token_id);
+    assert_state_before_transfer(contract, owner, account, TOKEN_ID);
 
     start_cheat_caller_address(contract_address, owner);
-    contract.safe_transfer_from(owner, account, token_id, DATA(true));
-    spy
-        .assert_emitted(
-            @array![
-                (contract_address, Event::Transfer(Transfer { from: owner, to: account, token_id }))
-            ]
-        );
-
-    assert_state_after_transfer(contract, owner, account, token_id);
-}
-
-#[test]
-fn test_safe_transfer_from_to_receiver() {
-    let (mut contract, contract_address) = setup();
-    let receiver = deploy_receiver();
-    let mut spy = spy_events();
-    let token_id = TOKEN_ID;
-    let owner = OWNER();
-
-    assert_state_before_transfer(contract, owner, receiver, token_id);
-
-    start_cheat_caller_address(contract_address, owner);
-    contract.safe_transfer_from(owner, receiver, token_id, DATA(true));
+    contract.safe_transfer_from(owner, account, TOKEN_ID, DATA(true));
     spy
         .assert_emitted(
             @array![
                 (
                     contract_address,
-                    Event::Transfer(Transfer { from: owner, to: receiver, token_id })
+                    Event::Transfer(Transfer { from: owner, to: account, token_id: TOKEN_ID })
                 )
             ]
         );
 
-    assert_state_after_transfer(contract, owner, receiver, token_id);
+    assert_state_after_transfer(contract, owner, account, TOKEN_ID);
+}
+
+#[test]
+fn test_safe_transfer_from_to_receiver() {
+    let receiver = deploy_receiver();
+    let mut spy = spy_events();
+    let owner = OWNER();
+    let (mut contract, contract_address) = setup(owner);
+
+    assert_state_before_transfer(contract, owner, receiver, TOKEN_ID);
+
+    start_cheat_caller_address(contract_address, owner);
+    contract.safe_transfer_from(owner, receiver, TOKEN_ID, DATA(true));
+    spy
+        .assert_emitted(
+            @array![
+                (
+                    contract_address,
+                    Event::Transfer(Transfer { from: owner, to: receiver, token_id: TOKEN_ID })
+                )
+            ]
+        );
+
+    assert_state_after_transfer(contract, owner, receiver, TOKEN_ID);
 }
 
 #[test]
 #[should_panic(expected: ('ERC721: safe transfer failed',))]
 fn test_safe_transfer_from_to_receiver_failure() {
-    let (mut contract, contract_address) = setup();
     let receiver = deploy_receiver();
-    let token_id = TOKEN_ID;
     let owner = OWNER();
+    let (mut contract, contract_address) = setup(owner);
 
     start_cheat_caller_address(contract_address, owner);
-    contract.safe_transfer_from(owner, receiver, token_id, DATA(false));
+    contract.safe_transfer_from(owner, receiver, TOKEN_ID, DATA(false));
 }
 
 #[test]
 #[ignore] // REASON: should_panic attribute not fit for complex panic messages.
 #[should_panic(expected: ('ENTRYPOINT_NOT_FOUND',))]
 fn test_safe_transfer_from_to_non_receiver() {
-    let (mut contract, contract_address) = setup();
     let recipient = deploy_non_receiver();
-    let token_id = TOKEN_ID;
     let owner = OWNER();
+    let (mut contract, contract_address) = setup(owner);
 
     start_cheat_caller_address(contract_address, owner);
-    contract.safe_transfer_from(owner, recipient, token_id, DATA(true));
+    contract.safe_transfer_from(owner, recipient, TOKEN_ID, DATA(true));
 }
 
 #[test]
 #[should_panic(expected: ('ERC721: invalid token ID',))]
 fn test_safe_transfer_from_nonexistent() {
-    let (mut contract, contract_address) = setup();
+    let (mut contract, contract_address) = setup(OWNER());
     start_cheat_caller_address(contract_address, OWNER());
     contract.safe_transfer_from(ZERO(), RECIPIENT(), NONEXISTENT_TOKEN_ID, DATA(true));
 }
@@ -524,74 +518,72 @@ fn test_safe_transfer_from_nonexistent() {
 #[test]
 #[should_panic(expected: ('ERC721: invalid receiver',))]
 fn test_safe_transfer_from_to_zero() {
-    let (mut contract, contract_address) = setup();
+    let (mut contract, contract_address) = setup(OWNER());
     start_cheat_caller_address(contract_address, OWNER());
     contract.safe_transfer_from(OWNER(), ZERO(), TOKEN_ID, DATA(true));
 }
 
 #[test]
 fn test_safe_transfer_from_to_owner() {
-    let (mut contract, contract_address) = setup_no_mint();
-    let token_id = TOKEN_ID;
     let owner = deploy_receiver();
+    let (mut contract, contract_address) = setup(owner);
 
-    contract.mint(owner, token_id);
-
-    assert_eq!(contract.owner_of(token_id), owner);
+    assert_eq!(contract.owner_of(TOKEN_ID), owner);
     assert_eq!(contract.balance_of(owner), 1);
 
     let mut spy = spy_events();
 
     start_cheat_caller_address(contract_address, owner);
-    contract.safe_transfer_from(owner, owner, token_id, DATA(true));
-    spy
-        .assert_emitted(
-            @array![
-                (contract_address, Event::Transfer(Transfer { from: owner, to: owner, token_id }))
-            ]
-        );
-
-    assert_eq!(contract.owner_of(token_id), owner);
-    assert_eq!(contract.balance_of(owner), 1);
-}
-
-#[test]
-fn test_safe_transfer_from_approved() {
-    let (mut contract, contract_address) = setup();
-    let receiver = deploy_receiver();
-    let token_id = TOKEN_ID;
-    let owner = OWNER();
-
-    assert_state_before_transfer(contract, owner, receiver, token_id);
-
-    start_cheat_caller_address(contract_address, owner);
-    contract.approve(OPERATOR(), token_id);
-
-    let mut spy = spy_events();
-
-    start_cheat_caller_address(contract_address, OPERATOR());
-    contract.safe_transfer_from(owner, receiver, token_id, DATA(true));
+    contract.safe_transfer_from(owner, owner, TOKEN_ID, DATA(true));
     spy
         .assert_emitted(
             @array![
                 (
                     contract_address,
-                    Event::Transfer(Transfer { from: owner, to: receiver, token_id })
+                    Event::Transfer(Transfer { from: owner, to: owner, token_id: TOKEN_ID })
                 )
             ]
         );
 
-    assert_state_after_transfer(contract, owner, receiver, token_id);
+    assert_eq!(contract.owner_of(TOKEN_ID), owner);
+    assert_eq!(contract.balance_of(owner), 1);
+}
+
+#[test]
+fn test_safe_transfer_from_approved() {
+    let receiver = deploy_receiver();
+    let owner = OWNER();
+    let (mut contract, contract_address) = setup(owner);
+
+    assert_state_before_transfer(contract, owner, receiver, TOKEN_ID);
+
+    start_cheat_caller_address(contract_address, owner);
+    contract.approve(OPERATOR(), TOKEN_ID);
+
+    let mut spy = spy_events();
+
+    start_cheat_caller_address(contract_address, OPERATOR());
+    contract.safe_transfer_from(owner, receiver, TOKEN_ID, DATA(true));
+    spy
+        .assert_emitted(
+            @array![
+                (
+                    contract_address,
+                    Event::Transfer(Transfer { from: owner, to: receiver, token_id: TOKEN_ID })
+                )
+            ]
+        );
+
+    assert_state_after_transfer(contract, owner, receiver, TOKEN_ID);
 }
 
 #[test]
 fn test_safe_transfer_from_approved_for_all() {
-    let (mut contract, contract_address) = setup();
     let receiver = deploy_receiver();
-    let token_id = TOKEN_ID;
     let owner = OWNER();
+    let (mut contract, contract_address) = setup(owner);
 
-    assert_state_before_transfer(contract, owner, receiver, token_id);
+    assert_state_before_transfer(contract, owner, receiver, TOKEN_ID);
 
     start_cheat_caller_address(contract_address, owner);
     contract.set_approval_for_all(OPERATOR(), true);
@@ -599,24 +591,24 @@ fn test_safe_transfer_from_approved_for_all() {
     let mut spy = spy_events();
 
     start_cheat_caller_address(contract_address, OPERATOR());
-    contract.safe_transfer_from(owner, receiver, token_id, DATA(true));
+    contract.safe_transfer_from(owner, receiver, TOKEN_ID, DATA(true));
     spy
         .assert_emitted(
             @array![
                 (
                     contract_address,
-                    Event::Transfer(Transfer { from: owner, to: receiver, token_id })
+                    Event::Transfer(Transfer { from: owner, to: receiver, token_id: TOKEN_ID })
                 )
             ]
         );
 
-    assert_state_after_transfer(contract, owner, receiver, token_id);
+    assert_state_after_transfer(contract, owner, receiver, TOKEN_ID);
 }
 
 #[test]
 #[should_panic(expected: ('ERC721: unauthorized caller',))]
 fn test_safe_transfer_from_unauthorized() {
-    let (mut contract, contract_address) = setup();
+    let (mut contract, contract_address) = setup(OWNER());
     start_cheat_caller_address(contract_address, OTHER());
     contract.safe_transfer_from(OWNER(), RECIPIENT(), TOKEN_ID, DATA(true));
 }
@@ -627,40 +619,43 @@ fn test_safe_transfer_from_unauthorized() {
 
 #[test]
 fn test_mint() {
-    let (mut contract, contract_address) = setup_no_mint();
     let mut spy = spy_events();
     let recipient = RECIPIENT();
-    let token_id = TOKEN_ID;
+    let (mut contract, contract_address) = setup(OWNER());
 
     assert!(contract.balance_of(recipient).is_zero());
 
-    contract.mint(recipient, TOKEN_ID);
+    {
+        let mut contract = IERC721MintableDispatcher { contract_address };
+        contract.mint(recipient, TOKEN_ID);
+    }
+
     spy
         .assert_emitted(
             @array![
                 (
                     contract_address,
-                    Event::Transfer(Transfer { from: ZERO(), to: recipient, token_id })
+                    Event::Transfer(Transfer { from: ZERO(), to: recipient, token_id: TOKEN_ID })
                 )
             ]
         );
 
-    assert_eq!(contract.owner_of(token_id), recipient);
+    assert_eq!(contract.owner_of(TOKEN_ID), recipient);
     assert_eq!(contract.balance_of(recipient), 1);
-    assert!(contract.get_approved(token_id).is_zero());
+    assert!(contract.get_approved(TOKEN_ID).is_zero());
 }
 
 #[test]
 #[should_panic(expected: ('ERC721: invalid receiver',))]
 fn test_mint_to_zero() {
-    let (mut contract, _) = setup();
-    contract.mint(ZERO(), TOKEN_ID);
+    setup(ZERO());
 }
 
 #[test]
 #[should_panic(expected: ('ERC721: token already minted',))]
 fn test_mint_already_exist() {
-    let (mut contract, _) = setup();
+    let (_, contract_address) = setup(OWNER());
+    let mut contract = IERC721MintableDispatcher { contract_address };
     contract.mint(RECIPIENT(), TOKEN_ID);
 }
 
@@ -701,7 +696,8 @@ fn test_burn() {
 #[test]
 #[should_panic(expected: ('ERC721: invalid token ID',))]
 fn test_burn_nonexistent() {
-    let (mut contract, _) = setup();
+    let (_, contract_address) = setup(OWNER());
+    let mut contract = IERC721BurnableDispatcher { contract_address };
     contract.burn(NONEXISTENT_TOKEN_ID);
 }
 

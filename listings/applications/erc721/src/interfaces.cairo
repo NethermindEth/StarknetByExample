@@ -31,17 +31,27 @@ pub trait IERC721<TContractState> {
 }
 
 #[starknet::interface]
-pub trait IERC721Metadata<TState> {
-    fn name(self: @TState) -> ByteArray;
-    fn symbol(self: @TState) -> ByteArray;
-    fn token_uri(self: @TState, token_id: u256) -> ByteArray;
+pub trait IERC721Metadata<TContractState> {
+    fn name(self: @TContractState) -> ByteArray;
+    fn symbol(self: @TContractState) -> ByteArray;
+    fn token_uri(self: @TContractState, token_id: u256) -> ByteArray;
 }
 
 #[starknet::interface]
-pub trait IERC721Enumerable<TState> {
-    fn total_supply(self: @TState) -> u256;
-    fn token_by_index(self: @TState, index: u256) -> u256;
-    fn token_of_owner_by_index(self: @TState, owner: ContractAddress, index: u256) -> u256;
+pub trait IERC721Enumerable<TContractState> {
+    fn total_supply(self: @TContractState) -> u256;
+    fn token_by_index(self: @TContractState, index: u256) -> u256;
+    fn token_of_owner_by_index(self: @TContractState, owner: ContractAddress, index: u256) -> u256;
+}
+
+#[starknet::interface]
+pub trait IERC721Mintable<TContractState> {
+    fn mint(ref self: TContractState, to: ContractAddress, token_id: u256);
+}
+
+#[starknet::interface]
+pub trait IERC721Burnable<TContractState> {
+    fn burn(ref self: TContractState, token_id: u256);
 }
 
 #[starknet::interface]
