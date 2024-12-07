@@ -31,20 +31,6 @@ pub trait IERC721<TContractState> {
 }
 
 #[starknet::interface]
-pub trait IERC721Metadata<TContractState> {
-    fn name(self: @TContractState) -> ByteArray;
-    fn symbol(self: @TContractState) -> ByteArray;
-    fn token_uri(self: @TContractState, token_id: u256) -> ByteArray;
-}
-
-#[starknet::interface]
-pub trait IERC721Enumerable<TContractState> {
-    fn total_supply(self: @TContractState) -> u256;
-    fn token_by_index(self: @TContractState, index: u256) -> u256;
-    fn token_of_owner_by_index(self: @TContractState, owner: ContractAddress, index: u256) -> u256;
-}
-
-#[starknet::interface]
 pub trait IERC721Mintable<TContractState> {
     fn mint(ref self: TContractState, to: ContractAddress, token_id: u256);
 }
@@ -63,6 +49,26 @@ pub trait IERC721Receiver<TContractState> {
         token_id: u256,
         data: Span<felt252>
     ) -> felt252;
+}
+
+// The `IERC721Metadata` and `IERC721Enumerable` interfaces are included here
+// as optional extensions to the ERC721 standard. While they provide additional
+// functionality (such as token metadata and enumeration), they are not
+// implemented in this example. Including these interfaces demonstrates how they
+// can be integrated and serves as a starting point for developers who wish to
+// extend the functionality.
+#[starknet::interface]
+pub trait IERC721Metadata<TContractState> {
+    fn name(self: @TContractState) -> ByteArray;
+    fn symbol(self: @TContractState) -> ByteArray;
+    fn token_uri(self: @TContractState, token_id: u256) -> ByteArray;
+}
+
+#[starknet::interface]
+pub trait IERC721Enumerable<TContractState> {
+    fn total_supply(self: @TContractState) -> u256;
+    fn token_by_index(self: @TContractState, index: u256) -> u256;
+    fn token_of_owner_by_index(self: @TContractState, owner: ContractAddress, index: u256) -> u256;
 }
 // [!endregion interface]
 
