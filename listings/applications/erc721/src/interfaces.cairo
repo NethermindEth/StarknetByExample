@@ -1,5 +1,8 @@
 use starknet::ContractAddress;
 
+pub const IERC721_RECEIVER_ID: felt252 =
+    0x3a0dff5f70d80458ad14ae37bb182a728e3c8cdda0402a5daa86620bdf910bc;
+
 // [!region interface]
 #[starknet::interface]
 pub trait IERC721<TContractState> {
@@ -25,8 +28,19 @@ pub trait IERC721<TContractState> {
     fn burn(ref self: TContractState, token_id: u256);
 }
 
-pub const IERC721_RECEIVER_ID: felt252 =
-    0x3a0dff5f70d80458ad14ae37bb182a728e3c8cdda0402a5daa86620bdf910bc;
+#[starknet::interface]
+pub trait IERC721Metadata<TState> {
+    fn name(self: @TState) -> ByteArray;
+    fn symbol(self: @TState) -> ByteArray;
+    fn token_uri(self: @TState, token_id: u256) -> ByteArray;
+}
+
+#[starknet::interface]
+pub trait IERC721Enumerable<TState> {
+    fn total_supply(self: @TState) -> u256;
+    fn token_by_index(self: @TState, index: u256) -> u256;
+    fn token_of_owner_by_index(self: @TState, owner: ContractAddress, index: u256) -> u256;
+}
 
 #[starknet::interface]
 pub trait IERC721Receiver<TContractState> {

@@ -6,7 +6,7 @@ pub mod ERC721 {
     use starknet::storage::{Map, StorageMapReadAccess, StorageMapWriteAccess};
     use openzeppelin_introspection::interface::{ISRC5Dispatcher, ISRC5DispatcherTrait};
     use erc721::interfaces::{
-        IERC721, IERC721ReceiverDispatcher, IERC721ReceiverDispatcherTrait, IERC721_RECEIVER_ID
+        IERC721, IERC721ReceiverDispatcher, IERC721ReceiverDispatcherTrait, IERC721_RECEIVER_ID,
     };
 
     #[storage]
