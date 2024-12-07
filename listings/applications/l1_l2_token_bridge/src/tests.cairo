@@ -8,7 +8,7 @@ use snforge_std::{
 use l1_l2_token_bridge::contract::{
     TokenBridge, ITokenBridgeDispatcher, ITokenBridgeDispatcherTrait
 };
-use l1_l2_token_bridge::mocks::MintableTokenMock;
+use l1_l2_token_bridge::mintable_token_mock::MintableTokenMock;
 
 fn CALLER() -> ContractAddress {
     contract_address_const::<'CALLER'>()
