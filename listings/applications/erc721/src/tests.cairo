@@ -497,15 +497,14 @@ fn test_safe_transfer_from_to_receiver_failure() {
 }
 
 #[test]
-#[ignore] // REASON: should_panic attribute not fit for complex panic messages.
-#[should_panic(expected: ('ENTRYPOINT_NOT_FOUND',))]
+#[should_panic(expected: ('ENTRYPOINT_NOT_FOUND', 'ENTRYPOINT_FAILED',))]
 fn test_safe_transfer_from_to_non_receiver() {
-    let recipient = deploy_non_receiver();
+    let none_receiver = deploy_non_receiver();
     let owner = OWNER();
     let (mut contract, contract_address) = setup(owner);
 
     start_cheat_caller_address(contract_address, owner);
-    contract.safe_transfer_from(owner, recipient, TOKEN_ID, DATA(true));
+    contract.safe_transfer_from(owner, none_receiver, TOKEN_ID, DATA(true));
 }
 
 #[test]
