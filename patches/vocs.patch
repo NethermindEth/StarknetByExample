@@ -1,0 +1,46 @@
+diff --git a/_lib/vite/plugins/rehype/inline-shiki.js b/_lib/vite/plugins/rehype/inline-shiki.js
+index 1e2a7426a5a80afa1bdff24388a8849b49e04f2e..a8394cddd3968f6c153eed58481a80fb5a8e1b09 100644
+--- a/_lib/vite/plugins/rehype/inline-shiki.js
++++ b/_lib/vite/plugins/rehype/inline-shiki.js
+@@ -13,16 +13,33 @@ export const rehypeInlineShiki = function (options = {}) {
+             });
+         const highlighter = await promise;
+         return visit(tree, 'element', (node, index, parent) => {
+-            if (node.tagName !== 'code')
+-                return;
++            if (node.tagName !== "code") return;
++            // ignore math
++            const classes = Array.isArray(node.properties.className)
++              ? node.properties.className
++              : [];
++            const languageMath = classes.includes("language-math");
++            const mathDisplay = classes.includes("math-display");
++            const mathInline = classes.includes("math-inline");
++            if (languageMath || mathDisplay || mathInline) {
++              return;
++            }
++
+             const match = node.children[0]?.value?.match(inlineShikiRegex);
+-            if (!match)
+-                return;
+-            const [, code, lang] = match;
+-            const hast = highlighter.codeToHast(code, { ...options, lang });
++            let hast;
++            if (match) {
++              const [, code, lang] = match;
++              hast = highlighter.codeToHast(code, { ...options, lang });
++            } else {
++              if (!node.children[0] || node.children[0].type !== "text") return;
++              const code = node.children[0].value;
++              hast = highlighter.codeToHast(code, {
++                ...options,
++                lang: "cairo",
++              });
++            }
+             const inlineCode = hast.children[0].children[0];
+-            if (!inlineCode)
+-                return;
++            if (!inlineCode) return;
+             parent?.children.splice(index ?? 0, 1, inlineCode);
+         });
+     };

@@ -1,6 +1,6 @@
 use starknet::ContractAddress;
 
-// ANCHOR: interface
+// [!region interface]
 #[starknet::interface]
 pub trait IERC721<TContractState> {
     fn balance_of(self: @TContractState, owner: ContractAddress) -> u256;
@@ -38,6 +38,6 @@ pub trait IERC721Receiver<TContractState> {
         data: Span<felt252>
     ) -> felt252;
 }
-// ANCHOR_END: interface
+// [!endregion interface]
 
 

@@ -1,0 +1,133 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Remove external link arrow */
+.vocs_ExternalLink::after {
+  width: 0;
+  margin: 0;
+}
+
+/* Remove dividers */
+.vocs_Sidebar_divider {
+  display: none;
+}
+:not(.vocs_Header) + .vocs_H2:not(:only-child),
+.vocs_Sidebar_navigation
+  > .vocs_Sidebar_group
+  > .vocs_Sidebar_section
+  + .vocs_Sidebar_section {
+  border-top: none;
+}
+.vocs_Header {
+  border-bottom: none;
+}
+.vocs_Footer_container {
+  border-bottom: none;
+}
+
+/* Remove title padding for more compact page */
+.vocs_Header {
+  padding-bottom: 0;
+}
+
+/* Ensure top section sidebar element are never active */
+section.vocs_Sidebar_level
+  > .vocs_Sidebar_sectionHeader
+  .vocs_Sidebar_sectionTitleLink[data-active="true"] {
+  color: var(--vocs-color_title) !important;
+}
+
+/* Remove footer padding, managed in footer.tsx */
+.vocs_Footer {
+  padding-bottom: 0;
+}
+
+/* Set footer text color */
+.footer_text span {
+  color: var(--vocs-color_text3);
+}
+
+/* Hide page outlines */
+.vocs_DocsLayout_gutterRight {
+  display: none;
+}
+
+/* Put searchbar on righ */
+.vocs_DesktopTopNav {
+  justify-content: end;
+  gap: var(--vocs-space_12);
+}
+
+/* Make sidebar collapsible */
+@media screen and (min-width: 1080px) {
+  .vocs_DocsLayout_gutterLeft {
+    margin-left: 0;
+    transition: margin 0.3s ease;
+    width: var(--vocs-sidebar_width);
+  }
+  .sidebar_hidden .vocs_DocsLayout_gutterLeft {
+    margin-left: calc(var(--vocs-sidebar_width) * -1);
+  }
+
+  .vocs_DocsLayout_content_withSidebar {
+    margin-left: var(--vocs-sidebar_width);
+  }
+  .sidebar_hidden .vocs_DocsLayout_content_withSidebar {
+    margin-left: 0 !important;
+  }
+  .vocs_DocsLayout_content_withSidebar {
+    margin-left: var(--vocs-sidebar_width);
+    transition: margin 300ms ease !important;
+    max-width: unset;
+  }
+
+  .vocs_DesktopTopNav_logo a {
+    margin-top: 2px !important;
+  }
+
+  .vocs_Sidebar_logo {
+    padding-top: 0px !important;
+  }
+
+  .sidebar_toggle {
+    position: absolute;
+    top: 0;
+    right: calc(var(--vocs-topNav_height) * -1);
+    height: var(--vocs-topNav_height);
+    width: var(--vocs-topNav_height);
+  }
+
+  .sidebar_toggle button {
+    padding: var(--vocs-space_8);
+  }
+}
+
+/* END sidebar */
+
+.vocs_Content,
+.vocs_Footer {
+  margin: auto;
+  font-size: 1rem;
+}
+
+/* Math styling */
+.katex {
+  font-size: var(--vocs-fontSize_18);
+}
+.katex math[display="block"] {
+  font-size: var(--vocs-fontSize_20);
+  padding-bottom: 0.875em;
+}
+
+.vocs_DesktopTopNav_logoWrapper {
+  left: 22px;
+  justify-content: start;
+}
+
+/* Force show theme switcher */
+@media screen and (max-width: 1280px) {
+  .vocs_DesktopTopNav_hideCompact {
+    display: block;
+  }
+}

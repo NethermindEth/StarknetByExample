@@ -1,4 +1,4 @@
-// ANCHOR: contract
+// [!region contract]
 #[starknet::interface]
 pub trait IExplicitInterfaceContract<TContractState> {
     fn get_value(self: @TContractState) -> u32;
@@ -25,7 +25,7 @@ pub mod ExplicitInterfaceContract {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod tests {

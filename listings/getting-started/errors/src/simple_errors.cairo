@@ -4,7 +4,7 @@ pub trait IErrorsExample<TContractState> {
     fn test_panic(self: @TContractState, i: u256);
 }
 
-// ANCHOR: contract
+// [!region contract]
 #[starknet::contract]
 pub mod ErrorsExample {
     #[storage]
@@ -26,7 +26,7 @@ pub mod ErrorsExample {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod test {

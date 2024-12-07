@@ -32,6 +32,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "commit_reveal"
+version = "0.1.0"
+
+[[package]]
 name = "components"
 version = "0.1.0"
 

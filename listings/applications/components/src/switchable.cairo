@@ -1,11 +1,11 @@
-// ANCHOR: component
+// [!region component]
 #[starknet::interface]
-// ANCHOR: interface
+// [!region interface]
 pub trait ISwitchable<TContractState> {
     fn is_on(self: @TContractState) -> bool;
     fn switch(ref self: TContractState);
 }
-// ANCHOR_END: interface
+// [!endregion interface]
 
 #[starknet::component]
 pub mod switchable_component {
@@ -48,9 +48,9 @@ pub mod switchable_component {
         }
     }
 }
-// ANCHOR_END: component
+// [!endregion component]
 
-// ANCHOR: contract
+// [!region contract]
 #[starknet::contract]
 pub mod SwitchContract {
     use super::switchable_component;
@@ -81,9 +81,9 @@ pub mod SwitchContract {
         self.switch._off();
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
-// ANCHOR: tests
+// [!region tests]
 #[cfg(test)]
 mod test {
     use super::SwitchContract; // Used as a mock contract
@@ -128,6 +128,6 @@ mod test {
         assert_eq!(switchable.is_on(), true);
     }
 }
-// ANCHOR_END: tests
+// [!endregion tests]
 
 

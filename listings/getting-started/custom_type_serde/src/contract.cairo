@@ -4,7 +4,7 @@ pub trait ISerdeCustomType<TContractState> {
     fn person_output(self: @TContractState) -> Person;
 }
 
-// ANCHOR: contract
+// [!region contract]
 // Deriving the `Serde` trait allows us to use
 // the `Person` type as an entrypoint parameter and as a return value
 #[derive(Drop, Serde)]
@@ -29,7 +29,7 @@ pub mod SerdeCustomType {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod tests {
