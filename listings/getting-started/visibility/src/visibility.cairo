@@ -4,7 +4,7 @@ pub trait IExampleContract<TContractState> {
     fn get(self: @TContractState) -> u32;
 }
 
-// ANCHOR: contract
+// [!region contract]
 #[starknet::contract]
 pub mod ExampleContract {
     use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
@@ -52,7 +52,7 @@ pub mod ExampleContract {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod test {

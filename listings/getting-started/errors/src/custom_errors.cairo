@@ -4,7 +4,7 @@ pub trait ICustomErrorsExample<TContractState> {
     fn test_panic(self: @TContractState, i: u256);
 }
 
-// ANCHOR: contract
+// [!region contract]
 pub mod Errors {
     pub const NOT_POSITIVE: felt252 = 'must be greater than 0';
     pub const NOT_NULL: felt252 = 'must not be null';
@@ -30,7 +30,7 @@ pub mod CustomErrorsExample {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod test {

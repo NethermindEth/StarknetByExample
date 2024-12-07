@@ -1,4 +1,4 @@
-// ANCHOR: contract
+// [!region contract]
 #[starknet::contract]
 pub mod Contract {
     #[storage]
@@ -8,7 +8,7 @@ pub mod Contract {
         pub c: u256
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod test {

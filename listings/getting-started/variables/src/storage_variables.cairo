@@ -4,7 +4,7 @@ pub trait IStorageVariableExample<TContractState> {
     fn get(self: @TContractState) -> u32;
 }
 
-// ANCHOR: contract
+// [!region contract]
 #[starknet::contract]
 pub mod StorageVariablesExample {
     // You need to import these storage functions to read and write to storage variables
@@ -32,7 +32,7 @@ pub mod StorageVariablesExample {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod test {

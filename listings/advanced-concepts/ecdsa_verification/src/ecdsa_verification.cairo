@@ -1,4 +1,4 @@
-// ANCHOR: contract
+// [!region contract]
 use core::starknet::eth_address::EthAddress;
 use starknet::secp256_trait::{Signature};
 
@@ -89,7 +89,7 @@ mod verifySignature {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod tests {

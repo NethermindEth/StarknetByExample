@@ -1,4 +1,4 @@
-// ANCHOR: contract
+// [!region contract]
 use starknet::ContractAddress;
 
 // In order to make contract calls within our Vault,
@@ -125,7 +125,7 @@ pub mod SimpleVault {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod tests {

@@ -1,4 +1,4 @@
-// ANCHOR: component
+// [!region component]
 use starknet::ContractAddress;
 
 #[starknet::interface]
@@ -115,7 +115,7 @@ pub mod pledgeable_component {
         }
     }
 }
-// ANCHOR_END: component
+// [!endregion component]
 
 #[cfg(test)]
 mod tests {

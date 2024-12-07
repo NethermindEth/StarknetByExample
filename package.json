@@ -1,0 +1,38 @@
+{
+  "name": "starknet-by-example",
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vocs dev",
+    "build": "vocs build",
+    "preview": "vocs preview"
+  },
+  "dependencies": {
+    "@types/react": "latest",
+    "react": "latest",
+    "react-dom": "^18.3.1",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0",
+    "typescript": "latest",
+    "vocs": "1.0.0-alpha.62"
+  },
+  "devDependencies": {
+    "@types/react-dom": "^18.3.1",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.14"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "vocs": "patches/vocs.patch"
+    },
+    "overrides": {
+      "vocs>shiki": "^1.23.0",
+      "vocs>@shikijs/core": "^1.23.0",
+      "vocs>@shikijs/types": "^1.23.0",
+      "vocs>@shikijs/rehype": "^1.23.0",
+      "vocs>@shikijs/twoslash": "^1.23.0",
+      "vocs>@shikijs/transformers": "^1.23.0"
+    }
+  }
+}

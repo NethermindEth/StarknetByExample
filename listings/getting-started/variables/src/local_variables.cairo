@@ -3,7 +3,7 @@ pub trait ILocalVariablesExample<TContractState> {
     fn do_something(self: @TContractState, value: u32) -> u32;
 }
 
-// ANCHOR: contract
+// [!region contract]
 #[starknet::contract]
 pub mod LocalVariablesExample {
     #[storage]
@@ -26,7 +26,7 @@ pub mod LocalVariablesExample {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod test {

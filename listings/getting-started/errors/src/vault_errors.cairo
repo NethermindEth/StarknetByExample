@@ -4,7 +4,7 @@ pub trait IVaultErrorsExample<TContractState> {
     fn withdraw(ref self: TContractState, amount: u256);
 }
 
-// ANCHOR: contract
+// [!region contract]
 pub mod VaultErrors {
     pub const INSUFFICIENT_BALANCE: felt252 = 'insufficient_balance';
     // you can define more errors here
@@ -44,7 +44,7 @@ pub mod VaultErrorsExample {
         }
     }
 }
-// ANCHOR_END: contract
+// [!endregion contract]
 
 #[cfg(test)]
 mod test {
