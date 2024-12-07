@@ -78,7 +78,7 @@ Be sure to check for typos with `typos`:
 
 ```bash
 cargo install typos-cli
-typos src/
+typos pages/
 ```
 
 ## Adding a new Cairo program
