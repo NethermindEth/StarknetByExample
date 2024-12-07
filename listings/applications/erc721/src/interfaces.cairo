@@ -8,6 +8,10 @@ pub const IERC721_RECEIVER_ID: felt252 =
 pub trait IERC721<TContractState> {
     fn balance_of(self: @TContractState, owner: ContractAddress) -> u256;
     fn owner_of(self: @TContractState, token_id: u256) -> ContractAddress;
+    // NOTE: The function `safe_transfer_from(address _from, address _to, uint256 _tokenId)` is not
+    // included because the same behavior can be achieved by calling `safe_transfer_from(from, to,
+    // tokenId, data)` with an empty `data` parameter.
+    // This approach reduces redundancy in the contract's interface.
     fn safe_transfer_from(
         ref self: TContractState,
         from: ContractAddress,
