@@ -131,7 +131,10 @@ pub mod ERC721 {
         ) -> bool {
             self.operator_approvals.read((owner, operator))
         }
+    }
 
+    #[generate_trait]
+    pub impl InternalImpl of InternalTrait {
         fn mint(ref self: ContractState, to: ContractAddress, token_id: u256) {
             assert(!to.is_zero(), Errors::INVALID_RECEIVER);
             assert(self.owners.read(token_id).is_zero(), Errors::ALREADY_MINTED);
@@ -152,10 +155,7 @@ pub mod ERC721 {
 
             self.emit(Transfer { from: owner, to: Zero::zero(), token_id });
         }
-    }
 
-    #[generate_trait]
-    pub impl InternalImpl of InternalTrait {
         fn _require_owned(self: @ContractState, token_id: u256) -> ContractAddress {
             let owner = self.owners.read(token_id);
             assert(!owner.is_zero(), Errors::INVALID_TOKEN_ID);
