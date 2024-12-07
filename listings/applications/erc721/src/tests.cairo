@@ -1,8 +1,8 @@
 use core::num::traits::Zero;
 use erc721::interfaces::{
-    IERC721, IERC721Dispatcher, IERC721DispatcherTrait, IERC721Mintable, IERC721MintableDispatcher,
-    IERC721MintableDispatcherTrait, IERC721Burnable, IERC721BurnableDispatcher,
-    IERC721BurnableDispatcherTrait
+    IERC721, IERC721Dispatcher, IERC721DispatcherTrait, IERC721SafeDispatcher,
+    IERC721SafeDispatcherTrait, IERC721Mintable, IERC721MintableDispatcher,
+    IERC721MintableDispatcherTrait, IERC721BurnableDispatcher, IERC721BurnableDispatcherTrait
 };
 use erc721::erc721::{ERC721, ERC721::{Event, Transfer, Approval, ApprovalForAll, InternalTrait},};
 use snforge_std::{
@@ -10,7 +10,6 @@ use snforge_std::{
     spy_events, EventSpyAssertionsTrait,
 };
 use starknet::{ContractAddress, contract_address_const,};
-use starknet::storage::StorageMapReadAccess;
 
 pub const SUCCESS: felt252 = 'SUCCESS';
 pub const FAILURE: felt252 = 'FAILURE';
@@ -76,8 +75,10 @@ fn deploy_non_receiver() -> ContractAddress {
 fn setup(mint_to: ContractAddress) -> (IERC721Dispatcher, ContractAddress) {
     let contract = declare("ERC721").unwrap().contract_class();
     let (contract_address, _) = contract.deploy(@array![]).unwrap();
-    let contract = IERC721MintableDispatcher { contract_address };
-    contract.mint(mint_to, TOKEN_ID);
+    if mint_to != ZERO() {
+        let contract = IERC721MintableDispatcher { contract_address };
+        contract.mint(mint_to, TOKEN_ID);
+    }
     let contract = IERC721Dispatcher { contract_address };
     (contract, contract_address)
 }
@@ -621,7 +622,7 @@ fn test_safe_transfer_from_unauthorized() {
 fn test_mint() {
     let mut spy = spy_events();
     let recipient = RECIPIENT();
-    let (mut contract, contract_address) = setup(OWNER());
+    let (mut contract, contract_address) = setup(ZERO());
 
     assert!(contract.balance_of(recipient).is_zero());
 
@@ -648,7 +649,9 @@ fn test_mint() {
 #[test]
 #[should_panic(expected: ('ERC721: invalid receiver',))]
 fn test_mint_to_zero() {
-    setup(ZERO());
+    let (_, contract_address) = setup(ZERO());
+    let mut contract = IERC721MintableDispatcher { contract_address };
+    contract.mint(ZERO(), TOKEN_ID);
 }
 
 #[test]
@@ -664,20 +667,25 @@ fn test_mint_already_exist() {
 //
 
 #[test]
+#[feature("safe_dispatcher")]
 fn test_burn() {
-    let mut state = setup_internals();
-    let contract_address = test_address();
+    let (mut contract, contract_address) = setup(OWNER());
 
     start_cheat_caller_address(contract_address, OWNER());
-    state.approve(OTHER(), TOKEN_ID);
+    // we test that approvals get removed when burning
+    contract.approve(OTHER(), TOKEN_ID);
 
-    assert_eq!(state.owner_of(TOKEN_ID), OWNER());
-    assert_eq!(state.balance_of(OWNER()), 1);
-    assert_eq!(state.get_approved(TOKEN_ID), OTHER());
+    assert_eq!(contract.owner_of(TOKEN_ID), OWNER());
+    assert_eq!(contract.balance_of(OWNER()), 1);
+    assert_eq!(contract.get_approved(TOKEN_ID), OTHER());
 
     let mut spy = spy_events();
 
-    state.burn(TOKEN_ID);
+    {
+        let mut contract = IERC721BurnableDispatcher { contract_address };
+        contract.burn(TOKEN_ID);
+    }
+
     spy
         .assert_emitted(
             @array![
@@ -688,9 +696,21 @@ fn test_burn() {
             ]
         );
 
-    assert_eq!(state.owners.read(TOKEN_ID), ZERO());
-    assert_eq!(state.balance_of(OWNER()), 0);
-    assert_eq!(state.approvals.read(TOKEN_ID), ZERO());
+    assert_eq!(contract.balance_of(OWNER()), 0);
+
+    let contract = IERC721SafeDispatcher { contract_address };
+    match contract.owner_of(TOKEN_ID) {
+        Result::Ok(_) => panic!("`owner_of` did not panic"),
+        Result::Err(panic_data) => {
+            assert(*panic_data.at(0) == 'ERC721: invalid token ID', *panic_data.at(0));
+        }
+    };
+    match contract.get_approved(TOKEN_ID) {
+        Result::Ok(_) => panic!("`get_approved` did not panic"),
+        Result::Err(panic_data) => {
+            assert(*panic_data.at(0) == 'ERC721: invalid token ID', *panic_data.at(0));
+        }
+    };
 }
 
 #[test]
