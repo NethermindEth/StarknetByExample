@@ -7,7 +7,6 @@ const config: Sidebar = [
   },
   {
     text: "Getting Started",
-    link: "/getting-started/basics/storage",
     items: [
       // {
       //   text: "Local environment setup"
@@ -98,7 +97,6 @@ const config: Sidebar = [
   },
   {
     text: "Components",
-    link: "/components/how_to",
     items: [
       {
         text: "Components How-To",
@@ -120,7 +118,6 @@ const config: Sidebar = [
   },
   {
     text: "Applications",
-    link: "/applications/upgradeable_contract",
     items: [
       {
         text: " Upgradeable Contract",
@@ -174,7 +171,6 @@ const config: Sidebar = [
   },
   {
     text: "Advanced concepts",
-    link: "/advanced-concepts/write_to_any_slot",
     items: [
       {
         text: "Writing to any storage slot",
