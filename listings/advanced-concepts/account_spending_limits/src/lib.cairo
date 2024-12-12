@@ -1,2 +1,4 @@
-mod account;
-mod erc20;
+pub mod account;
+
+#[cfg(test)]
+mod tests;

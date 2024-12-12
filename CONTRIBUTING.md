@@ -100,7 +100,7 @@ starknet.workspace = true
 # openzeppelin.workspace = true
 
 # If you want to use another Starknet By Example's listing, you can add it as a dependency like this:
-# erc20 = { path = "../../getting-started/erc20" }
+# erc20 = { path = "../../applications/erc20" }
 
 [dev-dependencies]
 cairo_test.workspace = true
@@ -128,7 +128,7 @@ starknet.workspace = true
 # openzeppelin.workspace = true
 
 # If you want to use another Starknet By Example's listing, you can add it as a dependency like this:
-# erc20 = { path = "../../getting-started/erc20" }
+# erc20 = { path = "../../applications/erc20" }
 
 [dev-dependencies]
 assert_macros.workspace = true

@@ -2,6 +2,11 @@ use starknet::account::Call;
 use starknet::ContractAddress;
 
 #[starknet::interface]
+trait ISRC5<TContractState> {
+    fn supports_interface(self: @TContractState, interface_id: felt252) -> bool;
+}
+
+#[starknet::interface]
 trait ISRC6<TContractState> {
     fn __execute__(ref self: TContractState, calls: Array<Call>) -> Array<Span<felt252>>;
     fn __validate__(self: @TContractState, calls: Array<Call>) -> felt252;
@@ -11,14 +16,9 @@ trait ISRC6<TContractState> {
 }
 
 #[starknet::interface]
-trait ISRC5<TContractState> {
-    fn supports_interface(self: @TContractState, interface_id: felt252) -> bool;
-}
-
-#[starknet::interface]
 trait IDeployableAccount<TContractState> {
     fn __validate_deploy__(
-        self: @TContractState, class_hash: felt252, salt: felt252, public_key: felt252
+        self: @TContractState, class_hash: felt252, salt: felt252, public_key: felt252,
     ) -> felt252;
 }
 
@@ -27,94 +27,89 @@ trait IDeclarerAccount<TContractState> {
     fn __validate_declare__(self: @TContractState, class_hash: felt252) -> felt252;
 }
 
+// [!region interface]
 #[starknet::interface]
-trait ISpendingLimitsAccount<TContractState> {
+pub trait ISpendingLimitsAccount<TContractState> {
     fn public_key(self: @TContractState) -> felt252;
-    fn get_time_limit(self: @TContractState) -> u64;
-    fn set_spending_limit(ref self: TContractState, token_address: ContractAddress, _limit: u256);
-    fn get_spending_limit_timestamp(self: @TContractState, token_address: ContractAddress) -> u64;
-    fn get_current_spending_limit(self: @TContractState, token_address: ContractAddress) -> u256;
-    fn get_spending_limit(self: @TContractState, token_address: ContractAddress) -> u256;
+    fn set_spending_limit(ref self: TContractState, token: ContractAddress, limit: SpendingLimit);
+    fn get_spending_limit(self: @TContractState, token: ContractAddress) -> Option<SpendingLimit>;
+    fn get_available_spending_amount(self: @TContractState, token: ContractAddress) -> u256;
 }
+// [!endregion interface]
 
+const SRC5_ID: felt252 = 0x3f918d17e5ee77373b56385708f855659a07f75997f365cf87748628532a055;
+const SRC6_ID: felt252 =
+    1270010605630597976495846281167968799381097569185364931397797212080166453709;
+
+// [!region spending_limit]
 #[derive(Copy, Drop, Serde, starknet::Store)]
-struct SpendingLimit {
-    exists: bool,
-    timestamp: u64,
-    limit: u256,
+pub struct SpendingLimit {
+    pub timestamp: u64,
+    pub max_amount: u256,
 }
+// [!endregion spending_limit]
+
+// [!region selectors]
+mod Selectors {
+    pub const TRANSFER: felt252 = 0x83afd3f4caedc6eebf44246fe54e38c95e3179a5ec9ea81740eca5b482d12e;
+    pub const APPROVE: felt252 = 0x0219209e083275171774dab1df80982e9df2096516f06319c5c6d71ae0a8480c;
+}
+// [!endregion selectors]
 
 #[starknet::contract(account)]
-mod Account {
-    use super::{
-        ISRC6, ISRC5, IDeployableAccount, IDeclarerAccount, ISpendingLimitsAccount, SpendingLimit
-    };
-    use starknet::{
-        ContractAddress, get_caller_address, get_tx_info, VALIDATED, get_block_timestamp,
-        get_contract_address, account::Call, syscalls::call_contract_syscall
-    };
-    use starknet::storage::{
-        Map, StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess,
-        StoragePointerWriteAccess
-    };
+pub mod SpendingLimitsAccount {
+    use super::{SpendingLimit, SRC5_ID, SRC6_ID, Selectors};
+    use super::{ISRC5, ISRC6, IDeployableAccount, IDeclarerAccount, ISpendingLimitsAccount};
+    use openzeppelin_token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+    use starknet::{ContractAddress, get_caller_address, get_contract_address};
+    use starknet::{get_tx_info, VALIDATED, get_block_timestamp,};
+    use starknet::{account::Call, syscalls::call_contract_syscall, SyscallResultTrait};
+    use starknet::storage::{Map, StorageMapReadAccess, StorageMapWriteAccess};
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
     use core::num::traits::Zero;
 
+    // [!region storage]
     #[storage]
     struct Storage {
         public_key: felt252,
-        spending_limit: Map<ContractAddress, SpendingLimit>,
-        current_spending_limit: Map<ContractAddress, u256>,
-        time_limit: u64,
+        spending_limit: Map<ContractAddress, Option<SpendingLimit>>,
+        spent_amount: Map<ContractAddress, u256>,
     }
-    const SRC6_TRAIT_ID: felt252 =
-        1270010605630597976495846281167968799381097569185364931397797212080166453709;
-
-    pub mod Selectors {
-        pub const TRANSFER: felt252 =
-            0x83afd3f4caedc6eebf44246fe54e38c95e3179a5ec9ea81740eca5b482d12e;
-        pub const APPROVE: felt252 =
-            0x0219209e083275171774dab1df80982e9df2096516f06319c5c6d71ae0a8480c;
-    }
+    // [!endregion storage]
 
     pub mod Errors {
+        pub const UNAUTHORIZED: felt252 = 'Account: Unauthorized';
         pub const INVALID_CALLER: felt252 = 'Account: Invalid caller';
         pub const INVALID_SIGNATURE: felt252 = 'Account: Invalid tx signature';
         pub const INVALID_TX_VERSION: felt252 = 'Account: Invalid tx version';
-        pub const UNAUTHORIZED: felt252 = 'Account: Unauthorized';
+        pub const ACTIVE_LIMIT_EXISTS: felt252 = 'Account: Active limit exists';
+        pub const INVALID_LIMIT_TIMESTAMP: felt252 = 'Account: Invalid timestamp';
+        pub const LIMIT_EXCEEDED: felt252 = 'Account: Limit exceeded';
     }
 
     // time_limit is in seconds
     #[constructor]
-    fn constructor(ref self: ContractState, public_key: felt252, time_limit: u64) {
+    fn constructor(ref self: ContractState, public_key: felt252) {
         self.public_key.write(public_key);
-        self.time_limit.write(time_limit);
     }
 
     //
     // External
     //
 
+    // [!region execute_validate]
     #[abi(embed_v0)]
     impl SRC6 of ISRC6<ContractState> {
         fn __execute__(ref self: ContractState, mut calls: Array<Call>) -> Array<Span<felt252>> {
-            self.only_protocol();
+            self._only_protocol();
 
+            // Execute the call
             let mut res = array![];
             for call in calls {
+                self._assert_valid_call(@call);
+                self._execute_spending_call(@call);
+
                 let Call { to, selector, calldata } = call;
-
-                let limit_exists: bool = self.spending_limit.read(to).exists;
-                if (self.is_spending_tx(selector) && limit_exists) {
-                    let low: u128 = (*calldata[1]).try_into().unwrap();
-                    let high: u128 = (*calldata[2]).try_into().unwrap();
-                    let value: u256 = u256 { low, high };
-
-                    let mut current_limit: u256 = self.get_spending_limit(to);
-                    current_limit -= value;
-                    self.current_spending_limit.write(to, current_limit);
-                    self.update_timestamp(to);
-                }
-
                 let syscall_res = call_contract_syscall(to, selector, calldata).unwrap_syscall();
                 res.append(syscall_res);
             };
@@ -122,15 +117,23 @@ mod Account {
         }
 
         fn __validate__(self: @ContractState, calls: Array<Call>) -> felt252 {
-            self.only_protocol();
-            self.validate_transaction()
+            self._only_protocol();
+
+            // Check the signature
+            self._validate_transaction();
+
+            // Check the calls
+            for call in calls {
+                self._assert_valid_call(@call);
+            };
+            VALIDATED
         }
+        // [!endregion execute_validate]
 
         fn is_valid_signature(
             self: @ContractState, hash: felt252, signature: Array<felt252>
         ) -> felt252 {
-            let is_valid = self._is_valid_signature(hash, signature.span());
-            if is_valid {
+            if self._is_valid_signature(hash, signature.span()) {
                 VALIDATED
             } else {
                 0
@@ -141,99 +144,144 @@ mod Account {
     #[abi(embed_v0)]
     impl SRC5 of ISRC5<ContractState> {
         fn supports_interface(self: @ContractState, interface_id: felt252) -> bool {
-            interface_id == SRC6_TRAIT_ID
+            interface_id == SRC5_ID || interface_id == SRC6_ID
         }
     }
 
     #[abi(embed_v0)]
     impl DeployableAccount of IDeployableAccount<ContractState> {
         fn __validate_deploy__(
-            self: @ContractState, class_hash: felt252, salt: felt252, public_key: felt252
+            self: @ContractState, class_hash: felt252, salt: felt252, public_key: felt252,
         ) -> felt252 {
-            self.only_protocol();
-            self.validate_transaction()
+            self._only_protocol();
+            self._validate_transaction()
+            // Call the constructor
         }
     }
 
     #[abi(embed_v0)]
     impl DeclarerAccount of IDeclarerAccount<ContractState> {
         fn __validate_declare__(self: @ContractState, class_hash: felt252) -> felt252 {
-            self.only_protocol();
-            self.validate_transaction()
+            self._only_protocol();
+            self._validate_transaction()
         }
     }
 
+    // [!region accountimpl]
     #[abi(embed_v0)]
     impl SpendingLimitsAccount of ISpendingLimitsAccount<ContractState> {
         fn public_key(self: @ContractState) -> felt252 {
             self.public_key.read()
         }
 
-        fn get_time_limit(self: @ContractState) -> u64 {
-            self.time_limit.read()
-        }
-
         fn set_spending_limit(
-            ref self: ContractState, token_address: ContractAddress, _limit: u256
+            ref self: ContractState, token: ContractAddress, limit: SpendingLimit
         ) {
-            assert(get_caller_address() == get_contract_address(), 'Invalid caller');
-            let timemstamp = get_block_timestamp();
-            let new_limit: SpendingLimit = SpendingLimit {
-                exists: true, limit: _limit, timestamp: timemstamp
-            };
-            self.spending_limit.write(token_address, new_limit);
-            self.current_spending_limit.write(token_address, _limit);
+            assert(get_caller_address() == get_contract_address(), Errors::INVALID_CALLER);
+            // Check that there's no active limit
+            assert(!self._is_active_limit(token), Errors::ACTIVE_LIMIT_EXISTS);
+            // Check that the limit is in the future
+            assert(limit.timestamp > get_block_timestamp(), Errors::INVALID_LIMIT_TIMESTAMP);
+
+            // Set the limit
+            self.spending_limit.write(token, Option::Some(limit));
+            // Reset the spent amount
+            self.spent_amount.write(token, 0);
         }
 
-        fn get_current_spending_limit(
-            self: @ContractState, token_address: ContractAddress
-        ) -> u256 {
-            self.current_spending_limit.read(token_address)
+        fn get_spending_limit(
+            self: @ContractState, token: ContractAddress
+        ) -> Option<SpendingLimit> {
+            if let Option::Some(limit) = self.spending_limit.read(token) {
+                if (self._is_active_limit(token)) {
+                    return Option::Some(limit);
+                }
+            }
+            Option::None
         }
 
-        fn get_spending_limit_timestamp(
-            self: @ContractState, token_address: ContractAddress
-        ) -> u64 {
-            self.spending_limit.read(token_address).timestamp
-        }
-
-        fn get_spending_limit(self: @ContractState, token_address: ContractAddress) -> u256 {
-            let spending_limit = self.spending_limit.read(token_address);
-            let time_limit: u64 = self.time_limit.read();
-            let current_timestamp: u64 = get_block_timestamp();
-
-            if ((spending_limit.timestamp + time_limit) >= current_timestamp) {
-                self.current_spending_limit.read(token_address)
-            } else {
-                spending_limit.limit
+        fn get_available_spending_amount(self: @ContractState, token: ContractAddress) -> u256 {
+            match self.get_spending_limit(token) {
+                Option::Some(limit) => limit.max_amount - self.spent_amount.read(token),
+                Option::None => IERC20Dispatcher { contract_address: token }
+                    .balance_of(get_contract_address()),
             }
         }
     }
+    // [!endregion accountimpl]
 
+    //
+    // Internal
+    //
+
+    // [!region private]
     #[generate_trait]
-    impl PrivateImpl of PrivateTrait {
-        fn only_protocol(self: @ContractState) {
-            let sender = get_caller_address();
-            assert(sender.is_zero(), Errors::INVALID_CALLER);
+    pub impl PrivateImpl of PrivateTrait {
+        fn _is_spending_tx(self: @ContractState, selector: felt252) -> bool {
+            selector == Selectors::TRANSFER || selector == Selectors::APPROVE
         }
 
-        // If the current block timestamp is past the time_limit,
-        // The max new limit set by the account owner is written to the current spending limit.
-        // And the current timestamp is updated.
-        fn update_timestamp(ref self: ContractState, token_address: ContractAddress) {
-            let mut spending_limit = self.spending_limit.read(token_address);
-            let current_timestamp: u64 = get_block_timestamp();
-            let time_limit: u64 = self.time_limit.read();
-            let timestamp: u64 = spending_limit.timestamp;
-
-            if ((timestamp + time_limit) < current_timestamp) {
-                spending_limit.timestamp = current_timestamp;
-                self.spending_limit.write(token_address, spending_limit);
+        fn _is_active_limit(self: @ContractState, token: ContractAddress) -> bool {
+            match self.spending_limit.read(token) {
+                Option::Some(limit) => limit.timestamp > get_block_timestamp(),
+                Option::None => false,
             }
         }
 
-        fn is_spending_tx(ref self: ContractState, selector: felt252) -> bool {
-            selector == Selectors::TRANSFER || selector == Selectors::APPROVE
+        fn _get_total_spent(
+            self: @ContractState, to: ContractAddress, calldata: Span<felt252>
+        ) -> u256 {
+            let low: u128 = (*calldata[1]).try_into().unwrap();
+            let high: u128 = (*calldata[2]).try_into().unwrap();
+            let spend_amount: u256 = u256 { low, high };
+            let spent_amount = self.spent_amount.read(to);
+            // total spent
+            spent_amount + spend_amount
+        }
+
+        fn _assert_valid_call(self: @ContractState, call: @Call) {
+            let Call { to, selector, calldata } = *call;
+
+            if let Option::Some(limit) = self.spending_limit.read(to) {
+                // Is the limit active?
+                if (!self._is_active_limit(to)) {
+                    return;
+                }
+                // Is it a spending call?
+                if (!self._is_spending_tx(selector)) {
+                    return;
+                }
+                // Is the spending amount within the limit?
+                assert(
+                    self._get_total_spent(to, calldata) <= limit.max_amount, Errors::LIMIT_EXCEEDED
+                );
+                // Ok
+            }
+        }
+
+        fn _execute_spending_call(ref self: ContractState, call: @Call) {
+            let Call { to, selector, calldata } = *call;
+
+            if let Option::Some(limit) = self.spending_limit.read(to) {
+                // Is the limit active?
+                if (!self._is_active_limit(to)) {
+                    return;
+                }
+                // Is it a spending call?
+                if (!self._is_spending_tx(selector)) {
+                    return;
+                }
+                // Is the spending amount within the limit?
+                let total_spent = self._get_total_spent(to, calldata);
+                assert(total_spent <= limit.max_amount, Errors::LIMIT_EXCEEDED);
+
+                // Mutate state
+                self.spent_amount.write(to, total_spent);
+            }
+        }
+
+        fn _only_protocol(self: @ContractState) {
+            assert(get_caller_address().is_zero(), Errors::INVALID_CALLER);
         }
 
         fn _is_valid_signature(
@@ -248,7 +296,7 @@ mod Account {
             }
         }
 
-        fn validate_transaction(self: @ContractState) -> felt252 {
+        fn _validate_transaction(self: @ContractState) -> felt252 {
             let tx_info = get_tx_info().unbox();
             let tx_hash = tx_info.transaction_hash;
             let signature = tx_info.signature;
@@ -257,4 +305,5 @@ mod Account {
             VALIDATED
         }
     }
+    // [!endregion private]
 }

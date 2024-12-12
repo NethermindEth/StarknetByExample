@@ -2,7 +2,7 @@
 version = 1
 
 [[package]]
-name = "aa_tutorial"
+name = "aa_spending_limits"
 version = "0.1.0"
 dependencies = [
  "openzeppelin",
