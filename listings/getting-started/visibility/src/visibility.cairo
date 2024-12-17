@@ -1,10 +1,10 @@
+// [!region contract]
 #[starknet::interface]
 pub trait IExampleContract<TContractState> {
     fn set(ref self: TContractState, value: u32);
     fn get(self: @TContractState) -> u32;
 }
 
-// [!region contract]
 #[starknet::contract]
 pub mod ExampleContract {
     use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
