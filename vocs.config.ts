@@ -8,6 +8,15 @@ import rehypeKatex from "rehype-katex";
 // This require custom highlighter, and patch of vocs to remove initial shiki instance
 
 export default defineConfig({
+  iconUrl: "/svg/Icon_Light.svg",
+  // iconUrl: {
+  //   light: "/svg/Icon_Light.svg",
+  //   dark: "/svg/Icon_Dark.svg",
+  // },
+  logoUrl: {
+    light: "/svg/Horizontal_Light.svg",
+    dark: "/svg/Horizontal_Dark.svg",
+  },
   title: "Starknet by Example",
   rootDir: ".",
   sidebar: routes,
@@ -89,8 +98,8 @@ export default defineConfig({
   // Theme configuration
   theme: {
     accentColor: {
-      dark: "#F69D50",
-      light: "#ff4b01",
+      dark: "#ff3000",
+      light: "#ff3000",
     },
   },
   font: {
