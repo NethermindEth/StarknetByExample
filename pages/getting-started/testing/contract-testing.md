@@ -30,9 +30,6 @@ Now, let's move on to the testing process:
 - Use `assert` to verify that the contract behaves as expected in the given context
   - You can also use assertion macros: `assert_eq!`, `assert_ne!`, `assert_gt!`, `assert_ge!`, `assert_lt!`, `assert_le!`
 
-If you haven't noticed yet, every example in this book has hidden tests, you can see them by clicking the "Show hidden lines" (eyes icon) on the top right of code blocks.
-You can also find a detailed explanation of testing in Cairo in [The Cairo Book](https://book.cairo-lang.org/ch10-00-testing-cairo-programs.html).
-
 ## Using the contract state
 
 You can use the `Contract::contract_state_for_testing` function to access the contract state. This function is only available in the test environment and allows you to mutate and read the contract state directly.
