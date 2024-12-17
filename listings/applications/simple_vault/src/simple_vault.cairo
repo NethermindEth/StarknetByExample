@@ -135,9 +135,7 @@ mod tests {
         IERC20Dispatcher as IERC20Dispatcher_token,
     };
     use starknet::testing::{set_contract_address, set_account_contract_address};
-    use starknet::{
-        ContractAddress, SyscallResultTrait, syscalls::deploy_syscall, contract_address_const,
-    };
+    use starknet::{ContractAddress, syscalls::deploy_syscall, contract_address_const};
 
     const token_name: felt252 = 'myToken';
     const decimals: u8 = 18;
@@ -154,7 +152,7 @@ mod tests {
             array![caller.into(), 'myToken', '8', '1000'.into(), 'MYT'].span(),
             false,
         )
-            .unwrap_syscall();
+            .unwrap();
 
         let (contract_address, _) = deploy_syscall(
             SimpleVault::TEST_CLASS_HASH.try_into().unwrap(),
@@ -162,7 +160,7 @@ mod tests {
             array![token_contract_address.into()].span(),
             false,
         )
-            .unwrap_syscall();
+            .unwrap();
 
         (
             ISimpleVaultDispatcher { contract_address },

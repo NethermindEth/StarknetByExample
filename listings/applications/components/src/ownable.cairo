@@ -132,7 +132,7 @@ mod test {
     use super::ownable_component::{OwnershipRenouncedEvent, OwnershipTransferredEvent};
     use super::{IOwnableDispatcher, IOwnableDispatcherTrait};
     use starknet::ContractAddress;
-    use starknet::{syscalls::deploy_syscall, SyscallResultTrait, contract_address_const};
+    use starknet::{syscalls::deploy_syscall, contract_address_const};
     use starknet::testing::{set_contract_address};
     use core::num::traits::Zero;
 
@@ -140,7 +140,7 @@ mod test {
         let (contract_address, _) = deploy_syscall(
             OwnedContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
-            .unwrap_syscall();
+            .unwrap();
 
         (IOwnableDispatcher { contract_address }, contract_address)
     }

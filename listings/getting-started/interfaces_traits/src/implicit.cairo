@@ -27,7 +27,7 @@ pub mod ImplicitInterfaceContract {
 #[cfg(test)]
 mod tests {
     use super::{ImplicitInterfaceContract, ImplicitInterfaceContract::IImplicitInterfaceContract};
-    use starknet::{SyscallResultTrait, syscalls::deploy_syscall, testing::set_contract_address};
+    use starknet::{syscalls::deploy_syscall, testing::set_contract_address};
 
     #[test]
     fn test_interface() {
@@ -37,7 +37,7 @@ mod tests {
             array![].span(),
             false,
         )
-            .unwrap_syscall();
+            .unwrap();
         set_contract_address(contract_address);
         let mut state = ImplicitInterfaceContract::contract_state_for_testing();
 

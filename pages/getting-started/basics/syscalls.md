@@ -163,7 +163,7 @@ let values = array![];
 values.append(1);
 values.append(2);
 values.append(3);
-emit_event_syscall(keys, values).unwrap_syscall();
+emit_event_syscall(keys, values).unwrap();
 ``` -->
 
 #### library_call

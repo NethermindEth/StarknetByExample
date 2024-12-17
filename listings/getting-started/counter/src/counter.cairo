@@ -46,7 +46,7 @@ pub mod SimpleCounter {
 #[cfg(test)]
 mod test {
     use super::{SimpleCounter, ISimpleCounterDispatcher, ISimpleCounterDispatcherTrait};
-    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
+    use starknet::syscalls::deploy_syscall;
 
     fn deploy(init_value: u128) -> ISimpleCounterDispatcher {
         let (contract_address, _) = deploy_syscall(
@@ -55,7 +55,7 @@ mod test {
             array![init_value.into()].span(),
             false,
         )
-            .unwrap_syscall();
+            .unwrap();
         ISimpleCounterDispatcher { contract_address }
     }
 

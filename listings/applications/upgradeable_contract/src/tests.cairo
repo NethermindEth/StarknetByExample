@@ -14,8 +14,7 @@ mod tests {
 
 
     use starknet::{
-        ContractAddress, SyscallResultTrait, syscalls::deploy_syscall, get_caller_address,
-        contract_address_const,
+        ContractAddress, syscalls::deploy_syscall, get_caller_address, contract_address_const,
     };
     use core::num::traits::Zero;
 
@@ -26,7 +25,7 @@ mod tests {
         let (contract_address, _) = deploy_syscall(
             UpgradeableContract_V0::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
-            .unwrap_syscall();
+            .unwrap();
         (
             IUpgradeableContractDispatcher_v0 { contract_address },
             contract_address,
@@ -39,7 +38,7 @@ mod tests {
         let (contract_address, _) = deploy_syscall(
             UpgradeableContract_V1::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
-            .unwrap_syscall();
+            .unwrap();
         (
             IUpgradeableContractDispatcher_v1 { contract_address },
             contract_address,

@@ -31,13 +31,13 @@ pub mod ErrorsExample {
 #[cfg(test)]
 mod test {
     use super::{ErrorsExample, IErrorsExampleDispatcher, IErrorsExampleDispatcherTrait};
-    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
+    use starknet::syscalls::deploy_syscall;
 
     fn deploy() -> IErrorsExampleDispatcher {
         let (contract_address, _) = deploy_syscall(
             ErrorsExample::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
-            .unwrap_syscall();
+            .unwrap();
         IErrorsExampleDispatcher { contract_address }
     }
 

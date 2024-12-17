@@ -33,7 +33,7 @@ mod tests {
         ExplicitInterfaceContract, IExplicitInterfaceContractDispatcher,
         IExplicitInterfaceContractDispatcherTrait,
     };
-    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
+    use starknet::syscalls::deploy_syscall;
 
     #[test]
     fn test_interface() {
@@ -43,7 +43,7 @@ mod tests {
             array![].span(),
             false,
         )
-            .unwrap_syscall();
+            .unwrap();
         let mut contract = IExplicitInterfaceContractDispatcher { contract_address };
 
         let value: u32 = 20;

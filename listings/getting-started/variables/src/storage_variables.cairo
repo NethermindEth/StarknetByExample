@@ -40,7 +40,7 @@ mod test {
         StorageVariablesExample, IStorageVariableExampleDispatcher,
         IStorageVariableExampleDispatcherTrait,
     };
-    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
+    use starknet::syscalls::deploy_syscall;
     use starknet::testing::set_contract_address;
     use starknet::storage::StoragePointerReadAccess;
 
@@ -49,7 +49,7 @@ mod test {
         let (contract_address, _) = deploy_syscall(
             StorageVariablesExample::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
-            .unwrap_syscall();
+            .unwrap();
 
         let contract = IStorageVariableExampleDispatcher { contract_address };
 

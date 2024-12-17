@@ -68,13 +68,12 @@ mod test {
     use super::MockContract;
     use components::countable::{ICountableDispatcher, ICountableDispatcherTrait};
     use starknet::syscalls::deploy_syscall;
-    use starknet::SyscallResultTrait;
 
     fn deploy_countable() -> ICountableDispatcher {
         let (contract_address, _) = deploy_syscall(
             MockContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
-            .unwrap_syscall();
+            .unwrap();
         ICountableDispatcher { contract_address: contract_address }
     }
 

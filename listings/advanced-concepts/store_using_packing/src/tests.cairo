@@ -1,5 +1,4 @@
 mod tests {
-    use starknet::SyscallResultTrait;
     use store_using_packing::contract::{TimeContract, Time, ITimeDispatcher, ITimeDispatcherTrait};
 
     use starknet::syscalls::deploy_syscall;
@@ -11,7 +10,7 @@ mod tests {
         let (address0, _) = deploy_syscall(
             TimeContract::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false,
         )
-            .unwrap_syscall();
+            .unwrap();
         let mut contract = ITimeDispatcher { contract_address: address0 };
 
         // Store a Time struct.

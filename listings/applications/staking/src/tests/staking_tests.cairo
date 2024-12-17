@@ -9,7 +9,6 @@ mod tests {
     };
     use openzeppelin::token::erc20::{interface::IERC20Dispatcher};
     use starknet::syscalls::deploy_syscall;
-    use starknet::SyscallResultTrait;
     use core::serde::Serde;
     use starknet::testing::{set_contract_address, set_block_timestamp, pop_log};
     use starknet::{contract_address_const, ContractAddress};
@@ -24,7 +23,7 @@ mod tests {
 
     fn deploy_util(class_hash: felt252, calldata: Array<felt252>) -> ContractAddress {
         let (address, _) = deploy_syscall(class_hash.try_into().unwrap(), 0, calldata.span(), false)
-            .unwrap_syscall();
+            .unwrap();
 
         address
     }

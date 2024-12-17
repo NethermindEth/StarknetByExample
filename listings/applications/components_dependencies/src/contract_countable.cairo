@@ -48,14 +48,13 @@ mod tests {
     use components::countable::{ICountableDispatcher, ICountableDispatcherTrait};
     use components::switchable::{ISwitchableDispatcher, ISwitchableDispatcherTrait};
 
-    use starknet::SyscallResultTrait;
     use starknet::syscalls::deploy_syscall;
 
     fn deploy() -> (ICountableDispatcher, ISwitchableDispatcher) {
         let (contract_address, _) = deploy_syscall(
             CountableContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
-            .unwrap_syscall();
+            .unwrap();
 
         (ICountableDispatcher { contract_address }, ISwitchableDispatcher { contract_address })
     }

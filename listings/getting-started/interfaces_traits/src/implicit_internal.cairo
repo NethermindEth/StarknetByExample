@@ -54,7 +54,7 @@ mod tests {
         ImplicitInternalContract, IImplicitInternalContractDispatcher,
         IImplicitInternalContractDispatcherTrait,
     };
-    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
+    use starknet::syscalls::deploy_syscall;
 
     #[test]
     fn test_interface() {
@@ -65,7 +65,7 @@ mod tests {
             array![].span(),
             false,
         )
-            .unwrap_syscall();
+            .unwrap();
         let mut contract = IImplicitInternalContractDispatcher { contract_address };
 
         let initial_value: u32 = 0;

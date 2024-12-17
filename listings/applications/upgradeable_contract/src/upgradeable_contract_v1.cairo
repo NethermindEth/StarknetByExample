@@ -9,7 +9,6 @@ pub trait IUpgradeableContract<TContractState> {
 #[starknet::contract]
 pub mod UpgradeableContract_V1 {
     use starknet::class_hash::ClassHash;
-    use starknet::SyscallResultTrait;
     use core::num::traits::Zero;
 
     #[storage]
@@ -30,7 +29,7 @@ pub mod UpgradeableContract_V1 {
     impl UpgradeableContract of super::IUpgradeableContract<ContractState> {
         fn upgrade(ref self: ContractState, impl_hash: ClassHash) {
             assert(impl_hash.is_non_zero(), 'Class hash cannot be zero');
-            starknet::syscalls::replace_class_syscall(impl_hash).unwrap_syscall();
+            starknet::syscalls::replace_class_syscall(impl_hash).unwrap();
             self.emit(Event::Upgraded(Upgraded { implementation: impl_hash }))
         }
 

@@ -90,13 +90,12 @@ mod test {
     use super::switchable_component::SwitchEvent;
     use super::{ISwitchableDispatcher, ISwitchableDispatcherTrait};
     use starknet::{syscalls::deploy_syscall, ContractAddress};
-    use starknet::SyscallResultTrait;
 
     fn deploy() -> (ISwitchableDispatcher, ContractAddress) {
         let (address, _) = deploy_syscall(
             SwitchContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
-            .unwrap_syscall();
+            .unwrap();
         (ISwitchableDispatcher { contract_address: address }, address)
     }
 

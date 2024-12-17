@@ -22,7 +22,7 @@ pub mod ExampleConstructor {
 #[cfg(test)]
 mod tests {
     use super::ExampleConstructor;
-    use starknet::{ContractAddress, SyscallResultTrait, syscalls::deploy_syscall};
+    use starknet::{ContractAddress, syscalls::deploy_syscall};
     use starknet::{contract_address_const, testing::{set_contract_address}};
     use starknet::storage::StorageMapReadAccess;
 
@@ -37,7 +37,7 @@ mod tests {
             array![name, address.into()].span(),
             false,
         )
-            .unwrap_syscall();
+            .unwrap();
 
         let state = @ExampleConstructor::contract_state_for_testing();
         set_contract_address(contract_address);

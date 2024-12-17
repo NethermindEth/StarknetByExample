@@ -220,9 +220,7 @@ pub mod erc20 {
 mod tests {
     use super::{erc20, IERC20Dispatcher, IERC20DispatcherTrait, erc20::{Event, Transfer, Approval}};
 
-    use starknet::{
-        ContractAddress, SyscallResultTrait, syscalls::deploy_syscall, contract_address_const,
-    };
+    use starknet::{ContractAddress, syscalls::deploy_syscall, contract_address_const};
     use core::num::traits::Zero;
 
     use starknet::testing::set_contract_address;
@@ -241,7 +239,7 @@ mod tests {
             array![recipient.into(), token_name, decimals.into(), initial_supply, symbols].span(),
             false,
         )
-            .unwrap_syscall();
+            .unwrap();
 
         (IERC20Dispatcher { contract_address }, contract_address)
     }
@@ -258,7 +256,7 @@ mod tests {
             array![recipient.into(), token_name, decimals.into(), initial_supply, symbols].span(),
             false,
         )
-            .unwrap_syscall();
+            .unwrap();
     }
     #[test]
     fn test_deploy_success() {

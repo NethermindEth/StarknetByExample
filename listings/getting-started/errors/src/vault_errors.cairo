@@ -51,13 +51,13 @@ mod test {
     use super::{
         VaultErrorsExample, IVaultErrorsExampleDispatcher, IVaultErrorsExampleDispatcherTrait,
     };
-    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
+    use starknet::syscalls::deploy_syscall;
 
     fn deploy() -> IVaultErrorsExampleDispatcher {
         let (contract_address, _) = deploy_syscall(
             VaultErrorsExample::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
-            .unwrap_syscall();
+            .unwrap();
         IVaultErrorsExampleDispatcher { contract_address }
     }
 

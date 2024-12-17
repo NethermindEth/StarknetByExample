@@ -64,7 +64,6 @@ pub mod HashTraits {
 
 #[cfg(test)]
 mod tests {
-    use starknet::SyscallResultTrait;
     use super::{HashTraits, IHashTraitDispatcher, IHashTraitDispatcherTrait};
     use starknet::syscalls::deploy_syscall;
 
@@ -73,7 +72,7 @@ mod tests {
         let (address, _) = deploy_syscall(
             HashTraits::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false,
         )
-            .unwrap_syscall();
+            .unwrap();
         IHashTraitDispatcher { contract_address: address }
     }
 

@@ -22,10 +22,7 @@ pub trait ICampaignFactory<TContractState> {
 #[starknet::contract]
 pub mod CampaignFactory {
     use core::num::traits::Zero;
-    use starknet::{
-        ContractAddress, ClassHash, SyscallResultTrait, syscalls::deploy_syscall,
-        get_caller_address,
-    };
+    use starknet::{ContractAddress, ClassHash, syscalls::deploy_syscall, get_caller_address};
     use crowdfunding::campaign::{ICampaignDispatcher, ICampaignDispatcherTrait};
     use components::ownable::ownable_component;
     use starknet::storage::{
@@ -112,7 +109,7 @@ pub mod CampaignFactory {
             let (contract_address, _) = deploy_syscall(
                 self.campaign_class_hash.read(), 0, constructor_calldata.span(), false,
             )
-                .unwrap_syscall();
+                .unwrap();
 
             // track new campaign instance
             self.campaigns.write((creator, contract_address), self.campaign_class_hash.read());

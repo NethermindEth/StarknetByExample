@@ -37,8 +37,7 @@ pub mod Campaign {
     use core::num::traits::Zero;
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
     use starknet::{
-        ClassHash, ContractAddress, SyscallResultTrait, get_block_timestamp, get_caller_address,
-        get_contract_address,
+        ClassHash, ContractAddress, get_block_timestamp, get_caller_address, get_contract_address,
     };
     use components::ownable::ownable_component;
     use super::pledgeable::pledgeable_component;
@@ -304,7 +303,7 @@ pub mod Campaign {
                 self._refund_all("contract upgraded");
             }
 
-            starknet::syscalls::replace_class_syscall(impl_hash).unwrap_syscall();
+            starknet::syscalls::replace_class_syscall(impl_hash).unwrap();
 
             self.emit(Event::Upgraded(Upgraded { implementation: impl_hash }));
         }

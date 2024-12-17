@@ -48,7 +48,7 @@ mod tests {
     use super::{SimpleContract, ISimpleContractDispatcher, ISimpleContractDispatcherTrait};
 
     // Import the deploy syscall to be able to deploy the contract.
-    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
+    use starknet::syscalls::deploy_syscall;
     use starknet::{get_contract_address, contract_address_const};
 
     // Use starknet test utils to fake the contract_address
@@ -63,7 +63,7 @@ mod tests {
             array![initial_value.into()].span(),
             false,
         )
-            .unwrap_syscall();
+            .unwrap();
 
         // Return the dispatcher.
         // The dispatcher allows to interact with the contract based on its interface.
@@ -164,7 +164,7 @@ mod tests_with_states {
     // But we can also deploy the contract and interact with it using the dispatcher
     // as shown in the previous tests, and still use the state for testing.
     use super::{ISimpleContractDispatcher, ISimpleContractDispatcherTrait};
-    use starknet::{SyscallResultTrait, syscalls::deploy_syscall, testing::set_contract_address};
+    use starknet::{syscalls::deploy_syscall, testing::set_contract_address};
 
     #[test]
     fn test_state_with_contract() {
@@ -180,7 +180,7 @@ mod tests_with_states {
             array![initial_value.into()].span(),
             false,
         )
-            .unwrap_syscall();
+            .unwrap();
         let mut contract = ISimpleContractDispatcher { contract_address };
 
         // create the state

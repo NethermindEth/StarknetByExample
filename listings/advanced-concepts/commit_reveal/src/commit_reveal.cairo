@@ -32,7 +32,6 @@ pub mod CommitmentRevealTraits {
 
 #[cfg(test)]
 mod tests {
-    use starknet::SyscallResultTrait;
     use super::{
         CommitmentRevealTraits, ICommitmentRevealTraitDispatcher,
         ICommitmentRevealTraitDispatcherTrait,
@@ -46,7 +45,7 @@ mod tests {
         let (contract_address, _) = deploy_syscall(
             CommitmentRevealTraits::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
-            .unwrap_syscall();
+            .unwrap();
         ICommitmentRevealTraitDispatcher { contract_address }
     }
 

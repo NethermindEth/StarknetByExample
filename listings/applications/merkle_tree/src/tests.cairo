@@ -1,7 +1,7 @@
 use merkle_tree::contract::IMerkleTreeDispatcherTrait;
 use merkle_tree::contract::{IMerkleTreeDispatcher, MerkleTree, ByteArrayHashTrait};
+use starknet::ContractAddress;
 use starknet::syscalls::deploy_syscall;
-use starknet::{ContractAddress, SyscallResultTrait};
 use starknet::testing::set_contract_address;
 use core::poseidon::PoseidonTrait;
 use core::hash::{HashStateTrait, HashStateExTrait};
@@ -9,7 +9,7 @@ use starknet::storage::{VecTrait, StoragePointerReadAccess};
 
 fn deploy_util(class_hash: felt252, calldata: Array<felt252>) -> ContractAddress {
     let (address, _) = deploy_syscall(class_hash.try_into().unwrap(), 0, calldata.span(), false)
-        .unwrap_syscall();
+        .unwrap();
     address
 }
 

@@ -33,14 +33,14 @@ pub mod MapContract {
 #[cfg(test)]
 mod test {
     use super::{MapContract, IMapContractDispatcher, IMapContractDispatcherTrait};
-    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
+    use starknet::syscalls::deploy_syscall;
 
     #[test]
     fn test_deploy_and_set_get() {
         let (contract_address, _) = deploy_syscall(
             MapContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
-            .unwrap_syscall();
+            .unwrap();
         let mut contract = IMapContractDispatcher { contract_address };
 
         // Write to map.

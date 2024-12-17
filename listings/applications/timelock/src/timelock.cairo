@@ -12,7 +12,7 @@ pub trait ITimeLock<TState> {
 pub mod TimeLock {
     use core::poseidon::{PoseidonTrait, poseidon_hash_span};
     use core::hash::HashStateTrait;
-    use starknet::{get_caller_address, get_block_timestamp, SyscallResultTrait, syscalls};
+    use starknet::{get_caller_address, get_block_timestamp, syscalls};
     use starknet::account::Call;
     use components::ownable::ownable_component;
     use starknet::storage::{Map, StorageMapReadAccess, StorageMapWriteAccess};
@@ -126,7 +126,7 @@ pub mod TimeLock {
             self.queued.write(tx_id, false);
 
             let result = syscalls::call_contract_syscall(call.to, call.selector, call.calldata)
-                .unwrap_syscall();
+                .unwrap();
 
             self.emit(Execute { tx_id, call: self._copy_call(@call), timestamp });
 

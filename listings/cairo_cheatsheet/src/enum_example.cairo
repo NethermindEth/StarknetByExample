@@ -7,6 +7,7 @@ struct Position {
 
 #[derive(Drop, Serde, Copy, starknet::Store)]
 enum UserCommand {
+    #[default]
     Login,
     UpdateProfile,
     Logout,
@@ -14,6 +15,7 @@ enum UserCommand {
 
 #[derive(Drop, Serde, Copy, starknet::Store)]
 enum Action {
+    #[default]
     Quit,
     Move: Position,
     SendMessage: felt252,

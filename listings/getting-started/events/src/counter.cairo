@@ -67,7 +67,7 @@ mod tests {
         EventCounter, EventCounter::{Event, CounterIncreased, UserIncreaseCounter},
         IEventCounterDispatcherTrait, IEventCounterDispatcher,
     };
-    use starknet::{contract_address_const, SyscallResultTrait, syscalls::deploy_syscall};
+    use starknet::{contract_address_const, syscalls::deploy_syscall};
     use starknet::testing::set_contract_address;
     use starknet::storage::StoragePointerReadAccess;
 
@@ -76,7 +76,7 @@ mod tests {
         let (contract_address, _) = deploy_syscall(
             EventCounter::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
-            .unwrap_syscall();
+            .unwrap();
         let mut contract = IEventCounterDispatcher { contract_address };
         let state = @EventCounter::contract_state_for_testing();
 
