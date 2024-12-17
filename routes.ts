@@ -317,7 +317,6 @@ const generateSidebarConfig = (sidebar: SidebarItem[]): Sidebar => {
 
   // Configure for all top-level routes
   getTopLevelRoutes(sidebar).forEach(([route, sectionName]) => {
-    // console.log(`config["${route}"] = sidebarFocusOn(sidebar, "${sectionName}", true)`)
     config[`/${route}`] = sidebarFocusOn(sidebar, sectionName, true);
   });
 
