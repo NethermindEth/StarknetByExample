@@ -198,23 +198,20 @@ const config: Sidebar = [
           },
         ],
       },
-      {
-        text: "Account Abstraction",
-        items: [
-          {
-            text: "AA on Starknet",
-            link: "/advanced-concepts/account_abstraction",
-          },
-          {
-            text: "Account Contract",
-            link: "/advanced-concepts/account_abstraction/account_contract",
-          },
-          {
-            text: "Account with Spending Limits",
-            link: "/advanced-concepts/account_abstraction/account_spending_limits",
-          }
-        ],
-      },
+      // Hidden as the content is not 100% correct
+      // {
+      //   text: "Account Abstraction",
+      //   items: [
+      //     {
+      //       text: "AA on Starknet",
+      //       link: "/advanced-concepts/account_abstraction",
+      //     },
+      //     {
+      //       text: "Account Contract",
+      //       link: "/advanced-concepts/account_abstraction/account_contract",
+      //     },
+      //   ],
+      // },
       {
         text: "Library Calls",
         link: "/advanced-concepts/library_calls",

@@ -4,7 +4,7 @@ enum Colour {
     Blue,
     Green,
     Orange,
-    Black
+    Black,
 }
 
 #[derive(Drop, Serde)]

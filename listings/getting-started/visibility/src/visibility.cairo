@@ -11,7 +11,7 @@ pub mod ExampleContract {
 
     #[storage]
     struct Storage {
-        pub value: u32
+        pub value: u32,
     }
 
     // The `#[abi(embed_v0)]` attribute indicates that all
@@ -57,7 +57,7 @@ pub mod ExampleContract {
 #[cfg(test)]
 mod test {
     use super::{ExampleContract, IExampleContractDispatcher, IExampleContractDispatcherTrait};
-    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
+    use starknet::syscalls::deploy_syscall;
     use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
 
     // These imports will allow us to directly access and set the contract state:
@@ -71,9 +71,9 @@ mod test {
     #[test]
     fn can_call_set_and_get() {
         let (contract_address, _) = deploy_syscall(
-            ExampleContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+            ExampleContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
-            .unwrap_syscall();
+            .unwrap();
 
         // You can interact with the external entrypoints of the contract using the dispatcher.
         let contract = IExampleContractDispatcher { contract_address };

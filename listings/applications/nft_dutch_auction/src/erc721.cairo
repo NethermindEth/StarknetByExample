@@ -9,12 +9,12 @@ pub trait IERC721<TContractState> {
     fn owner_of(self: @TContractState, token_id: u256) -> ContractAddress;
     fn get_approved(self: @TContractState, token_id: u256) -> ContractAddress;
     fn is_approved_for_all(
-        self: @TContractState, owner: ContractAddress, operator: ContractAddress
+        self: @TContractState, owner: ContractAddress, operator: ContractAddress,
     ) -> bool;
     fn approve(ref self: TContractState, to: ContractAddress, token_id: u256);
     fn set_approval_for_all(ref self: TContractState, operator: ContractAddress, approved: bool);
     fn transfer_from(
-        ref self: TContractState, from: ContractAddress, to: ContractAddress, token_id: u256
+        ref self: TContractState, from: ContractAddress, to: ContractAddress, token_id: u256,
     );
     fn mint(ref self: TContractState, to: ContractAddress, token_id: u256);
 }
@@ -27,7 +27,7 @@ mod ERC721 {
     use starknet::{ContractAddress, get_caller_address};
     use starknet::storage::{
         Map, StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess,
-        StoragePointerWriteAccess
+        StoragePointerWriteAccess,
     };
     use core::num::traits::Zero;
 
@@ -50,7 +50,7 @@ mod ERC721 {
     enum Event {
         Approval: Approval,
         Transfer: Transfer,
-        ApprovalForAll: ApprovalForAll
+        ApprovalForAll: ApprovalForAll,
     }
 
     ////////////////////////////////
@@ -60,7 +60,7 @@ mod ERC721 {
     struct Approval {
         owner: ContractAddress,
         to: ContractAddress,
-        token_id: u256
+        token_id: u256,
     }
 
     ////////////////////////////////
@@ -70,7 +70,7 @@ mod ERC721 {
     struct Transfer {
         from: ContractAddress,
         to: ContractAddress,
-        token_id: u256
+        token_id: u256,
     }
 
     ////////////////////////////////
@@ -80,7 +80,7 @@ mod ERC721 {
     struct ApprovalForAll {
         owner: ContractAddress,
         operator: ContractAddress,
-        approved: bool
+        approved: bool,
     }
 
 
@@ -145,7 +145,7 @@ mod ERC721 {
         // is_approved_for_all function returns approved operator for a token
         ////////////////////////////////
         fn is_approved_for_all(
-            self: @ContractState, owner: ContractAddress, operator: ContractAddress
+            self: @ContractState, owner: ContractAddress, operator: ContractAddress,
         ) -> bool {
             self.operator_approvals.read((owner, operator))
         }
@@ -159,7 +159,7 @@ mod ERC721 {
             assert(
                 get_caller_address() == owner
                     || self.is_approved_for_all(owner, get_caller_address()),
-                'Not token owner'
+                'Not token owner',
             );
             self.token_approvals.write(token_id, to);
             self.emit(Approval { owner: self.owner_of(token_id), to: to, token_id: token_id });
@@ -169,7 +169,7 @@ mod ERC721 {
         // set_approval_for_all function approves an operator to spend all tokens
         ////////////////////////////////
         fn set_approval_for_all(
-            ref self: ContractState, operator: ContractAddress, approved: bool
+            ref self: ContractState, operator: ContractAddress, approved: bool,
         ) {
             let owner = get_caller_address();
             assert(owner != operator, 'ERC721: approve to caller');
@@ -181,11 +181,11 @@ mod ERC721 {
         // transfer_from function is used to transfer a token
         ////////////////////////////////
         fn transfer_from(
-            ref self: ContractState, from: ContractAddress, to: ContractAddress, token_id: u256
+            ref self: ContractState, from: ContractAddress, to: ContractAddress, token_id: u256,
         ) {
             assert(
                 self._is_approved_or_owner(get_caller_address(), token_id),
-                'neither owner nor approved'
+                'neither owner nor approved',
             );
             self._transfer(from, to, token_id);
         }
@@ -209,7 +209,7 @@ mod ERC721 {
         // _is_approved_or_owner checks if an address is an approved spender or owner
         ////////////////////////////////
         fn _is_approved_or_owner(
-            self: @ContractState, spender: ContractAddress, token_id: u256
+            self: @ContractState, spender: ContractAddress, token_id: u256,
         ) -> bool {
             let owner = self.owners.read(token_id);
             spender == owner
@@ -229,7 +229,7 @@ mod ERC721 {
         // internal function that performs the transfer logic
         ////////////////////////////////
         fn _transfer(
-            ref self: ContractState, from: ContractAddress, to: ContractAddress, token_id: u256
+            ref self: ContractState, from: ContractAddress, to: ContractAddress, token_id: u256,
         ) {
             // check that from address is equal to owner of token
             assert(from == self.owner_of(token_id), 'ERC721: Caller is not owner');
