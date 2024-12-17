@@ -13,4 +13,3 @@ cairo_test.workspace = true
 test.workspace = true
 
 [[target.starknet-contract]]
-allowed-libfuncs-list.name = "experimental"
