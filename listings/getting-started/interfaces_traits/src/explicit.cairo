@@ -11,7 +11,7 @@ pub mod ExplicitInterfaceContract {
 
     #[storage]
     struct Storage {
-        value: u32
+        value: u32,
     }
 
     #[abi(embed_v0)]
@@ -31,7 +31,7 @@ pub mod ExplicitInterfaceContract {
 mod tests {
     use super::{
         ExplicitInterfaceContract, IExplicitInterfaceContractDispatcher,
-        IExplicitInterfaceContractDispatcherTrait
+        IExplicitInterfaceContractDispatcherTrait,
     };
     use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
 
@@ -41,7 +41,7 @@ mod tests {
             ExplicitInterfaceContract::TEST_CLASS_HASH.try_into().unwrap(),
             0,
             array![].span(),
-            false
+            false,
         )
             .unwrap_syscall();
         let mut contract = IExplicitInterfaceContractDispatcher { contract_address };

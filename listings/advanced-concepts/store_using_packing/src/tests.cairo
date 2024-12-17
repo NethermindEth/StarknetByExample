@@ -9,7 +9,7 @@ mod tests {
         // Set up.
         let mut calldata: Array<felt252> = array![];
         let (address0, _) = deploy_syscall(
-            TimeContract::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
+            TimeContract::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false,
         )
             .unwrap_syscall();
         let mut contract = ITimeDispatcher { contract_address: address0 };

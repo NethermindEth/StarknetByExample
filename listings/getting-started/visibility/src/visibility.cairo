@@ -11,7 +11,7 @@ pub mod ExampleContract {
 
     #[storage]
     struct Storage {
-        pub value: u32
+        pub value: u32,
     }
 
     // The `#[abi(embed_v0)]` attribute indicates that all
@@ -71,7 +71,7 @@ mod test {
     #[test]
     fn can_call_set_and_get() {
         let (contract_address, _) = deploy_syscall(
-            ExampleContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+            ExampleContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
             .unwrap_syscall();
 

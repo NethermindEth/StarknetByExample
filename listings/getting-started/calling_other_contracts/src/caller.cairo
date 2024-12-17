@@ -27,7 +27,7 @@ pub mod Callee {
 #[starknet::interface]
 pub trait ICaller<TContractState> {
     fn set_value_from_address(
-        ref self: TContractState, addr: starknet::ContractAddress, value: u128
+        ref self: TContractState, addr: starknet::ContractAddress, value: u128,
     );
 }
 
@@ -59,16 +59,16 @@ mod tests {
 
     fn deploy() -> (ICalleeDispatcher, ICallerDispatcher) {
         let (address_callee, _) = deploy_syscall(
-            Callee::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+            Callee::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
             .unwrap_syscall();
         let (address_caller, _) = deploy_syscall(
-            Caller::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+            Caller::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
             .unwrap_syscall();
         (
             ICalleeDispatcher { contract_address: address_callee },
-            ICallerDispatcher { contract_address: address_caller }
+            ICallerDispatcher { contract_address: address_caller },
         )
     }
 

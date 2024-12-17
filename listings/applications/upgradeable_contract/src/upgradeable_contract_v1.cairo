@@ -18,12 +18,12 @@ pub mod UpgradeableContract_V1 {
     #[event]
     #[derive(Drop, starknet::Event)]
     enum Event {
-        Upgraded: Upgraded
+        Upgraded: Upgraded,
     }
 
     #[derive(Drop, starknet::Event)]
     struct Upgraded {
-        implementation: ClassHash
+        implementation: ClassHash,
     }
 
     #[abi(embed_v0)]

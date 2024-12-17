@@ -35,7 +35,7 @@ mod test {
 
     fn deploy() -> IErrorsExampleDispatcher {
         let (contract_address, _) = deploy_syscall(
-            ErrorsExample::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+            ErrorsExample::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
             .unwrap_syscall();
         IErrorsExampleDispatcher { contract_address }

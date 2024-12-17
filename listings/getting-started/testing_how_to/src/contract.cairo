@@ -14,7 +14,7 @@ pub mod SimpleContract {
     #[storage]
     struct Storage {
         pub value: u32,
-        pub owner: ContractAddress
+        pub owner: ContractAddress,
     }
 
     #[constructor]
@@ -61,7 +61,7 @@ mod tests {
             SimpleContract::TEST_CLASS_HASH.try_into().unwrap(),
             0,
             array![initial_value.into()].span(),
-            false
+            false,
         )
             .unwrap_syscall();
 
@@ -178,7 +178,7 @@ mod tests_with_states {
             SimpleContract::TEST_CLASS_HASH.try_into().unwrap(),
             0,
             array![initial_value.into()].span(),
-            false
+            false,
         )
             .unwrap_syscall();
         let mut contract = ISimpleContractDispatcher { contract_address };

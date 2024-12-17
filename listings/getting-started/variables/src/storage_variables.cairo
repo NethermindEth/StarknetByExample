@@ -15,7 +15,7 @@ pub mod StorageVariablesExample {
     #[storage]
     struct Storage {
         // Storage variable holding a number
-        pub value: u32
+        pub value: u32,
     }
 
     #[abi(embed_v0)]
@@ -38,7 +38,7 @@ pub mod StorageVariablesExample {
 mod test {
     use super::{
         StorageVariablesExample, IStorageVariableExampleDispatcher,
-        IStorageVariableExampleDispatcherTrait
+        IStorageVariableExampleDispatcherTrait,
     };
     use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
     use starknet::testing::set_contract_address;
@@ -47,7 +47,7 @@ mod test {
     #[test]
     fn test_can_deploy_and_mutate_storage() {
         let (contract_address, _) = deploy_syscall(
-            StorageVariablesExample::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+            StorageVariablesExample::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
             .unwrap_syscall();
 

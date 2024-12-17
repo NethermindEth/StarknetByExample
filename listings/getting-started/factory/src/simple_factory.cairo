@@ -44,7 +44,7 @@ pub mod CounterFactory {
 
             // Contract deployment
             let (deployed_address, _) = deploy_syscall(
-                self.counter_class_hash.read(), 0, constructor_calldata.span(), false
+                self.counter_class_hash.read(), 0, constructor_calldata.span(), false,
             )
                 .unwrap_syscall();
 
@@ -120,17 +120,17 @@ mod tests {
 
     /// Deploy a counter factory contract
     fn deploy_factory(
-        counter_class_hash: ClassHash, init_value: u128
+        counter_class_hash: ClassHash, init_value: u128,
     ) -> ICounterFactoryDispatcher {
         let mut constructor_calldata: Array::<felt252> = array![
-            init_value.into(), counter_class_hash.into()
+            init_value.into(), counter_class_hash.into(),
         ];
 
         let (contract_address, _) = deploy_syscall(
             CounterFactory::TEST_CLASS_HASH.try_into().unwrap(),
             0,
             constructor_calldata.span(),
-            false
+            false,
         )
             .unwrap_syscall();
 

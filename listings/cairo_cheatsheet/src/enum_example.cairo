@@ -18,7 +18,7 @@ enum Action {
     Move: Position,
     SendMessage: felt252,
     ChangeAvatarColor: (u8, u8, u8),
-    ProfileState: UserCommand
+    ProfileState: UserCommand,
 }
 // [!endregion enums]
 
@@ -49,7 +49,7 @@ mod EnumContract {
                 Action::Move(value) => { println!("Move with x: {} and y: {}", value.x, value.y); },
                 Action::SendMessage(msg) => { println!("Write with message: {}", msg); },
                 Action::ChangeAvatarColor((
-                    r, g, b
+                    r, g, b,
                 )) => { println!("Change color to r: {}, g: {}, b: {}", r, g, b); },
                 Action::ProfileState(state) => {
                     let profile_state = match state {
@@ -58,7 +58,7 @@ mod EnumContract {
                         UserCommand::Logout => 3,
                     };
                     println!("profile_state: {}", profile_state);
-                }
+                },
             };
 
             self.most_recent_action.write(action);

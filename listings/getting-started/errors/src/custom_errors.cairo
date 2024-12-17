@@ -35,13 +35,13 @@ pub mod CustomErrorsExample {
 #[cfg(test)]
 mod test {
     use super::{
-        CustomErrorsExample, ICustomErrorsExampleDispatcher, ICustomErrorsExampleDispatcherTrait
+        CustomErrorsExample, ICustomErrorsExampleDispatcher, ICustomErrorsExampleDispatcherTrait,
     };
     use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
 
     fn deploy() -> ICustomErrorsExampleDispatcher {
         let (contract_address, _) = deploy_syscall(
-            CustomErrorsExample::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+            CustomErrorsExample::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
             .unwrap_syscall();
         ICustomErrorsExampleDispatcher { contract_address }

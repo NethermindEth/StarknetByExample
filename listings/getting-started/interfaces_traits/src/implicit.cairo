@@ -5,7 +5,7 @@ pub mod ImplicitInterfaceContract {
 
     #[storage]
     struct Storage {
-        value: u32
+        value: u32,
     }
 
     #[abi(per_item)]
@@ -35,7 +35,7 @@ mod tests {
             ImplicitInterfaceContract::TEST_CLASS_HASH.try_into().unwrap(),
             0,
             array![].span(),
-            false
+            false,
         )
             .unwrap_syscall();
         set_contract_address(contract_address);

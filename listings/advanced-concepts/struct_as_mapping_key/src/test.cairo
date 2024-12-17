@@ -14,7 +14,7 @@ mod tests {
         // Set up.
         let mut calldata: Array<felt252> = array![];
         let (address0, _) = deploy_syscall(
-            PetRegistry::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
+            PetRegistry::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false,
         )
             .unwrap_syscall();
         let mut contract = IPetRegistryDispatcher { contract_address: address0 };

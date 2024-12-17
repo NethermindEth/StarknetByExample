@@ -35,7 +35,7 @@ mod tests {
     use starknet::SyscallResultTrait;
     use super::{
         CommitmentRevealTraits, ICommitmentRevealTraitDispatcher,
-        ICommitmentRevealTraitDispatcherTrait
+        ICommitmentRevealTraitDispatcherTrait,
     };
 
     use core::hash::HashStateTrait;
@@ -44,7 +44,7 @@ mod tests {
 
     fn deploy() -> ICommitmentRevealTraitDispatcher {
         let (contract_address, _) = deploy_syscall(
-            CommitmentRevealTraits::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+            CommitmentRevealTraits::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
             .unwrap_syscall();
         ICommitmentRevealTraitDispatcher { contract_address }

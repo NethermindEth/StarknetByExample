@@ -53,14 +53,14 @@ pub mod SwitchCollisionContract {
 mod switch_collision_tests {
     use components::switchable::{ISwitchableDispatcher, ISwitchableDispatcherTrait};
     use super::{
-        SwitchCollisionContract, ISwitchCollisionDispatcher, ISwitchCollisionDispatcherTrait
+        SwitchCollisionContract, ISwitchCollisionDispatcher, ISwitchCollisionDispatcherTrait,
     };
     use starknet::SyscallResultTrait;
     use starknet::syscalls::deploy_syscall;
 
     fn deploy() -> (ISwitchCollisionDispatcher, ISwitchableDispatcher) {
         let (contract_address, _) = deploy_syscall(
-            SwitchCollisionContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+            SwitchCollisionContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
             .unwrap_syscall();
 

@@ -35,7 +35,7 @@ mod tests {
             ExampleConstructor::TEST_CLASS_HASH.try_into().unwrap(),
             0,
             array![name, address.into()].span(),
-            false
+            false,
         )
             .unwrap_syscall();
 

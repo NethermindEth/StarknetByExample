@@ -24,7 +24,7 @@ pub mod UpgradeableContract_V0 {
 
     #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
     pub struct Upgraded {
-        pub implementation: ClassHash
+        pub implementation: ClassHash,
     }
 
     #[abi(embed_v0)]

@@ -5,7 +5,7 @@ mod tests {
     use staking::tests::tokens::{RewardToken, StakingToken};
     use staking::contract::{
         StakingContract, IStakingContractDispatcher, StakingContract::Event,
-        StakingContract::Deposit, StakingContract::Withdrawal, StakingContract::RewardsFinished
+        StakingContract::Deposit, StakingContract::Withdrawal, StakingContract::RewardsFinished,
     };
     use openzeppelin::token::erc20::{interface::IERC20Dispatcher};
     use starknet::syscalls::deploy_syscall;
@@ -19,7 +19,7 @@ mod tests {
     struct Deployment {
         contract: IStakingContractDispatcher,
         staking_token: IERC20Dispatcher,
-        reward_token: IERC20Dispatcher
+        reward_token: IERC20Dispatcher,
     }
 
     fn deploy_util(class_hash: felt252, calldata: Array<felt252>) -> ContractAddress {
@@ -30,7 +30,7 @@ mod tests {
     }
 
     fn deploy_erc20(
-        class_hash: felt252, name: ByteArray, symbol: ByteArray
+        class_hash: felt252, name: ByteArray, symbol: ByteArray,
     ) -> (ContractAddress, IERC20Dispatcher) {
         let supply: u256 = 1000000;
         let recipient = contract_address_const::<'recipient'>();
@@ -46,7 +46,7 @@ mod tests {
     }
 
     fn deploy_staking_contract(
-        staking_token_address: ContractAddress, reward_token_address: ContractAddress
+        staking_token_address: ContractAddress, reward_token_address: ContractAddress,
     ) -> (ContractAddress, IStakingContractDispatcher) {
         let mut calldata: Array<felt252> = array![];
         calldata.append(staking_token_address.into());
@@ -55,7 +55,7 @@ mod tests {
         let staking_contract_address = deploy_util(StakingContract::TEST_CLASS_HASH, calldata);
         (
             staking_contract_address,
-            IStakingContractDispatcher { contract_address: staking_contract_address }
+            IStakingContractDispatcher { contract_address: staking_contract_address },
         )
     }
 
@@ -68,14 +68,14 @@ mod tests {
         );
 
         let (_, staking_contract) = deploy_staking_contract(
-            staking_token_address, reward_token_address
+            staking_token_address, reward_token_address,
         );
 
         Deployment { contract: staking_contract, staking_token, reward_token }
     }
 
     fn mint_and_approve_staking_tokens_to(
-        recipient: ContractAddress, amount: u256, deploy: Deployment, value_to_approve: u256
+        recipient: ContractAddress, amount: u256, deploy: Deployment, value_to_approve: u256,
     ) {
         // mint tokens
         let mut state = StakingToken::contract_state_for_testing();
@@ -89,7 +89,7 @@ mod tests {
     }
 
     fn mint_reward_tokens_to(
-        deployed_contract: ContractAddress, amount: u256, reward_token_address: ContractAddress
+        deployed_contract: ContractAddress, amount: u256, reward_token_address: ContractAddress,
     ) {
         // mint tokens
         let mut state = RewardToken::contract_state_for_testing();
@@ -116,10 +116,10 @@ mod tests {
         /// then
         assert_eq!(state.owner.read(), owner);
         assert_eq!(
-            state.staking_token.read().contract_address, deploy.staking_token.contract_address
+            state.staking_token.read().contract_address, deploy.staking_token.contract_address,
         );
         assert_eq!(
-            state.reward_token.read().contract_address, deploy.reward_token.contract_address
+            state.reward_token.read().contract_address, deploy.reward_token.contract_address,
         );
     }
 
@@ -153,11 +153,11 @@ mod tests {
         // check 1st & 2nd event - when user stakes
         assert_eq!(
             pop_log(deploy.contract.contract_address),
-            Option::Some(Event::RewardsFinished(RewardsFinished { msg: 'Rewards not active yet' }))
+            Option::Some(Event::RewardsFinished(RewardsFinished { msg: 'Rewards not active yet' })),
         );
         assert_eq!(
             pop_log(deploy.contract.contract_address),
-            Option::Some(Event::Deposit(Deposit { user, amount: stake_amount }))
+            Option::Some(Event::Deposit(Deposit { user, amount: stake_amount })),
         );
 
         /// when - withdrawal
@@ -173,17 +173,17 @@ mod tests {
         assert_eq!(state.total_supply.read(), stake_amount - withdrawal_amount);
         assert_eq!(
             deploy.staking_token.balance_of(user),
-            amount_tokens_minted - stake_amount + withdrawal_amount
+            amount_tokens_minted - stake_amount + withdrawal_amount,
         );
 
         // check 3rd & 4th events - when user withdraws
         assert_eq!(
             pop_log(deploy.contract.contract_address),
-            Option::Some(Event::RewardsFinished(RewardsFinished { msg: 'Rewards not active yet' }))
+            Option::Some(Event::RewardsFinished(RewardsFinished { msg: 'Rewards not active yet' })),
         );
         assert_eq!(
             pop_log(deploy.contract.contract_address),
-            Option::Some(Event::Withdrawal(Withdrawal { user, amount: withdrawal_amount }))
+            Option::Some(Event::Withdrawal(Withdrawal { user, amount: withdrawal_amount })),
         );
     }
 
@@ -201,7 +201,7 @@ mod tests {
         mint_reward_tokens_to(
             deploy.contract.contract_address,
             reward_tokens_amount,
-            deploy.reward_token.contract_address
+            deploy.reward_token.contract_address,
         );
 
         // owner sets up rewards duration and amount
@@ -226,7 +226,7 @@ mod tests {
         let alice_stake_amount = 40;
         let alice_amount_tokens_minted = 100;
         mint_and_approve_staking_tokens_to(
-            alice, alice_amount_tokens_minted, deploy, alice_stake_amount
+            alice, alice_amount_tokens_minted, deploy, alice_stake_amount,
         );
 
         // alice stakes
@@ -262,7 +262,7 @@ mod tests {
         let john_stake_amount = 30;
         let john_amount_tokens_minted = 100;
         mint_and_approve_staking_tokens_to(
-            john, john_amount_tokens_minted, deploy, john_stake_amount
+            john, john_amount_tokens_minted, deploy, john_stake_amount,
         );
 
         // john stakes
@@ -327,7 +327,7 @@ mod tests {
 
         // timestamp after the duration is finished
         set_block_timestamp(
-            block_timestamp.try_into().unwrap() + reward_duration.try_into().unwrap() + 10
+            block_timestamp.try_into().unwrap() + reward_duration.try_into().unwrap() + 10,
         );
 
         // alice claims
@@ -405,7 +405,7 @@ mod tests {
         mint_reward_tokens_to(
             deploy.contract.contract_address,
             reward_tokens_amount,
-            deploy.reward_token.contract_address
+            deploy.reward_token.contract_address,
         );
 
         // owner sets up rewards duration and amount
@@ -429,7 +429,7 @@ mod tests {
 
         // alice claims her rewards after the duration is over
         set_block_timestamp(
-            block_timestamp.try_into().unwrap() + reward_duration.try_into().unwrap()
+            block_timestamp.try_into().unwrap() + reward_duration.try_into().unwrap(),
         );
         deploy.contract.claim_rewards();
 
@@ -449,21 +449,25 @@ mod tests {
         // check 1st event - when alice stakes
         assert_eq!(
             pop_log(deploy.contract.contract_address),
-            Option::Some(Event::Deposit(Deposit { user: alice, amount: alice_stake_amount }))
+            Option::Some(Event::Deposit(Deposit { user: alice, amount: alice_stake_amount })),
         );
         // check 2nd event - when alice claims
         assert_eq!(
             pop_log(deploy.contract.contract_address),
-            Option::Some(Event::RewardsFinished(RewardsFinished { msg: 'Rewards all distributed' }))
+            Option::Some(
+                Event::RewardsFinished(RewardsFinished { msg: 'Rewards all distributed' }),
+            ),
         );
         // check 3rd & 4th events - when bob stakes
         assert_eq!(
             pop_log(deploy.contract.contract_address),
-            Option::Some(Event::RewardsFinished(RewardsFinished { msg: 'Rewards all distributed' }))
+            Option::Some(
+                Event::RewardsFinished(RewardsFinished { msg: 'Rewards all distributed' }),
+            ),
         );
         assert_eq!(
             pop_log(deploy.contract.contract_address),
-            Option::Some(Event::Deposit(Deposit { user: bob, amount: bob_stake_amount }))
+            Option::Some(Event::Deposit(Deposit { user: bob, amount: bob_stake_amount })),
         );
     }
 
@@ -481,7 +485,7 @@ mod tests {
         mint_reward_tokens_to(
             deploy.contract.contract_address,
             reward_tokens_amount,
-            deploy.reward_token.contract_address
+            deploy.reward_token.contract_address,
         );
 
         // owner sets up rewards duration and amount

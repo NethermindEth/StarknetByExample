@@ -38,7 +38,7 @@ pub mod TimeLock {
         OwnableEvent: ownable_component::Event,
         Queue: Queue,
         Execute: Execute,
-        Cancel: Cancel
+        Cancel: Cancel,
     }
 
     #[derive(Drop, starknet::Event)]
@@ -46,7 +46,7 @@ pub mod TimeLock {
         #[key]
         pub tx_id: felt252,
         pub call: Call,
-        pub timestamp: u64
+        pub timestamp: u64,
     }
 
     #[derive(Drop, starknet::Event)]
@@ -54,13 +54,13 @@ pub mod TimeLock {
         #[key]
         pub tx_id: felt252,
         pub call: Call,
-        pub timestamp: u64
+        pub timestamp: u64,
     }
 
     #[derive(Drop, starknet::Event)]
     pub struct Cancel {
         #[key]
-        pub tx_id: felt252
+        pub tx_id: felt252,
     }
 
     pub const MIN_DELAY: u64 = 10; // seconds
@@ -103,7 +103,7 @@ pub mod TimeLock {
                 timestamp >= block_timestamp
                     + MIN_DELAY && timestamp <= block_timestamp
                     + MAX_DELAY,
-                Errors::TIMESTAMP_NOT_IN_RANGE
+                Errors::TIMESTAMP_NOT_IN_RANGE,
             );
 
             self.queued.write(tx_id, true);

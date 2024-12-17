@@ -10,7 +10,7 @@ pub trait ISerdeCustomType<TContractState> {
 #[derive(Drop, Serde)]
 pub struct Person {
     pub age: u8,
-    pub name: felt252
+    pub name: felt252,
 }
 
 #[starknet::contract]
@@ -34,13 +34,13 @@ pub mod SerdeCustomType {
 #[cfg(test)]
 mod tests {
     use super::{
-        SerdeCustomType, Person, ISerdeCustomTypeDispatcher, ISerdeCustomTypeDispatcherTrait
+        SerdeCustomType, Person, ISerdeCustomTypeDispatcher, ISerdeCustomTypeDispatcherTrait,
     };
     use starknet::{syscalls::deploy_syscall, SyscallResultTrait};
 
     fn deploy() -> ISerdeCustomTypeDispatcher {
         let (contract_address, _) = deploy_syscall(
-            SerdeCustomType::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+            SerdeCustomType::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
             .unwrap_syscall();
         ISerdeCustomTypeDispatcher { contract_address }

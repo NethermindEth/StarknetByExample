@@ -31,7 +31,7 @@ mod test {
     #[test]
     fn test_can_deploy() {
         let (_contract_address, _) = deploy_syscall(
-            GlobalExample::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+            GlobalExample::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
             .unwrap_syscall();
         // Not much to test

@@ -32,14 +32,14 @@ pub mod LocalVariablesExample {
 mod test {
     use super::{
         LocalVariablesExample, ILocalVariablesExampleDispatcher,
-        ILocalVariablesExampleDispatcherTrait
+        ILocalVariablesExampleDispatcherTrait,
     };
     use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
 
     #[test]
     fn test_can_deploy_and_do_something() {
         let (contract_address, _) = deploy_syscall(
-            LocalVariablesExample::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+            LocalVariablesExample::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
             .unwrap_syscall();
 

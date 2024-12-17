@@ -5,7 +5,7 @@ pub mod Contract {
     struct Storage {
         pub a: u128,
         pub b: u8,
-        pub c: u256
+        pub c: u256,
     }
 }
 // [!endregion contract]
@@ -19,7 +19,7 @@ mod test {
     #[test]
     fn test_can_deploy() {
         let (_contract_address, _) = deploy_syscall(
-            Contract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+            Contract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
             .unwrap_syscall();
     }

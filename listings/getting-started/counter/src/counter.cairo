@@ -53,7 +53,7 @@ mod test {
             SimpleCounter::TEST_CLASS_HASH.try_into().unwrap(),
             0,
             array![init_value.into()].span(),
-            false
+            false,
         )
             .unwrap_syscall();
         ISimpleCounterDispatcher { contract_address }

@@ -16,7 +16,7 @@ pub mod countable_component {
 
     #[embeddable_as(Countable)]
     impl CountableImpl<
-        TContractState, +HasComponent<TContractState>
+        TContractState, +HasComponent<TContractState>,
     > of super::ICountable<ComponentState<TContractState>> {
         fn get(self: @ComponentState<TContractState>) -> u32 {
             self.countable_value.read()
@@ -44,7 +44,7 @@ mod CountableContract {
     #[event]
     #[derive(Drop, starknet::Event)]
     enum Event {
-        CountableEvent: countable_component::Event
+        CountableEvent: countable_component::Event,
     }
 
     #[abi(embed_v0)]
@@ -61,7 +61,7 @@ mod test {
 
     fn deploy_countable() -> ICountableDispatcher {
         let (address, _) = deploy_syscall(
-            CountableContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+            CountableContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
             .unwrap_syscall();
         ICountableDispatcher { contract_address: address }

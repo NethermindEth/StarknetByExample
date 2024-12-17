@@ -38,7 +38,7 @@ mod test {
     #[test]
     fn test_deploy_and_set_get() {
         let (contract_address, _) = deploy_syscall(
-            MapContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+            MapContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
             .unwrap_syscall();
         let mut contract = IMapContractDispatcher { contract_address };
