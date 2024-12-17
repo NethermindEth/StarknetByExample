@@ -27,7 +27,7 @@ pub mod switchable_component {
 
     #[embeddable_as(Switchable)]
     impl SwitchableImpl<
-        TContractState, +HasComponent<TContractState>
+        TContractState, +HasComponent<TContractState>,
     > of super::ISwitchable<ComponentState<TContractState>> {
         fn is_on(self: @ComponentState<TContractState>) -> bool {
             self.switchable_value.read()
@@ -41,7 +41,7 @@ pub mod switchable_component {
 
     #[generate_trait]
     pub impl SwitchableInternalImpl<
-        TContractState, +HasComponent<TContractState>
+        TContractState, +HasComponent<TContractState>,
     > of SwitchableInternalTrait<TContractState> {
         fn _off(ref self: ComponentState<TContractState>) {
             self.switchable_value.write(false);
@@ -90,13 +90,12 @@ mod test {
     use super::switchable_component::SwitchEvent;
     use super::{ISwitchableDispatcher, ISwitchableDispatcherTrait};
     use starknet::{syscalls::deploy_syscall, ContractAddress};
-    use starknet::SyscallResultTrait;
 
     fn deploy() -> (ISwitchableDispatcher, ContractAddress) {
         let (address, _) = deploy_syscall(
-            SwitchContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+            SwitchContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
-            .unwrap_syscall();
+            .unwrap();
         (ISwitchableDispatcher { contract_address: address }, address)
     }
 
@@ -113,7 +112,7 @@ mod test {
         assert_eq!(switchable.is_on(), true);
         assert_eq!(
             starknet::testing::pop_log(contract_address),
-            Option::Some(SwitchContract::Event::SwitchableEvent(SwitchEvent {}.into()))
+            Option::Some(SwitchContract::Event::SwitchableEvent(SwitchEvent {}.into())),
         );
     }
 

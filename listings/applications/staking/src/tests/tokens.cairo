@@ -28,7 +28,7 @@ pub mod RewardToken {
         name: ByteArray,
         symbol: ByteArray,
         initial_supply: u256,
-        recipient: ContractAddress
+        recipient: ContractAddress,
     ) {
         self.erc20.initializer(name, symbol);
         self.erc20.mint(recipient, initial_supply);
@@ -65,7 +65,7 @@ pub mod StakingToken {
         name: ByteArray,
         symbol: ByteArray,
         initial_supply: u256,
-        recipient: ContractAddress
+        recipient: ContractAddress,
     ) {
         self.erc20.initializer(name, symbol);
         self.erc20.mint(recipient, initial_supply);

@@ -17,7 +17,7 @@ You can define [storage variables](/getting-started/basics/variables#storage-var
 
 :::note
 Actually these two contracts have the same underlying Sierra program.
-From the compiler's perspective, the storage variables don't exist until they are used.
+The Sierra code is generated only for storage variables that are actually accessed in the contract's functions. Declaring but never using a storage variable doesn't affect the compiled contract size/gas costs.
 :::
 
 You can also read about [storing custom types](/getting-started/basics/storing-custom-types).

@@ -21,7 +21,7 @@ Interface:
 // [!include ~/listings/applications/components/src/others/switch_collision.cairo:interface]
 ```
 
-Here's the storage of the contract (you can expand the code snippet to see the full contract and tests):
+Here's the storage of the contract:
 
 ```cairo
 // [!include ~/listings/applications/components/src/others/switch_collision.cairo:storage]

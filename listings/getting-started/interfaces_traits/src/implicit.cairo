@@ -5,7 +5,7 @@ pub mod ImplicitInterfaceContract {
 
     #[storage]
     struct Storage {
-        value: u32
+        value: u32,
     }
 
     #[abi(per_item)]
@@ -27,7 +27,7 @@ pub mod ImplicitInterfaceContract {
 #[cfg(test)]
 mod tests {
     use super::{ImplicitInterfaceContract, ImplicitInterfaceContract::IImplicitInterfaceContract};
-    use starknet::{SyscallResultTrait, syscalls::deploy_syscall, testing::set_contract_address};
+    use starknet::{syscalls::deploy_syscall, testing::set_contract_address};
 
     #[test]
     fn test_interface() {
@@ -35,9 +35,9 @@ mod tests {
             ImplicitInterfaceContract::TEST_CLASS_HASH.try_into().unwrap(),
             0,
             array![].span(),
-            false
+            false,
         )
-            .unwrap_syscall();
+            .unwrap();
         set_contract_address(contract_address);
         let mut state = ImplicitInterfaceContract::contract_state_for_testing();
 

@@ -36,7 +36,7 @@ pub mod ERC721 {
         symbol: ByteArray,
         base_uri: ByteArray,
         recipient: ContractAddress,
-        token_id: u256
+        token_id: u256,
     ) {
         self.erc721.initializer(name, symbol, base_uri);
         self.erc721.mint(recipient, token_id);

@@ -1,10 +1,10 @@
 #[starknet::interface]
 pub trait IHashTrait<T> {
     fn save_user_with_poseidon(
-        ref self: T, id: felt252, username: felt252, password: felt252
+        ref self: T, id: felt252, username: felt252, password: felt252,
     ) -> felt252;
     fn save_user_with_pedersen(
-        ref self: T, id: felt252, username: felt252, password: felt252
+        ref self: T, id: felt252, username: felt252, password: felt252,
     ) -> felt252;
 }
 
@@ -36,7 +36,7 @@ pub mod HashTraits {
     #[abi(embed_v0)]
     impl HashTrait of super::IHashTrait<ContractState> {
         fn save_user_with_poseidon(
-            ref self: ContractState, id: felt252, username: felt252, password: felt252
+            ref self: ContractState, id: felt252, username: felt252, password: felt252,
         ) -> felt252 {
             let login = LoginDetails { username, password };
             let user = UserDetails { id, login };
@@ -48,7 +48,7 @@ pub mod HashTraits {
         }
 
         fn save_user_with_pedersen(
-            ref self: ContractState, id: felt252, username: felt252, password: felt252
+            ref self: ContractState, id: felt252, username: felt252, password: felt252,
         ) -> felt252 {
             let login = LoginDetails { username, password };
             let user = UserDetails { id, login };
@@ -64,16 +64,15 @@ pub mod HashTraits {
 
 #[cfg(test)]
 mod tests {
-    use starknet::SyscallResultTrait;
     use super::{HashTraits, IHashTraitDispatcher, IHashTraitDispatcherTrait};
     use starknet::syscalls::deploy_syscall;
 
     fn deploy() -> IHashTraitDispatcher {
         let mut calldata = array![];
         let (address, _) = deploy_syscall(
-            HashTraits::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
+            HashTraits::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false,
         )
-            .unwrap_syscall();
+            .unwrap();
         IHashTraitDispatcher { contract_address: address }
     }
 
