@@ -13,7 +13,7 @@ pub mod countable_component {
     // [!region impl]
     #[embeddable_as(Countable)]
     impl CountableImpl<
-        TContractState, +HasComponent<TContractState>, +ISwitchable<TContractState>
+        TContractState, +HasComponent<TContractState>, +ISwitchable<TContractState>,
     > of ICountable<ComponentState<TContractState>> {
         fn get(self: @ComponentState<TContractState>) -> u32 {
             self.countable_value.read()
@@ -68,13 +68,12 @@ mod test {
     use super::MockContract;
     use components::countable::{ICountableDispatcher, ICountableDispatcherTrait};
     use starknet::syscalls::deploy_syscall;
-    use starknet::SyscallResultTrait;
 
     fn deploy_countable() -> ICountableDispatcher {
         let (contract_address, _) = deploy_syscall(
-            MockContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+            MockContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
-            .unwrap_syscall();
+            .unwrap();
         ICountableDispatcher { contract_address: contract_address }
     }
 

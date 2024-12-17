@@ -19,17 +19,17 @@ pub mod countable_component {
         TContractState,
         +HasComponent<TContractState>,
         +switchable_component::HasComponent<TContractState>,
-        +Drop<TContractState>
+        +Drop<TContractState>,
     > of GetSwitchableTrait<TContractState> {
         fn get_switchable(
-            self: @ComponentState<TContractState>
+            self: @ComponentState<TContractState>,
         ) -> @switchable_component::ComponentState<TContractState> {
             let contract = self.get_contract();
             switchable_component::HasComponent::<TContractState>::get_component(contract)
         }
 
         fn get_switchable_mut(
-            ref self: ComponentState<TContractState>
+            ref self: ComponentState<TContractState>,
         ) -> switchable_component::ComponentState<TContractState> {
             let mut contract = self.get_contract_mut();
             switchable_component::HasComponent::<TContractState>::get_component_mut(ref contract)
@@ -42,7 +42,7 @@ pub mod countable_component {
         +HasComponent<TContractState>,
         +ISwitchable<TContractState>,
         +switchable_component::HasComponent<TContractState>,
-        +Drop<TContractState>
+        +Drop<TContractState>,
     > of ICountable<ComponentState<TContractState>> {
         fn get(self: @ComponentState<TContractState>) -> u32 {
             self.countable_value.read()

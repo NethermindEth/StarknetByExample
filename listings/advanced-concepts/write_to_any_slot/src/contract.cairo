@@ -7,7 +7,6 @@ pub trait IWriteToAnySlots<TContractState> {
 #[starknet::contract]
 pub mod WriteToAnySlot {
     use starknet::syscalls::{storage_read_syscall, storage_write_syscall};
-    use starknet::SyscallResultTrait;
     use core::poseidon::poseidon_hash_span;
     use starknet::StorageAddress;
 
@@ -19,15 +18,11 @@ pub mod WriteToAnySlot {
     #[abi(embed_v0)]
     impl WriteToAnySlot of super::IWriteToAnySlots<ContractState> {
         fn write_slot(ref self: ContractState, value: u32) {
-            storage_write_syscall(0, get_address_from_name(SLOT_NAME), value.into())
-                .unwrap_syscall();
+            storage_write_syscall(0, get_address_from_name(SLOT_NAME), value.into()).unwrap();
         }
 
         fn read_slot(self: @ContractState) -> u32 {
-            storage_read_syscall(0, get_address_from_name(SLOT_NAME))
-                .unwrap_syscall()
-                .try_into()
-                .unwrap()
+            storage_read_syscall(0, get_address_from_name(SLOT_NAME)).unwrap().try_into().unwrap()
         }
     }
     pub fn get_address_from_name(variable_name: felt252) -> StorageAddress {

@@ -11,19 +11,19 @@ pub trait IERC20<TContractState> {
     fn get_total_supply(self: @TContractState) -> felt252;
     fn balance_of(self: @TContractState, account: ContractAddress) -> felt252;
     fn allowance(
-        self: @TContractState, owner: ContractAddress, spender: ContractAddress
+        self: @TContractState, owner: ContractAddress, spender: ContractAddress,
     ) -> felt252;
     fn transfer(ref self: TContractState, recipient: ContractAddress, amount: felt252);
     fn transfer_from(
         ref self: TContractState,
         sender: ContractAddress,
         recipient: ContractAddress,
-        amount: felt252
+        amount: felt252,
     );
     fn approve(ref self: TContractState, spender: ContractAddress, amount: felt252);
     fn increase_allowance(ref self: TContractState, spender: ContractAddress, added_value: felt252);
     fn decrease_allowance(
-        ref self: TContractState, spender: ContractAddress, subtracted_value: felt252
+        ref self: TContractState, spender: ContractAddress, subtracted_value: felt252,
     );
 }
 
@@ -41,14 +41,14 @@ pub mod SimpleVault {
     use starknet::{ContractAddress, get_caller_address, get_contract_address};
     use starknet::storage::{
         Map, StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess,
-        StoragePointerWriteAccess
+        StoragePointerWriteAccess,
     };
 
     #[storage]
     struct Storage {
         token: IERC20Dispatcher,
         total_supply: u256,
-        balance_of: Map<ContractAddress, u256>
+        balance_of: Map<ContractAddress, u256>,
     }
 
     #[constructor]
@@ -127,17 +127,16 @@ pub mod SimpleVault {
 }
 // [!endregion contract]
 
+// TODO migrate to sn-foundry
 #[cfg(test)]
 mod tests {
-    use super::{SimpleVault, ISimpleVaultDispatcher, ISimpleVaultDispatcherTrait,};
+    use super::{SimpleVault, ISimpleVaultDispatcher, ISimpleVaultDispatcherTrait};
     use erc20::token::{
         IERC20DispatcherTrait as IERC20DispatcherTrait_token,
-        IERC20Dispatcher as IERC20Dispatcher_token
+        IERC20Dispatcher as IERC20Dispatcher_token,
     };
     use starknet::testing::{set_contract_address, set_account_contract_address};
-    use starknet::{
-        ContractAddress, SyscallResultTrait, syscalls::deploy_syscall, contract_address_const
-    };
+    use starknet::{ContractAddress, syscalls::deploy_syscall, contract_address_const};
 
     const token_name: felt252 = 'myToken';
     const decimals: u8 = 18;
@@ -151,23 +150,23 @@ mod tests {
         let (token_contract_address, _) = deploy_syscall(
             erc20::token::erc20::TEST_CLASS_HASH.try_into().unwrap(),
             caller.into(),
-            array![caller.into(), 'myToken', '8', '1000'.into(), 'MYT'].span(),
-            false
+            array![caller.into(), token_name, decimals.into(), initial_supply, symbols].span(),
+            false,
         )
-            .unwrap_syscall();
+            .expect('1');
 
         let (contract_address, _) = deploy_syscall(
             SimpleVault::TEST_CLASS_HASH.try_into().unwrap(),
             0,
             array![token_contract_address.into()].span(),
-            false
+            false,
         )
-            .unwrap_syscall();
+            .expect('2');
 
         (
             ISimpleVaultDispatcher { contract_address },
             contract_address,
-            IERC20Dispatcher_token { contract_address: token_contract_address }
+            IERC20Dispatcher_token { contract_address: token_contract_address },
         )
     }
 

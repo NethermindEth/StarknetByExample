@@ -11,7 +11,7 @@ pub mod MessageContract {
 
     #[storage]
     struct Storage {
-        pub message: ByteArray
+        pub message: ByteArray,
     }
 
     #[constructor]

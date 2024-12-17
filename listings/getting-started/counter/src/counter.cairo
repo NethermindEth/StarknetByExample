@@ -46,16 +46,16 @@ pub mod SimpleCounter {
 #[cfg(test)]
 mod test {
     use super::{SimpleCounter, ISimpleCounterDispatcher, ISimpleCounterDispatcherTrait};
-    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
+    use starknet::syscalls::deploy_syscall;
 
     fn deploy(init_value: u128) -> ISimpleCounterDispatcher {
         let (contract_address, _) = deploy_syscall(
             SimpleCounter::TEST_CLASS_HASH.try_into().unwrap(),
             0,
             array![init_value.into()].span(),
-            false
+            false,
         )
-            .unwrap_syscall();
+            .unwrap();
         ISimpleCounterDispatcher { contract_address }
     }
 

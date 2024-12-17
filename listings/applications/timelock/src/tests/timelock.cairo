@@ -3,7 +3,7 @@ use starknet::account::Call;
 use core::poseidon::{PoseidonTrait, poseidon_hash_span};
 use core::hash::HashStateTrait;
 use snforge_std::{
-    cheat_caller_address, cheat_block_timestamp, CheatSpan, spy_events, EventSpyAssertionsTrait
+    cheat_caller_address, cheat_block_timestamp, CheatSpan, spy_events, EventSpyAssertionsTrait,
 };
 use openzeppelin::token::erc721::interface::IERC721DispatcherTrait;
 use openzeppelin::token::erc721::erc721::ERC721Component;
@@ -34,7 +34,9 @@ fn test_queue_only_owner() {
         .timelock_safe
         .queue(timelock_test.get_call(), timelock_test.get_timestamp()) {
         Result::Ok(_) => panic_with_felt252('FAIL'),
-        Result::Err(panic_data) => { assert_eq!(*panic_data.at(0), ownable::Errors::UNAUTHORIZED); }
+        Result::Err(panic_data) => {
+            assert_eq!(*panic_data.at(0), ownable::Errors::UNAUTHORIZED);
+        },
     }
 }
 
@@ -47,7 +49,7 @@ fn test_queue_already_queued() {
         Result::Ok(_) => panic_with_felt252('FAIL'),
         Result::Err(panic_data) => {
             assert_eq!(*panic_data.at(0), TimeLock::Errors::ALREADY_QUEUED);
-        }
+        },
     }
 }
 
@@ -58,7 +60,7 @@ fn test_queue_timestamp_not_in_range() {
         Result::Ok(_) => panic_with_felt252('FAIL'),
         Result::Err(panic_data) => {
             assert_eq!(*panic_data.at(0), TimeLock::Errors::TIMESTAMP_NOT_IN_RANGE);
-        }
+        },
     }
     match timelock_test
         .timelock_safe
@@ -66,7 +68,7 @@ fn test_queue_timestamp_not_in_range() {
         Result::Ok(_) => panic_with_felt252('FAIL'),
         Result::Err(panic_data) => {
             assert_eq!(*panic_data.at(0), TimeLock::Errors::TIMESTAMP_NOT_IN_RANGE);
-        }
+        },
     }
 }
 
@@ -82,10 +84,10 @@ fn test_queue_success() {
                 (
                     timelock_test.timelock_address,
                     TimeLock::Event::Queue(
-                        TimeLock::Queue { tx_id, call: timelock_test.get_call(), timestamp }
-                    )
-                )
-            ]
+                        TimeLock::Queue { tx_id, call: timelock_test.get_call(), timestamp },
+                    ),
+                ),
+            ],
         );
     assert_eq!(tx_id, timelock_test.timelock.get_tx_id(timelock_test.get_call(), timestamp));
 }
@@ -98,7 +100,9 @@ fn test_execute_only_owner() {
         .timelock_safe
         .execute(timelock_test.get_call(), timelock_test.get_timestamp()) {
         Result::Ok(_) => panic_with_felt252('FAIL'),
-        Result::Err(panic_data) => { assert_eq!(*panic_data.at(0), ownable::Errors::UNAUTHORIZED); }
+        Result::Err(panic_data) => {
+            assert_eq!(*panic_data.at(0), ownable::Errors::UNAUTHORIZED);
+        },
     }
 }
 
@@ -109,7 +113,7 @@ fn test_execute_not_queued() {
         .timelock_safe
         .execute(timelock_test.get_call(), timelock_test.get_timestamp()) {
         Result::Ok(_) => panic_with_felt252('FAIL'),
-        Result::Err(panic_data) => { assert_eq!(*panic_data.at(0), TimeLock::Errors::NOT_QUEUED); }
+        Result::Err(panic_data) => { assert_eq!(*panic_data.at(0), TimeLock::Errors::NOT_QUEUED); },
     }
 }
 
@@ -122,7 +126,7 @@ fn test_execute_timestamp_not_passed() {
         Result::Ok(_) => panic_with_felt252('FAIL'),
         Result::Err(panic_data) => {
             assert_eq!(*panic_data.at(0), TimeLock::Errors::TIMESTAMP_NOT_PASSED);
-        }
+        },
     }
 }
 
@@ -134,13 +138,13 @@ fn test_execute_timestamp_expired() {
     cheat_block_timestamp(
         timelock_test.timelock_address,
         timestamp + TimeLock::GRACE_PERIOD + 1,
-        CheatSpan::TargetCalls(1)
+        CheatSpan::TargetCalls(1),
     );
     match timelock_test.timelock_safe.execute(timelock_test.get_call(), timestamp) {
         Result::Ok(_) => panic_with_felt252('FAIL'),
         Result::Err(panic_data) => {
             assert_eq!(*panic_data.at(0), TimeLock::Errors::TIMESTAMP_EXPIRED);
-        }
+        },
     }
 }
 
@@ -160,10 +164,10 @@ fn test_execute_success() {
                 (
                     timelock_test.timelock_address,
                     TimeLock::Event::Execute(
-                        TimeLock::Execute { tx_id, call: timelock_test.get_call(), timestamp }
-                    )
-                )
-            ]
+                        TimeLock::Execute { tx_id, call: timelock_test.get_call(), timestamp },
+                    ),
+                ),
+            ],
         );
 }
 
@@ -177,7 +181,7 @@ fn test_execute_failed() {
         Result::Ok(_) => panic_with_felt252('FAIL'),
         Result::Err(panic_data) => {
             assert_eq!(*panic_data.at(0), ERC721Component::Errors::UNAUTHORIZED);
-        }
+        },
     }
 }
 
@@ -190,7 +194,9 @@ fn test_cancel_only_owner() {
     cheat_caller_address(timelock_test.timelock_address, OTHER(), CheatSpan::TargetCalls(1));
     match timelock_test.timelock_safe.cancel(tx_id) {
         Result::Ok(_) => panic_with_felt252('FAIL'),
-        Result::Err(panic_data) => { assert_eq!(*panic_data.at(0), ownable::Errors::UNAUTHORIZED); }
+        Result::Err(panic_data) => {
+            assert_eq!(*panic_data.at(0), ownable::Errors::UNAUTHORIZED);
+        },
     }
 }
 
@@ -202,7 +208,7 @@ fn test_cancel_not_queued() {
         .get_tx_id(timelock_test.get_call(), timelock_test.get_timestamp());
     match timelock_test.timelock_safe.cancel(tx_id) {
         Result::Ok(_) => panic_with_felt252('FAIL'),
-        Result::Err(panic_data) => { assert_eq!(*panic_data.at(0), TimeLock::Errors::NOT_QUEUED); }
+        Result::Err(panic_data) => { assert_eq!(*panic_data.at(0), TimeLock::Errors::NOT_QUEUED); },
     }
 }
 
@@ -219,8 +225,8 @@ fn test_cancel_success() {
             @array![
                 (
                     timelock_test.timelock_address,
-                    TimeLock::Event::Cancel(TimeLock::Cancel { tx_id })
-                )
-            ]
+                    TimeLock::Event::Cancel(TimeLock::Cancel { tx_id }),
+                ),
+            ],
         );
 }

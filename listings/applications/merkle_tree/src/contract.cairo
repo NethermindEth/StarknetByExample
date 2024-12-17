@@ -14,7 +14,7 @@ pub trait IMerkleTree<TContractState> {
     fn get_root(self: @TContractState) -> felt252;
     // function to verify if leaf node exists in the merkle tree
     fn verify(
-        self: @TContractState, proof: Array<felt252>, root: felt252, leaf: felt252, index: usize
+        self: @TContractState, proof: Array<felt252>, root: felt252, leaf: felt252, index: usize,
     ) -> bool;
 }
 
@@ -28,19 +28,19 @@ pub mod MerkleTree {
     use core::poseidon::PoseidonTrait;
     use core::hash::{HashStateTrait, HashStateExTrait};
     use starknet::storage::{
-        StoragePointerWriteAccess, StoragePointerReadAccess, Vec, MutableVecTrait, VecTrait
+        StoragePointerWriteAccess, StoragePointerReadAccess, Vec, MutableVecTrait, VecTrait,
     };
     use super::ByteArrayHashTrait;
 
     #[storage]
     struct Storage {
-        pub hashes: Vec<felt252>
+        pub hashes: Vec<felt252>,
     }
 
     #[derive(Drop, Serde, Copy)]
     struct Vec2 {
         x: u32,
-        y: u32
+        y: u32,
     }
 
     #[abi(embed_v0)]
@@ -96,7 +96,7 @@ pub mod MerkleTree {
             mut proof: Array<felt252>,
             root: felt252,
             leaf: felt252,
-            mut index: usize
+            mut index: usize,
         ) -> bool {
             let mut current_hash = leaf;
 

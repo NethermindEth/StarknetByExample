@@ -13,14 +13,14 @@ pub mod ERC20Token {
     #[storage]
     struct Storage {
         #[substorage(v0)]
-        erc20: ERC20Component::Storage
+        erc20: ERC20Component::Storage,
     }
 
     #[event]
     #[derive(Drop, starknet::Event)]
     enum Event {
         #[flat]
-        ERC20Event: ERC20Component::Event
+        ERC20Event: ERC20Component::Event,
     }
 
     #[constructor]
@@ -29,7 +29,7 @@ pub mod ERC20Token {
         initial_supply: u256,
         recipient: ContractAddress,
         name: ByteArray,
-        symbol: ByteArray
+        symbol: ByteArray,
     ) {
         self.erc20.initializer(name, symbol);
         self.erc20.mint(recipient, initial_supply);
