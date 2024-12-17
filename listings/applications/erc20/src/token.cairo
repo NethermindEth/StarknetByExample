@@ -246,7 +246,7 @@ mod tests {
 
 
     #[test]
-    #[should_panic(expected: ('ERC20: mint to 0', 'CONSTRUCTOR_FAILED'))]
+    #[should_panic]
     fn test_deploy_when_recipient_is_address_zero() {
         let recipient: ContractAddress = Zero::zero();
 

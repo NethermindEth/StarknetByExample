@@ -127,6 +127,7 @@ pub mod SimpleVault {
 }
 // [!endregion contract]
 
+// TODO migrate to sn-foundry
 #[cfg(test)]
 mod tests {
     use super::{SimpleVault, ISimpleVaultDispatcher, ISimpleVaultDispatcherTrait};
@@ -149,10 +150,10 @@ mod tests {
         let (token_contract_address, _) = deploy_syscall(
             erc20::token::erc20::TEST_CLASS_HASH.try_into().unwrap(),
             caller.into(),
-            array![caller.into(), 'myToken', '8', '1000'.into(), 'MYT'].span(),
+            array![caller.into(), token_name, decimals.into(), initial_supply, symbols].span(),
             false,
         )
-            .unwrap();
+            .expect('1');
 
         let (contract_address, _) = deploy_syscall(
             SimpleVault::TEST_CLASS_HASH.try_into().unwrap(),
@@ -160,7 +161,7 @@ mod tests {
             array![token_contract_address.into()].span(),
             false,
         )
-            .unwrap();
+            .expect('2');
 
         (
             ISimpleVaultDispatcher { contract_address },
