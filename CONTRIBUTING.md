@@ -78,7 +78,7 @@ Be sure to check for typos with `typos`:
 
 ```bash
 cargo install typos-cli
-typos src/
+typos pages/
 ```
 
 ## Adding a new Cairo program
@@ -95,6 +95,7 @@ Here's the required `Scarb.toml` configuration for **cairo-test**:
 [package]
 name = "pkg_name"
 version.workspace = true
+edition.workspace = true
 
 # Specify that this can be used as a dependency in another scarb project:
 [lib]
@@ -123,6 +124,7 @@ Here's the required `Scarb.toml` configuration for **Starknet Foundry**:
 [package]
 name = "pkg_name"
 version.workspace = true
+edition.workspace = true
 
 # Specify that this can be used as a dependency in another scarb project:
 [lib]
