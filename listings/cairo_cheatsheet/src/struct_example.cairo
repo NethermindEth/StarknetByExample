@@ -2,5 +2,5 @@
 #[derive(Drop, starknet::Store)]
 struct Data {
     address: starknet::ContractAddress,
-    age: u8
+    age: u8,
 }

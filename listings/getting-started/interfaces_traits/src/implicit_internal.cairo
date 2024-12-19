@@ -12,7 +12,7 @@ pub mod ImplicitInternalContract {
 
     #[storage]
     struct Storage {
-        value: u32
+        value: u32,
     }
 
     #[generate_trait]
@@ -52,17 +52,20 @@ pub mod ImplicitInternalContract {
 mod tests {
     use super::{
         ImplicitInternalContract, IImplicitInternalContractDispatcher,
-        IImplicitInternalContractDispatcherTrait
+        IImplicitInternalContractDispatcherTrait,
     };
-    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
+    use starknet::syscalls::deploy_syscall;
 
     #[test]
     fn test_interface() {
         // Set up.
         let (contract_address, _) = deploy_syscall(
-            ImplicitInternalContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+            ImplicitInternalContract::TEST_CLASS_HASH.try_into().unwrap(),
+            0,
+            array![].span(),
+            false,
         )
-            .unwrap_syscall();
+            .unwrap();
         let mut contract = IImplicitInternalContractDispatcher { contract_address };
 
         let initial_value: u32 = 0;

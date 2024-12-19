@@ -21,14 +21,14 @@ pub mod EventCounter {
     // It must also derive at least the `Drop` and `starknet::Event` traits.
     pub enum Event {
         CounterIncreased: CounterIncreased,
-        UserIncreaseCounter: UserIncreaseCounter
+        UserIncreaseCounter: UserIncreaseCounter,
     }
 
     // By deriving the `starknet::Event` trait, we indicate to the compiler that
     // this struct will be used when emitting events.
     #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
     pub struct CounterIncreased {
-        pub amount: u128
+        pub amount: u128,
     }
 
     #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
@@ -51,9 +51,9 @@ pub mod EventCounter {
                 .emit(
                     Event::UserIncreaseCounter(
                         UserIncreaseCounter {
-                            user: get_caller_address(), new_value: self.counter.read()
-                        }
-                    )
+                            user: get_caller_address(), new_value: self.counter.read(),
+                        },
+                    ),
                 );
             // [!endregion emit]
         }
@@ -65,18 +65,18 @@ pub mod EventCounter {
 mod tests {
     use super::{
         EventCounter, EventCounter::{Event, CounterIncreased, UserIncreaseCounter},
-        IEventCounterDispatcherTrait, IEventCounterDispatcher
+        IEventCounterDispatcherTrait, IEventCounterDispatcher,
     };
-    use starknet::{contract_address_const, SyscallResultTrait, syscalls::deploy_syscall};
+    use starknet::{contract_address_const, syscalls::deploy_syscall};
     use starknet::testing::set_contract_address;
     use starknet::storage::StoragePointerReadAccess;
 
     #[test]
     fn test_increment_events() {
         let (contract_address, _) = deploy_syscall(
-            EventCounter::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+            EventCounter::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
-            .unwrap_syscall();
+            .unwrap();
         let mut contract = IEventCounterDispatcher { contract_address };
         let state = @EventCounter::contract_state_for_testing();
 
@@ -94,14 +94,14 @@ mod tests {
         // [!region test_events]
         assert_eq!(
             starknet::testing::pop_log(contract_address),
-            Option::Some(Event::CounterIncreased(CounterIncreased { amount }))
+            Option::Some(Event::CounterIncreased(CounterIncreased { amount })),
         );
         // [!endregion test_events]
         assert_eq!(
             starknet::testing::pop_log(contract_address),
             Option::Some(
-                Event::UserIncreaseCounter(UserIncreaseCounter { user: caller, new_value: amount })
-            )
+                Event::UserIncreaseCounter(UserIncreaseCounter { user: caller, new_value: amount }),
+            ),
         );
     }
 }

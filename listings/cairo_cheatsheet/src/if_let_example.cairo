@@ -13,15 +13,15 @@ fn if_let() {
     // "if `let` destructures `number` into `Some(i)`:
     // evaluate the block (`{}`).
     if let Option::Some(i) = number {
-        println!("Matched {}", i);
+        format!("Matched {}", i);
     }
 
     // If you need to specify a failure, use an else:
     if let Option::Some(i) = letter {
-        println!("Matched {}", i);
+        format!("Matched {}", i);
     } else {
         // Destructure failed. Change to the failure case.
-        println!("Didn't match a number.");
+        format!("Didn't match a number.");
     }
 
     // Using `if let` with enum
@@ -31,19 +31,19 @@ fn if_let() {
 
     // Variable a matches Foo::Bar
     if let Foo::Bar = a {
-        println!("a is foobar");
+        format!("a is foobar");
     }
 
     // Variable b does not match Foo::Bar
     // So this will print nothing
     if let Foo::Bar = b {
-        println!("b is foobar");
+        format!("b is foobar");
     }
 
     // Variable c matches Foo::Qux which has a value
     // Similar to Some() in the previous example
     if let Foo::Qux(value) = c {
-        println!("c is {}", value);
+        format!("c is {}", value);
     }
 }
 // [!endregion sheet]

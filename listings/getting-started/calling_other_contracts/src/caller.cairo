@@ -27,7 +27,7 @@ pub mod Callee {
 #[starknet::interface]
 pub trait ICaller<TContractState> {
     fn set_value_from_address(
-        ref self: TContractState, addr: starknet::ContractAddress, value: u128
+        ref self: TContractState, addr: starknet::ContractAddress, value: u128,
     );
 }
 
@@ -54,21 +54,21 @@ pub mod Caller {
 #[cfg(test)]
 mod tests {
     use super::{Callee, ICalleeDispatcher, Caller, ICallerDispatcher, ICallerDispatcherTrait};
-    use starknet::{testing::set_contract_address, syscalls::deploy_syscall, SyscallResultTrait};
+    use starknet::{testing::set_contract_address, syscalls::deploy_syscall};
     use starknet::storage::StoragePointerReadAccess;
 
     fn deploy() -> (ICalleeDispatcher, ICallerDispatcher) {
         let (address_callee, _) = deploy_syscall(
-            Callee::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+            Callee::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
-            .unwrap_syscall();
+            .unwrap();
         let (address_caller, _) = deploy_syscall(
-            Caller::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+            Caller::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
-            .unwrap_syscall();
+            .unwrap();
         (
             ICalleeDispatcher { contract_address: address_callee },
-            ICallerDispatcher { contract_address: address_caller }
+            ICallerDispatcher { contract_address: address_caller },
         )
     }
 

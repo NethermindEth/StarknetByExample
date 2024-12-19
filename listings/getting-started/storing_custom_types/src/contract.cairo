@@ -10,7 +10,7 @@ pub trait IStoringCustomType<TContractState> {
 #[derive(Drop, Serde, Copy, starknet::Store)]
 pub struct Person {
     pub age: u8,
-    pub name: felt252
+    pub name: felt252,
 }
 
 #[starknet::contract]
@@ -20,7 +20,7 @@ pub mod StoringCustomType {
 
     #[storage]
     struct Storage {
-        pub person: Person
+        pub person: Person,
     }
 
     #[abi(embed_v0)]
@@ -40,7 +40,7 @@ pub mod StoringCustomType {
 
 #[cfg(test)]
 mod tests {
-    use super::{IStoringCustomType, StoringCustomType, Person,};
+    use super::{IStoringCustomType, StoringCustomType, Person};
     use starknet::storage::StoragePointerReadAccess;
 
     #[test]

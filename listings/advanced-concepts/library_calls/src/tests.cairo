@@ -1,8 +1,7 @@
 mod tests {
     use starknet::syscalls::deploy_syscall;
-    use starknet::SyscallResultTrait;
     use library_calls::library_call::{
-        MathUtils, MathUtilsLibraryCall, IMathUtilsDispatcher, IMathUtilsDispatcherTrait
+        MathUtils, MathUtilsLibraryCall, IMathUtilsDispatcher, IMathUtilsDispatcherTrait,
     };
 
     #[test]
@@ -12,9 +11,9 @@ mod tests {
             .unwrap();
         let mut calldata: Array<felt252> = array![];
         let (address, _) = deploy_syscall(
-            MathUtilsLibraryCall::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
+            MathUtilsLibraryCall::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false,
         )
-            .unwrap_syscall();
+            .unwrap();
         let mut contract = IMathUtilsDispatcher { contract_address: address };
 
         contract.set_class_hash(math_utils_class_hash);

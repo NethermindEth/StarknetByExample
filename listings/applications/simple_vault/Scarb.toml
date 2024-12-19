@@ -14,3 +14,4 @@ cairo_test.workspace = true
 test.workspace = true
 
 [[target.starknet-contract]]
+build-external-contracts = ["erc20::token::erc20"]
