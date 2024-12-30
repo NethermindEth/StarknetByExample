@@ -224,6 +224,10 @@ const config: Sidebar = [
         text: "Signature Verification",
         link: "/advanced-concepts/signature_verification",
       },
+      {
+        text: "Sierra IR",
+        link: "/advanced-concepts/sierra_ir",
+      }
     ],
   },
   {

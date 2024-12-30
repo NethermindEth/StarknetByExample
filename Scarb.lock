@@ -250,6 +250,10 @@ version = "1.0.0"
 source = "git+https://github.com/astraly-labs/pragma-lib?tag=2.9.1#ee1f3f7e9276cf64e19e267832de380d84c04d28"
 
 [[package]]
+name = "sierra_ir"
+version = "0.1.0"
+
+[[package]]
 name = "simple_account"
 version = "0.1.0"
 dependencies = [
