@@ -18,3 +18,6 @@ src/**/*.md
 
 node_modules
 
+
+# windsurf rules
+.windsurfrules
