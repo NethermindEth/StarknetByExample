@@ -8,7 +8,7 @@ export default function Footer() {
       />
       <div className="footer_text text-xs flex flex-col items-center">
         <span>Released under the MIT License.</span>
-        <span>© 2024 Nethermind. All Rights Reserved</span>
+        <span>© 2025 Nethermind. All Rights Reserved</span>
       </div>
     </div>
   );
