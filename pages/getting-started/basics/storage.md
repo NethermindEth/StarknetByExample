@@ -1,23 +1,27 @@
 # Storage
 
-Here's the most minimal contract you can write in Cairo:
+## Basic Contract Structure
+
+Every Starknet contract must be defined as a module with the `#[starknet::contract]` attribute. Here's the simplest possible Cairo contract:
 
 ```cairo
 // [!include ~/listings/getting-started/storage/src/minimal_contract.cairo:contract]
 ```
 
-Storage is a `struct` annotated with `#[storage]`. Every contract must have one and only one storage.
-It's a key-value store, where each key will be mapped to a storage address of the contract's storage space.
+## Contract Storage Basics
 
-You can define [storage variables](/getting-started/basics/variables#storage-variables) in your contract, and then use them to store and retrieve data.
+Storage in Cairo contracts is implemented as a key-value store using a struct marked with the `#[storage]` attribute. Every contract must have exactly one storage definition, which serves as the contract's persistent state on the blockchain and is kept between contract executions.
+
+### Storage Variables
+
+You can define [Storage Variables](/getting-started/basics/variables#storage-variables) to store and retrieve data in your contract:
 
 ```cairo
 // [!include ~/listings/getting-started/storage/src/contract.cairo:contract]
 ```
 
 :::note
-Actually these two contracts have the same underlying Sierra program.
-The Sierra code is generated only for storage variables that are actually accessed in the contract's functions. Declaring but never using a storage variable doesn't affect the compiled contract size/gas costs.
+💡 **Optimization Tip**: Both contracts above generate identical Sierra code. The compiler only generates code for storage variables that are actually used in contract functions. Declaring unused storage variables has no impact on contract size or gas costs.
 :::
 
-You can also read about [storing custom types](/getting-started/basics/storing-custom-types).
+For more complex data structures, see [Storing Custom Types](/getting-started/basics/storing-custom-types).
