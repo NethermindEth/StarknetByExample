@@ -1,19 +1,23 @@
 // [!region contract]
 #[starknet::contract]
-pub mod ExampleConstructor {
-    use starknet::ContractAddress;
-    use starknet::storage::{Map, StorageMapWriteAccess};
+mod ConstructorContract {
+    // This trait is necessary to be able to write to a specific storage variable
+    use starknet::storage::StoragePointerWriteAccess;
 
     #[storage]
     struct Storage {
-        pub names: Map::<ContractAddress, felt252>,
+        a: u128,
+        b: u8,
+        c: u256,
     }
 
     // The constructor is decorated with a `#[constructor]` attribute.
     // It is not inside an `impl` block.
     #[constructor]
-    fn constructor(ref self: ContractState, name: felt252, address: ContractAddress) {
-        self.names.write(address, name);
+    fn constructor(ref self: ContractState, a: u128, b: u8, c: u256) {
+        self.a.write(a);
+        self.b.write(b);
+        self.c.write(c);
     }
 }
 // [!endregion contract]
@@ -21,29 +25,25 @@ pub mod ExampleConstructor {
 // [!region tests]
 #[cfg(test)]
 mod tests {
-    use super::ExampleConstructor;
-    use starknet::{ContractAddress, syscalls::deploy_syscall};
-    use starknet::{contract_address_const, testing::{set_contract_address}};
-    use starknet::storage::StorageMapReadAccess;
+    use snforge_std::{ContractClassTrait, DeclareResultTrait, declare, load};
 
     #[test]
     fn should_deploy_with_constructor_init_value() {
-        let name: felt252 = 'bob';
-        let address: ContractAddress = contract_address_const::<'caller'>();
+        let contract = declare("ConstructorContract").unwrap().contract_class();
+        let mut constructor_calldata: Array<felt252> = array![];
+        1_u128.serialize(ref constructor_calldata); // a
+        2_u8.serialize(ref constructor_calldata); // b
+        3_u256.serialize(ref constructor_calldata); // c
+        let (contract_address, _) = contract.deploy(@constructor_calldata).unwrap();
 
-        let (contract_address, _) = deploy_syscall(
-            ExampleConstructor::TEST_CLASS_HASH.try_into().unwrap(),
-            0,
-            array![name, address.into()].span(),
-            false,
-        )
-            .unwrap();
+        let mut loaded = load(contract_address, selector!("a"), 1).span();
+        assert_eq!(Serde::deserialize(ref loaded).unwrap(), 1);
 
-        let state = @ExampleConstructor::contract_state_for_testing();
-        set_contract_address(contract_address);
+        let mut loaded = load(contract_address, selector!("b"), 1).span();
+        assert_eq!(Serde::deserialize(ref loaded).unwrap(), 2);
 
-        let name = state.names.read(address);
-        assert_eq!(name, 'bob');
+        let mut loaded = load(contract_address, selector!("c"), 2).span();
+        assert_eq!(Serde::deserialize(ref loaded).unwrap(), 3);
     }
 }
 // [!endregion tests]
