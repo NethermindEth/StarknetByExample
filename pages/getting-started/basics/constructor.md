@@ -1,9 +1,35 @@
 # Constructor
 
-Constructors are a special type of function that runs only once when deploying a contract, and can be used to initialize the state of the contract. Your contract must not have more than one constructor, and that constructor function must be annotated with the `#[constructor]` attribute. Also, a good practice consists in naming that function `constructor`.
+A constructor is a special function that initializes a contract's state during deployment. It has several key characteristics:
 
-Here's a simple example that demonstrates how to initialize the state of a contract on deployment by defining logic inside a constructor.
+- Runs exactly once when the contract is deployed
+- Must be annotated with `#[constructor]`
+- Up to one constructor per contract
+- Function is conventionally named `constructor`
+
+Here's an example that shows how to initialize storage variables during contract deployment:
 
 ```cairo
 // [!include ~/listings/getting-started/constructor/src/constructor.cairo:contract]
 ```
+
+In this example:
+
+- The constructor takes three parameters: `a`, `b`, and `c`
+- Each parameter corresponds to a storage variable of the same name, but you can specify any argument variable name
+- The values are written to storage using the `write()` method. You need to import the `StoragePointerWriteAccess` trait to be able to write to a specific storage pointer
+
+:::note
+**Best Practice**
+
+Constructors are ideal for:
+
+- Setting initial contract state
+- Storing deployment-time parameters
+- Initializing access control (e.g., setting an owner)
+
+:::
+
+:::warning
+**Constructor values cannot be changed after deployment unless you specifically implement functions to modify them.**
+:::
