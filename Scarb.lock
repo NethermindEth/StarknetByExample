@@ -56,6 +56,9 @@ dependencies = [
 [[package]]
 name = "constructor"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "counter"
@@ -292,6 +295,9 @@ dependencies = [
 [[package]]
 name = "storage"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "store_using_packing"
