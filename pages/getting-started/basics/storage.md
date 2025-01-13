@@ -21,7 +21,9 @@ You can define [Storage Variables](/getting-started/basics/variables#storage-var
 ```
 
 :::note
-💡 **Optimization Tip**: Both contracts above generate identical Sierra code. The compiler only generates code for storage variables that are actually used in contract functions. Declaring unused storage variables has no impact on contract size or gas costs.
+**Optimization Tip**
+
+Both contracts above generate identical Sierra code. The compiler only generates code for storage variables that are actually used in contract functions. Declaring unused storage variables has no impact on contract size or gas costs.
 :::
 
 For more complex data structures, see [Storing Custom Types](/getting-started/basics/storing-custom-types).
@@ -32,26 +34,37 @@ The contract's storage space consists of $2^{251}$ *storage slots*, where each s
 
 - Can store a single `felt252` value
 - Is initialized to 0
-- Has a unique address that can be accessed using `selector!("variable_name")` for primitive types
+
+### Storage Pointers
+
+Storage variables are stored in storage slots using Starknet's memory model abstraction called **Storage Pointers**. A storage pointer is a tuple `(base_address, offset)` where:
+
+- `base_address` is the address of the first slot where the variable is stored
+- `offset` is the distance from the base address where the variable is stored
+
+To get the base address of a storage variable, you can use the `selector!` macro to derive it from the variable name: for example, `selector!("variable_name")`.
+
+### Storage Layout Example
 
 In our previous contract example:
 
 - Variable `a` (u128):
-  - Address: `selector!("a")`
-  - Uses first 128 bits of the slot
+  - Base address: `selector!("a")`
+  - Uses lowest 128 bits of the slot at offset 0
   - Leaves 124 bits unused
 - Variable `b` (u8):
-  - Address: `selector!("b")`
-  - Uses first 8 bits of the slot
+  - Base address: `selector!("b")`
+  - Uses lowest 8 bits of the slot at offset 0
   - Leaves 244 bits unused
-- Variable `c` (u256)
-  - An u256 cannot fit in a single slot
+- Variable `c` (u256):
   - Base address: `selector!("c")`
-  - Uses two consecutive slots:
-    - First slot: lower 128 bits at `selector!("c")`
-    - Second slot: upper 128 bits at `selector!("c") + 1`
-  - Leaves 248 bits unused
+  - Too large for a single slot, uses two consecutive slots:
+    - First slot: lower 128 bits at offset 0
+    - Second slot: lower 128 bits at offset 1
+  - Leaves 248 bits unused, 124 in each slot
 
 :::note
-💡 **Storage Optimization**: Notice how many bits are left unused in each slot? This can make storage operations expensive. To optimize storage usage, you can pack multiple variables together. Learn more in [Storage Optimisation](/advanced-concepts/optimisations/store_using_packing).
+**Storage Optimization**
+
+Notice how many bits are left unused in each slot? This can make storage operations expensive. To optimize storage usage, you can pack multiple variables together. Learn more in [Storage Optimisation](/advanced-concepts/optimisations/store_using_packing).
 :::
