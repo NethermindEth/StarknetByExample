@@ -19,12 +19,12 @@ const config: Sidebar = [
             link: "/getting-started/basics/storage",
           },
           {
-            text: "Constructor",
-            link: "/getting-started/basics/constructor",
-          },
-          {
             text: "Variables",
             link: "/getting-started/basics/variables",
+          },
+          {
+            text: "Constructor",
+            link: "/getting-started/basics/constructor",
           },
           {
             text: "Visibility and Mutability",
