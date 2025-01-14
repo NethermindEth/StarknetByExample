@@ -4,7 +4,7 @@ mod LocalVariablesContract {
     #[storage]
     struct Storage {}
 
-    pub fn do_something(self: @ContractState, value: u32) -> u32 {
+    pub fn do_something(value: u32) -> u32 {
         // This variable is local to the current block.
         // It can't be accessed once it goes out of scope.
         let increment = 10;
@@ -22,13 +22,11 @@ mod LocalVariablesContract {
 
 #[cfg(test)]
 mod test {
-    use super::LocalVariablesContract;
     use super::LocalVariablesContract::do_something;
 
     #[test]
     fn test_can_do_something() {
-        let mut state = LocalVariablesContract::contract_state_for_testing();
         let value = 10;
-        assert_eq!(do_something(@state, value), value + 10);
+        assert_eq!(do_something(value), value + 10);
     }
 }
