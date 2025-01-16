@@ -1,29 +1,78 @@
-# Visibility and Mutability
+# Interfaces, Visibility and Mutability
 
-## Visibility
+## Function Visibility
 
-There are two types of functions in Starknet contracts:
+In Starknet contracts, functions can have two types of visibility:
 
-- Functions that are accessible externally and can be called by anyone.
-- Functions that are only accessible internally and can only be called by other functions in the contract.
-
-These functions are also typically divided into two different implementation blocks. The first `impl` block for externally accessible functions is explicitly annotated with an `#[abi(embed_v0)]` attribute. This indicates that all the functions inside this block can be called either as a transaction or as a view function. The second `impl` block for internally accessible functions is not annotated with any attribute, which means that all the functions inside this block are private by default.
+- **External Functions**: Can be called by anyone, including other contracts and users
+- **Internal Functions**: Can only be called by other functions within the same contract
 
 ## State Mutability
 
-Regardless of whether a function is internal or external, it can either modify the contract's state or not. When we declare functions that interact with storage variables inside a smart contract,
-we need to explicitly state that we are accessing the `ContractState` by adding it as the first parameter of the function. This can be done in two different ways:
+Every function in a contract can either modify or just read the contract's state. This behavior is determined by how we pass the `ContractState` parameter:
 
-- If we want our function to be able to mutate the state of the contract, we pass it by reference like this: `ref self: ContractState`
-- If we want our function to be read-only and not mutate the state of the contract, we pass it by snapshot like this: `self: @ContractState`
+- **State-Modifying Functions**: Use `ref self: ContractState`
+  - Can read and write to storage
+  - Require a transaction to execute
+  - Cost gas to run
 
-Read-only functions, also called view functions, can be directly called without making a transaction. You can interact with them directly through an RPC node to read the contract's state, and they're free to call!
-External functions, that modify the contract's state, on the other hand, can only be called by making a transaction.
+- **View Functions**: Use `self: @ContractState`
+  - Can only read from storage
+  - Can be called directly through an RPC node
+  - Free to call (no transaction needed)
 
-Internal functions can't be called externally, but the same principle applies regarding state mutability.
+:::note
+Internal functions follow the same state mutability rules as external functions. The only difference is who can call them.
+:::
 
-Let's take a look at a simple example contract to see these in action:
+## Implementation
+
+### External Functions
+
+For external functions (both state-modifying and view), you need:
+
+1. **Interface Definition**
+   - Defined with `#[starknet::interface]` attribute
+   - Lists all functions that can be called externally
+   - Functions can be called as transactions or view calls
+   - Part of the contract's public API
+
+2. **Interface Implementation**
+   - Uses `#[abi(embed_v0)]` attribute
+   - Becomes part of the contract's ABI (Application Binary Interface)
+   - ABI defines how to interact with the contract from outside
+   - Must implement all functions defined in the interface
+
+### Internal Functions
+
+For internal functions, there are two options:
+
+1. **Implementation Block**
+    - Can use `#[generate_trait]` attribute
+    - Recommended for functions that need `ContractState` access
+    - Sometimes prefixed with `_` to indicate internal use
+
+2. **Direct Contract Body**
+    - Functions defined directly in the contract
+    - Recommended for pure functions
+        - Useful for helper functions and calculations
+
+## Example
+
+Here's a complete example demonstrating these concepts:
 
 ```cairo
 // [!include ~/listings/getting-started/visibility/src/visibility.cairo:contract]
 ```
+
+:::note
+**Multiple Implementations**
+
+Cairo contracts can implement multiple interfaces and have multiple internal implementation blocks. This is not only possible but recommended because it:
+
+- Keeps each implementation block focused on a single responsibility
+- Makes the code more maintainable and easier to test
+- Simplifies the implementation of standard interfaces
+- Allows for better organization of related functionality
+
+:::
