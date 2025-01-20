@@ -13,7 +13,7 @@ pub mod SimpleCounter {
     #[storage]
     struct Storage {
         // Counter variable
-        pub counter: u128,
+        counter: u128,
     }
 
     #[constructor]
@@ -45,17 +45,14 @@ pub mod SimpleCounter {
 
 #[cfg(test)]
 mod test {
-    use super::{SimpleCounter, ISimpleCounterDispatcher, ISimpleCounterDispatcherTrait};
-    use starknet::syscalls::deploy_syscall;
+    use super::{ISimpleCounterDispatcher, ISimpleCounterDispatcherTrait};
+    use snforge_std::{ContractClassTrait, DeclareResultTrait, declare};
 
     fn deploy(init_value: u128) -> ISimpleCounterDispatcher {
-        let (contract_address, _) = deploy_syscall(
-            SimpleCounter::TEST_CLASS_HASH.try_into().unwrap(),
-            0,
-            array![init_value.into()].span(),
-            false,
-        )
-            .unwrap();
+        let contract = declare("SimpleCounter").unwrap().contract_class();
+        let mut constructor_calldata = array![];
+        init_value.serialize(ref constructor_calldata);
+        let (contract_address, _) = contract.deploy(@constructor_calldata).unwrap();
         ISimpleCounterDispatcher { contract_address }
     }
 
