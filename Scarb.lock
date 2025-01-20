@@ -71,6 +71,9 @@ dependencies = [
 [[package]]
 name = "counter"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "crowdfunding"
