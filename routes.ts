@@ -47,10 +47,6 @@ const config: Sidebar = [
             link: "/getting-started/basics/syscalls",
           },
           {
-            text: "Strings and ByteArrays",
-            link: "/getting-started/basics/bytearrays-strings",
-          },
-          {
             text: "Storing Custom Types",
             link: "/getting-started/basics/storing-custom-types",
           },
