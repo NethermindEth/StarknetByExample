@@ -35,10 +35,6 @@ const config: Sidebar = [
             link: "/getting-started/basics/counter",
           },
           {
-            text: "Mappings",
-            link: "/getting-started/basics/mappings",
-          },
-          {
             text: "Errors",
             link: "/getting-started/basics/errors",
           },
@@ -57,6 +53,10 @@ const config: Sidebar = [
           {
             text: "Storing Custom Types",
             link: "/getting-started/basics/storing-custom-types",
+          },
+          {
+            text: "Mappings",
+            link: "/getting-started/basics/mappings",
           },
           {
             text: "Custom types in entrypoints",
