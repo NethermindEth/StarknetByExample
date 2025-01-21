@@ -1,24 +1,24 @@
 #[starknet::interface]
-pub trait ICustomErrorsExample<TContractState> {
+trait ICustomErrors<TContractState> {
     fn test_assert(self: @TContractState, i: u256);
     fn test_panic(self: @TContractState, i: u256);
 }
 
 // [!region contract]
-pub mod Errors {
+mod Errors {
     pub const NOT_POSITIVE: felt252 = 'must be greater than 0';
     pub const NOT_NULL: felt252 = 'must not be null';
 }
 
 #[starknet::contract]
-pub mod CustomErrorsExample {
-    use super::Errors;
+mod CustomErrorsContract {
+    use super::{Errors, ICustomErrors};
 
     #[storage]
     struct Storage {}
 
     #[abi(embed_v0)]
-    impl CustomErrorsExample of super::ICustomErrorsExample<ContractState> {
+    impl CustomErrorsContract of ICustomErrors<ContractState> {
         fn test_assert(self: @ContractState, i: u256) {
             assert(i > 0, Errors::NOT_POSITIVE);
         }
@@ -34,28 +34,24 @@ pub mod CustomErrorsExample {
 
 #[cfg(test)]
 mod test {
-    use super::{
-        CustomErrorsExample, ICustomErrorsExampleDispatcher, ICustomErrorsExampleDispatcherTrait,
-    };
-    use starknet::syscalls::deploy_syscall;
+    use super::{ICustomErrorsDispatcher, ICustomErrorsDispatcherTrait};
+    use snforge_std::{ContractClassTrait, DeclareResultTrait, declare};
 
-    fn deploy() -> ICustomErrorsExampleDispatcher {
-        let (contract_address, _) = deploy_syscall(
-            CustomErrorsExample::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
-        )
-            .unwrap();
-        ICustomErrorsExampleDispatcher { contract_address }
+    fn deploy() -> ICustomErrorsDispatcher {
+        let contract = declare("CustomErrorsContract").unwrap().contract_class();
+        let (contract_address, _) = contract.deploy(@array![]).unwrap();
+        ICustomErrorsDispatcher { contract_address }
     }
 
     #[test]
-    #[should_panic(expected: ('must not be null', 'ENTRYPOINT_FAILED'))]
+    #[should_panic(expected: 'must not be null')]
     fn should_panic() {
         let contract = deploy();
         contract.test_panic(0);
     }
 
     #[test]
-    #[should_panic(expected: ('must be greater than 0', 'ENTRYPOINT_FAILED'))]
+    #[should_panic(expected: 'must be greater than 0')]
     fn should_assert() {
         let contract = deploy();
         contract.test_assert(0);
