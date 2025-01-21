@@ -1,5 +1,5 @@
 #[starknet::interface]
-pub trait ISimpleCounter<TContractState> {
+trait ISimpleCounter<TContractState> {
     fn get_current_count(self: @TContractState) -> u128;
     fn increment(ref self: TContractState);
     fn decrement(ref self: TContractState);
@@ -7,7 +7,7 @@ pub trait ISimpleCounter<TContractState> {
 
 // [!region contract]
 #[starknet::contract]
-pub mod SimpleCounter {
+mod SimpleCounter {
     use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
 
     #[storage]
