@@ -119,6 +119,9 @@ version = "0.1.0"
 [[package]]
 name = "mappings"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "merkle_tree"
