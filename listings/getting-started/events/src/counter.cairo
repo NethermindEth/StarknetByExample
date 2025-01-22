@@ -1,18 +1,37 @@
+// [!region contract]
 #[starknet::interface]
-pub trait IEventCounter<TContractState> {
+trait IEventCounter<TContractState> {
     fn increment(ref self: TContractState, amount: u128);
 }
 
-// [!region contract]
+mod Events {
+    // Events must derive the `starknet::Event` trait
+    #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
+    pub struct CounterIncreased {
+        pub amount: u128,
+    }
+
+    #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
+    pub struct UserIncreaseCounter {
+        // The `#[key]` attribute indicates that this event will be indexed.
+        // You can also use `#[flat]` for nested structs.
+        #[key]
+        pub user: starknet::ContractAddress,
+        pub new_value: u128,
+    }
+}
+
 #[starknet::contract]
-pub mod EventCounter {
-    use starknet::{get_caller_address, ContractAddress};
+mod EventCounter {
+    use super::IEventCounter;
+    use super::Events::*;
+    use starknet::get_caller_address;
     use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
 
     #[storage]
     struct Storage {
         // Counter value
-        pub counter: u128,
+        counter: u128,
     }
 
     #[event]
@@ -24,24 +43,8 @@ pub mod EventCounter {
         UserIncreaseCounter: UserIncreaseCounter,
     }
 
-    // By deriving the `starknet::Event` trait, we indicate to the compiler that
-    // this struct will be used when emitting events.
-    #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
-    pub struct CounterIncreased {
-        pub amount: u128,
-    }
-
-    #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
-    pub struct UserIncreaseCounter {
-        // The `#[key]` attribute indicates that this event will be indexed.
-        // You can also use `#[flat]` for nested structs.
-        #[key]
-        pub user: ContractAddress,
-        pub new_value: u128,
-    }
-
     #[abi(embed_v0)]
-    impl EventCounter of super::IEventCounter<ContractState> {
+    impl EventCounter of IEventCounter<ContractState> {
         fn increment(ref self: ContractState, amount: u128) {
             self.counter.write(self.counter.read() + amount);
             // Emit event
@@ -64,44 +67,49 @@ pub mod EventCounter {
 #[cfg(test)]
 mod tests {
     use super::{
-        EventCounter, EventCounter::{Event, CounterIncreased, UserIncreaseCounter},
-        IEventCounterDispatcherTrait, IEventCounterDispatcher,
+        EventCounter::{Event, CounterIncreased, UserIncreaseCounter}, IEventCounterDispatcherTrait,
+        IEventCounterDispatcher,
     };
-    use starknet::{contract_address_const, syscalls::deploy_syscall};
-    use starknet::testing::set_contract_address;
-    use starknet::storage::StoragePointerReadAccess;
+    use starknet::contract_address_const;
+
+    use snforge_std::{
+        EventSpyAssertionsTrait, spy_events, start_cheat_caller_address, stop_cheat_caller_address,
+        ContractClassTrait, DeclareResultTrait, declare,
+    };
+
+    fn deploy() -> IEventCounterDispatcher {
+        let contract = declare("EventCounter").unwrap().contract_class();
+        let (contract_address, _) = contract.deploy(@array![]).unwrap();
+        IEventCounterDispatcher { contract_address }
+    }
 
     #[test]
     fn test_increment_events() {
-        let (contract_address, _) = deploy_syscall(
-            EventCounter::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
-        )
-            .unwrap();
-        let mut contract = IEventCounterDispatcher { contract_address };
-        let state = @EventCounter::contract_state_for_testing();
-
+        let mut contract = deploy();
         let amount = 10;
         let caller = contract_address_const::<'caller'>();
 
-        // fake caller
-        set_contract_address(caller);
-        contract.increment(amount);
-        // set back to the contract for reading state
-        set_contract_address(contract_address);
-        assert_eq!(state.counter.read(), amount);
-
-        // Notice the order: the first event emitted is the first to be popped.
         // [!region test_events]
-        assert_eq!(
-            starknet::testing::pop_log(contract_address),
-            Option::Some(Event::CounterIncreased(CounterIncreased { amount })),
-        );
+        let mut spy = spy_events();
+        start_cheat_caller_address(contract.contract_address, caller);
+        contract.increment(amount);
+        stop_cheat_caller_address(contract.contract_address);
+
+        spy
+            .assert_emitted(
+                @array![
+                    (
+                        contract.contract_address,
+                        Event::CounterIncreased(CounterIncreased { amount }),
+                    ),
+                    (
+                        contract.contract_address,
+                        Event::UserIncreaseCounter(
+                            UserIncreaseCounter { user: caller, new_value: amount },
+                        ),
+                    ),
+                ],
+            );
         // [!endregion test_events]
-        assert_eq!(
-            starknet::testing::pop_log(contract_address),
-            Option::Some(
-                Event::UserIncreaseCounter(UserIncreaseCounter { user: caller, new_value: amount }),
-            ),
-        );
     }
 }

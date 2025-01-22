@@ -19,10 +19,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "bytearray"
-version = "0.1.0"
-
-[[package]]
 name = "cairo_cheatsheet"
 version = "0.1.0"
 
@@ -106,6 +102,9 @@ dependencies = [
 [[package]]
 name = "events"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "factory"
