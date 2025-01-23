@@ -43,20 +43,20 @@ const config: Sidebar = [
             link: "/getting-started/basics/events",
           },
           {
-            text: "Syscalls",
-            link: "/getting-started/basics/syscalls",
-          },
-          {
             text: "Storing Custom Types",
             link: "/getting-started/basics/storing-custom-types",
+          },
+          {
+            text: "Custom Types in Entrypoints",
+            link: "/getting-started/basics/custom-types-in-entrypoints",
           },
           {
             text: "Mappings",
             link: "/getting-started/basics/mappings",
           },
           {
-            text: "Custom types in entrypoints",
-            link: "/getting-started/basics/custom-types-in-entrypoints",
+            text: "Syscalls",
+            link: "/getting-started/basics/syscalls",
           },
           {
             text: "Documentation",

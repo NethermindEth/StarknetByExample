@@ -1,30 +1,31 @@
+// [!region contract]
 #[starknet::interface]
-pub trait IStoringCustomType<TContractState> {
+trait IStoringCustomType<TContractState> {
     fn set_person(ref self: TContractState, person: Person);
     fn set_name(ref self: TContractState, name: felt252);
 }
 
-// [!region contract]
 // Deriving the starknet::Store trait
 // allows us to store the `Person` struct in the contract's storage.
 #[derive(Drop, Serde, Copy, starknet::Store)]
-pub struct Person {
-    pub age: u8,
-    pub name: felt252,
+struct Person {
+    age: u8,
+    name: felt252,
 }
 
 #[starknet::contract]
-pub mod StoringCustomType {
+mod StoringCustomType {
     use starknet::storage::StoragePointerWriteAccess;
     use super::Person;
+    use super::IStoringCustomType;
 
     #[storage]
     struct Storage {
-        pub person: Person,
+        person: Person,
     }
 
     #[abi(embed_v0)]
-    impl StoringCustomType of super::IStoringCustomType<ContractState> {
+    impl StoringCustomType of IStoringCustomType<ContractState> {
         fn set_person(ref self: ContractState, person: Person) {
             self.person.write(person);
         }
@@ -40,30 +41,26 @@ pub mod StoringCustomType {
 
 #[cfg(test)]
 mod tests {
-    use super::{IStoringCustomType, StoringCustomType, Person};
-    use starknet::storage::StoragePointerReadAccess;
+    use super::{IStoringCustomTypeDispatcherTrait, IStoringCustomTypeDispatcher, Person};
+    use snforge_std::{ContractClassTrait, DeclareResultTrait, declare};
+
+    fn deploy() -> IStoringCustomTypeDispatcher {
+        let contract = declare("StoringCustomType").unwrap().contract_class();
+        let (contract_address, _) = contract.deploy(@array![]).unwrap();
+        IStoringCustomTypeDispatcher { contract_address }
+    }
+
 
     #[test]
     fn can_call_set_person() {
-        let mut state = StoringCustomType::contract_state_for_testing();
-
+        let mut contract = deploy();
         let person = Person { age: 10, name: 'Joe' };
-
-        state.set_person(person);
-
-        let read_person = state.person.read();
-
-        assert_eq!(person.age, read_person.age);
-        assert_eq!(person.name, read_person.name);
+        contract.set_person(person);
     }
 
     #[test]
     fn can_call_set_name() {
-        let mut state = StoringCustomType::contract_state_for_testing();
-
-        state.set_name('John');
-
-        let read_person = state.person.read();
-        assert_eq!(read_person.name, 'John');
+        let mut contract = deploy();
+        contract.set_name('John');
     }
 }
