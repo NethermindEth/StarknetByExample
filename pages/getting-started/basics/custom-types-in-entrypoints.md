@@ -4,7 +4,7 @@ Using custom types in entrypoints requires our type to implement the `Serde` tra
 Thankfully, we can just derive the `Serde` trait for our custom type.
 
 ```cairo
-// [!include ~/listings/getting-started/custom_type_serde/src/contract.cairo:contract]
+// [!include ~/listings/getting-started/custom_type_entrypoints/src/contract.cairo:contract]
 ```
 
 :::note
