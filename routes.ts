@@ -55,10 +55,6 @@ const config: Sidebar = [
             link: "/getting-started/basics/mappings",
           },
           {
-            text: "Syscalls",
-            link: "/getting-started/basics/syscalls",
-          },
-          {
             text: "Documentation",
             link: "/getting-started/basics/documentation",
           },
@@ -88,6 +84,10 @@ const config: Sidebar = [
       {
         text: "Testing contracts",
         link: "/getting-started/testing/contract-testing",
+      },
+      {
+        text: "Syscalls Reference",
+        link: "/getting-started/syscalls",
       },
     ],
   },
