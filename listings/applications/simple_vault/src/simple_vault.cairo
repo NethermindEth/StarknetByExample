@@ -31,8 +31,8 @@ pub trait IERC20<TContractState> {
 pub trait ISimpleVault<TContractState> {
     fn deposit(ref self: TContractState, amount: u256);
     fn withdraw(ref self: TContractState, shares: u256);
-    fn user_balance_of(ref self: TContractState, account: ContractAddress) -> u256;
-    fn contract_total_supply(ref self: TContractState) -> u256;
+    fn user_balance_of(self: @TContractState, account: ContractAddress) -> u256;
+    fn contract_total_supply(self: @TContractState) -> u256;
 }
 
 #[starknet::contract]
@@ -71,11 +71,11 @@ pub mod SimpleVault {
 
     #[abi(embed_v0)]
     impl SimpleVault of super::ISimpleVault<ContractState> {
-        fn user_balance_of(ref self: ContractState, account: ContractAddress) -> u256 {
+        fn user_balance_of(self: @ContractState, account: ContractAddress) -> u256 {
             self.balance_of.read(account)
         }
 
-        fn contract_total_supply(ref self: ContractState) -> u256 {
+        fn contract_total_supply(self: @ContractState) -> u256 {
             self.total_supply.read()
         }
 
