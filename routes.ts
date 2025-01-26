@@ -68,10 +68,6 @@ const config: Sidebar = [
             link: "/getting-started/interacting/how_to_deploy",
           },
           {
-            text: "Contract interfaces and Traits generation",
-            link: "/getting-started/interacting/interfaces-traits",
-          },
-          {
             text: "Calling other contracts",
             link: "/getting-started/interacting/calling_other_contracts",
           },
