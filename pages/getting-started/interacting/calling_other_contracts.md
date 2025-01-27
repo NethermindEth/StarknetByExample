@@ -1,22 +1,41 @@
-# Calling other contracts
+# Calling Other Contracts
 
-There are two different ways to call other contracts in Cairo.
+In Starknet, contracts can interact with each other through contract calls. The recommended way to make these calls is using the dispatcher pattern, which provides type safety and better error handling.
 
-The easiest way to call other contracts is by using the dispatcher of the contract you want to call.
-You can read more about Dispatchers in the [Cairo Book](https://book.cairo-lang.org/ch15-02-interacting-with-another-contract.html#calling-contracts-using-the-contract-dispatcher).
+## Understanding Dispatchers
 
-The other way is to use the `starknet::call_contract_syscall` syscall yourself. However, this method is not recommended and will not be covered in this chapter.
+A dispatcher is an automatically generated struct that handles the serialization and deserialization of contract calls. To use dispatchers:
 
-In order to call other contracts using dispatchers, you will need to define the called contract's interface as a trait annotated with the `#[starknet::interface]` attribute, and then import the `IContractDispatcher` and `IContractDispatcherTrait` items in your contract.
+1. Define the target contract's interface as a trait with `#[starknet::interface]` (`IContract`)
+2. Import the generated dispatcher types (`IContractDispatcher` and `IContractDispatcherTrait`)
+3. Create a dispatcher instance with the target contract's address
 
-Here's the `Callee` contract interface and implementation:
+Let's look at a practical example where one contract (`Caller`) interacts with another (`Callee`). The `Callee` contract stores a value that can be set and retrieved:
 
 ```cairo
 // [!include ~/listings/getting-started/calling_other_contracts/src/caller.cairo:callee_contract]
 ```
 
-The following `Caller` contract uses the `Callee` dispatcher to call the `Callee` contract:
+The `Caller` contract demonstrates how to use the dispatcher to interact with `Callee`:
 
 ```cairo
 // [!include ~/listings/getting-started/calling_other_contracts/src/caller.cairo:caller_contract]
 ```
+
+### Key Points:
+
+- The `#[starknet::interface]` attribute automatically generates the dispatcher types
+- Dispatchers handle all the low-level details of contract interaction
+- Contract calls are type-safe and checked at compile time
+- Each contract maintains its own storage and state
+
+For more details about dispatchers, check out the [Cairo Book](https://book.cairo-lang.org/ch102-02-interacting-with-another-contract.html).
+
+:::note
+While you can use the low-level `call_contract_syscall` directly, it's not recommended as it:
+
+- Requires manual serialization/deserialization
+- Lacks compile-time type checking
+- Is more easy to make mistakes
+
+:::
