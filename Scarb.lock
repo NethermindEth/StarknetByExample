@@ -25,6 +25,9 @@ version = "0.1.0"
 [[package]]
 name = "calling_other_contracts"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "coin_flip"
@@ -119,10 +122,6 @@ version = "0.1.0"
 
 [[package]]
 name = "hash_trait"
-version = "0.1.0"
-
-[[package]]
-name = "interfaces_traits"
 version = "0.1.0"
 
 [[package]]
