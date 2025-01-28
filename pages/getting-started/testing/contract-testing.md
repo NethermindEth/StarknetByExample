@@ -72,7 +72,7 @@ To make testing more convenient, the `testing` module of the corelib provides so
 - `pop_log<T, +starknet::Event<T>>(address: ContractAddress) -> Option<T>`
 - `pop_l2_to_l1_message(address: ContractAddress) -> Option<(felt252, Span<felt252>)>`
 
-You may also need the `info` module from the corelib, which allows you to access information about the current execution context (see [syscalls](/getting-started/basics/syscalls)):
+You may also need the `info` module from the corelib, which allows you to access information about the current execution context (see [syscalls](/getting-started/syscalls)):
 
 - `get_caller_address() -> ContractAddress`
 - `get_contract_address() -> ContractAddress`
