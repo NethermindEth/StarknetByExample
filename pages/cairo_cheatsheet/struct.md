@@ -5,5 +5,5 @@ A struct is a data type similar to a tuple. Like tuples, they can be used to hol
 For example:
 
 ```cairo
-// [!include ~/listings/cairo_cheatsheet/src/struct_example.cairo]
+// [!include ~/listings/cairo_cheatsheet/listing/src/struct_example.cairo]
 ```

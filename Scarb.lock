@@ -19,10 +19,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "cairo_cheatsheet"
-version = "0.1.0"
-
-[[package]]
 name = "calling_other_contracts"
 version = "0.1.0"
 dependencies = [
