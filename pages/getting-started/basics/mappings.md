@@ -17,7 +17,7 @@ Let's break down the key components:
   - `write(key, value)`: Stores a value for a given key
   - `read(key)`: Retrieves the value associated with a key
 - Maps automatically initialize all values to zero
-- Keys and values must be of valid storage types, see [Storing Custom Types](/getting-started/basics/storing-custom-types)
+- Keys and values must be of valid storage types, see [Storing Custom Types](/getting-started/basics/storing_custom_types)
 
 ### Composite Keys
 
@@ -34,4 +34,4 @@ Under the hood, Cairo maps use a deterministic storage layout:
 
 - Each key-value pair is stored at a unique address calculated using Pedersen hashes
 - The address formula is: $\text{h}(...\text{h}(\text{h}(\text{sn\_keccak}(name),k_1),k_2),...,k_n)$ mod $2^{251} - 256$
-- Learn more in the [Starknet Documentation](https://docs.starknet.io/documentation/architecture_and_concepts/Smart_Contracts/contract-storage/#storage_variables)
+- Learn more in the [Starknet Documentation](https://docs.starknet.io/architecture-and-concepts/smart-contracts/contract-storage/#storage_variables)

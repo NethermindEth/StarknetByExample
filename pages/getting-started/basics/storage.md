@@ -26,7 +26,7 @@ You can define [Storage Variables](/getting-started/basics/variables#storage-var
 Both contracts above generate identical Sierra code. The compiler only generates code for storage variables that are actually used in contract functions. Declaring unused storage variables has no impact on contract size or gas costs.
 :::
 
-For more complex data structures, see [Storing Custom Types](/getting-started/basics/storing-custom-types).
+For more complex data structures, see [Storing Custom Types](/getting-started/basics/storing_custom_types).
 
 ### Storage Space (advanced)
 

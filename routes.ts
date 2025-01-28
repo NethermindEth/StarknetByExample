@@ -44,7 +44,7 @@ const config: Sidebar = [
           },
           {
             text: "Storing Custom Types",
-            link: "/getting-started/basics/storing-custom-types",
+            link: "/getting-started/basics/storing_custom_types",
           },
           {
             text: "Custom Types in Entrypoints",
