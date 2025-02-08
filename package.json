@@ -9,8 +9,8 @@
   },
   "dependencies": {
     "@types/react": "latest",
-    "react": "latest",
-    "react-dom": "^18.3.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0",
     "typescript": "latest",
