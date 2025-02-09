@@ -27,12 +27,12 @@
       "vocs": "patches/vocs.patch"
     },
     "overrides": {
-      "vocs>shiki": "^1.23.0",
-      "vocs>@shikijs/core": "^1.23.0",
-      "vocs>@shikijs/types": "^1.23.0",
-      "vocs>@shikijs/rehype": "^1.23.0",
-      "vocs>@shikijs/twoslash": "^1.23.0",
-      "vocs>@shikijs/transformers": "^1.23.0"
+      "vocs>shiki": "^1.23.0 <1.24.0",
+      "vocs>@shikijs/core": "^1.23.0 <1.24.0",
+      "vocs>@shikijs/types": "^1.23.0 <1.24.0",
+      "vocs>@shikijs/rehype": "^1.23.0 <1.24.0",
+      "vocs>@shikijs/twoslash": "^1.23.0 <1.24.0",
+      "vocs>@shikijs/transformers": "^1.23.0 <1.24.0"
     }
   }
 }
