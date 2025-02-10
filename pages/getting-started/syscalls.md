@@ -228,7 +228,8 @@ Computes the Keccak hash of the input data as a little-endian 256-bit number, wh
   2. Add zero or more '0' bits
   3. Add a final '1' bit
      The total length after padding must be a multiple of 1088 bits
-     :::
+
+:::
 
 ### sha256_process_block
 
