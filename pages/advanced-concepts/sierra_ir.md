@@ -1,14 +1,17 @@
 # Understanding Sierra: From High-Level Cairo to Safe CASM
 
-Sierra (**S**afe **I**nt**er**mediate **R**epresent**a**tion) is an intermediate representation of Cairo instructions, designed to bridge the gap between high-level Cairo 1 and low-level Cairo Assembly (CASM).
-Sierra can be compiled to a subset of CASM that we call `Safe CASM{:md}`. It ensures that every function returns by using a compiler that can detect operations that can't be proven such as infinite loops, unsatisfiable constraints, etc.
+Sierra (**S**afe **I**nt**er**mediate **R**epresent**a**tion) is a linear intermediate representation of Cairo instructions, designed to bridge the gap between high-level Cairo 1 and low-level Cairo Assembly (CASM).
+Sierra can be compiled to a subset of CASM, known as `Safe CASM{:md}`.
+
+Sierra ensures that programs are always **provable** by preventing the compilation of programs with infinite loops or invalid constraints.
 
 ### From Cairo 1 to Sierra
 
-Before Starknet Alpha v0.11.0, developers wrote contracts in Cairo 0 which compiled directly to Cairo Assembly (CASM), and the contract classes were submitted to the sequencer with `DECLARE` transactions. This approach had risks as the sequencer would not be able to know if a given transaction would fail or not without executing it, and would not be able to charge fees for failed transactions.
+Before Starknet Alpha v0.11.0, developers wrote contracts in Cairo 0, which compiled directly to Cairo Assembly (CASM), and contract classes were submitted to the sequencer via `DECLARE` transactions.
+This approach had risks, as the sequencer could not determine whether a given transaction would fail without executing it, and therefore could not charge fees for failed transactions.
 
-Cairo 1 introduced contract class compilation to this new Sierra intermediate representation instead of directly to CASM. The Sierra code is then submitted to the sequencer, compiled down to CASM, and finally executed by the Starknet OS. 
-The usage of Sierra ensures that every transactions (including failed ones) must be provable, and the sequencers can charge fees for all submitted transactions making DoS attacks really expensive.
+Cairo 1 introduced contract class compilation to this new Sierra intermediate representation instead of directly compiling to CASM. The Sierra code is then submitted to the sequencer, compiled down to CASM, and finally executed by the Starknet OS.
+Using Sierra ensures that all transactions (including failed ones) are provable, and allows sequencers to charge fees for all submitted transactions, making DoS attacks significantly more expensive.
 
 ### Compilation Pipeline
 
@@ -28,49 +31,66 @@ The usage of Sierra ensures that every transactions (including failed ones) must
     STARK Proofs (Proof Generation)
 ```
 
-At its core, Sierra's compilation process is all about safety and efficiency. It carefully checks types at every step of the transformation, makes sure memory is handled safely in the final code, and keeps track of gas usage. The compiler also focuses on generating optimized code while ensuring that every operation will run the same way each time.
+At its core, Sierra's compilation process is focused on safety and efficiency.
+Cairo 1 uses a linear type system and a non-deterministic, immutable, contiguous memory model, which guarantees that dereferencing never fails.
+
+Sierra transforms loops into recursion and keeps track of gas usage, which prevents infinite loops.
+
+:::note
 If you're interested in really understanding how the compilation works under the hood, check out the [cairo-compiler-workshop](https://github.com/software-mansion-labs/cairo-compiler-workshop).
+:::
 
 ### Anatomy of a Sierra Program
 
 ### Type Declarations
 
-Sierra uses a **linear type system**, where each value **must be used exactly once**. 
-During the compilation, an unique identifier is assigned to each type.
+Sierra, as a Cairo representation, also uses a **linear type system**, where each value **must be used exactly once**.
+During the compilation, a unique identifier is assigned to each type.
 
 When types can safely be used multiple times, they need to be duplicated using the `dup` instruction, which will assign two new identifiers to preserve linearity.
 
 Type declaration is done with the following syntax:
+
 ```cairo
 type type_id = concrete_type;
 ```
 
-<!-- TODO
+:::info
 In addition, each type has a set of attributes that describe how it can be used:
+
 - storable
 - droppable
 - duplicatable
-- zero_sized 
-They can be added in the type declaration:
+- zero_sized
+
+They are added in the type declaration:
+
 ```cairo
 type type_id = concrete_type [storable: bool, drop: bool, dup: bool, zero_sized: bool]
 ```
--->
+
+:::
 
 ### Library Function Declarations
 
-Sierra comes with a set of built-in functions (`libfuncs`) that always compile to Safe CASM. After types declaration, a Sierra program must define all the libfuncs used in the program with the inpt type expected.
+Sierra comes with a set of built-in functions (`libfuncs`) that represent the call to low-level units of code known to be safe. After type declarations, a Sierra program must define all the libfuncs used in the program along with their expected input types.
 
 Libfunc declaration is done with the following syntax:
+
 ```cairo
 libfunc libfunc_id = libfunc_name<input_types>;
 ```
 
+:::note
+While this section is generic, Starknet uses an allowed [list](https://github.com/starkware-libs/cairo/tree/main/crates/cairo-lang-starknet-classes/src/allowed_libfuncs_lists) of libfuncs.
+:::
+
 ### Statements
 
-This part shows the sequence of operations that happen during execution, which describes the actual logic of the program. A statement either invokes a libfunc or returns a value.
+This section shows the sequence of operations that occur during execution, describing the actual logic of the program. A statement either invokes a libfunc or returns a value.
 
-A statement is declared with the following syntax:
+Statements are declared with the following syntax:
+
 ```cairo
 libfunc_id<input_types>(input_variables) -> (output_variables);
 ```
@@ -79,9 +99,10 @@ To return a value, we use the `return(variable_id)` statement.
 
 ### User Defined Functions Declarations
 
-At the very end of the Sierra program, each user defined function is declared with an unique identifier and an index to specify the location of the statement where the execution of the function should start.
+At the end of a Sierra program, each user-defined function is declared with a unique identifier and the statement index where the function starts. This provides information about the function, such as its signature, while the implementation is defined in the statements section.
 
 An user defined function is declared with the following syntax:
+
 ```cairo
 function_id@statement_index(parameters: types) -> (return_types);
 ```
@@ -100,41 +121,34 @@ It compiles to the following Sierra code:
 // [!include ~/listings/advanced-concepts/sierra_ir/simple_program.sierra]
 ```
 
+Type Declarations:
+
+- `felt252`: Represents the field element type
+
+Libfunc Declarations:
+
+- `felt252_add`: Performs addition on field elements
+- `store_temp<felt252>`: Temporarily stores the result
+
+Statements Section:
+
+- Statement 0: calls the `felt252_add` libfunc to add the values from memory cells 0 and 1, storing the result in memory cell 2
+- Statement 1: calls the `store_temp<felt252>` libfunc to prepare the result for the return statement
+- Statement 2: returns the value from memory cell 2
+
+User Defined Functions:
+
+- `add_numbers`: Takes two `felt252` types in memory cells 0 and 1 and returns a `felt252` value by starting at statement 0
+
 :::info
-To enable Sierra code generation in human-readable format, you can add the `sierra-text{:md}` flag to the library target in your `Scarb.toml{:md}` file:
+To enable Sierra code generation in a human-readable format, add the `sierra-text` flag to the library target in your `Scarb.toml{:md}` file:
+
 ```toml
 [lib]
 sierra-text = true
 ```
+
 :::
-
-We can break it down:
-
-Type Declarations:
-  - `felt252`: Represents the field element type
-
-Libfunc Declarations:
-  - `felt252_add`: Performs addition on field elements
-  - `store_temp<felt252>`: Temporarily stores the result
-
-Compilation Steps: 
-  - Step 0: `felt252_add([0], [1]) -> ([2])`: Call the `felt252_add` libfunc on memory slot 0 and 1 and store the result in memory slot 2. So `[2] = [0] + [1]` and the value of `[0]` and `[1]` were used.
-  - Step 1: `store_temp<felt252>([2]) -> ([2])`: Store the value of `[2]` in a temporary memory slot `[2]`. Because the type `felt252` has `storable: true` and `dup: true`, it is possible to 
-  - Step 2: `return([2])`: Return the value of `[2]`
-
-4. Libfunc Restrictions:
-
-- Starknet uses an allowed [list](https://github.com/starkware-libs/cairo/tree/main/crates/cairo-lang-starknet-classes/src/allowed_libfuncs_lists) of libfuncs to ensure:
-  - Security:
-    Sierra enforces security by allowing only whitelisted operations with predefined behaviors, while maintaining strict control over memory operations and eliminating arbitrary pointer arithmetic to prevent vulnerabilities.
-  - Predictability:
-    The restricted libfunc approach ensures deterministic execution across all operations, enabling precise gas cost calculations and well-defined state transitions, while keeping all side effects explicitly managed and traceable.
-  - Verifiability:
-    By limiting library functions, Sierra simplifies the proof generation process and makes constraint system generation more efficient, which reduces verification complexity and ensures consistent behavior across different implementations.
-  - Error Prevention
-    The restricted library functions eliminate undefined behavior by catching potential runtime errors at compile time, while enforcing explicit resource management and maintaining type safety throughout the entire execution process.
-
-The restricted libfunc approach helps maintain the safety and efficiency of smart contracts on the Starknet platform.
 
 ### Storage Variables Smart Contract Sierra Code
 
@@ -151,3 +165,5 @@ You can find a more complex example of the [compiled Sierra code](/advanced-conc
 - [Cairo and Sierra](https://docs.starknet.io/architecture-and-concepts/smart-contracts/cairo-and-sierra/)
 
 - [Sierra - Deep Dive](https://www.starknet.io/blog/sierra-deep-dive-video/)
+
+- [Cairo and MLIR](https://blog.lambdaclass.com/cairo-and-mlir/)
