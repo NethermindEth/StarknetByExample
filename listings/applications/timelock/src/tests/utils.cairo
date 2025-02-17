@@ -59,7 +59,7 @@ pub impl TimeLockTestImpl of TimeLockTestTrait {
         Call {
             to: *self.erc721_address,
             selector: selector!("transfer_from"),
-            calldata: calldata.span()
+            calldata: calldata.span(),
         }
     }
     fn get_timestamp(self: @TimeLockTest) -> u64 {

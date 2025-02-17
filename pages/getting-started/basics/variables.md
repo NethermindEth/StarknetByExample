@@ -1,24 +1,32 @@
 # Variables
 
-There are 3 types of variables in Cairo contracts:
+Cairo contracts support three types of variables, each serving a different purpose:
 
-- Local
-  - declared inside a function
-  - not stored on the blockchain
-- Storage
-  - declared in the [Storage](/getting-started/basics/storage) of a contract
-  - can be accessed from one execution to another
-- Global
-  - provides information about the blockchain
-  - accessed anywhere, even within library functions
+1. **Local Variables**
+   - Temporary variables within functions
+   - Exist only during function execution
+   - Not stored on the blockchain
+
+2. **Storage Variables**
+   - Defined in the contract's [Storage](/getting-started/basics/storage)
+   - Persist between contract executions
+   - Stored on the blockchain
+
+3. **Global Variables**
+   - Provide blockchain context and information
+   - Accessible anywhere in the contract
+   - Read-only system variables
 
 ## Local Variables
 
-Local variables are used and accessed within the scope of a specific function or block of code. They are temporary and exist only for the duration of that particular function or block execution.
+Local variables are temporary variables that exist only within their defined scope (a function or code block). Key characteristics:
 
-Local variables are stored in memory and are not stored on the blockchain. This means they cannot be accessed from one execution to another. Local variables are useful for storing temporary data that is relevant only within a specific context. They also make the code more readable by giving names to intermediate values.
+- Stored in memory, not on the blockchain
+- Used for intermediate calculations and temporary data
+- Available only during function execution
+- Help improve code readability by naming values
 
-Here's a simple example of a contract with only local variables:
+Here's an example demonstrating local variable scope:
 
 ```cairo
 // [!include ~/listings/getting-started/variables/src/local_variables.cairo:contract]
@@ -26,25 +34,36 @@ Here's a simple example of a contract with only local variables:
 
 ## Storage Variables
 
-Storage variables are persistent data stored on the blockchain. They can be accessed from one execution to another, allowing the contract to remember and update information over time. See [Storage](/getting-started/basics/storage).
+Storage variables provide persistent state for your contract on the blockchain. They have these properties:
 
-To write or update a storage variable, you need to interact with the contract through an external entrypoint by sending a transaction.
+- Persist between contract executions
+- Can be read for free (no transaction needed)
+- Require a transaction to write to them
+- Must be defined in the contract's Storage struct
 
-On the other hand, you can read state variables for free, without any transaction, simply by interacting with a node.
-
-Here's a simple example of a contract with one storage variable:
+Here's an example showing storage variable usage:
 
 ```cairo
 // [!include ~/listings/getting-started/variables/src/storage_variables.cairo:contract]
 ```
 
+:::note
+**Storage Access**
+
+- Reading: Free operation, no transaction needed
+- Writing: Requires a transaction and costs gas
+
+:::
+
 ## Global Variables
 
-Global variables are predefined variables that provide information about the blockchain and the current execution environment. They can be accessed at any time and from anywhere!
+Global variables provide access to blockchain context and system information. In Starknet:
 
-In Starknet, you can access global variables by using specific functions from the Starknet core library.
+- Accessed through core library functions
+- Available anywhere in the contract
+- Provide critical blockchain context (e.g., caller address, block info)
 
-For example, the `get_caller_address` function returns the address of the caller of the current transaction, and the `get_contract_address` function returns the address of the current contract.
+Example using global variables:
 
 ```cairo
 // [!include ~/listings/getting-started/variables/src/global_variables.cairo:contract]

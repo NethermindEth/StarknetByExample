@@ -1,6 +1,6 @@
 // [!region contract]
 #[starknet::contract]
-pub mod Contract {
+mod Contract {
     #[storage]
     struct Storage {}
 }
@@ -9,15 +9,12 @@ pub mod Contract {
 // [!region tests]
 #[cfg(test)]
 mod test {
-    use super::Contract;
-    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
+    use snforge_std::{ContractClassTrait, DeclareResultTrait, declare};
 
     #[test]
     fn test_can_deploy() {
-        let (_contract_address, _) = deploy_syscall(
-            Contract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
-        )
-            .unwrap_syscall();
+        let contract = declare("Contract").unwrap().contract_class();
+        let (_contract_address, _) = contract.deploy(@array![]).unwrap();
         // Not much to test
     }
 }

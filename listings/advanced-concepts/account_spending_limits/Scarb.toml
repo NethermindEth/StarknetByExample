@@ -1,0 +1,18 @@
+[package]
+name = "account_spending_limits"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+starknet.workspace = true
+openzeppelin.workspace = true
+
+[dev-dependencies]
+assert_macros.workspace = true
+snforge_std.workspace = true
+
+[scripts]
+test.workspace = true
+
+[[target.starknet-contract]]
+build-external-contracts = ["openzeppelin_presets::erc20::ERC20Upgradeable"]

@@ -13,16 +13,16 @@ pub trait IPragmaVRF<TContractState> {
         requestor_address: ContractAddress,
         request_id: u64,
         random_words: Span<felt252>,
-        calldata: Array<felt252>
+        calldata: Array<felt252>,
     );
 }
 
 #[starknet::contract]
 pub mod CoinFlip {
     use core::num::traits::zero::Zero;
-    use starknet::{ContractAddress, get_caller_address, get_contract_address,};
+    use starknet::{ContractAddress, get_caller_address, get_contract_address};
     use starknet::storage::{
-        Map, StoragePointerReadAccess, StoragePathEntry, StoragePointerWriteAccess
+        Map, StoragePointerReadAccess, StoragePathEntry, StoragePointerWriteAccess,
     };
     use pragma_lib::abi::{IRandomnessDispatcher, IRandomnessDispatcherTrait};
     use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
@@ -52,7 +52,7 @@ pub mod CoinFlip {
     pub struct Landed {
         pub flip_id: u64,
         pub flipper: ContractAddress,
-        pub side: Side
+        pub side: Side,
     }
 
     #[derive(Drop, Debug, PartialEq, Serde)]
@@ -79,7 +79,7 @@ pub mod CoinFlip {
     fn constructor(
         ref self: ContractState,
         randomness_contract_address: ContractAddress,
-        eth_address: ContractAddress
+        eth_address: ContractAddress,
     ) {
         assert(randomness_contract_address.is_non_zero(), Errors::INVALID_ADDRESS);
         assert(eth_address.is_non_zero(), Errors::INVALID_ADDRESS);
@@ -106,11 +106,11 @@ pub mod CoinFlip {
             requestor_address: ContractAddress,
             request_id: u64,
             random_words: Span<felt252>,
-            calldata: Array<felt252>
+            calldata: Array<felt252>,
         ) {
             let caller = get_caller_address();
             assert(
-                caller == self.randomness_contract_address.read(), Errors::CALLER_NOT_RANDOMNESS
+                caller == self.randomness_contract_address.read(), Errors::CALLER_NOT_RANDOMNESS,
             );
 
             let this = get_contract_address();
@@ -125,7 +125,7 @@ pub mod CoinFlip {
         fn _request_my_randomness(ref self: ContractState) -> u64 {
             let randomness_contract_address = self.randomness_contract_address.read();
             let randomness_dispatcher = IRandomnessDispatcher {
-                contract_address: randomness_contract_address
+                contract_address: randomness_contract_address,
             };
 
             let this = get_contract_address();
@@ -139,7 +139,7 @@ pub mod CoinFlip {
             // Request the randomness to be used to construct the winning combination
             let request_id = randomness_dispatcher
                 .request_random(
-                    nonce, this, CALLBACK_FEE_LIMIT, PUBLISH_DELAY, NUM_OF_WORDS, array![]
+                    nonce, this, CALLBACK_FEE_LIMIT, PUBLISH_DELAY, NUM_OF_WORDS, array![],
                 );
 
             self.nonce.write(nonce + 1);

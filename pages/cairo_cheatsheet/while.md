@@ -3,7 +3,7 @@
 A `while` loop allows you to specify a condition that must be true for the loop to continue.
 
 ```cairo
-// [!include ~/listings/cairo_cheatsheet/src/while_example.cairo:sheet]
+// [!include ~/listings/cairo_cheatsheet/listing/src/while_example.cairo:sheet]
 ```
 
 ### See also

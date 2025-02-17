@@ -9,8 +9,8 @@
   },
   "dependencies": {
     "@types/react": "latest",
-    "react": "latest",
-    "react-dom": "^18.3.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0",
     "typescript": "latest",
@@ -33,6 +33,12 @@
       "vocs>@shikijs/rehype": "^1.23.0",
       "vocs>@shikijs/twoslash": "^1.23.0",
       "vocs>@shikijs/transformers": "^1.23.0"
+      "vocs>shiki": "^1.23.0 <1.24.0",
+      "vocs>@shikijs/core": "^1.23.0 <1.24.0",
+      "vocs>@shikijs/types": "^1.23.0 <1.24.0",
+      "vocs>@shikijs/rehype": "^1.23.0 <1.24.0",
+      "vocs>@shikijs/twoslash": "^1.23.0 <1.24.0",
+      "vocs>@shikijs/transformers": "^1.23.0 <1.24.0"
     }
   }
 }

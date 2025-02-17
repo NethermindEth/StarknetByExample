@@ -1,19 +1,19 @@
 #[starknet::interface]
-pub trait IVaultErrorsExample<TContractState> {
+trait IVaultErrors<TContractState> {
     fn deposit(ref self: TContractState, amount: u256);
     fn withdraw(ref self: TContractState, amount: u256);
 }
 
 // [!region contract]
-pub mod VaultErrors {
+mod VaultErrors {
     pub const INSUFFICIENT_BALANCE: felt252 = 'insufficient_balance';
     // you can define more errors here
 }
 
 #[starknet::contract]
-pub mod VaultErrorsExample {
+mod VaultErrorsContract {
     use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
-    use super::VaultErrors;
+    use super::{VaultErrors, IVaultErrors};
 
     #[storage]
     struct Storage {
@@ -21,7 +21,7 @@ pub mod VaultErrorsExample {
     }
 
     #[abi(embed_v0)]
-    impl VaultErrorsExample of super::IVaultErrorsExample<ContractState> {
+    impl VaultErrorsContract of IVaultErrors<ContractState> {
         fn deposit(ref self: ContractState, amount: u256) {
             let mut balance = self.balance.read();
             balance = balance + amount;
@@ -48,17 +48,13 @@ pub mod VaultErrorsExample {
 
 #[cfg(test)]
 mod test {
-    use super::{
-        VaultErrorsExample, IVaultErrorsExampleDispatcher, IVaultErrorsExampleDispatcherTrait
-    };
-    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
+    use super::{IVaultErrorsDispatcher, IVaultErrorsDispatcherTrait};
+    use snforge_std::{ContractClassTrait, DeclareResultTrait, declare};
 
-    fn deploy() -> IVaultErrorsExampleDispatcher {
-        let (contract_address, _) = deploy_syscall(
-            VaultErrorsExample::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
-        )
-            .unwrap_syscall();
-        IVaultErrorsExampleDispatcher { contract_address }
+    fn deploy() -> IVaultErrorsDispatcher {
+        let contract = declare("VaultErrorsContract").unwrap().contract_class();
+        let (contract_address, _) = contract.deploy(@array![]).unwrap();
+        IVaultErrorsDispatcher { contract_address }
     }
 
     #[test]
@@ -69,7 +65,7 @@ mod test {
     }
 
     #[test]
-    #[should_panic(expected: ('insufficient_balance', 'ENTRYPOINT_FAILED'))]
+    #[should_panic(expected: 'insufficient_balance')]
     fn should_panic_on_insufficient_balance() {
         let mut contract = deploy();
         contract.deposit(10);

@@ -1,24 +1,25 @@
 use starknet::ContractAddress;
 
 #[starknet::interface]
-pub trait IMapContract<TContractState> {
+trait IMapContract<TContractState> {
     fn set(ref self: TContractState, key: ContractAddress, value: felt252);
     fn get(self: @TContractState, key: ContractAddress) -> felt252;
 }
 
 // [!region contract]
 #[starknet::contract]
-pub mod MapContract {
+mod MapContract {
+    use super::IMapContract;
     use starknet::ContractAddress;
     use starknet::storage::{Map, StorageMapReadAccess, StorageMapWriteAccess};
 
     #[storage]
     struct Storage {
-        map: Map::<ContractAddress, felt252>,
+        map: Map<ContractAddress, felt252>,
     }
 
     #[abi(embed_v0)]
-    impl MapContractImpl of super::IMapContract<ContractState> {
+    impl MapContractImpl of IMapContract<ContractState> {
         fn set(ref self: ContractState, key: ContractAddress, value: felt252) {
             self.map.write(key, value);
         }
@@ -32,23 +33,27 @@ pub mod MapContract {
 
 #[cfg(test)]
 mod test {
-    use super::{MapContract, IMapContractDispatcher, IMapContractDispatcherTrait};
-    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
+    use super::{IMapContractDispatcher, IMapContractDispatcherTrait};
+    use snforge_std::{ContractClassTrait, DeclareResultTrait, declare};
+    use starknet::contract_address_const;
+
+    fn deploy() -> IMapContractDispatcher {
+        let contract = declare("MapContract").unwrap().contract_class();
+        let (contract_address, _) = contract.deploy(@array![]).unwrap();
+        IMapContractDispatcher { contract_address }
+    }
 
     #[test]
     fn test_deploy_and_set_get() {
-        let (contract_address, _) = deploy_syscall(
-            MapContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
-        )
-            .unwrap_syscall();
-        let mut contract = IMapContractDispatcher { contract_address };
+        let contract = deploy();
 
         // Write to map.
+        let key = contract_address_const::<'key'>();
         let value: felt252 = 1;
-        contract.set(key: contract_address, value: value);
+        contract.set(key, value);
 
         // Read from map.
-        let read_value = contract.get(contract_address);
-        assert(read_value == 1, 'wrong value read');
+        let read_value = contract.get(key);
+        assert_eq!(read_value, value);
     }
 }

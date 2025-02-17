@@ -1,103 +1,100 @@
+// [!region contract]
+// This trait defines the public interface of our contract
+// All functions declared here will be accessible externally
 #[starknet::interface]
-pub trait IExampleContract<TContractState> {
+trait ContractInterface<TContractState> {
     fn set(ref self: TContractState, value: u32);
     fn get(self: @TContractState) -> u32;
 }
 
-// [!region contract]
 #[starknet::contract]
-pub mod ExampleContract {
+mod Contract {
     use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
+    use super::ContractInterface;
 
     #[storage]
-    struct Storage {
-        pub value: u32
+    pub struct Storage {
+        pub value: u32,
     }
 
-    // The `#[abi(embed_v0)]` attribute indicates that all
-    // the functions in this implementation can be called externally.
-    // Omitting this attribute would make all the functions internal.
+    // External Functions Implementation
+    // The `#[abi(embed_v0)]` attribute makes these functions callable from outside the contract
+    // This is where we implement our public interface defined in ContractInterface
     #[abi(embed_v0)]
-    impl ExampleContract of super::IExampleContract<ContractState> {
-        // The `set` function can be called externally
-        // because it is written inside an implementation marked as `#[abi(embed_v0)]`.
-        // It can modify the contract's state as it is passed as a reference.
+    pub impl ContractImpl of ContractInterface<ContractState> {
+        // External function that can modify state
+        // - Takes `ref self` to allow state modifications
+        // - Calls internal `increment` function to demonstrate internal function usage
         fn set(ref self: ContractState, value: u32) {
-            self.value.write(value);
+            self.value.write(increment(value));
         }
 
-        // The `get` function can be called externally
-        // because it is written inside an implementation marked as `#[abi(embed_v0)]`.
-        // However, it can't modify the contract's state, as it is passed as a snapshot
-        // -> It's only a "view" function.
+        // External view function (cannot modify state)
+        // - Takes `@self` (snapshot) to prevent state modifications
+        // - Demonstrates calling an internal function (_read_value)
         fn get(self: @ContractState) -> u32 {
-            // We can call an internal function from any functions within the contract
-            PrivateFunctionsTrait::_read_value(self)
+            self._read_value()
         }
     }
 
-    // The lack of the `#[abi(embed_v0)]` attribute indicates that all the functions in
-    // this implementation can only be called internally.
-    // We name the trait `PrivateFunctionsTrait` to indicate that it is an
-    // internal trait allowing us to call internal functions.
+    // Internal Functions Implementation
+    // These functions can only be called from within the contract
+    // The #[generate_trait] attribute creates a trait for these internal functions
     #[generate_trait]
-    pub impl PrivateFunctions of PrivateFunctionsTrait {
-        // The `_read_value` function is outside the implementation that is
-        // marked as `#[abi(embed_v0)]`, so it's an _internal_ function
-        // and can only be called from within the contract.
-        // However, it can't modify the contract's state, as it is passed
-        // as a snapshot: it is only a "view" function.
+    pub impl Internal of InternalTrait {
+        // Internal view function
+        // - Takes `@self` as it only needs to read state
+        // - Can only be called by other functions within the contract
         fn _read_value(self: @ContractState) -> u32 {
             self.value.read()
         }
+    }
+
+    // Pure Internal Function
+    // - Doesn't access contract state
+    // - Defined directly in the contract body
+    // - Considered good practice to keep pure functions outside impl blocks
+    // It's also possible to use ContractState here, but it's not recommended
+    // as it'll require to pass the state as a parameter
+    pub fn increment(value: u32) -> u32 {
+        value + 1
     }
 }
 // [!endregion contract]
 
 #[cfg(test)]
 mod test {
-    use super::{ExampleContract, IExampleContractDispatcher, IExampleContractDispatcherTrait};
-    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
     use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
-
-    // These imports will allow us to directly access and set the contract state:
-    // - for `PrivateFunctionsTrait` internal functions access
-    //   implementation need to be public to be able to access it
-    use super::ExampleContract::PrivateFunctionsTrait;
-    // to set the contract address for the state
-    // and also be able to use the dispatcher on the same contract
-    use starknet::testing::set_contract_address;
+    use snforge_std::{ContractClassTrait, DeclareResultTrait, declare};
+    use super::{ContractInterfaceDispatcher, ContractInterfaceDispatcherTrait};
+    use super::Contract;
+    use super::Contract::{InternalTrait, increment};
 
     #[test]
-    fn can_call_set_and_get() {
-        let (contract_address, _) = deploy_syscall(
-            ExampleContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
-        )
-            .unwrap_syscall();
+    fn test_external_functions() {
+        // Deploy the contract
+        let contract = declare("Contract").unwrap().contract_class();
+        let (contract_address, _) = contract.deploy(@array![]).unwrap();
 
-        // You can interact with the external entrypoints of the contract using the dispatcher.
-        let contract = IExampleContractDispatcher { contract_address };
-        // But for internal functions, you need to use the contract state.
-        let mut state = ExampleContract::contract_state_for_testing();
-        set_contract_address(contract_address);
+        // Create contract interface for external calls
+        let contract = ContractInterfaceDispatcher { contract_address };
 
-        // The contract dispatcher and state refer to the same contract.
-        assert_eq!(contract.get(), state.value.read());
-
-        // We can set from the dispatcher
+        // Test external function that modifies state
         contract.set(42);
-        assert_eq!(contract.get(), state.value.read());
-        assert_eq!(42, state.value.read());
-        assert_eq!(42, contract.get());
+        assert_eq!(43, contract.get()); // Value is incremented
+    }
 
-        // Or directly from the state for more complex operations
+    #[test]
+    fn test_internal_functions() {
+        // Create contract state for internal function access
+        let mut state = Contract::contract_state_for_testing();
+
+        // Test direct state modification
         state.value.write(24);
-        assert_eq!(contract.get(), state.value.read());
         assert_eq!(24, state.value.read());
-        assert_eq!(24, contract.get());
 
-        // We can also access internal functions from the state
+        // Test internal function access
         assert_eq!(state._read_value(), state.value.read());
-        assert_eq!(state._read_value(), contract.get());
+        assert_eq!(25, increment(24));
     }
 }

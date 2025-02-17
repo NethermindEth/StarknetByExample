@@ -4,7 +4,7 @@ use coin_flip::contract::{
 use starknet::{ContractAddress, contract_address_const};
 use snforge_std::{
     declare, start_cheat_caller_address, stop_cheat_caller_address, spy_events,
-    EventSpyAssertionsTrait, DeclareResultTrait, ContractClassTrait
+    EventSpyAssertionsTrait, DeclareResultTrait, ContractClassTrait,
 };
 use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
 use pragma_lib::abi::{IRandomnessDispatcher, IRandomnessDispatcherTrait};
@@ -63,9 +63,7 @@ fn test_all_relevant_random_words() {
         (1001, Side::Tails, 8),
         (12345654321, Side::Tails, 9),
     ];
-    for (
-        random_word, expected_side, expected_request_id
-    ) in random_words {
+    for (random_word, expected_side, expected_request_id) in random_words {
         _flip_request(
             coin_flip,
             randomness,
@@ -74,7 +72,7 @@ fn test_all_relevant_random_words() {
             expected_request_id,
             CALLBACK_FEE_LIMIT / 5 * 3,
             random_word,
-            expected_side
+            expected_side,
         );
     }
 }
@@ -89,7 +87,7 @@ fn test_multiple_flips() {
     stop_cheat_caller_address(eth.contract_address);
 
     _flip_request(
-        coin_flip, randomness, eth, deployer, 0, CALLBACK_FEE_LIMIT / 5 * 3, 123456789, Side::Tails
+        coin_flip, randomness, eth, deployer, 0, CALLBACK_FEE_LIMIT / 5 * 3, 123456789, Side::Tails,
     );
     _flip_request(
         coin_flip,
@@ -99,7 +97,7 @@ fn test_multiple_flips() {
         1,
         CALLBACK_FEE_LIMIT / 4 * 3,
         12345654321,
-        Side::Tails
+        Side::Tails,
     );
     _flip_request(coin_flip, randomness, eth, deployer, 2, CALLBACK_FEE_LIMIT, 3, Side::Tails);
 }
@@ -112,7 +110,7 @@ fn _flip_request(
     expected_request_id: u64,
     expected_callback_fee: u128,
     random_word: felt252,
-    expected_side: Side
+    expected_side: Side,
 ) {
     let original_balance = eth.balance_of(coin_flip.contract_address);
 
@@ -128,17 +126,17 @@ fn _flip_request(
                 (
                     coin_flip.contract_address,
                     CoinFlip::Event::Flipped(
-                        CoinFlip::Flipped { flip_id: expected_request_id, flipper: deployer }
-                    )
-                )
-            ]
+                        CoinFlip::Flipped { flip_id: expected_request_id, flipper: deployer },
+                    ),
+                ),
+            ],
         );
 
     let post_flip_balance = eth.balance_of(coin_flip.contract_address);
     assert_eq!(
         post_flip_balance,
         original_balance
-            - randomness.get_total_fees(coin_flip.contract_address, expected_request_id)
+            - randomness.get_total_fees(coin_flip.contract_address, expected_request_id),
     );
 
     randomness
@@ -152,7 +150,7 @@ fn _flip_request(
             expected_callback_fee,
             array![random_word].span(),
             array![].span(),
-            array![]
+            array![],
         );
 
     spy
@@ -162,16 +160,16 @@ fn _flip_request(
                     coin_flip.contract_address,
                     CoinFlip::Event::Landed(
                         CoinFlip::Landed {
-                            flip_id: expected_request_id, flipper: deployer, side: expected_side
-                        }
-                    )
-                )
-            ]
+                            flip_id: expected_request_id, flipper: deployer, side: expected_side,
+                        },
+                    ),
+                ),
+            ],
         );
 
     assert_eq!(
         eth.balance_of(coin_flip.contract_address),
-        post_flip_balance + (CALLBACK_FEE_LIMIT - expected_callback_fee).into()
+        post_flip_balance + (CALLBACK_FEE_LIMIT - expected_callback_fee).into(),
     );
 }
 
@@ -201,15 +199,15 @@ fn test_two_consecutive_flips() {
             @array![
                 (
                     coin_flip.contract_address,
-                    CoinFlip::Event::Flipped(CoinFlip::Flipped { flip_id: 0, flipper: deployer })
+                    CoinFlip::Event::Flipped(CoinFlip::Flipped { flip_id: 0, flipper: deployer }),
                 ),
                 (
                     coin_flip.contract_address,
                     CoinFlip::Event::Flipped(
-                        CoinFlip::Flipped { flip_id: 1, flipper: other_flipper }
-                    )
-                )
-            ]
+                        CoinFlip::Flipped { flip_id: 1, flipper: other_flipper },
+                    ),
+                ),
+            ],
         );
 
     let post_flip_balance = eth.balance_of(coin_flip.contract_address);
@@ -234,7 +232,7 @@ fn test_two_consecutive_flips() {
             expected_callback_fee,
             array![random_word_deployer].span(),
             array![].span(),
-            array![]
+            array![],
         );
     randomness
         .submit_random(
@@ -247,7 +245,7 @@ fn test_two_consecutive_flips() {
             expected_callback_fee,
             array![random_word_other_flipper].span(),
             array![].span(),
-            array![]
+            array![],
         );
 
     spy
@@ -257,24 +255,24 @@ fn test_two_consecutive_flips() {
                     coin_flip.contract_address,
                     CoinFlip::Event::Landed(
                         CoinFlip::Landed {
-                            flip_id: 0, flipper: deployer, side: expected_side_deployer
-                        }
-                    )
+                            flip_id: 0, flipper: deployer, side: expected_side_deployer,
+                        },
+                    ),
                 ),
                 (
                     coin_flip.contract_address,
                     CoinFlip::Event::Landed(
                         CoinFlip::Landed {
-                            flip_id: 1, flipper: other_flipper, side: expected_side_other_flipper
-                        }
-                    )
-                )
-            ]
+                            flip_id: 1, flipper: other_flipper, side: expected_side_other_flipper,
+                        },
+                    ),
+                ),
+            ],
         );
 
     assert_eq!(
         eth.balance_of(coin_flip.contract_address),
-        post_flip_balance + (CALLBACK_FEE_LIMIT - expected_callback_fee).into() * 2
+        post_flip_balance + (CALLBACK_FEE_LIMIT - expected_callback_fee).into() * 2,
     );
 }
 
