@@ -17,4 +17,3 @@ target/*
 src/**/*.md
 
 node_modules
-
