@@ -1,6 +1,6 @@
 # Understanding Sierra: From High-Level Cairo to Safe CASM
 
-Sierra (**S**afe **I**nt**er**mediate **R**epresent**a**tion) is a linear intermediate representation of Cairo instructions, designed to bridge the gap between high-level Cairo 1 and low-level Cairo Assembly (CASM).
+Sierra (Safe Intermediate REpresentAtion) is a linear intermediate representation of Cairo instructions, designed to bridge the gap between high-level Cairo 1 intermdiate and low-level Cairo Assembly (CASM).
 Sierra can be compiled to a subset of CASM, known as `Safe CASM{:md}`.
 
 Sierra ensures that programs are always **provable** by preventing the compilation of programs with infinite loops or invalid constraints.
