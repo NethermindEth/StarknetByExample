@@ -10,12 +10,6 @@ You should never open a pull request to merge your changes directly into `main`.
 
 The `dev` branch is deployed at <https://starknet-by-example-dev.voyager.online/>
 
-The release branch is `main`. The development branch is `dev` and is considered stable (but not released yet).
-When you want to contribute, please create a new branch from `dev` and open a pull request to merge your changes back into `dev`.
-You should never open a pull request to merge your changes directly into `main`.
-
-The `dev` branch is deployed at https://starknet-by-example-dev.voyager.online/
-
 Please note we have a code of conduct, please follow it in all your interactions with the project.
 
 ## Table of Contents
