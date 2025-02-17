@@ -1,0 +1,16 @@
+[package]
+name = "sierra_ir"
+version.workspace = true
+edition.workspace = true
+
+[lib]
+sierra-text = true
+
+[dependencies]
+starknet.workspace = true
+
+[dev-dependencies]
+cairo_test.workspace = true
+
+[scripts]
+test.workspace = true
