@@ -1,5 +1,5 @@
 [package]
-name = "interfaces_traits"
+name = "custom_type_entrypoints"
 version.workspace = true
 edition.workspace = true
 
@@ -7,7 +7,8 @@ edition.workspace = true
 starknet.workspace = true
 
 [dev-dependencies]
-cairo_test.workspace = true
+assert_macros.workspace = true
+snforge_std.workspace = true
 
 [scripts]
 test.workspace = true

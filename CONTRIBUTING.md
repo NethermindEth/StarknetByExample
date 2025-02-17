@@ -2,7 +2,13 @@
 
 When contributing to this repository, please first discuss the change you wish to make via issue or in the telegram channel before making a change.
 
-Join the telegram channel: https://t.me/StarknetByExample
+Join the telegram channel: <https://t.me/StarknetByExample>
+
+The release branch is `main`. The development branch is `dev` and is considered stable (but not released yet).
+When you want to contribute, please create a new branch from `dev` and open a pull request to merge your changes back into `dev`.
+You should never open a pull request to merge your changes directly into `main`.
+
+The `dev` branch is deployed at <https://starknet-by-example-dev.voyager.online/>
 
 The release branch is `main`. The development branch is `dev` and is considered stable (but not released yet).
 When you want to contribute, please create a new branch from `dev` and open a pull request to merge your changes back into `dev`.
@@ -86,36 +92,8 @@ typos src/
 You can add or modify examples in the `listings` directory. Each listing is a scarb project.
 You can use `scarb init` to create a new scarb project, but be sure to remove the generated git repository with `rm -rf .git` and follow the instructions below for the correct `Scarb.toml` configuration.
 
-You can choose to use standard cairo with `cairo-test` or Starknet Foundry with `snforge_std`.
+We prefer to use Starknet Foundry with `snforge_std`, however you can still use `cairo-test` if desired.
 Please use the appropriate `Scarb.toml` configuration. `scarb test` will automatically resolve to `snforge test` if `snforge_std` is in the dependencies.
-
-Here's the required `Scarb.toml` configuration for **cairo-test**:
-
-```toml
-[package]
-name = "pkg_name"
-version.workspace = true
-
-# Specify that this can be used as a dependency in another scarb project:
-[lib]
-
-[dependencies]
-starknet.workspace = true
-# Uncomment the following lines if you want to use additional dependencies:
-# OpenZeppelin:
-# openzeppelin.workspace = true
-
-# If you want to use another Starknet By Example's listing, you can add it as a dependency like this:
-# erc20 = { path = "../../getting-started/erc20" }
-
-[dev-dependencies]
-cairo_test.workspace = true
-
-[scripts]
-test.workspace = true
-
-[[target.starknet-contract]]
-```
 
 Here's the required `Scarb.toml` configuration for **Starknet Foundry**:
 
@@ -146,10 +124,38 @@ test.workspace = true
 [[target.starknet-contract]]
 ```
 
-You also NEED to do the following:
+You also **NEED** to do the following:
 
 - Remove the generated git repository, `rm -rf .git` (this is important!)
 - Double check that the package name is the same as the name of the directory
+
+Here's the required `Scarb.toml` configuration for **cairo-test**:
+
+```toml
+[package]
+name = "pkg_name"
+version.workspace = true
+
+# Specify that this can be used as a dependency in another scarb project:
+[lib]
+
+[dependencies]
+starknet.workspace = true
+# Uncomment the following lines if you want to use additional dependencies:
+# OpenZeppelin:
+# openzeppelin.workspace = true
+
+# If you want to use another Starknet By Example's listing, you can add it as a dependency like this:
+# erc20 = { path = "../../getting-started/erc20" }
+
+[dev-dependencies]
+cairo_test.workspace = true
+
+[scripts]
+test.workspace = true
+
+[[target.starknet-contract]]
+```
 
 ### Verification script
 

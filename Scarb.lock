@@ -2,6 +2,14 @@
 version = 1
 
 [[package]]
+name = "account_spending_limits"
+version = "0.1.0"
+dependencies = [
+ "openzeppelin",
+ "snforge_std",
+]
+
+[[package]]
 name = "advanced_factory"
 version = "0.1.0"
 dependencies = [
@@ -11,16 +19,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "bytearray"
-version = "0.1.0"
-
-[[package]]
-name = "cairo_cheatsheet"
-version = "0.1.0"
-
-[[package]]
 name = "calling_other_contracts"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "coin_flip"
@@ -56,10 +59,16 @@ dependencies = [
 [[package]]
 name = "constructor"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "counter"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "crowdfunding"
@@ -71,8 +80,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "custom_type_serde"
+name = "custom_type_entrypoints"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "ecdsa_verification"
@@ -85,10 +97,16 @@ version = "0.1.0"
 [[package]]
 name = "errors"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "events"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "factory"
@@ -103,16 +121,15 @@ name = "hash_trait"
 version = "0.1.0"
 
 [[package]]
-name = "interfaces_traits"
-version = "0.1.0"
-
-[[package]]
 name = "library_calls"
 version = "0.1.0"
 
 [[package]]
 name = "mappings"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "merkle_tree"
@@ -296,6 +313,9 @@ dependencies = [
 [[package]]
 name = "storage"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "store_using_packing"
@@ -304,6 +324,9 @@ version = "0.1.0"
 [[package]]
 name = "storing_custom_types"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "struct_as_mapping_key"
@@ -329,10 +352,16 @@ version = "0.1.0"
 [[package]]
 name = "variables"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "visibility"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "write_to_any_slot"

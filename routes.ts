@@ -19,24 +19,20 @@ const config: Sidebar = [
             link: "/getting-started/basics/storage",
           },
           {
-            text: "Constructor",
-            link: "/getting-started/basics/constructor",
+            text: "Interfaces, Visibility and Mutability",
+            link: "/getting-started/basics/visibility-mutability",
           },
           {
             text: "Variables",
             link: "/getting-started/basics/variables",
           },
           {
-            text: "Visibility and Mutability",
-            link: "/getting-started/basics/visibility-mutability",
+            text: "Constructor",
+            link: "/getting-started/basics/constructor",
           },
           {
             text: "Counter Example",
             link: "/getting-started/basics/counter",
-          },
-          {
-            text: "Mappings",
-            link: "/getting-started/basics/mappings",
           },
           {
             text: "Errors",
@@ -47,20 +43,16 @@ const config: Sidebar = [
             link: "/getting-started/basics/events",
           },
           {
-            text: "Syscalls",
-            link: "/getting-started/basics/syscalls",
-          },
-          {
-            text: "Strings and ByteArrays",
-            link: "/getting-started/basics/bytearrays-strings",
-          },
-          {
             text: "Storing Custom Types",
-            link: "/getting-started/basics/storing-custom-types",
+            link: "/getting-started/basics/storing_custom_types",
           },
           {
-            text: "Custom types in entrypoints",
+            text: "Custom Types in Entrypoints",
             link: "/getting-started/basics/custom-types-in-entrypoints",
+          },
+          {
+            text: "Mappings",
+            link: "/getting-started/basics/mappings",
           },
           {
             text: "Documentation",
@@ -76,10 +68,6 @@ const config: Sidebar = [
             link: "/getting-started/interacting/how_to_deploy",
           },
           {
-            text: "Contract interfaces and Traits generation",
-            link: "/getting-started/interacting/interfaces-traits",
-          },
-          {
             text: "Calling other contracts",
             link: "/getting-started/interacting/calling_other_contracts",
           },
@@ -92,6 +80,10 @@ const config: Sidebar = [
       {
         text: "Testing contracts",
         link: "/getting-started/testing/contract-testing",
+      },
+      {
+        text: "Syscalls Reference",
+        link: "/getting-started/syscalls",
       },
     ],
   },

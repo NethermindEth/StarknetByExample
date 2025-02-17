@@ -1,12 +1,21 @@
-# Custom types in entrypoints
+# Custom Types in Entrypoints
 
-Using custom types in entrypoints requires our type to implement the `Serde` trait. This is because when calling an entrypoint, the input is sent as an array of `felt252` to the entrypoint, and we need to be able to deserialize it into our custom type. Similarly, when returning a custom type from an entrypoint, we need to be able to serialize it into an array of `felt252`.
-Thankfully, we can just derive the `Serde` trait for our custom type.
+When using custom types in Starknet contract entrypoints, you need to handle serialization and deserialization of data. This is because:
+
+1. Input parameters are sent to entrypoints as arrays of `felt252`
+2. Return values must be converted back to arrays of `felt252`
+3. Custom types need to be converted between these formats automatically
+
+## Using the Serde Trait
+
+The `Serde` trait provides the necessary serialization and deserialization capabilities for your custom types. For most simple types, you can derive this trait automatically:
 
 ```cairo
-// [!include ~/listings/getting-started/custom_type_serde/src/contract.cairo:contract]
+// [!include ~/listings/getting-started/custom_type_entrypoints/src/contract.cairo:contract]
 ```
 
 :::note
-The purpose of this example is to demonstrate the ability to use custom types as inputs and outputs in contract calls. For simplicity, we are not using getters and setters to manage the contract's state.
+For some complex types, you might need to implement the `Serde` trait manually. This gives you control over how your type is serialized and deserialized.
+
+The `Serde` trait is distinct from the `Store` trait - `Serde` is for passing data in and out of entrypoints, while `Store` is for persisting data in contract storage.
 :::
