@@ -222,7 +222,7 @@ mod ERC721 {
         ////////////////////////////////
         fn _set_token_uri(ref self: ContractState, token_id: u256, token_uri: felt252) {
             assert(self._exists(token_id), 'ERC721: invalid token ID');
-            self.token_uri.write(token_id, token_uri)
+            self.token_uri.write(token_id, token_uri);
         }
 
         ////////////////////////////////
