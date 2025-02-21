@@ -8,9 +8,10 @@ const config: Sidebar = [
   {
     text: "Getting Started",
     items: [
-      // {
-      //   text: "Local environment setup"
-      // },
+      {
+        text: "Local environment setup",
+        link: "/getting-started/env_setup",
+      },
       {
         text: "Basics of a Starknet contract",
         items: [
