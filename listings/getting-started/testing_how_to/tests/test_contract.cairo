@@ -4,7 +4,7 @@ use testing_how_to::{IInventoryContractDispatcher, IInventoryContractDispatcherT
 
 // Import the required traits and functions from Snforge
 use snforge_std::{ContractClassTrait, DeclareResultTrait, declare};
-// And additionaly the testing utilities
+// And additionally the testing utilities
 use snforge_std::{start_cheat_caller_address_global, stop_cheat_caller_address_global, load};
 
 // Declare and deploy the contract and return its dispatcher.
@@ -38,7 +38,7 @@ fn test_as_owner() {
     contract.update_inventory(10);
     assert_eq!(contract.get_inventory_count(), 10);
 
-    // Additionaly, you can directly test the storage
+    // additionally, you can directly test the storage
     let loaded = load(
         contract.contract_address, // the contract address
         selector!("owner"), // field marking the start of the memory chunk being read from
