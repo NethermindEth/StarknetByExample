@@ -80,7 +80,17 @@ const config: Sidebar = [
       },
       {
         text: "Testing contracts",
-        link: "/getting-started/testing/contract-testing",
+        link: "/getting-started/testing/testing",
+        items: [
+          {
+            text: "With Snforge",
+            link: "/getting-started/testing/testing-snforge",
+          },
+          {
+            text: "With Cairo Test",
+            link: "/getting-started/testing/testing-cairo-test",
+          },
+        ],
       },
       {
         text: "Syscalls Reference",
