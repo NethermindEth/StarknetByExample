@@ -1,13 +1,13 @@
 mod tests {
-    use openzeppelin::token::erc20::interface::IERC20DispatcherTrait;
-    use openzeppelin::token::erc20::erc20::ERC20Component::InternalTrait;
+    use openzeppelin_token::erc20::interface::IERC20DispatcherTrait;
+    use openzeppelin_token::erc20::erc20::ERC20Component::InternalTrait;
     use staking::contract::IStakingContractDispatcherTrait;
     use staking::tests::tokens::{RewardToken, StakingToken};
     use staking::contract::{
         StakingContract, IStakingContractDispatcher, StakingContract::Event,
         StakingContract::Deposit, StakingContract::Withdrawal, StakingContract::RewardsFinished,
     };
-    use openzeppelin::token::erc20::{interface::IERC20Dispatcher};
+    use openzeppelin_token::erc20::{interface::IERC20Dispatcher};
     use starknet::syscalls::deploy_syscall;
     use core::serde::Serde;
     use starknet::testing::{set_contract_address, set_block_timestamp, pop_log};

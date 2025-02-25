@@ -6,7 +6,7 @@ trait ISRC6<TContractState> {
     fn __execute__(ref self: TContractState, calls: Array<Call>) -> Array<Span<felt252>>;
     fn __validate__(self: @TContractState, calls: Array<Call>) -> felt252;
     fn is_valid_signature(
-        self: @TContractState, hash: felt252, signature: Array<felt252>
+        self: @TContractState, hash: felt252, signature: Array<felt252>,
     ) -> felt252;
 }
 
@@ -18,7 +18,7 @@ trait ISRC5<TContractState> {
 #[starknet::interface]
 trait IDeployableAccount<TContractState> {
     fn __validate_deploy__(
-        self: @TContractState, class_hash: felt252, salt: felt252, public_key: felt252
+        self: @TContractState, class_hash: felt252, public_key: felt252, time_limit: u64,
     ) -> felt252;
 }
 
@@ -47,15 +47,15 @@ struct SpendingLimit {
 #[starknet::contract(account)]
 mod Account {
     use super::{
-        ISRC6, ISRC5, IDeployableAccount, IDeclarerAccount, ISpendingLimitsAccount, SpendingLimit
+        ISRC6, ISRC5, IDeployableAccount, IDeclarerAccount, ISpendingLimitsAccount, SpendingLimit,
     };
     use starknet::{
         ContractAddress, get_caller_address, get_tx_info, VALIDATED, get_block_timestamp,
-        get_contract_address, account::Call, syscalls::call_contract_syscall
+        get_contract_address, account::Call, syscalls::call_contract_syscall,
     };
     use starknet::storage::{
         Map, StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess,
-        StoragePointerWriteAccess
+        StoragePointerWriteAccess,
     };
     use core::num::traits::Zero;
 
@@ -115,7 +115,7 @@ mod Account {
                     self.update_timestamp(to);
                 }
 
-                let syscall_res = call_contract_syscall(to, selector, calldata).unwrap_syscall();
+                let syscall_res = call_contract_syscall(to, selector, calldata).unwrap();
                 res.append(syscall_res);
             };
             res
@@ -127,7 +127,7 @@ mod Account {
         }
 
         fn is_valid_signature(
-            self: @ContractState, hash: felt252, signature: Array<felt252>
+            self: @ContractState, hash: felt252, signature: Array<felt252>,
         ) -> felt252 {
             let is_valid = self._is_valid_signature(hash, signature.span());
             if is_valid {
@@ -148,7 +148,7 @@ mod Account {
     #[abi(embed_v0)]
     impl DeployableAccount of IDeployableAccount<ContractState> {
         fn __validate_deploy__(
-            self: @ContractState, class_hash: felt252, salt: felt252, public_key: felt252
+            self: @ContractState, class_hash: felt252, public_key: felt252, time_limit: u64,
         ) -> felt252 {
             self.only_protocol();
             self.validate_transaction()
@@ -174,25 +174,25 @@ mod Account {
         }
 
         fn set_spending_limit(
-            ref self: ContractState, token_address: ContractAddress, _limit: u256
+            ref self: ContractState, token_address: ContractAddress, _limit: u256,
         ) {
             assert(get_caller_address() == get_contract_address(), 'Invalid caller');
             let timemstamp = get_block_timestamp();
             let new_limit: SpendingLimit = SpendingLimit {
-                exists: true, limit: _limit, timestamp: timemstamp
+                exists: true, limit: _limit, timestamp: timemstamp,
             };
             self.spending_limit.write(token_address, new_limit);
             self.current_spending_limit.write(token_address, _limit);
         }
 
         fn get_current_spending_limit(
-            self: @ContractState, token_address: ContractAddress
+            self: @ContractState, token_address: ContractAddress,
         ) -> u256 {
             self.current_spending_limit.read(token_address)
         }
 
         fn get_spending_limit_timestamp(
-            self: @ContractState, token_address: ContractAddress
+            self: @ContractState, token_address: ContractAddress,
         ) -> u64 {
             self.spending_limit.read(token_address).timestamp
         }
@@ -237,11 +237,11 @@ mod Account {
         }
 
         fn _is_valid_signature(
-            self: @ContractState, hash: felt252, signature: Span<felt252>
+            self: @ContractState, hash: felt252, signature: Span<felt252>,
         ) -> bool {
             if signature.len() == 2_u32 {
                 core::ecdsa::check_ecdsa_signature(
-                    hash, self.public_key.read(), *signature.at(0_u32), *signature.at(1_u32)
+                    hash, self.public_key.read(), *signature.at(0_u32), *signature.at(1_u32),
                 )
             } else {
                 false

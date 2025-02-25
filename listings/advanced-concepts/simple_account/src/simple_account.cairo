@@ -18,8 +18,8 @@ mod simpleAccount {
     use starknet::storage::{StoragePointerWriteAccess, StoragePointerReadAccess};
 
     // Implement SRC5 with openzeppelin
-    use openzeppelin::account::interface;
-    use openzeppelin::introspection::src5::SRC5Component;
+    use openzeppelin_account::interface;
+    use openzeppelin_introspection::src5::SRC5Component;
     component!(path: SRC5Component, storage: src5, event: SRC5Event);
 
     #[abi(embed_v0)]

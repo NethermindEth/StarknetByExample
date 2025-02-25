@@ -103,7 +103,7 @@ version.workspace = true
 starknet.workspace = true
 # Uncomment the following lines if you want to use additional dependencies:
 # OpenZeppelin:
-# openzeppelin.workspace = true
+# openzeppelin_{package_name}.workspace = true
 
 # If you want to use another Starknet By Example's listing, you can add it as a dependency like this:
 # erc20 = { path = "../../getting-started/erc20" }
@@ -137,7 +137,7 @@ version.workspace = true
 starknet.workspace = true
 # Uncomment the following lines if you want to use additional dependencies:
 # OpenZeppelin:
-# openzeppelin.workspace = true
+# openzeppelin_{package_name}.workspace = true
 
 # If you want to use another Starknet By Example's listing, you can add it as a dependency like this:
 # erc20 = { path = "../../getting-started/erc20" }

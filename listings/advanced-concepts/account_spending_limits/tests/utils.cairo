@@ -13,11 +13,11 @@ fn deploy_account_contract(public_key: felt252, time_limit: u64) -> ContractAddr
 }
 
 fn deploy_erc20_contract(
-    name: felt252, symbol: felt252, fixed_supply: u256, recipient: ContractAddress
+    name: felt252, symbol: felt252, fixed_supply: u256, recipient: ContractAddress,
 ) -> ContractAddress {
     let contract = declare("MyERC20Token").unwrap();
     let constructor_args = array![
-        name, symbol, fixed_supply.low.into(), fixed_supply.high.into(), recipient.into()
+        name, symbol, fixed_supply.low.into(), fixed_supply.high.into(), recipient.into(),
     ];
 
     let (contract_address, _) = contract.deploy(@constructor_args).unwrap();
@@ -33,10 +33,10 @@ fn deploy_declared_erc20(
     name: felt252,
     symbol: felt252,
     fixed_supply: u256,
-    recipient: ContractAddress
+    recipient: ContractAddress,
 ) -> ContractAddress {
     let constructor_args = array![
-        name, symbol, fixed_supply.low.into(), fixed_supply.high.into(), recipient.into()
+        name, symbol, fixed_supply.low.into(), fixed_supply.high.into(), recipient.into(),
     ];
 
     let (contract_address, _) = class.deploy(@constructor_args).unwrap();
@@ -45,7 +45,7 @@ fn deploy_declared_erc20(
 
 
 fn create_transfer_call(
-    token_address: ContractAddress, recipient: ContractAddress, value: u256
+    token_address: ContractAddress, recipient: ContractAddress, value: u256,
 ) -> Call {
     return Call {
         to: token_address,
@@ -55,7 +55,7 @@ fn create_transfer_call(
 }
 
 fn create_approve_call(
-    token_address: ContractAddress, allowed_address: ContractAddress, value: u256
+    token_address: ContractAddress, allowed_address: ContractAddress, value: u256,
 ) -> Call {
     return Call {
         to: token_address,

@@ -1,6 +1,6 @@
 #[starknet::contract]
 pub mod ERC20Token {
-    use openzeppelin::token::erc20::{ERC20Component, ERC20HooksEmptyImpl};
+    use openzeppelin_token::erc20::{ERC20Component, ERC20HooksEmptyImpl};
     use starknet::ContractAddress;
 
     component!(path: ERC20Component, storage: erc20, event: ERC20Event);
@@ -38,10 +38,10 @@ pub mod ERC20Token {
 // Wait for OZ #953 fix
 // mod tests {
 //     use super::ERC20Token;
-//     use openzeppelin::token::erc20::{interface::IERC20Dispatcher,
+//     use openzeppelin_token::erc20::{interface::IERC20Dispatcher,
 //     interface::IERC20DispatcherTrait};
-//     use openzeppelin::tests::utils;
-//     use openzeppelin::utils::serde::SerializedAppend;
+//     use openzeppelin_tests::utils;
+//     use openzeppelin_utils::serde::SerializedAppend;
 
 //     use constant_product_amm::contracts::{
 //         ConstantProductAmm, IConstantProductAmmDispatcher, IConstantProductAmmDispatcherTrait

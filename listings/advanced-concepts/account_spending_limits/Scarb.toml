@@ -5,7 +5,7 @@ edition.workspace = true
 
 [dependencies]
 starknet.workspace = true
-openzeppelin.workspace = true
+openzeppelin_token.workspace = true
 
 [dev-dependencies]
 assert_macros.workspace = true

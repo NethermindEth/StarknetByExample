@@ -6,15 +6,15 @@ use core::integer::{U64IntoFelt252};
 
 use snforge_std::{
     declare, ContractClassTrait, start_mock_call, stop_mock_call, start_cheat_caller_address,
-    stop_cheat_caller_address, start_cheat_block_timestamp, stop_cheat_block_timestamp
+    stop_cheat_caller_address, start_cheat_block_timestamp, stop_cheat_block_timestamp,
 };
 use snforge_std::signature::KeyPairTrait;
 use snforge_std::signature::stark_curve::{
-    StarkCurveKeyPairImpl, StarkCurveSignerImpl, StarkCurveVerifierImpl
+    StarkCurveKeyPairImpl, StarkCurveSignerImpl, StarkCurveVerifierImpl,
 };
 use super::utils::{
     deploy_account_contract, deploy_erc20_contract, create_transfer_call, create_approve_call,
-    declare_erc20_contract, deploy_declared_erc20
+    declare_erc20_contract, deploy_declared_erc20,
 };
 
 use aa_tutorial::standard_account::IAccountDispatcher;
@@ -22,8 +22,8 @@ use aa_tutorial::standard_account::IAccountDispatcherTrait;
 use aa_tutorial::standard_account::IAccountSafeDispatcher;
 use aa_tutorial::standard_account::IAccountSafeDispatcherTrait;
 
-use openzeppelin::token::erc20::interface::IERC20Dispatcher;
-use openzeppelin::token::erc20::interface::IERC20DispatcherTrait;
+use openzeppelin_token::erc20::interface::IERC20Dispatcher;
+use openzeppelin_token::erc20::interface::IERC20DispatcherTrait;
 
 #[test]
 fn check_stored_pub_key() {
@@ -70,14 +70,14 @@ fn check_spending_limit_after_transfer() {
     let spending_limit = 10000000000000000; //0.01 * 10 ** 18
     let account_address = deploy_account_contract(signer.public_key, time_limit);
     let token_address = deploy_erc20_contract(
-        'MyToken', 'MTK', 10000000000000000000, account_address
+        'MyToken', 'MTK', 10000000000000000000, account_address,
     ); //Pre-mints 10 MTK.
 
     let account_dispatcher = IAccountDispatcher { contract_address: account_address };
 
     account_dispatcher.set_spending_limit(token_address, spending_limit);
     let mock_account_address = contract_address_const::<
-        0x067981c7f9f55bcbdd4e0d0a9c5bbcea77dacb42cccbf13554a847d6353f728e
+        0x067981c7f9f55bcbdd4e0d0a9c5bbcea77dacb42cccbf13554a847d6353f728e,
     >();
     let transfer_value: u256 = 1000000000000000; //0.001 MTK
 
@@ -102,7 +102,7 @@ fn spending_limit_after_time_limit() {
     let spending_limit = 10000000000000000; //0.01 * 10 ** 18
     let account_address = deploy_account_contract(signer.public_key, time_limit);
     let token_address = deploy_erc20_contract(
-        'MyToken', 'MTK', 10000000000000000000, account_address
+        'MyToken', 'MTK', 10000000000000000000, account_address,
     ); //Pre-mints 10 MTK.
 
     let account_dispatcher = IAccountDispatcher { contract_address: account_address };
@@ -142,10 +142,10 @@ fn multicall_spending_limit() {
     let erc20_class = declare_erc20_contract();
 
     let token_address1 = deploy_declared_erc20(
-        erc20_class, 'MyToken', 'MTK', 10000000000000000000, account_address
+        erc20_class, 'MyToken', 'MTK', 10000000000000000000, account_address,
     ); //Pre-mints 10 MTK.
     let token_address2 = deploy_declared_erc20(
-        erc20_class, 'MyTokenTest', 'MTKT', 10000000000000000000, account_address
+        erc20_class, 'MyTokenTest', 'MTKT', 10000000000000000000, account_address,
     ); //Pre-mints 10 MTK1.
     let account_dispatcher = IAccountDispatcher { contract_address: account_address };
 
@@ -173,7 +173,7 @@ fn multicall_spending_limit() {
     let spending_limit_2 = account_dispatcher.get_spending_limit(token_address2);
     assert(
         spending_limit_1 == (spending_limit - (approve_value + transfer_value)),
-        'Multicall limit wrong'
+        'Multicall limit wrong',
     );
     assert(spending_limit_2 == (spending_limit - approve_value), 'Token2 limit wrong');
 
@@ -195,7 +195,7 @@ fn check_over_spending_limit() {
     let spending_limit = 10000000000000000; //0.01 * 10 ** 18
     let account_address = deploy_account_contract(signer.public_key, time_limit);
     let token_address = deploy_erc20_contract(
-        'MyToken', 'MTK', 10000000000000000000, account_address
+        'MyToken', 'MTK', 10000000000000000000, account_address,
     ); //Pre-mints 10 MTK.
     let mock_account_address = contract_address_const::<123456789>();
 

@@ -12,11 +12,13 @@ test = "$(git rev-parse --show-toplevel)/scripts/test_resolver.sh"
 [workspace.tool.snforge]
 
 [workspace.dependencies]
-starknet = "2.9.2"
-cairo_test = "2.9.2"
-assert_macros = "2.9.2" 
-snforge_std = "0.35.0"
-openzeppelin = "0.20.0"
+starknet = "2.9.4"
+cairo_test = "2.9.4"
+assert_macros = "2.9.4" 
+snforge_std = "0.37.0"
+openzeppelin_token = "1.0.0"
+openzeppelin_account = "1.0.0"
+openzeppelin_introspection = "1.0.0"
 components = { path = "listings/applications/components" }
 pragma_lib = { git = "https://github.com/astraly-labs/pragma-lib", tag = "2.9.1" }
 
