@@ -16,9 +16,11 @@ starknet = "2.9.4"
 cairo_test = "2.9.4"
 assert_macros = "2.9.4" 
 snforge_std = "0.37.0"
-openzeppelin_token = "1.0.0"
 openzeppelin_account = "1.0.0"
 openzeppelin_introspection = "1.0.0"
+openzeppelin_presets = "1.0.0"
+openzeppelin_token = "1.0.0"
+openzeppelin_utils = "1.0.0"
 components = { path = "listings/applications/components" }
 pragma_lib = { git = "https://github.com/astraly-labs/pragma-lib", tag = "2.9.1" }
 

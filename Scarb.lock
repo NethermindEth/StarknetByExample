@@ -2,14 +2,6 @@
 version = 1
 
 [[package]]
-name = "account_spending_limits"
-version = "0.1.0"
-dependencies = [
- "openzeppelin_token",
- "snforge_std",
-]
-
-[[package]]
 name = "advanced_factory"
 version = "0.1.0"
 dependencies = [
@@ -29,6 +21,7 @@ dependencies = [
 name = "coin_flip"
 version = "0.1.0"
 dependencies = [
+ "openzeppelin_presets",
  "openzeppelin_token",
  "pragma_lib",
  "snforge_std",
@@ -75,6 +68,7 @@ name = "crowdfunding"
 version = "0.1.0"
 dependencies = [
  "components",
+ "openzeppelin_presets",
  "openzeppelin_token",
  "snforge_std",
 ]
@@ -164,10 +158,35 @@ dependencies = [
 ]
 
 [[package]]
+name = "openzeppelin_finance"
+version = "1.0.0"
+source = "registry+https://scarbs.xyz/"
+checksum = "sha256:9fa9e91d39b6ccdfa31eef32fdc087cd06c0269cc9c6b86e32d57f5a6997d98b"
+dependencies = [
+ "openzeppelin_access",
+ "openzeppelin_token",
+]
+
+[[package]]
 name = "openzeppelin_introspection"
 version = "1.0.0"
 source = "registry+https://scarbs.xyz/"
 checksum = "sha256:34e088ecf19e0b3012481a29f1fbb20e600540cb9a5db1c3002a97ebb7f5a32a"
+
+[[package]]
+name = "openzeppelin_presets"
+version = "1.0.0"
+source = "registry+https://scarbs.xyz/"
+checksum = "sha256:4eb098e2ee3ac0e67b6828115a7de62f781418beab767d4e80b54e176808369d"
+dependencies = [
+ "openzeppelin_access",
+ "openzeppelin_account",
+ "openzeppelin_finance",
+ "openzeppelin_introspection",
+ "openzeppelin_token",
+ "openzeppelin_upgrades",
+ "openzeppelin_utils",
+]
 
 [[package]]
 name = "openzeppelin_token"
@@ -180,6 +199,12 @@ dependencies = [
  "openzeppelin_introspection",
  "openzeppelin_utils",
 ]
+
+[[package]]
+name = "openzeppelin_upgrades"
+version = "1.0.0"
+source = "registry+https://scarbs.xyz/"
+checksum = "sha256:36f7a03e7e7111577916aacf31f88ad0053de20f33ee10b0ab3804849c3aa373"
 
 [[package]]
 name = "openzeppelin_utils"
@@ -273,6 +298,7 @@ dependencies = [
  "components",
  "openzeppelin_introspection",
  "openzeppelin_token",
+ "openzeppelin_utils",
  "snforge_std",
 ]
 

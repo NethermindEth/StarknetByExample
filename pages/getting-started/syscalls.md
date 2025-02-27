@@ -248,4 +248,4 @@ The system call does not add any padding and the input needs to be a multiple of
 ## Additional Resources
 
 - [Official Syscalls Documentation](https://docs.starknet.io/documentation/architecture_and_concepts/Smart_Contracts/system-calls-cairo1/)
-- [Source Code](https://github.com/starkware-libs/cairo/blob/v2.9.2/corelib/src/starknet/syscalls.cairo)
+- [Source Code](https://github.com/starkware-libs/cairo/blob/v2.9.4/corelib/src/starknet/syscalls.cairo)

@@ -9,6 +9,7 @@ openzeppelin_token.workspace = true
 pragma_lib.workspace = true
 
 [dev-dependencies]
+openzeppelin_presets.workspace = true
 assert_macros.workspace = true
 snforge_std.workspace = true
 
