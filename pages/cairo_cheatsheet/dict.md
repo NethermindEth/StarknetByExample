@@ -8,5 +8,5 @@ A dictionary is a data structure used to store key-value pairs, enabling efficie
 For example:
 
 ```cairo
-// [!include ~/listings/cairo_cheatsheet/listing/src/dict_example.cairo:sheet]
+// [!include ~/listings/cairo_cheatsheet/src/dict_example.cairo:sheet]
 ```

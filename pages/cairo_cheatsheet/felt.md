@@ -6,5 +6,5 @@
 For example:
 
 ```cairo
-// [!include ~/listings/cairo_cheatsheet/listing/src/felt_example.cairo:sheet]
+// [!include ~/listings/cairo_cheatsheet/src/felt_example.cairo:sheet]
 ```

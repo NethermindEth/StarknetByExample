@@ -80,7 +80,7 @@ const config: Sidebar = [
       },
       {
         text: "Testing contracts",
-        link: "/getting-started/testing/testing",
+        link: "/getting-started/testing/",
         items: [
           {
             text: "With Snforge",
