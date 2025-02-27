@@ -9,7 +9,7 @@ Cairo-test is the included testing framework from Cairo, and can be run with `sc
 You need to add it as a dev dependency with the following line in your `Scarb.toml`:
 ```toml
 [dev-dependencies]
-cairo_test = "2.9.4" // Version should be same as your Starknet/Scarb version
+cairo_test = "2.10.1" // Version should be same as your Starknet/Scarb version
 ```
 
 Testing is done similarly as shown in the [Testing with Snforge](/getting-started/testing/testing-snforge) section, but all the snforge specific features are not available.
