@@ -39,7 +39,7 @@ Each test function requires the `#[test]` attribute. For tests that should verif
 Here's a comprehensive test example:
 
 ```cairo
-// [!include ~/listings/getting-started/testing_how_to/tests/test_contract.cairo:tests]
+// [!include ~/listings/getting-started/testing_how_to/src/test_contract.cairo:tests]
 ```
 
 ## Testing Techniques
@@ -49,7 +49,7 @@ Here's a comprehensive test example:
 For testing specific storage scenarios, snforge provides `load` and `store` functions:
 
 ```cairo
-// [!include ~/listings/getting-started/testing_how_to/tests/test_contract.cairo:tests_with_direct_storage_access]
+// [!include ~/listings/getting-started/testing_how_to/src/test_contract.cairo:tests_with_direct_storage_access]
 ```
 
 ### Contract State Testing
@@ -57,7 +57,7 @@ For testing specific storage scenarios, snforge provides `load` and `store` func
 Use `Contract::contract_state_for_testing` to access internal contract state:
 
 ```cairo
-// [!include ~/listings/getting-started/testing_how_to/tests/test_contract.cairo:tests_with_contract_state]
+// [!include ~/listings/getting-started/testing_how_to/src/test_contract.cairo:tests_with_contract_state]
 ```
 
 ### Event Testing
@@ -65,7 +65,7 @@ Use `Contract::contract_state_for_testing` to access internal contract state:
 To verify event emissions:
 
 ```cairo
-// [!include ~/listings/getting-started/testing_how_to/tests/test_contract.cairo:tests_with_events]
+// [!include ~/listings/getting-started/testing_how_to/src/test_contract.cairo:tests_with_events]
 ```
 
 :::info

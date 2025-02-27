@@ -20,5 +20,5 @@ trait ArrayTrait<T> {
 For example:
 
 ```cairo
-// [!include ~/listings/cairo_cheatsheet/listing/src/array_example.cairo]
+// [!include ~/listings/cairo_cheatsheet/src/array_example.cairo]
 ```

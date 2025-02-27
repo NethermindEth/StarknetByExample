@@ -6,5 +6,5 @@ The `into` method is used for conversion from a smaller data type to a larger da
 For example:
 
 ```cairo
-// [!include ~/listings/cairo_cheatsheet/listing/src/type_casting_example.cairo:sheet]
+// [!include ~/listings/cairo_cheatsheet/src/type_casting_example.cairo:sheet]
 ```
