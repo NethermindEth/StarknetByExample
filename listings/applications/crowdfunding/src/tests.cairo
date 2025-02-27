@@ -7,7 +7,7 @@ use snforge_std::{
 
 use crowdfunding::campaign::{Campaign, ICampaignDispatcher, ICampaignDispatcherTrait};
 use components::ownable::{IOwnableDispatcher, IOwnableDispatcherTrait};
-use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+use openzeppelin_token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
 
 /// Deploy a campaign contract with the provided data
 fn deploy(

@@ -8,7 +8,7 @@ pub mod MockRandomness {
     };
     use core::num::traits::zero::Zero;
     use coin_flip::contract::{IPragmaVRFDispatcher, IPragmaVRFDispatcherTrait};
-    use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+    use openzeppelin_token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
 
     #[storage]
     struct Storage {

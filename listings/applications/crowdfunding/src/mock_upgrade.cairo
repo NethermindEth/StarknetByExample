@@ -3,7 +3,7 @@ pub mod MockUpgrade {
     use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
     use components::ownable::ownable_component::OwnableInternalTrait;
     use core::num::traits::Zero;
-    use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+    use openzeppelin_token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
     use starknet::{
         ClassHash, ContractAddress, get_block_timestamp, get_caller_address, get_contract_address,
     };

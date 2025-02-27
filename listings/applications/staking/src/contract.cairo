@@ -25,7 +25,7 @@ pub mod StakingContract {
     use core::starknet::event::EventEmitter;
     use core::num::traits::Zero;
     use starknet::{ContractAddress, get_caller_address, get_block_timestamp, get_contract_address};
-    use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+    use openzeppelin_token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
     use starknet::storage::{
         Map, StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess,
         StoragePointerWriteAccess,

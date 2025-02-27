@@ -5,8 +5,8 @@ use core::hash::HashStateTrait;
 use snforge_std::{
     cheat_caller_address, cheat_block_timestamp, CheatSpan, spy_events, EventSpyAssertionsTrait,
 };
-use openzeppelin::token::erc721::interface::IERC721DispatcherTrait;
-use openzeppelin::token::erc721::erc721::ERC721Component;
+use openzeppelin_token::erc721::interface::IERC721DispatcherTrait;
+use openzeppelin_token::erc721::erc721::ERC721Component;
 use components::ownable;
 use timelock::timelock::{TimeLock, ITimeLockDispatcherTrait, ITimeLockSafeDispatcherTrait};
 use timelock::tests::utils::{TimeLockTestTrait, TOKEN_ID, OTHER};

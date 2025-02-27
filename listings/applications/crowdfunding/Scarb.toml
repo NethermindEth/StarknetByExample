@@ -7,7 +7,8 @@ edition.workspace = true
 
 [dependencies]
 starknet.workspace = true
-openzeppelin.workspace = true
+openzeppelin_token.workspace = true
+openzeppelin_presets.workspace = true
 components.workspace = true
 
 [dev-dependencies]

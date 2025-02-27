@@ -1,24 +1,19 @@
 mod tests {
     use starknet::class_hash::ClassHash;
 
-    use super::super::upgradeable_contract_v0::{
+    use crate::upgradeable_contract_v0::{
         UpgradeableContract_V0, IUpgradeableContractDispatcher as IUpgradeableContractDispatcher_v0,
         IUpgradeableContractDispatcherTrait as UpgradeableContractDispatcherTrait_v0,
         UpgradeableContract_V0::{Event, Upgraded},
     };
 
-    use super::super::upgradeable_contract_v1::{
+    use crate::upgradeable_contract_v1::{
         UpgradeableContract_V1, IUpgradeableContractDispatcher as IUpgradeableContractDispatcher_v1,
-        IUpgradeableContractDispatcherTrait as UpgradeableContractDispatcherTrait_v1,
     };
 
 
-    use starknet::{
-        ContractAddress, syscalls::deploy_syscall, get_caller_address, contract_address_const,
-    };
+    use starknet::{ContractAddress, syscalls::deploy_syscall};
     use core::num::traits::Zero;
-
-    use starknet::testing::{set_contract_address, set_account_contract_address};
 
     // deploy v0 contract
     fn deploy_v0() -> (IUpgradeableContractDispatcher_v0, ContractAddress, ClassHash) {

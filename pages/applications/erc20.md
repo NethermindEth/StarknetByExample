@@ -17,4 +17,4 @@ Here's an implementation of the ERC20 interface in Cairo:
 // [!include ~/listings/applications/erc20/src/token.cairo:erc20]
 ```
 
-There's several other implementations, such as the [Open Zeppelin](https://docs.openzeppelin.com/contracts-cairo/0.7.0/erc20) or the [Cairo By Example](https://cairo-by-example.com/examples/erc20/) ones.
+There's several other implementations, such as the [Open Zeppelin](https://docs.openzeppelin.com/contracts-cairo/1.0.0/erc20) or the [Cairo By Example](https://cairo-by-example.com/examples/erc20/) ones.

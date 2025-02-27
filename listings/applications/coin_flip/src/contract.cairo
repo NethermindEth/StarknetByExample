@@ -25,7 +25,7 @@ pub mod CoinFlip {
         Map, StoragePointerReadAccess, StoragePathEntry, StoragePointerWriteAccess,
     };
     use pragma_lib::abi::{IRandomnessDispatcher, IRandomnessDispatcherTrait};
-    use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+    use openzeppelin_token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
 
     #[storage]
     struct Storage {

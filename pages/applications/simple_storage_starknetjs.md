@@ -94,7 +94,7 @@ The setup is finished! By calling the `fn get(self: @ContractState) -> u128` fun
 
 In order to run your code, run the command `node index.js{:md}` in your project directory. After a short amount of time, you should see a "0" as the stored data.
 
-Now, we will set a new number to the `stored_data` variable by calling the `fn set(self: @mut ContractState, new_data: u128)` function. This is an `INVOKE:{md}` transaction, so we need to sign the transaction with our account's private key and pass along the calldata.
+Now, we will set a new number to the `stored_data` variable by calling the `fn set(self: @mut ContractState, new_data: u128)` function. This is an `INVOKE{:md}` transaction, so we need to sign the transaction with our account's private key and pass along the calldata.
 
 The transaction is signed and broadcasted to the network and it can takes a few seconds for the transaction to be confirmed.
 

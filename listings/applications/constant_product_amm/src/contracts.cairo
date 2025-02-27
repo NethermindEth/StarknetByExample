@@ -11,7 +11,7 @@ pub trait IConstantProductAmm<TContractState> {
 #[starknet::contract]
 pub mod ConstantProductAmm {
     use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
-    use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+    use openzeppelin_token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
     use starknet::{ContractAddress, get_caller_address, get_contract_address};
     use starknet::storage::{Map, StorageMapReadAccess, StorageMapWriteAccess};
     use core::num::traits::Sqrt;

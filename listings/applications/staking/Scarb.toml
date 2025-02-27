@@ -5,7 +5,7 @@ edition.workspace = true
 
 [dependencies]
 starknet.workspace = true
-openzeppelin.workspace = true
+openzeppelin_token.workspace = true
 
 [dev-dependencies]
 cairo_test.workspace = true

@@ -6,7 +6,7 @@ use snforge_std::{
     declare, start_cheat_caller_address, stop_cheat_caller_address, spy_events,
     EventSpyAssertionsTrait, DeclareResultTrait, ContractClassTrait,
 };
-use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+use openzeppelin_token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
 use pragma_lib::abi::{IRandomnessDispatcher, IRandomnessDispatcherTrait};
 
 fn deploy() -> (ICoinFlipDispatcher, IRandomnessDispatcher, IERC20Dispatcher, ContractAddress) {
