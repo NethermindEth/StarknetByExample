@@ -54,16 +54,14 @@ mod CountableContract {
 
 #[cfg(test)]
 mod test {
-    use super::CountableContract;
     use super::{ICountableDispatcher, ICountableDispatcherTrait};
-    use starknet::syscalls::deploy_syscall;
+    use snforge_std::{ContractClassTrait, DeclareResultTrait, declare};
 
     fn deploy_countable() -> ICountableDispatcher {
-        let (address, _) = deploy_syscall(
-            CountableContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
-        )
-            .unwrap();
-        ICountableDispatcher { contract_address: address }
+        let contract = declare("CountableContract").unwrap().contract_class();
+        let (contract_address, _) = contract.deploy(@array![]).unwrap();
+
+        ICountableDispatcher { contract_address }
     }
 
     #[test]
