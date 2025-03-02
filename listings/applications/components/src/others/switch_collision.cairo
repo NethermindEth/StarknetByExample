@@ -55,8 +55,12 @@ mod switch_collision_tests {
     use components::switchable::{ISwitchableDispatcher, ISwitchableDispatcherTrait};
     use super::{ISwitchCollisionDispatcher, ISwitchCollisionDispatcherTrait};
     use snforge_std::{ContractClassTrait, DeclareResultTrait, declare};
+    use super::{ISwitchCollisionDispatcher, ISwitchCollisionDispatcherTrait};
+    use snforge_std::{ContractClassTrait, DeclareResultTrait, declare};
 
     fn deploy() -> (ISwitchCollisionDispatcher, ISwitchableDispatcher) {
+        let contract = declare("SwitchCollisionContract").unwrap().contract_class();
+        let (contract_address, _) = contract.deploy(@array![]).unwrap();
         let contract = declare("SwitchCollisionContract").unwrap().contract_class();
         let (contract_address, _) = contract.deploy(@array![]).unwrap();
 
