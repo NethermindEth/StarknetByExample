@@ -53,16 +53,12 @@ pub mod SwitchCollisionContract {
 #[cfg(test)]
 mod switch_collision_tests {
     use components::switchable::{ISwitchableDispatcher, ISwitchableDispatcherTrait};
-    use super::{
-        SwitchCollisionContract, ISwitchCollisionDispatcher, ISwitchCollisionDispatcherTrait,
-    };
-    use starknet::syscalls::deploy_syscall;
+    use super::{ISwitchCollisionDispatcher, ISwitchCollisionDispatcherTrait};
+    use snforge_std::{ContractClassTrait, DeclareResultTrait, declare};
 
     fn deploy() -> (ISwitchCollisionDispatcher, ISwitchableDispatcher) {
-        let (contract_address, _) = deploy_syscall(
-            SwitchCollisionContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
-        )
-            .unwrap();
+        let contract = declare("SwitchCollisionContract").unwrap().contract_class();
+        let (contract_address, _) = contract.deploy(@array![]).unwrap();
 
         (
             ISwitchCollisionDispatcher { contract_address },
