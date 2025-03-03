@@ -1,11 +1,11 @@
 use advanced_factory::contract::{
-    CampaignFactory, ICampaignFactoryDispatcher, ICampaignFactoryDispatcherTrait
+    CampaignFactory, ICampaignFactoryDispatcher, ICampaignFactoryDispatcherTrait,
 };
 use crowdfunding::campaign::Campaign;
 use starknet::{ClassHash, get_block_timestamp, contract_address_const};
 use snforge_std::{
     declare, start_cheat_caller_address, stop_cheat_caller_address, spy_events, DeclareResultTrait,
-    ContractClassTrait, get_class_hash, EventSpyAssertionsTrait
+    ContractClassTrait, get_class_hash, EventSpyAssertionsTrait,
 };
 
 // Define a goal contract to deploy
@@ -88,11 +88,11 @@ fn test_create_campaign() {
                     factory.contract_address,
                     CampaignFactory::Event::CampaignCreated(
                         CampaignFactory::CampaignCreated {
-                            creator: campaign_creator, contract_address: campaign_address
-                        }
-                    )
-                )
-            ]
+                            creator: campaign_creator, contract_address: campaign_address,
+                        },
+                    ),
+                ),
+            ],
         );
 }
 
@@ -111,7 +111,7 @@ fn test_upgrade_campaign_class_hash() {
     start_cheat_caller_address(factory.contract_address, pending_campaign_creator);
     let pending_campaign = factory
         .create_campaign(
-            "title 1", "description 1", 10000, start_time_pending, end_time_pending, token
+            "title 1", "description 1", 10000, start_time_pending, end_time_pending, token,
         );
 
     assert_eq!(old_class_hash, get_class_hash(pending_campaign));
@@ -123,7 +123,7 @@ fn test_upgrade_campaign_class_hash() {
     start_cheat_caller_address(factory.contract_address, active_campaign_creator);
     let active_campaign = factory
         .create_campaign(
-            "title 2", "description 2", 20000, start_time_active, end_time_active, token
+            "title 2", "description 2", 20000, start_time_active, end_time_active, token,
         );
 
     assert_eq!(old_class_hash, get_class_hash(active_campaign));
@@ -145,10 +145,10 @@ fn test_upgrade_campaign_class_hash() {
                 (
                     factory.contract_address,
                     CampaignFactory::Event::ClassHashUpdated(
-                        CampaignFactory::ClassHashUpdated { new_class_hash }
-                    )
-                )
-            ]
+                        CampaignFactory::ClassHashUpdated { new_class_hash },
+                    ),
+                ),
+            ],
         );
 
     // upgrade pending campaign
@@ -163,9 +163,11 @@ fn test_upgrade_campaign_class_hash() {
             @array![
                 (
                     pending_campaign,
-                    Campaign::Event::Upgraded(Campaign::Upgraded { implementation: new_class_hash })
-                )
-            ]
+                    Campaign::Event::Upgraded(
+                        Campaign::Upgraded { implementation: new_class_hash },
+                    ),
+                ),
+            ],
         );
 
     // upgrade active campaign
@@ -180,8 +182,10 @@ fn test_upgrade_campaign_class_hash() {
             @array![
                 (
                     active_campaign,
-                    Campaign::Event::Upgraded(Campaign::Upgraded { implementation: new_class_hash })
-                )
-            ]
+                    Campaign::Event::Upgraded(
+                        Campaign::Upgraded { implementation: new_class_hash },
+                    ),
+                ),
+            ],
         );
 }

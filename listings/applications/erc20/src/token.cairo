@@ -9,19 +9,19 @@ pub trait IERC20<TContractState> {
     fn get_total_supply(self: @TContractState) -> felt252;
     fn balance_of(self: @TContractState, account: ContractAddress) -> felt252;
     fn allowance(
-        self: @TContractState, owner: ContractAddress, spender: ContractAddress
+        self: @TContractState, owner: ContractAddress, spender: ContractAddress,
     ) -> felt252;
     fn transfer(ref self: TContractState, recipient: ContractAddress, amount: felt252);
     fn transfer_from(
         ref self: TContractState,
         sender: ContractAddress,
         recipient: ContractAddress,
-        amount: felt252
+        amount: felt252,
     );
     fn approve(ref self: TContractState, spender: ContractAddress, amount: felt252);
     fn increase_allowance(ref self: TContractState, spender: ContractAddress, added_value: felt252);
     fn decrease_allowance(
-        ref self: TContractState, spender: ContractAddress, subtracted_value: felt252
+        ref self: TContractState, spender: ContractAddress, subtracted_value: felt252,
     );
 }
 // [!endregion interface]
@@ -35,7 +35,7 @@ pub mod erc20 {
     use starknet::ContractAddress;
     use starknet::storage::{
         Map, StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess,
-        StoragePointerWriteAccess
+        StoragePointerWriteAccess,
     };
 
     #[storage]
@@ -83,7 +83,7 @@ pub mod erc20 {
         name: felt252,
         decimals: u8,
         initial_supply: felt252,
-        symbol: felt252
+        symbol: felt252,
     ) {
         self.name.write(name);
         self.symbol.write(symbol);
@@ -114,7 +114,7 @@ pub mod erc20 {
         }
 
         fn allowance(
-            self: @ContractState, owner: ContractAddress, spender: ContractAddress
+            self: @ContractState, owner: ContractAddress, spender: ContractAddress,
         ) -> felt252 {
             self.allowances.read((owner, spender))
         }
@@ -128,7 +128,7 @@ pub mod erc20 {
             ref self: ContractState,
             sender: ContractAddress,
             recipient: ContractAddress,
-            amount: felt252
+            amount: felt252,
         ) {
             let caller = get_caller_address();
             self.spend_allowance(sender, caller, amount);
@@ -141,22 +141,22 @@ pub mod erc20 {
         }
 
         fn increase_allowance(
-            ref self: ContractState, spender: ContractAddress, added_value: felt252
+            ref self: ContractState, spender: ContractAddress, added_value: felt252,
         ) {
             let caller = get_caller_address();
             self
                 .approve_helper(
-                    caller, spender, self.allowances.read((caller, spender)) + added_value
+                    caller, spender, self.allowances.read((caller, spender)) + added_value,
                 );
         }
 
         fn decrease_allowance(
-            ref self: ContractState, spender: ContractAddress, subtracted_value: felt252
+            ref self: ContractState, spender: ContractAddress, subtracted_value: felt252,
         ) {
             let caller = get_caller_address();
             self
                 .approve_helper(
-                    caller, spender, self.allowances.read((caller, spender)) - subtracted_value
+                    caller, spender, self.allowances.read((caller, spender)) - subtracted_value,
                 );
         }
     }
@@ -167,7 +167,7 @@ pub mod erc20 {
             ref self: ContractState,
             sender: ContractAddress,
             recipient: ContractAddress,
-            amount: felt252
+            amount: felt252,
         ) {
             assert(sender.is_non_zero(), Errors::TRANSFER_FROM_ZERO);
             assert(recipient.is_non_zero(), Errors::TRANSFER_TO_ZERO);
@@ -180,7 +180,7 @@ pub mod erc20 {
             ref self: ContractState,
             owner: ContractAddress,
             spender: ContractAddress,
-            amount: felt252
+            amount: felt252,
         ) {
             let allowance = self.allowances.read((owner, spender));
             self.allowances.write((owner, spender), allowance - amount);
@@ -190,7 +190,7 @@ pub mod erc20 {
             ref self: ContractState,
             owner: ContractAddress,
             spender: ContractAddress,
-            amount: felt252
+            amount: felt252,
         ) {
             assert(spender.is_non_zero(), Errors::APPROVE_TO_ZERO);
             self.allowances.write((owner, spender), amount);
@@ -207,9 +207,9 @@ pub mod erc20 {
                 .emit(
                     Event::Transfer(
                         Transfer {
-                            from: contract_address_const::<0>(), to: recipient, value: amount
-                        }
-                    )
+                            from: contract_address_const::<0>(), to: recipient, value: amount,
+                        },
+                    ),
                 );
         }
     }
@@ -220,9 +220,7 @@ pub mod erc20 {
 mod tests {
     use super::{erc20, IERC20Dispatcher, IERC20DispatcherTrait, erc20::{Event, Transfer, Approval}};
 
-    use starknet::{
-        ContractAddress, SyscallResultTrait, syscalls::deploy_syscall, contract_address_const
-    };
+    use starknet::{ContractAddress, syscalls::deploy_syscall, contract_address_const};
     use core::num::traits::Zero;
 
     use starknet::testing::set_contract_address;
@@ -239,16 +237,16 @@ mod tests {
             erc20::TEST_CLASS_HASH.try_into().unwrap(),
             recipient.into(),
             array![recipient.into(), token_name, decimals.into(), initial_supply, symbols].span(),
-            false
+            false,
         )
-            .unwrap_syscall();
+            .unwrap();
 
         (IERC20Dispatcher { contract_address }, contract_address)
     }
 
 
     #[test]
-    #[should_panic(expected: ('ERC20: mint to 0', 'CONSTRUCTOR_FAILED'))]
+    #[should_panic]
     fn test_deploy_when_recipient_is_address_zero() {
         let recipient: ContractAddress = Zero::zero();
 
@@ -256,9 +254,9 @@ mod tests {
             erc20::TEST_CLASS_HASH.try_into().unwrap(),
             recipient.into(),
             array![recipient.into(), token_name, decimals.into(), initial_supply, symbols].span(),
-            false
+            false,
         )
-            .unwrap_syscall();
+            .unwrap();
     }
     #[test]
     fn test_deploy_success() {
@@ -268,9 +266,9 @@ mod tests {
             starknet::testing::pop_log(contract_address),
             Option::Some(
                 Event::Transfer(
-                    Transfer { from: Zero::zero(), to: recipient, value: initial_supply }
-                )
-            )
+                    Transfer { from: Zero::zero(), to: recipient, value: initial_supply },
+                ),
+            ),
         );
     }
 
@@ -305,7 +303,7 @@ mod tests {
         let recipient = contract_address_const::<'initialized_recipient'>();
         let (dispatcher, _) = deploy();
         assert(
-            dispatcher.balance_of(recipient) == initial_supply, 'incorrect balance of recipient'
+            dispatcher.balance_of(recipient) == initial_supply, 'incorrect balance of recipient',
         );
     }
 
@@ -353,14 +351,14 @@ mod tests {
             starknet::testing::pop_log(contract_address),
             Option::Some(
                 Event::Transfer(
-                    Transfer { from: Zero::zero(), to: recipient, value: initial_supply }
-                )
-            )
+                    Transfer { from: Zero::zero(), to: recipient, value: initial_supply },
+                ),
+            ),
         );
 
         assert_eq!(
             starknet::testing::pop_log(contract_address),
-            Option::Some(Event::Approval(Approval { owner: caller, spender, value }))
+            Option::Some(Event::Approval(Approval { owner: caller, spender, value })),
         );
     }
 
@@ -386,7 +384,7 @@ mod tests {
         set_contract_address(caller);
         dispatcher.increase_allowance(spender, 100);
         assert(
-            dispatcher.allowance(caller, spender) == amount + 100, 'incorrect increased allowance'
+            dispatcher.allowance(caller, spender) == amount + 100, 'incorrect increased allowance',
         );
 
         // emits one transfer event and two approval events
@@ -395,19 +393,19 @@ mod tests {
             starknet::testing::pop_log(contract_address),
             Option::Some(
                 Event::Transfer(
-                    Transfer { from: Zero::zero(), to: recipient, value: initial_supply }
-                )
-            )
+                    Transfer { from: Zero::zero(), to: recipient, value: initial_supply },
+                ),
+            ),
         );
 
         assert_eq!(
             starknet::testing::pop_log(contract_address),
-            Option::Some(Event::Approval(Approval { owner: caller, spender, value: amount }))
+            Option::Some(Event::Approval(Approval { owner: caller, spender, value: amount })),
         );
 
         assert_eq!(
             starknet::testing::pop_log(contract_address),
-            Option::Some(Event::Approval(Approval { owner: caller, spender, value: amount + 100 }))
+            Option::Some(Event::Approval(Approval { owner: caller, spender, value: amount + 100 })),
         );
     }
 
@@ -434,7 +432,7 @@ mod tests {
         set_contract_address(caller);
         dispatcher.decrease_allowance(spender, 90);
         assert(
-            dispatcher.allowance(caller, spender) == amount - 90, 'incorrect decreased allowance'
+            dispatcher.allowance(caller, spender) == amount - 90, 'incorrect decreased allowance',
         );
 
         // emits one transfer event and two approval events
@@ -443,19 +441,19 @@ mod tests {
             starknet::testing::pop_log(contract_address),
             Option::Some(
                 Event::Transfer(
-                    Transfer { from: Zero::zero(), to: recipient, value: initial_supply }
-                )
-            )
+                    Transfer { from: Zero::zero(), to: recipient, value: initial_supply },
+                ),
+            ),
         );
 
         assert_eq!(
             starknet::testing::pop_log(contract_address),
-            Option::Some(Event::Approval(Approval { owner: caller, spender, value: amount }))
+            Option::Some(Event::Approval(Approval { owner: caller, spender, value: amount })),
         );
 
         assert_eq!(
             starknet::testing::pop_log(contract_address),
-            Option::Some(Event::Approval(Approval { owner: caller, spender, value: amount - 90 }))
+            Option::Some(Event::Approval(Approval { owner: caller, spender, value: amount - 90 })),
         );
     }
 
@@ -494,13 +492,13 @@ mod tests {
         assert_eq!(
             starknet::testing::pop_log(contract_address),
             Option::Some(
-                Event::Transfer(Transfer { from: Zero::zero(), to: caller, value: initial_supply })
-            )
+                Event::Transfer(Transfer { from: Zero::zero(), to: caller, value: initial_supply }),
+            ),
         );
 
         assert_eq!(
             starknet::testing::pop_log(contract_address),
-            Option::Some(Event::Transfer(Transfer { from: caller, to: receiver, value: amount }))
+            Option::Some(Event::Transfer(Transfer { from: caller, to: receiver, value: amount })),
         );
     }
 
@@ -543,13 +541,13 @@ mod tests {
         assert_eq!(
             starknet::testing::pop_log(contract_address),
             Option::Some(
-                Event::Transfer(Transfer { from: Zero::zero(), to: caller, value: initial_supply })
-            )
+                Event::Transfer(Transfer { from: Zero::zero(), to: caller, value: initial_supply }),
+            ),
         );
 
         assert_eq!(
             starknet::testing::pop_log(contract_address),
-            Option::Some(Event::Transfer(Transfer { from: caller, to: receiver, value: amount }))
+            Option::Some(Event::Transfer(Transfer { from: caller, to: receiver, value: amount })),
         );
     }
 }

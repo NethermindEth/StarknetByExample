@@ -29,24 +29,24 @@ pub mod ownable_component {
     #[derive(Drop, Debug, PartialEq, starknet::Event)]
     pub struct OwnershipTransferredEvent {
         pub previous: ContractAddress,
-        pub new: ContractAddress
+        pub new: ContractAddress,
     }
 
     #[derive(Drop, Debug, PartialEq, starknet::Event)]
     pub struct OwnershipRenouncedEvent {
-        pub previous: ContractAddress
+        pub previous: ContractAddress,
     }
 
     #[event]
     #[derive(Drop, Debug, PartialEq, starknet::Event)]
     pub enum Event {
         OwnershipTransferredEvent: OwnershipTransferredEvent,
-        OwnershipRenouncedEvent: OwnershipRenouncedEvent
+        OwnershipRenouncedEvent: OwnershipRenouncedEvent,
     }
 
     #[embeddable_as(Ownable)]
     pub impl OwnableImpl<
-        TContractState, +HasComponent<TContractState>
+        TContractState, +HasComponent<TContractState>,
     > of super::IOwnable<ComponentState<TContractState>> {
         fn owner(self: @ComponentState<TContractState>) -> ContractAddress {
             self.ownable_owner.read()
@@ -65,7 +65,7 @@ pub mod ownable_component {
 
     #[generate_trait]
     pub impl OwnableInternalImpl<
-        TContractState, +HasComponent<TContractState>
+        TContractState, +HasComponent<TContractState>,
     > of OwnableInternalTrait<TContractState> {
         fn _assert_only_owner(self: @ComponentState<TContractState>) {
             let caller = get_caller_address();
@@ -84,7 +84,7 @@ pub mod ownable_component {
             self.ownable_owner.write(new);
             self
                 .emit(
-                    Event::OwnershipTransferredEvent(OwnershipTransferredEvent { previous, new })
+                    Event::OwnershipTransferredEvent(OwnershipTransferredEvent { previous, new }),
                 );
         }
 
@@ -132,15 +132,15 @@ mod test {
     use super::ownable_component::{OwnershipRenouncedEvent, OwnershipTransferredEvent};
     use super::{IOwnableDispatcher, IOwnableDispatcherTrait};
     use starknet::ContractAddress;
-    use starknet::{syscalls::deploy_syscall, SyscallResultTrait, contract_address_const};
+    use starknet::{syscalls::deploy_syscall, contract_address_const};
     use starknet::testing::{set_contract_address};
     use core::num::traits::Zero;
 
     fn deploy() -> (IOwnableDispatcher, ContractAddress) {
         let (contract_address, _) = deploy_syscall(
-            OwnedContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+            OwnedContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
-            .unwrap_syscall();
+            .unwrap();
 
         (IOwnableDispatcher { contract_address }, contract_address)
     }
@@ -167,9 +167,9 @@ mod test {
             starknet::testing::pop_log(address),
             Option::Some(
                 OwnedContract::Event::OwnableEvent(
-                    OwnershipTransferredEvent { previous: contract_address, new: new_owner }.into()
-                )
-            )
+                    OwnershipTransferredEvent { previous: contract_address, new: new_owner }.into(),
+                ),
+            ),
         );
     }
 
@@ -204,9 +204,9 @@ mod test {
             starknet::testing::pop_log(address),
             Option::Some(
                 OwnedContract::Event::OwnableEvent(
-                    OwnershipRenouncedEvent { previous: contract_address }.into()
-                )
-            )
+                    OwnershipRenouncedEvent { previous: contract_address }.into(),
+                ),
+            ),
         );
     }
 

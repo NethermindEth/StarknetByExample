@@ -38,7 +38,7 @@ After this command, the address of the account is shown once it is deployed alon
 starkli account deploy ./starkli-wallet/account.json
 ```
 
-This command wants you to fund the address (given in the instructions below the command) in order to deploy the account on the Starknet Sepolia Testnet. We need Starknet Sepolia testnet ethers which could be obtained from [this faucet](https://starknet-faucet.vercel.app/).
+This command wants you to fund the address (given in the instructions below the command) in order to deploy the account on the Starknet Sepolia Testnet. We need Starknet Sepolia testnet ethers, you can find [a list of available faucets](https://docs.starknet.io/tools/oracles-faucets/).
 
 Once the transaction is confirmed on the faucet page, press ENTER, and the account will be deployed on Starknet Sepolia! Try to find your account on [Voyager Sepolia](https://sepolia.voyager.online/)!
 

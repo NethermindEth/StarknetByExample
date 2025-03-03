@@ -10,26 +10,24 @@ pub trait ICampaignFactory<TContractState> {
         goal: u256,
         start_time: u64,
         end_time: u64,
-        token_address: ContractAddress
+        token_address: ContractAddress,
     ) -> ContractAddress;
     fn get_campaign_class_hash(self: @TContractState) -> ClassHash;
     fn update_campaign_class_hash(ref self: TContractState, new_class_hash: ClassHash);
     fn upgrade_campaign(
-        ref self: TContractState, campaign_address: ContractAddress, new_end_time: Option<u64>
+        ref self: TContractState, campaign_address: ContractAddress, new_end_time: Option<u64>,
     );
 }
 
 #[starknet::contract]
 pub mod CampaignFactory {
     use core::num::traits::Zero;
-    use starknet::{
-        ContractAddress, ClassHash, SyscallResultTrait, syscalls::deploy_syscall, get_caller_address
-    };
+    use starknet::{ContractAddress, ClassHash, syscalls::deploy_syscall, get_caller_address};
     use crowdfunding::campaign::{ICampaignDispatcher, ICampaignDispatcherTrait};
     use components::ownable::ownable_component;
     use starknet::storage::{
         Map, StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess,
-        StoragePointerWriteAccess
+        StoragePointerWriteAccess,
     };
 
     component!(path: ownable_component, storage: ownable, event: OwnableEvent);
@@ -71,7 +69,7 @@ pub mod CampaignFactory {
     #[derive(Drop, starknet::Event)]
     pub struct CampaignCreated {
         pub creator: ContractAddress,
-        pub contract_address: ContractAddress
+        pub contract_address: ContractAddress,
     }
 
     pub mod Errors {
@@ -109,9 +107,9 @@ pub mod CampaignFactory {
 
             // Contract deployment
             let (contract_address, _) = deploy_syscall(
-                self.campaign_class_hash.read(), 0, constructor_calldata.span(), false
+                self.campaign_class_hash.read(), 0, constructor_calldata.span(), false,
             )
-                .unwrap_syscall();
+                .unwrap();
 
             // track new campaign instance
             self.campaigns.write((creator, contract_address), self.campaign_class_hash.read());
@@ -135,7 +133,7 @@ pub mod CampaignFactory {
         }
 
         fn upgrade_campaign(
-            ref self: ContractState, campaign_address: ContractAddress, new_end_time: Option<u64>
+            ref self: ContractState, campaign_address: ContractAddress, new_end_time: Option<u64>,
         ) {
             assert(campaign_address.is_non_zero(), Errors::ZERO_ADDRESS);
 

@@ -1,41 +1,73 @@
 // [!region contract]
 #[starknet::interface]
-pub trait ISimpleContract<TContractState> {
-    fn get_value(self: @TContractState) -> u32;
-    fn get_owner(self: @TContractState) -> starknet::ContractAddress;
-    fn set_value(ref self: TContractState, value: u32);
+pub trait IInventoryContract<TContractState> {
+    fn get_inventory_count(self: @TContractState) -> u32;
+    fn get_max_capacity(self: @TContractState) -> u32;
+    fn update_inventory(ref self: TContractState, new_count: u32);
+}
+
+/// An external function that encodes constraints for update inventory
+fn check_update_inventory(new_count: u32, max_capacity: u32) -> Result<u32, felt252> {
+    if new_count == 0 {
+        return Result::Err('OutOfStock');
+    }
+    if new_count > max_capacity {
+        return Result::Err('ExceedsCapacity');
+    }
+
+    Result::Ok(new_count)
 }
 
 #[starknet::contract]
-pub mod SimpleContract {
+pub mod InventoryContract {
+    use super::check_update_inventory;
     use starknet::{get_caller_address, ContractAddress};
     use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
 
     #[storage]
-    struct Storage {
-        pub value: u32,
-        pub owner: ContractAddress
+    pub struct Storage {
+        pub inventory_count: u32,
+        pub max_capacity: u32,
+        pub owner: ContractAddress,
+    }
+
+    #[event]
+    #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
+    pub enum Event {
+        InventoryUpdated: InventoryUpdated,
+    }
+
+    #[derive(Copy, Drop, Debug, PartialEq, starknet::Event)]
+    pub struct InventoryUpdated {
+        pub new_count: u32,
     }
 
     #[constructor]
-    pub fn constructor(ref self: ContractState, initial_value: u32) {
-        self.value.write(initial_value);
+    pub fn constructor(ref self: ContractState, max_capacity: u32) {
+        self.inventory_count.write(0);
+        self.max_capacity.write(max_capacity);
         self.owner.write(get_caller_address());
     }
 
     #[abi(embed_v0)]
-    pub impl SimpleContractImpl of super::ISimpleContract<ContractState> {
-        fn get_value(self: @ContractState) -> u32 {
-            self.value.read()
+    pub impl InventoryContractImpl of super::IInventoryContract<ContractState> {
+        fn get_inventory_count(self: @ContractState) -> u32 {
+            self.inventory_count.read()
         }
 
-        fn get_owner(self: @ContractState) -> ContractAddress {
-            self.owner.read()
+        fn get_max_capacity(self: @ContractState) -> u32 {
+            self.max_capacity.read()
         }
 
-        fn set_value(ref self: ContractState, value: u32) {
+        fn update_inventory(ref self: ContractState, new_count: u32) {
             assert(self.owner.read() == get_caller_address(), 'Not owner');
-            self.value.write(value);
+
+            match check_update_inventory(new_count, self.max_capacity.read()) {
+                Result::Ok(new_count) => self.inventory_count.write(new_count),
+                Result::Err(error) => { panic!("{}", error); },
+            }
+
+            self.emit(Event::InventoryUpdated(InventoryUpdated { new_count }));
         }
     }
 }
@@ -44,178 +76,24 @@ pub mod SimpleContract {
 // [!region tests]
 #[cfg(test)]
 mod tests {
-    // Import the interface and dispatcher to be able to interact with the contract.
-    use super::{SimpleContract, ISimpleContractDispatcher, ISimpleContractDispatcherTrait};
+    use super::check_update_inventory;
 
-    // Import the deploy syscall to be able to deploy the contract.
-    use starknet::{SyscallResultTrait, syscalls::deploy_syscall};
-    use starknet::{get_contract_address, contract_address_const};
-
-    // Use starknet test utils to fake the contract_address
-    use starknet::testing::set_contract_address;
-
-    // Deploy the contract and return its dispatcher.
-    fn deploy(initial_value: u32) -> ISimpleContractDispatcher {
-        // Declare and deploy
-        let (contract_address, _) = deploy_syscall(
-            SimpleContract::TEST_CLASS_HASH.try_into().unwrap(),
-            0,
-            array![initial_value.into()].span(),
-            false
-        )
-            .unwrap_syscall();
-
-        // Return the dispatcher.
-        // The dispatcher allows to interact with the contract based on its interface.
-        ISimpleContractDispatcher { contract_address }
+    #[test]
+    fn test_check_update_inventory() {
+        let result = check_update_inventory(10, 100);
+        assert_eq!(result, Result::Ok(10));
     }
 
     #[test]
-    fn test_deploy() {
-        let initial_value: u32 = 10;
-        let contract = deploy(initial_value);
-
-        assert_eq!(contract.get_value(), initial_value);
-        assert_eq!(contract.get_owner(), get_contract_address());
+    fn test_check_update_inventory_out_of_stock() {
+        let result = check_update_inventory(0, 100);
+        assert_eq!(result, Result::Err('OutOfStock'));
     }
 
     #[test]
-    fn test_set_as_owner() {
-        // Fake the contract address to owner
-        let owner = contract_address_const::<'owner'>();
-        set_contract_address(owner);
-
-        // When deploying the contract, the owner is the caller.
-        let contract = deploy(10);
-        assert_eq!(contract.get_owner(), owner);
-
-        // As the current caller is the owner, the value can be set.
-        let new_value: u32 = 20;
-        contract.set_value(new_value);
-
-        assert_eq!(contract.get_value(), new_value);
-    }
-
-    #[test]
-    #[should_panic]
-    fn test_set_not_owner() {
-        let owner = contract_address_const::<'owner'>();
-        set_contract_address(owner);
-        let contract = deploy(10);
-
-        // Fake the contract address to another address
-        let not_owner = contract_address_const::<'not owner'>();
-        set_contract_address(not_owner);
-
-        // As the current caller is not the owner, the value cannot be set.
-        let new_value: u32 = 20;
-        contract.set_value(new_value);
-        // Panic expected
-    }
-
-    #[test]
-    #[available_gas(150000)]
-    fn test_deploy_gas() {
-        deploy(10);
-    }
-}
-// [!endregion tests]
-
-// [!region tests_with_state]
-#[cfg(test)]
-mod tests_with_states {
-    // Only import the contract and implementation
-    use super::SimpleContract;
-    use SimpleContract::SimpleContractImpl;
-
-    use starknet::contract_address_const;
-    use starknet::testing::set_caller_address;
-    use core::num::traits::Zero;
-    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
-
-    #[test]
-    fn test_standalone_state() {
-        let mut state = SimpleContract::contract_state_for_testing();
-
-        // As no contract was deployed, the constructor was not called on the state
-        // - with valueContractMemberStateTrait
-        assert_eq!(state.value.read(), 0);
-        // - with SimpleContractImpl
-        assert_eq!(state.get_value(), 0);
-        assert_eq!(state.owner.read(), Zero::zero());
-
-        // We can still directly call the constructor to initialize the state.
-        let owner = contract_address_const::<'owner'>();
-        // We are not setting the contract address but the caller address here,
-        // as we are not deploying the contract but directly calling the constructor function.
-        set_caller_address(owner);
-
-        let initial_value: u32 = 10;
-        SimpleContract::constructor(ref state, initial_value);
-        assert_eq!(state.get_value(), initial_value);
-        assert_eq!(state.get_owner(), owner);
-
-        // As the current caller is the owner, the value can be set.
-        let new_value: u32 = 20;
-        state.set_value(new_value);
-        assert_eq!(state.get_value(), new_value);
-    }
-
-    // But we can also deploy the contract and interact with it using the dispatcher
-    // as shown in the previous tests, and still use the state for testing.
-    use super::{ISimpleContractDispatcher, ISimpleContractDispatcherTrait};
-    use starknet::{SyscallResultTrait, syscalls::deploy_syscall, testing::set_contract_address};
-
-    #[test]
-    fn test_state_with_contract() {
-        let owner = contract_address_const::<'owner'>();
-        let not_owner = contract_address_const::<'not owner'>();
-
-        // Deploy as owner
-        let initial_value: u32 = 10;
-        set_contract_address(owner);
-        let (contract_address, _) = deploy_syscall(
-            SimpleContract::TEST_CLASS_HASH.try_into().unwrap(),
-            0,
-            array![initial_value.into()].span(),
-            false
-        )
-            .unwrap_syscall();
-        let mut contract = ISimpleContractDispatcher { contract_address };
-
-        // create the state
-        // - Set back as not owner
-        set_contract_address(not_owner);
-        let mut state = SimpleContract::contract_state_for_testing();
-        // - Currently, the state is not 'linked' to the contract
-        assert_ne!(state.get_value(), initial_value);
-        assert_ne!(state.get_owner(), owner);
-        // - Link the state to the contract by setting the contract address
-        set_contract_address(contract.contract_address);
-        assert_eq!(state.get_value(), initial_value);
-        assert_eq!(state.get_owner(), owner);
-
-        // Mutating the state from the contract changes the testing state
-        set_contract_address(owner);
-        let new_value: u32 = 20;
-        contract.set_value(new_value);
-        set_contract_address(contract.contract_address);
-        assert_eq!(state.get_value(), new_value);
-
-        // Mutating the state from the testing state changes the contract state
-        set_caller_address(owner);
-        state.set_value(initial_value);
-        assert_eq!(contract.get_value(), initial_value);
-
-        // Directly mutating the state allows to change state
-        // in ways that are not allowed by the contract, such as changing the owner.
-        let new_owner = contract_address_const::<'new owner'>();
-        state.owner.write(new_owner);
-        assert_eq!(contract.get_owner(), new_owner);
-
-        set_caller_address(new_owner);
-        state.set_value(new_value);
-        assert_eq!(contract.get_value(), new_value);
+    fn test_check_update_inventory_exceeds_capacity() {
+        let result = check_update_inventory(101, 100);
+        assert_eq!(result, Result::Err('ExceedsCapacity'));
     }
 }
 // [!endregion tests]

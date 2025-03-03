@@ -11,7 +11,7 @@ pub trait IConstantProductAmm<TContractState> {
 #[starknet::contract]
 pub mod ConstantProductAmm {
     use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
-    use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+    use openzeppelin_token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
     use starknet::{ContractAddress, get_caller_address, get_contract_address};
     use starknet::storage::{Map, StorageMapReadAccess, StorageMapWriteAccess};
     use core::num::traits::Sqrt;
@@ -31,7 +31,7 @@ pub mod ConstantProductAmm {
 
     #[constructor]
     fn constructor(
-        ref self: ContractState, token0: ContractAddress, token1: ContractAddress, fee: u16
+        ref self: ContractState, token0: ContractAddress, token1: ContractAddress, fee: u16,
     ) {
         // assert(fee <= 1000, 'fee > 1000');
         self.token0.write(IERC20Dispatcher { contract_address: token0 });
@@ -61,7 +61,7 @@ pub mod ConstantProductAmm {
             assert(
                 token == self.token0.read().contract_address
                     || token == self.token1.read().contract_address,
-                'invalid token'
+                'invalid token',
             );
             token == self.token0.read().contract_address
         }
@@ -83,11 +83,11 @@ pub mod ConstantProductAmm {
             let is_token0: bool = self.select_token(token_in);
 
             let (token0, token1): (IERC20Dispatcher, IERC20Dispatcher) = (
-                self.token0.read(), self.token1.read()
+                self.token0.read(), self.token1.read(),
             );
             let (reserve0, reserve1): (u256, u256) = (self.reserve0.read(), self.reserve1.read());
             let (
-                token_in, token_out, reserve_in, reserve_out
+                token_in, token_out, reserve_in, reserve_out,
             ): (IERC20Dispatcher, IERC20Dispatcher, u256, u256) =
                 if (is_token0) {
                 (token0, token1, reserve0, reserve1)
@@ -121,7 +121,7 @@ pub mod ConstantProductAmm {
             let caller = get_caller_address();
             let this = get_contract_address();
             let (token0, token1): (IERC20Dispatcher, IERC20Dispatcher) = (
-                self.token0.read(), self.token1.read()
+                self.token0.read(), self.token1.read(),
             );
 
             token0.transfer_from(caller, this, amount0);
@@ -196,7 +196,7 @@ pub mod ConstantProductAmm {
                 (amount0 * amount1).sqrt().into()
             } else {
                 PrivateFunctions::min(
-                    amount0 * total_supply / reserve0, amount1 * total_supply / reserve1
+                    amount0 * total_supply / reserve0, amount1 * total_supply / reserve1,
                 )
             };
             assert(shares > 0, 'shares = 0');
@@ -210,7 +210,7 @@ pub mod ConstantProductAmm {
             let caller = get_caller_address();
             let this = get_contract_address();
             let (token0, token1): (IERC20Dispatcher, IERC20Dispatcher) = (
-                self.token0.read(), self.token1.read()
+                self.token0.read(), self.token1.read(),
             );
 
             // Claim
@@ -251,7 +251,7 @@ pub mod ConstantProductAmm {
 
             let total_supply = self.total_supply.read();
             let (amount0, amount1): (u256, u256) = (
-                (shares * bal0) / total_supply, (shares * bal1) / total_supply
+                (shares * bal0) / total_supply, (shares * bal1) / total_supply,
             );
             assert(amount0 > 0 && amount1 > 0, 'amount0 or amount1 = 0');
 

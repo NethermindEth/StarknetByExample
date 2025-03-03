@@ -9,12 +9,12 @@ use starknet::secp256_trait::{Signature};
 // 3. Sign the hash (off chain, keep your private key secret)
 #[starknet::interface]
 trait IVerifySignature<TContractState> {
-    fn get_signature(self: @TContractState, r: u256, s: u256, v: u32,) -> Signature;
+    fn get_signature(self: @TContractState, r: u256, s: u256, v: u32) -> Signature;
     fn verify_eth_signature(
         self: @TContractState, eth_address: EthAddress, msg_hash: u256, r: u256, s: u256, v: u32,
     );
     fn recover_public_key(
-        self: @TContractState, eth_address: EthAddress, msg_hash: u256, r: u256, s: u256, v: u32
+        self: @TContractState, eth_address: EthAddress, msg_hash: u256, r: u256, s: u256, v: u32,
     );
 }
 
@@ -23,7 +23,7 @@ mod verifySignature {
     use super::IVerifySignature;
     use core::starknet::eth_address::EthAddress;
     use starknet::secp256k1::Secp256k1Point;
-    use starknet::secp256_trait::{Signature, signature_from_vrs, recover_public_key,};
+    use starknet::secp256_trait::{Signature, signature_from_vrs, recover_public_key};
     use starknet::eth_signature::{verify_eth_signature, public_key_point_to_eth_address};
 
     #[storage]
@@ -46,7 +46,7 @@ mod verifySignature {
         /// # Returns
         ///
         /// * `Signature` - The signature struct.
-        fn get_signature(self: @ContractState, r: u256, s: u256, v: u32,) -> Signature {
+        fn get_signature(self: @ContractState, r: u256, s: u256, v: u32) -> Signature {
             // Create a Signature object from the given v, r, and s values.
             let signature: Signature = signature_from_vrs(v, r, s);
             signature
@@ -62,7 +62,7 @@ mod verifySignature {
         /// * `s` - The S component of the signature.
         /// * `v` - The V component of the signature.
         fn verify_eth_signature(
-            self: @ContractState, eth_address: EthAddress, msg_hash: u256, r: u256, s: u256, v: u32
+            self: @ContractState, eth_address: EthAddress, msg_hash: u256, r: u256, s: u256, v: u32,
         ) {
             let signature = self.get_signature(r, s, v);
             verify_eth_signature(:msg_hash, :signature, :eth_address);
@@ -79,7 +79,7 @@ mod verifySignature {
         /// * `s` - The S component of the signature.
         /// * `v` - The V component of the signature.
         fn recover_public_key(
-            self: @ContractState, eth_address: EthAddress, msg_hash: u256, r: u256, s: u256, v: u32
+            self: @ContractState, eth_address: EthAddress, msg_hash: u256, r: u256, s: u256, v: u32,
         ) {
             let signature = self.get_signature(r, s, v);
             let public_key_point = recover_public_key::<Secp256k1Point>(msg_hash, signature)
@@ -93,7 +93,7 @@ mod verifySignature {
 
 #[cfg(test)]
 mod tests {
-    use starknet::secp256_trait::{Signature, signature_from_vrs, recover_public_key,};
+    use starknet::secp256_trait::{Signature, signature_from_vrs, recover_public_key};
     use starknet::EthAddress;
     use starknet::secp256k1::{Secp256k1Point};
     use starknet::eth_signature::{verify_eth_signature, public_key_point_to_eth_address};

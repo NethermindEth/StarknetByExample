@@ -7,6 +7,7 @@ struct Position {
 
 #[derive(Drop, Serde, Copy, starknet::Store)]
 enum UserCommand {
+    #[default]
     Login,
     UpdateProfile,
     Logout,
@@ -14,11 +15,12 @@ enum UserCommand {
 
 #[derive(Drop, Serde, Copy, starknet::Store)]
 enum Action {
+    #[default]
     Quit,
     Move: Position,
     SendMessage: felt252,
     ChangeAvatarColor: (u8, u8, u8),
-    ProfileState: UserCommand
+    ProfileState: UserCommand,
 }
 // [!endregion enums]
 
@@ -45,20 +47,20 @@ mod EnumContract {
         fn register_action(ref self: ContractState, action: Action) {
             // quick note: match takes ownership of variable (but enum Action implements Copy trait)
             match action {
-                Action::Quit => { println!("Quit"); },
-                Action::Move(value) => { println!("Move with x: {} and y: {}", value.x, value.y); },
-                Action::SendMessage(msg) => { println!("Write with message: {}", msg); },
+                Action::Quit => "Quit",
+                Action::Move(value) => format!("Move with x: {} and y: {}", value.x, value.y),
+                Action::SendMessage(msg) => format!("Write with message: {}", msg),
                 Action::ChangeAvatarColor((
-                    r, g, b
-                )) => { println!("Change color to r: {}, g: {}, b: {}", r, g, b); },
+                    r, g, b,
+                )) => format!("Change color to r: {}, g: {}, b: {}", r, g, b),
                 Action::ProfileState(state) => {
                     let profile_state = match state {
                         UserCommand::Login => 1,
                         UserCommand::UpdateProfile => 2,
                         UserCommand::Logout => 3,
                     };
-                    println!("profile_state: {}", profile_state);
-                }
+                    format!("profile_state: {}", profile_state)
+                },
             };
 
             self.most_recent_action.write(action);

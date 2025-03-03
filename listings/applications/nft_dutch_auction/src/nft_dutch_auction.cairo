@@ -9,19 +9,19 @@ pub trait IERC20<TContractState> {
     fn get_total_supply(self: @TContractState) -> felt252;
     fn balance_of(self: @TContractState, account: ContractAddress) -> felt252;
     fn allowance(
-        self: @TContractState, owner: ContractAddress, spender: ContractAddress
+        self: @TContractState, owner: ContractAddress, spender: ContractAddress,
     ) -> felt252;
     fn transfer(ref self: TContractState, recipient: ContractAddress, amount: felt252);
     fn transfer_from(
         ref self: TContractState,
         sender: ContractAddress,
         recipient: ContractAddress,
-        amount: felt252
+        amount: felt252,
     );
     fn approve(ref self: TContractState, spender: ContractAddress, amount: felt252);
     fn increase_allowance(ref self: TContractState, spender: ContractAddress, added_value: felt252);
     fn decrease_allowance(
-        ref self: TContractState, spender: ContractAddress, subtracted_value: felt252
+        ref self: TContractState, spender: ContractAddress, subtracted_value: felt252,
     );
 }
 
@@ -34,12 +34,12 @@ trait IERC721<TContractState> {
     fn owner_of(self: @TContractState, token_id: u256) -> ContractAddress;
     fn get_approved(self: @TContractState, token_id: u256) -> ContractAddress;
     fn is_approved_for_all(
-        self: @TContractState, owner: ContractAddress, operator: ContractAddress
+        self: @TContractState, owner: ContractAddress, operator: ContractAddress,
     ) -> bool;
     fn approve(ref self: TContractState, to: ContractAddress, token_id: u256);
     fn set_approval_for_all(ref self: TContractState, operator: ContractAddress, approved: bool);
     fn transfer_from(
-        ref self: TContractState, from: ContractAddress, to: ContractAddress, token_id: u256
+        ref self: TContractState, from: ContractAddress, to: ContractAddress, token_id: u256,
     );
     fn mint(ref self: TContractState, to: ContractAddress, token_id: u256);
 }
@@ -67,7 +67,7 @@ pub mod NFTDutchAuction {
         start_at: u64,
         expires_at: u64,
         purchase_count: u128,
-        total_supply: u128
+        total_supply: u128,
     }
 
     mod Errors {
@@ -85,7 +85,7 @@ pub mod NFTDutchAuction {
         seller: ContractAddress,
         duration: u64,
         discount_rate: u64,
-        total_supply: u128
+        total_supply: u128,
     ) {
         assert(starting_price >= discount_rate * duration, Errors::LOW_STARTING_PRICE);
 
@@ -117,7 +117,7 @@ pub mod NFTDutchAuction {
 
             let erc20_dispatcher = IERC20Dispatcher { contract_address: self.erc20_token.read() };
             let erc721_dispatcher = IERC721Dispatcher {
-                contract_address: self.erc721_token.read()
+                contract_address: self.erc721_token.read(),
             };
 
             let caller = get_caller_address();
@@ -142,7 +142,7 @@ mod tests {
     use starknet::ContractAddress;
     use snforge_std::{
         declare, DeclareResultTrait, ContractClassTrait, cheat_caller_address, CheatSpan,
-        cheat_block_timestamp
+        cheat_block_timestamp,
     };
     use nft_dutch_auction::erc721::{IERC721Dispatcher, IERC721DispatcherTrait};
     use super::{INFTDutchAuctionDispatcher, INFTDutchAuctionDispatcherTrait};
@@ -176,7 +176,7 @@ mod tests {
             erc20_name,
             erc20_decimals.into(),
             erc20_initial_supply.into(),
-            erc20_symbol
+            erc20_symbol,
         ];
         let (erc20_address, _) = erc20.deploy(@erc20_constructor_calldata).unwrap();
         let nft_auction = declare("NFTDutchAuction").unwrap().contract_class();
@@ -187,7 +187,7 @@ mod tests {
             seller,
             duration,
             discount_rate,
-            total_supply
+            total_supply,
         ];
         let (nft_auction_address, _) = nft_auction
             .deploy(@nft_auction_constructor_calldata)
@@ -201,7 +201,7 @@ mod tests {
         let erc721_dispatcher = IERC721Dispatcher { contract_address: erc721_address };
         let erc20_dispatcher = IERC20Dispatcher { contract_address: erc20_address };
         let nft_auction_dispatcher = INFTDutchAuctionDispatcher {
-            contract_address: nft_auction_address
+            contract_address: nft_auction_address,
         };
         let erc20_admin: ContractAddress = 'admin'.try_into().unwrap();
         let seller: ContractAddress = 'seller'.try_into().unwrap();
@@ -256,7 +256,7 @@ mod tests {
         let (_, erc20_address, nft_auction_address) = get_contract_addresses();
         let erc20_dispatcher = IERC20Dispatcher { contract_address: erc20_address };
         let nft_auction_dispatcher = INFTDutchAuctionDispatcher {
-            contract_address: nft_auction_address
+            contract_address: nft_auction_address,
         };
         let erc20_admin: ContractAddress = 'admin'.try_into().unwrap();
         let buyer: ContractAddress = 'buyer'.try_into().unwrap();
@@ -300,7 +300,7 @@ mod tests {
         let (_, erc20_address, nft_auction_address) = get_contract_addresses();
         let erc20_dispatcher = IERC20Dispatcher { contract_address: erc20_address };
         let nft_auction_dispatcher = INFTDutchAuctionDispatcher {
-            contract_address: nft_auction_address
+            contract_address: nft_auction_address,
         };
         let erc20_admin: ContractAddress = 'admin'.try_into().unwrap();
         let buyer: ContractAddress = 'buyer'.try_into().unwrap();
@@ -337,7 +337,7 @@ mod tests {
     fn test_price_decreases_after_some_time() {
         let (_, _, nft_auction_address) = get_contract_addresses();
         let nft_auction_dispatcher = INFTDutchAuctionDispatcher {
-            contract_address: nft_auction_address
+            contract_address: nft_auction_address,
         };
 
         let nft_price_before_time_travel = nft_auction_dispatcher.get_price();

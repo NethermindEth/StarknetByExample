@@ -5,7 +5,7 @@ trait ISRC6<TContractState> {
     fn execute_calls(self: @TContractState, calls: Array<Call>) -> Array<Span<felt252>>;
     fn validate_calls(self: @TContractState, calls: Array<Call>) -> felt252;
     fn is_valid_signature(
-        self: @TContractState, hash: felt252, signature: Array<felt252>
+        self: @TContractState, hash: felt252, signature: Array<felt252>,
     ) -> felt252;
 }
 
@@ -18,8 +18,8 @@ mod simpleAccount {
     use starknet::storage::{StoragePointerWriteAccess, StoragePointerReadAccess};
 
     // Implement SRC5 with openzeppelin
-    use openzeppelin::account::interface;
-    use openzeppelin::introspection::src5::SRC5Component;
+    use openzeppelin_account::interface;
+    use openzeppelin_introspection::src5::SRC5Component;
     component!(path: SRC5Component, storage: src5, event: SRC5Event);
 
     #[abi(embed_v0)]
@@ -30,7 +30,7 @@ mod simpleAccount {
     struct Storage {
         #[substorage(v0)]
         src5: SRC5Component::Storage,
-        public_key: felt252
+        public_key: felt252,
     }
 
     #[constructor]
@@ -43,7 +43,7 @@ mod simpleAccount {
     #[derive(Drop, starknet::Event)]
     enum Event {
         #[flat]
-        SRC5Event: SRC5Component::Event
+        SRC5Event: SRC5Component::Event,
     }
 
     #[abi(embed_v0)]
@@ -68,7 +68,7 @@ mod simpleAccount {
         }
 
         fn is_valid_signature(
-            self: @ContractState, hash: felt252, signature: Array<felt252>
+            self: @ContractState, hash: felt252, signature: Array<felt252>,
         ) -> felt252 {
             if self._is_valid_signature(hash, signature.span()) {
                 starknet::VALIDATED
@@ -81,10 +81,10 @@ mod simpleAccount {
     #[generate_trait]
     impl SignatureVerificationImpl of SignatureVerification {
         fn _is_valid_signature(
-            self: @ContractState, hash: felt252, signature: Span<felt252>
+            self: @ContractState, hash: felt252, signature: Span<felt252>,
         ) -> bool {
             check_ecdsa_signature(
-                hash, self.public_key.read(), *signature.at(0_u32), *signature.at(1_u32)
+                hash, self.public_key.read(), *signature.at(0_u32), *signature.at(1_u32),
             )
         }
     }

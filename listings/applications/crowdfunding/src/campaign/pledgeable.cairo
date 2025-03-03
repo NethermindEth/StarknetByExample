@@ -18,7 +18,7 @@ pub mod pledgeable_component {
     use starknet::ContractAddress;
     use starknet::storage::{
         Map, StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess,
-        StoragePointerWriteAccess
+        StoragePointerWriteAccess,
     };
 
     #[storage]
@@ -39,7 +39,7 @@ pub mod pledgeable_component {
 
     #[embeddable_as(Pledgeable)]
     pub impl PledgeableImpl<
-        TContractState, +HasComponent<TContractState>
+        TContractState, +HasComponent<TContractState>,
     > of super::IPledgeable<ComponentState<TContractState>> {
         fn add(ref self: ComponentState<TContractState>, pledger: ContractAddress, amount: u256) {
             let old_amount: u256 = self.pledger_to_amount.read(pledger);
@@ -134,7 +134,7 @@ mod tests {
         #[event]
         #[derive(Drop, starknet::Event)]
         enum Event {
-            PledgeableEvent: pledgeable_component::Event
+            PledgeableEvent: pledgeable_component::Event,
         }
 
         #[abi(embed_v0)]

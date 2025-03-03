@@ -4,11 +4,11 @@ pub mod MockRandomness {
     use pragma_lib::types::RequestStatus;
     use starknet::{ContractAddress, ClassHash, get_caller_address, get_contract_address};
     use starknet::storage::{
-        Map, StoragePointerReadAccess, StoragePathEntry, StoragePointerWriteAccess
+        Map, StoragePointerReadAccess, StoragePathEntry, StoragePointerWriteAccess,
     };
     use core::num::traits::zero::Zero;
     use coin_flip::contract::{IPragmaVRFDispatcher, IPragmaVRFDispatcherTrait};
-    use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+    use openzeppelin_token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
 
     #[storage]
     struct Storage {
@@ -41,7 +41,7 @@ pub mod MockRandomness {
             callback_fee_limit: u128,
             publish_delay: u64,
             num_words: u64,
-            calldata: Array<felt252>
+            calldata: Array<felt252>,
         ) -> u64 {
             let caller = get_caller_address();
             let this = get_contract_address();
@@ -70,7 +70,7 @@ pub mod MockRandomness {
             callback_fee: u128,
             random_words: Span<felt252>,
             proof: Span<felt252>,
-            calldata: Array<felt252>
+            calldata: Array<felt252>,
         ) {
             let requestor = IPragmaVRFDispatcher { contract_address: callback_address };
             requestor.receive_random_words(requestor_address, request_id, random_words, calldata);
@@ -81,7 +81,7 @@ pub mod MockRandomness {
         }
 
         fn get_total_fees(
-            self: @ContractState, caller_address: ContractAddress, request_id: u64
+            self: @ContractState, caller_address: ContractAddress, request_id: u64,
         ) -> u256 {
             self.total_fees.entry((caller_address, request_id)).read()
         }
@@ -94,7 +94,7 @@ pub mod MockRandomness {
             ref self: ContractState,
             requestor_address: ContractAddress,
             request_id: u64,
-            new_status: RequestStatus
+            new_status: RequestStatus,
         ) {
             panic!("unimplemented")
         }
@@ -107,24 +107,24 @@ pub mod MockRandomness {
             minimum_block_number: u64,
             callback_address: ContractAddress,
             callback_fee_limit: u128,
-            num_words: u64
+            num_words: u64,
         ) {
             panic!("unimplemented")
         }
 
         fn get_pending_requests(
-            self: @ContractState, requestor_address: ContractAddress, offset: u64, max_len: u64
+            self: @ContractState, requestor_address: ContractAddress, offset: u64, max_len: u64,
         ) -> Span<felt252> {
             panic!("unimplemented")
         }
 
         fn get_request_status(
-            self: @ContractState, requestor_address: ContractAddress, request_id: u64
+            self: @ContractState, requestor_address: ContractAddress, request_id: u64,
         ) -> RequestStatus {
             panic!("unimplemented")
         }
         fn requestor_current_index(
-            self: @ContractState, requestor_address: ContractAddress
+            self: @ContractState, requestor_address: ContractAddress,
         ) -> u64 {
             panic!("unimplemented")
         }
@@ -141,7 +141,7 @@ pub mod MockRandomness {
             panic!("unimplemented")
         }
         fn refund_operation(
-            ref self: ContractState, caller_address: ContractAddress, request_id: u64
+            ref self: ContractState, caller_address: ContractAddress, request_id: u64,
         ) {
             panic!("unimplemented")
         }
@@ -156,7 +156,7 @@ pub mod MockRandomness {
         fn get_contract_balance(self: @ContractState) -> u256 {
             panic!("unimplemented")
         }
-        fn get_admin_address(self: @ContractState,) -> ContractAddress {
+        fn get_admin_address(self: @ContractState) -> ContractAddress {
             panic!("unimplemented")
         }
         fn set_admin_address(ref self: ContractState, new_admin_address: ContractAddress) {
