@@ -1,49 +1,43 @@
 mod tests {
     use starknet::class_hash::ClassHash;
 
-    use super::super::upgradeable_contract_v0::{
+    use crate::upgradeable_contract_v0::{
         UpgradeableContract_V0, IUpgradeableContractDispatcher as IUpgradeableContractDispatcher_v0,
         IUpgradeableContractDispatcherTrait as UpgradeableContractDispatcherTrait_v0,
-        UpgradeableContract_V0::{Event, Upgraded}
+        UpgradeableContract_V0::{Event, Upgraded},
     };
 
-    use super::super::upgradeable_contract_v1::{
+    use crate::upgradeable_contract_v1::{
         UpgradeableContract_V1, IUpgradeableContractDispatcher as IUpgradeableContractDispatcher_v1,
-        IUpgradeableContractDispatcherTrait as UpgradeableContractDispatcherTrait_v1
     };
 
 
-    use starknet::{
-        ContractAddress, SyscallResultTrait, syscalls::deploy_syscall, get_caller_address,
-        contract_address_const
-    };
+    use starknet::{ContractAddress, syscalls::deploy_syscall};
     use core::num::traits::Zero;
-
-    use starknet::testing::{set_contract_address, set_account_contract_address};
 
     // deploy v0 contract
     fn deploy_v0() -> (IUpgradeableContractDispatcher_v0, ContractAddress, ClassHash) {
         let (contract_address, _) = deploy_syscall(
-            UpgradeableContract_V0::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+            UpgradeableContract_V0::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
-            .unwrap_syscall();
+            .unwrap();
         (
             IUpgradeableContractDispatcher_v0 { contract_address },
             contract_address,
-            UpgradeableContract_V0::TEST_CLASS_HASH.try_into().unwrap()
+            UpgradeableContract_V0::TEST_CLASS_HASH.try_into().unwrap(),
         )
     }
 
     //  deploy v1 contract
     fn deploy_v1() -> (IUpgradeableContractDispatcher_v1, ContractAddress, ClassHash) {
         let (contract_address, _) = deploy_syscall(
-            UpgradeableContract_V1::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
+            UpgradeableContract_V1::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
         )
-            .unwrap_syscall();
+            .unwrap();
         (
             IUpgradeableContractDispatcher_v1 { contract_address },
             contract_address,
-            UpgradeableContract_V1::TEST_CLASS_HASH.try_into().unwrap()
+            UpgradeableContract_V1::TEST_CLASS_HASH.try_into().unwrap(),
         )
     }
 
@@ -78,7 +72,7 @@ mod tests {
         // emit event
         assert_eq!(
             starknet::testing::pop_log(contract_address),
-            Option::Some(Event::Upgraded(Upgraded { implementation: class_hash }))
+            Option::Some(Event::Upgraded(Upgraded { implementation: class_hash })),
         );
 
         assert(dispatcher_v0.version() == 1, ' version did not upgrade');

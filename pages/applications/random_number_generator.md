@@ -53,7 +53,7 @@ There are other ways to generate randomness on-chain, for more information read 
 
 ## CoinFlip using Pragma VRF
 
-Below is an implementation of a `CoinFlip` contract that utilizes a [Pragma Verifiable Random Function (VRF)](https://docs.pragma.build/Resources/Cairo%201/randomness/randomness) to generate random numbers on-chain.
+Below is an implementation of a `CoinFlip` contract that utilizes a [Pragma Verifiable Random Function (VRF)](https://docs.pragma.build/v1/Resources/randomness/randomness) to generate random numbers on-chain.
 
 - Players can flip a virtual coin and receive a random outcome of `Heads` or `Tails`
 - The contract needs to be funded with enough ETH to perform the necessary operations, including paying fees to Pragma's Randomness Oracle which returns a random value

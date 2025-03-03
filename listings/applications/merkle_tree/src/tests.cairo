@@ -1,7 +1,7 @@
 use merkle_tree::contract::IMerkleTreeDispatcherTrait;
 use merkle_tree::contract::{IMerkleTreeDispatcher, MerkleTree, ByteArrayHashTrait};
+use starknet::ContractAddress;
 use starknet::syscalls::deploy_syscall;
-use starknet::{ContractAddress, SyscallResultTrait};
 use starknet::testing::set_contract_address;
 use core::poseidon::PoseidonTrait;
 use core::hash::{HashStateTrait, HashStateExTrait};
@@ -9,7 +9,7 @@ use starknet::storage::{VecTrait, StoragePointerReadAccess};
 
 fn deploy_util(class_hash: felt252, calldata: Array<felt252>) -> ContractAddress {
     let (address, _) = deploy_syscall(class_hash.try_into().unwrap(), 0, calldata.span(), false)
-        .unwrap_syscall();
+        .unwrap();
     address
 }
 
@@ -83,11 +83,9 @@ fn build_tree_succeeds() {
 
     assert_eq!(state.hashes.len(), expected_hashes.len().into());
 
-    for i in 0
-        ..expected_hashes
-            .len() {
-                assert_eq!(state.hashes.at(i.into()).read(), *expected_hashes.at(i));
-            }
+    for i in 0..expected_hashes.len() {
+        assert_eq!(state.hashes.at(i.into()).read(), *expected_hashes.at(i));
+    }
 }
 
 #[test]
@@ -173,9 +171,9 @@ fn verify_leaf_fails() {
     let res = deploy
         .verify(
             wrong_proof, // proof
-             *hashes.at(6), // root
-             data_3.hash(), // leaf
-             2 // leaf index
+            *hashes.at(6), // root
+            data_3.hash(), // leaf
+            2 // leaf index
         );
     assert(!res, '2- Leaf should NOT be in tree');
 }

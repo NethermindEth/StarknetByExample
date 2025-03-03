@@ -1,8 +1,8 @@
 use starknet::{ContractAddress, contract_address_const, get_block_timestamp};
 use starknet::account::Call;
 use snforge_std::{declare, ContractClassTrait, test_address, DeclareResultTrait};
-use openzeppelin::utils::serde::SerializedAppend;
-use openzeppelin::token::erc721::interface::IERC721Dispatcher;
+use openzeppelin_utils::serde::SerializedAppend;
+use openzeppelin_token::erc721::interface::IERC721Dispatcher;
 use timelock::timelock::{TimeLock, ITimeLockDispatcher, ITimeLockSafeDispatcher};
 
 pub const TOKEN_ID: u256 = 1;
@@ -59,7 +59,7 @@ pub impl TimeLockTestImpl of TimeLockTestTrait {
         Call {
             to: *self.erc721_address,
             selector: selector!("transfer_from"),
-            calldata: calldata.span()
+            calldata: calldata.span(),
         }
     }
     fn get_timestamp(self: @TimeLockTest) -> u64 {

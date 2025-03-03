@@ -11,22 +11,22 @@ dependencies = [
 ]
 
 [[package]]
-name = "bytearray"
-version = "0.1.0"
-
-[[package]]
 name = "cairo_cheatsheet"
 version = "0.1.0"
 
 [[package]]
 name = "calling_other_contracts"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "coin_flip"
 version = "0.1.0"
 dependencies = [
- "openzeppelin",
+ "openzeppelin_presets",
+ "openzeppelin_token",
  "pragma_lib",
  "snforge_std",
 ]
@@ -50,29 +50,39 @@ dependencies = [
 name = "constant_product_amm"
 version = "0.1.0"
 dependencies = [
- "openzeppelin",
+ "openzeppelin_token",
 ]
 
 [[package]]
 name = "constructor"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "counter"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "crowdfunding"
 version = "0.1.0"
 dependencies = [
  "components",
- "openzeppelin",
+ "openzeppelin_presets",
+ "openzeppelin_token",
  "snforge_std",
 ]
 
 [[package]]
-name = "custom_type_serde"
+name = "custom_type_entrypoints"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "ecdsa_verification"
@@ -93,10 +103,16 @@ dependencies = [
 [[package]]
 name = "errors"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "events"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "factory"
@@ -111,16 +127,15 @@ name = "hash_trait"
 version = "0.1.0"
 
 [[package]]
-name = "interfaces_traits"
-version = "0.1.0"
-
-[[package]]
 name = "library_calls"
 version = "0.1.0"
 
 [[package]]
 name = "mappings"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "merkle_tree"
@@ -135,23 +150,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "openzeppelin"
-version = "0.16.0"
-source = "registry+https://scarbs.xyz/"
-checksum = "sha256:5dc87a71f0f5d045e02e5bc5ea7a9b0360bbbc3f388b846006280d266feac192"
-dependencies = [
- "openzeppelin_merkle_tree",
- "openzeppelin_presets",
- "openzeppelin_security",
- "openzeppelin_token",
- "openzeppelin_upgrades",
-]
-
-[[package]]
 name = "openzeppelin_access"
-version = "0.16.0"
+version = "1.0.0"
 source = "registry+https://scarbs.xyz/"
-checksum = "sha256:b9139449e53d715992b2d9e887c0c723d886419bee7ceb5561648c70bd6d3174"
+checksum = "sha256:a39a4ea1582916c637bf7e3aee0832c3fe1ea3a3e39191955e8dc39d08327f9b"
 dependencies = [
  "openzeppelin_introspection",
  "openzeppelin_utils",
@@ -159,88 +161,84 @@ dependencies = [
 
 [[package]]
 name = "openzeppelin_account"
-version = "0.16.0"
+version = "1.0.0"
 source = "registry+https://scarbs.xyz/"
-checksum = "sha256:841bb881adbe98b64fee1dc1329f6e3fbabdfbd9fa65c66ffb54c55f13764bce"
+checksum = "sha256:7e943a2de32ddca4d48e467e52790e380ab1f49c4daddbbbc4634dd930d0243f"
 dependencies = [
  "openzeppelin_introspection",
  "openzeppelin_utils",
 ]
 
 [[package]]
-name = "openzeppelin_governance"
-version = "0.16.0"
+name = "openzeppelin_finance"
+version = "1.0.0"
 source = "registry+https://scarbs.xyz/"
-checksum = "sha256:a9d9c983cfd4369e7bbb69433fb264edf376805ed873b1f70a287825a6bd1eaf"
+checksum = "sha256:9fa9e91d39b6ccdfa31eef32fdc087cd06c0269cc9c6b86e32d57f5a6997d98b"
 dependencies = [
  "openzeppelin_access",
- "openzeppelin_introspection",
+ "openzeppelin_token",
 ]
 
 [[package]]
 name = "openzeppelin_introspection"
-version = "0.16.0"
+version = "1.0.0"
 source = "registry+https://scarbs.xyz/"
-checksum = "sha256:312bc2e531f036480ad7392dbb31042c38d875ef9dbb5578ea8de5c05e35b7d8"
-
-[[package]]
-name = "openzeppelin_merkle_tree"
-version = "0.16.0"
-source = "registry+https://scarbs.xyz/"
-checksum = "sha256:8e264c8d5f0591262a235a445b8ca78dd5580c251707b218b829b6b4d6f84a34"
+checksum = "sha256:34e088ecf19e0b3012481a29f1fbb20e600540cb9a5db1c3002a97ebb7f5a32a"
 
 [[package]]
 name = "openzeppelin_presets"
-version = "0.16.0"
+version = "1.0.0"
 source = "registry+https://scarbs.xyz/"
-checksum = "sha256:7bc9db7563e434535ebd06c7598ba0f8494e791c5f80401389b356a3ebd65a08"
+checksum = "sha256:4eb098e2ee3ac0e67b6828115a7de62f781418beab767d4e80b54e176808369d"
+dependencies = [
+ "openzeppelin_access",
+ "openzeppelin_account",
+ "openzeppelin_finance",
+ "openzeppelin_introspection",
+ "openzeppelin_token",
+ "openzeppelin_upgrades",
+ "openzeppelin_utils",
+]
+
+[[package]]
+name = "openzeppelin_token"
+version = "1.0.0"
+source = "registry+https://scarbs.xyz/"
+checksum = "sha256:33fcb84a1a76d2d3fff9302094ff564f78d45b743548fd7568c130b272473f66"
 dependencies = [
  "openzeppelin_access",
  "openzeppelin_account",
  "openzeppelin_introspection",
- "openzeppelin_token",
- "openzeppelin_upgrades",
-]
-
-[[package]]
-name = "openzeppelin_security"
-version = "0.16.0"
-source = "registry+https://scarbs.xyz/"
-checksum = "sha256:b7497f5e55c6d9f1d7606ad0d12719e3c04765e266fb91fb72740e0af41d03f3"
-
-[[package]]
-name = "openzeppelin_token"
-version = "0.16.0"
-source = "registry+https://scarbs.xyz/"
-checksum = "sha256:7074c23fbc300b3cccff1037264dfdbe976fb11ae42ce687f4a8ce469adc552a"
-dependencies = [
- "openzeppelin_account",
- "openzeppelin_governance",
- "openzeppelin_introspection",
+ "openzeppelin_utils",
 ]
 
 [[package]]
 name = "openzeppelin_upgrades"
-version = "0.16.0"
+version = "1.0.0"
 source = "registry+https://scarbs.xyz/"
-checksum = "sha256:4de95a7fb8955e63711f34bb954676f6cef127b44b570c0535d7781297821b44"
+checksum = "sha256:36f7a03e7e7111577916aacf31f88ad0053de20f33ee10b0ab3804849c3aa373"
 
 [[package]]
 name = "openzeppelin_utils"
-version = "0.16.0"
+version = "1.0.0"
 source = "registry+https://scarbs.xyz/"
-checksum = "sha256:a494aeb5f1371db7f22e922196aa41d1d1698877a766a838350c0b6ffe49fda2"
+checksum = "sha256:fd348b31c4a4407add33adc3c2b8f26dca71dbd7431faaf726168f37a91db0c1"
 
 [[package]]
 name = "pragma_lib"
 version = "1.0.0"
-source = "git+https://github.com/astraly-labs/pragma-lib#86d7ccdc15b349b8b48d9796fc8464c947bea6e1"
+source = "git+https://github.com/astraly-labs/pragma-lib?tag=2.9.1#ee1f3f7e9276cf64e19e267832de380d84c04d28"
+
+[[package]]
+name = "sierra_ir"
+version = "0.1.0"
 
 [[package]]
 name = "simple_account"
 version = "0.1.0"
 dependencies = [
- "openzeppelin",
+ "openzeppelin_account",
+ "openzeppelin_introspection",
 ]
 
 [[package]]
@@ -256,15 +254,15 @@ dependencies = [
 
 [[package]]
 name = "snforge_scarb_plugin"
-version = "0.2.0"
+version = "0.38.0"
 source = "registry+https://scarbs.xyz/"
-checksum = "sha256:2e4ce3ebe3f49548bd26908391b5d78537a765d827df0d96c32aeb88941d0d67"
+checksum = "sha256:c4d128eedb5fca4362be38a84e5f5a85bd94ec1557bab7c045d48de0163e406c"
 
 [[package]]
 name = "snforge_std"
-version = "0.30.0"
+version = "0.38.0"
 source = "registry+https://scarbs.xyz/"
-checksum = "sha256:2f3c4846881813ac0f5d1460981249c9f5e2a6831e752beedf9b70975495b4ec"
+checksum = "sha256:8b3eaff778105c313b78708974c253cd927ecf5c896f4557a0ea4f10f427b554"
 dependencies = [
  "snforge_scarb_plugin",
 ]
@@ -273,12 +271,15 @@ dependencies = [
 name = "staking"
 version = "0.1.0"
 dependencies = [
- "openzeppelin",
+ "openzeppelin_token",
 ]
 
 [[package]]
 name = "storage"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "store_using_packing"
@@ -287,6 +288,9 @@ version = "0.1.0"
 [[package]]
 name = "storing_custom_types"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "struct_as_mapping_key"
@@ -295,13 +299,18 @@ version = "0.1.0"
 [[package]]
 name = "testing_how_to"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "timelock"
 version = "0.1.0"
 dependencies = [
  "components",
- "openzeppelin",
+ "openzeppelin_introspection",
+ "openzeppelin_token",
+ "openzeppelin_utils",
  "snforge_std",
 ]
 
@@ -312,10 +321,16 @@ version = "0.1.0"
 [[package]]
 name = "variables"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "visibility"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "write_to_any_slot"

@@ -35,10 +35,9 @@ pub mod Campaign {
     use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
     use components::ownable::ownable_component::OwnableInternalTrait;
     use core::num::traits::Zero;
-    use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+    use openzeppelin_token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
     use starknet::{
-        ClassHash, ContractAddress, SyscallResultTrait, get_block_timestamp, get_caller_address,
-        get_contract_address
+        ClassHash, ContractAddress, get_block_timestamp, get_caller_address, get_contract_address,
     };
     use components::ownable::ownable_component;
     use super::pledgeable::pledgeable_component;
@@ -125,7 +124,7 @@ pub mod Campaign {
 
     #[derive(Drop, starknet::Event)]
     pub struct Upgraded {
-        pub implementation: ClassHash
+        pub implementation: ClassHash,
     }
 
     pub mod Errors {
@@ -296,14 +295,15 @@ pub mod Campaign {
                 if let Option::Some(end_time) = new_end_time {
                     assert(end_time >= get_block_timestamp(), Errors::END_BEFORE_NOW);
                     assert(
-                        end_time <= get_block_timestamp() + NINETY_DAYS, Errors::END_BIGGER_THAN_MAX
+                        end_time <= get_block_timestamp() + NINETY_DAYS,
+                        Errors::END_BIGGER_THAN_MAX,
                     );
                     self.end_time.write(end_time);
                 };
                 self._refund_all("contract upgraded");
             }
 
-            starknet::syscalls::replace_class_syscall(impl_hash).unwrap_syscall();
+            starknet::syscalls::replace_class_syscall(impl_hash).unwrap();
 
             self.emit(Event::Upgraded(Upgraded { implementation: impl_hash }));
         }

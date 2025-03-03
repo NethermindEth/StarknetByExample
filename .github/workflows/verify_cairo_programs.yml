@@ -3,10 +3,17 @@ name: Verify Cairo programs compilation
 on:
   pull_request:
     branches:
+      - dev
       - main
   workflow_dispatch:
 
 jobs:
+  typos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: crate-ci/typos@master
+
   compile_and_verify:
     runs-on: ubuntu-latest
 
@@ -19,7 +26,7 @@ jobs:
       - name: Configure upstream repository
         run: |
           git remote add upstream https://github.com/NethermindEth/StarknetByExample
-          git fetch upstream main
+          git fetch upstream
 
       - name: Install scarb
         uses: software-mansion/setup-scarb@v1
@@ -27,13 +34,7 @@ jobs:
       - name: Install snforge
         uses: foundry-rs/setup-snfoundry@v3
 
-      - name: Run build script
+      - name: Verify changes
         run: |
           chmod +x scripts/cairo_programs_verifier.sh
           ./scripts/cairo_programs_verifier.sh
-
-  typos:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: crate-ci/typos@master

@@ -1,7 +1,7 @@
 #[derive(Copy, Serde, Drop)]
 pub struct Time {
     pub hour: u8,
-    pub minute: u8
+    pub minute: u8,
 }
 
 #[starknet::interface]
@@ -18,7 +18,7 @@ pub mod TimeContract {
 
     #[storage]
     struct Storage {
-        time: Time
+        time: Time,
     }
 
     impl TimePackable of StorePacking<Time, felt252> {

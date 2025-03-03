@@ -16,7 +16,7 @@ mod tests {
         // Set up.
         let mut calldata: Array<felt252> = array![];
         let (address0, _) = deploy_syscall(
-            WriteToAnySlot::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false
+            WriteToAnySlot::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false,
         )
             .unwrap();
         let mut contract = IWriteToAnySlotDispatcher { contract_address: address0 };

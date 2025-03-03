@@ -12,13 +12,17 @@ test = "$(git rev-parse --show-toplevel)/scripts/test_resolver.sh"
 [workspace.tool.snforge]
 
 [workspace.dependencies]
-starknet = "2.8.2"
-cairo_test = "2.8.2"
-assert_macros = "2.8.2" 
-snforge_std = "0.30.0"
-openzeppelin = "0.16.0"
+starknet = "2.10.1"
+cairo_test = "2.10.1"
+assert_macros = "2.10.1" 
+snforge_std = "0.38.0"
+openzeppelin_account = "1.0.0"
+openzeppelin_introspection = "1.0.0"
+openzeppelin_presets = "1.0.0"
+openzeppelin_token = "1.0.0"
+openzeppelin_utils = "1.0.0"
 components = { path = "listings/applications/components" }
-pragma_lib = { git = "https://github.com/astraly-labs/pragma-lib" }
+pragma_lib = { git = "https://github.com/astraly-labs/pragma-lib", tag = "2.9.1" }
 
 [workspace.package]
 description = "Collection of examples of how to use the Cairo programming language to create smart contracts on Starknet."

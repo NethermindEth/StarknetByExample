@@ -1,13 +1,13 @@
-use starknet::{ContractAddress, get_block_timestamp, contract_address_const,};
+use starknet::{ContractAddress, get_block_timestamp, contract_address_const};
 use snforge_std::{
     declare, ContractClass, ContractClassTrait, start_cheat_caller_address,
     stop_cheat_caller_address, spy_events, EventSpyAssertionsTrait, get_class_hash,
-    DeclareResultTrait, start_cheat_block_timestamp_global
+    DeclareResultTrait, start_cheat_block_timestamp_global,
 };
 
 use crowdfunding::campaign::{Campaign, ICampaignDispatcher, ICampaignDispatcherTrait};
 use components::ownable::{IOwnableDispatcher, IOwnableDispatcherTrait};
-use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+use openzeppelin_token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
 
 /// Deploy a campaign contract with the provided data
 fn deploy(
@@ -17,7 +17,7 @@ fn deploy(
     goal: u256,
     start_time: u64,
     end_time: u64,
-    token: ContractAddress
+    token: ContractAddress,
 ) -> ICampaignDispatcher {
     let creator = contract_address_const::<'creator'>();
     let mut calldata: Array::<felt252> = array![];
@@ -35,7 +35,7 @@ fn deploy(
 }
 
 fn deploy_with_token(
-    contract: ContractClass, token: ContractClass
+    contract: ContractClass, token: ContractClass,
 ) -> (ICampaignDispatcher, IERC20Dispatcher) {
     // define ERC20 data
     let token_name: ByteArray = "My Token";
@@ -65,7 +65,7 @@ fn deploy_with_token(
     let start_time = get_block_timestamp();
     let end_time = start_time + 60;
     let campaign_dispatcher = deploy(
-        contract, "title 1", "description 1", 10000, start_time, end_time, token_address
+        contract, "title 1", "description 1", 10000, start_time, end_time, token_address,
     );
 
     // approve the pledges for each pledger
@@ -96,7 +96,7 @@ fn test_deploy() {
         10000,
         start_time,
         end_time,
-        contract_address_const::<'token'>()
+        contract_address_const::<'token'>(),
     );
 
     let details = campaign.get_details();
@@ -143,10 +143,10 @@ fn test_successful_campaign() {
                 (
                     campaign.contract_address,
                     Campaign::Event::PledgeMade(
-                        Campaign::PledgeMade { pledger: pledger_1, amount: 3000 }
-                    )
-                )
-            ]
+                        Campaign::PledgeMade { pledger: pledger_1, amount: 3000 },
+                    ),
+                ),
+            ],
         );
 
     // 2nd donation
@@ -163,10 +163,10 @@ fn test_successful_campaign() {
                 (
                     campaign.contract_address,
                     Campaign::Event::PledgeMade(
-                        Campaign::PledgeMade { pledger: pledger_2, amount: 500 }
-                    )
-                )
-            ]
+                        Campaign::PledgeMade { pledger: pledger_2, amount: 500 },
+                    ),
+                ),
+            ],
         );
 
     // 3rd donation
@@ -183,10 +183,10 @@ fn test_successful_campaign() {
                 (
                     campaign.contract_address,
                     Campaign::Event::PledgeMade(
-                        Campaign::PledgeMade { pledger: pledger_3, amount: 7000 }
-                    )
-                )
-            ]
+                        Campaign::PledgeMade { pledger: pledger_3, amount: 7000 },
+                    ),
+                ),
+            ],
         );
 
     // claim
@@ -202,9 +202,9 @@ fn test_successful_campaign() {
             @array![
                 (
                     campaign.contract_address,
-                    Campaign::Event::Claimed(Campaign::Claimed { amount: 10500 })
-                )
-            ]
+                    Campaign::Event::Claimed(Campaign::Claimed { amount: 10500 }),
+                ),
+            ],
         );
 }
 
@@ -230,9 +230,11 @@ fn test_upgrade_class_hash() {
             @array![
                 (
                     campaign.contract_address,
-                    Campaign::Event::Upgraded(Campaign::Upgraded { implementation: new_class_hash })
-                )
-            ]
+                    Campaign::Event::Upgraded(
+                        Campaign::Upgraded { implementation: new_class_hash },
+                    ),
+                ),
+            ],
         );
 
     // test active campaign
@@ -268,15 +270,17 @@ fn test_upgrade_class_hash() {
             @array![
                 (
                     campaign.contract_address,
-                    Campaign::Event::Upgraded(Campaign::Upgraded { implementation: new_class_hash })
+                    Campaign::Event::Upgraded(
+                        Campaign::Upgraded { implementation: new_class_hash },
+                    ),
                 ),
                 (
                     campaign.contract_address,
                     Campaign::Event::RefundedAll(
-                        Campaign::RefundedAll { reason: "contract upgraded" }
-                    )
-                )
-            ]
+                        Campaign::RefundedAll { reason: "contract upgraded" },
+                    ),
+                ),
+            ],
         );
 }
 
@@ -325,13 +329,13 @@ fn test_cancel() {
             @array![
                 (
                     campaign.contract_address,
-                    Campaign::Event::RefundedAll(Campaign::RefundedAll { reason: "testing" })
+                    Campaign::Event::RefundedAll(Campaign::RefundedAll { reason: "testing" }),
                 ),
                 (
                     campaign.contract_address,
-                    Campaign::Event::Canceled(Campaign::Canceled { reason: "testing" })
-                )
-            ]
+                    Campaign::Event::Canceled(Campaign::Canceled { reason: "testing" }),
+                ),
+            ],
         );
 
     // test failed campaign
@@ -376,13 +380,13 @@ fn test_cancel() {
             @array![
                 (
                     campaign.contract_address,
-                    Campaign::Event::RefundedAll(Campaign::RefundedAll { reason: "testing" })
+                    Campaign::Event::RefundedAll(Campaign::RefundedAll { reason: "testing" }),
                 ),
                 (
                     campaign.contract_address,
-                    Campaign::Event::Canceled(Campaign::Canceled { reason: "testing" })
-                )
-            ]
+                    Campaign::Event::Canceled(Campaign::Canceled { reason: "testing" }),
+                ),
+            ],
         );
 }
 
@@ -391,7 +395,7 @@ fn test_refund() {
     // setup
     let (campaign, token) = deploy_with_token(
         *declare("Campaign").unwrap().contract_class(),
-        *declare("ERC20Upgradeable").unwrap().contract_class()
+        *declare("ERC20Upgradeable").unwrap().contract_class(),
     );
     let mut spy = spy_events();
     let creator = contract_address_const::<'creator'>();
@@ -430,11 +434,11 @@ fn test_refund() {
                     campaign.contract_address,
                     Campaign::Event::Refunded(
                         Campaign::Refunded {
-                            pledger: pledger_1, amount: amount_1, reason: "testing"
-                        }
-                    )
-                )
-            ]
+                            pledger: pledger_1, amount: amount_1, reason: "testing",
+                        },
+                    ),
+                ),
+            ],
         );
 }
 
@@ -443,7 +447,7 @@ fn test_unpledge() {
     // setup
     let (campaign, token) = deploy_with_token(
         *declare("Campaign").unwrap().contract_class(),
-        *declare("ERC20Upgradeable").unwrap().contract_class()
+        *declare("ERC20Upgradeable").unwrap().contract_class(),
     );
     let mut spy = spy_events();
     let pledger = contract_address_const::<'pledger_1'>();
@@ -469,9 +473,9 @@ fn test_unpledge() {
                 (
                     campaign.contract_address,
                     Campaign::Event::Unpledged(
-                        Campaign::Unpledged { pledger, amount, reason: "testing" }
-                    )
-                )
-            ]
+                        Campaign::Unpledged { pledger, amount, reason: "testing" },
+                    ),
+                ),
+            ],
         );
 }

@@ -25,10 +25,10 @@ pub mod StakingContract {
     use core::starknet::event::EventEmitter;
     use core::num::traits::Zero;
     use starknet::{ContractAddress, get_caller_address, get_block_timestamp, get_contract_address};
-    use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+    use openzeppelin_token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
     use starknet::storage::{
         Map, StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess,
-        StoragePointerWriteAccess
+        StoragePointerWriteAccess,
     };
 
     #[storage]
@@ -98,7 +98,7 @@ pub mod StakingContract {
             // can only set duration if the previous duration has already finished
             assert(
                 self.finish_at.read() < get_block_timestamp().into(),
-                super::Errors::UNFINISHED_DURATION
+                super::Errors::UNFINISHED_DURATION,
             );
 
             self.duration.write(duration);
@@ -124,7 +124,7 @@ pub mod StakingContract {
             assert(
                 self.reward_token.read().balance_of(get_contract_address()) >= rate
                     * self.duration.read(),
-                super::Errors::NOT_ENOUGH_REWARDS
+                super::Errors::NOT_ENOUGH_REWARDS,
             );
 
             self.reward_rate.write(rate);
@@ -158,7 +158,7 @@ pub mod StakingContract {
 
             assert(
                 self.staking_token.read().balance_of(user) >= amount,
-                super::Errors::NOT_ENOUGH_BALANCE
+                super::Errors::NOT_ENOUGH_BALANCE,
             );
 
             self.update_rewards(user);

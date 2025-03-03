@@ -1,50 +1,57 @@
 // [!region callee_contract]
 // This will automatically generate ICalleeDispatcher and ICalleeDispatcherTrait
 #[starknet::interface]
-pub trait ICallee<TContractState> {
-    fn set_value(ref self: TContractState, value: u128) -> u128;
+trait ICallee<TContractState> {
+    fn set_value(ref self: TContractState, value: u128);
+    fn get_value(self: @TContractState) -> u128;
 }
 
 #[starknet::contract]
-pub mod Callee {
-    use starknet::storage::StoragePointerWriteAccess;
+mod Callee {
+    use starknet::storage::{StoragePointerWriteAccess, StoragePointerReadAccess};
+    use super::ICallee;
 
     #[storage]
     struct Storage {
-        pub value: u128,
+        value: u128,
     }
 
     #[abi(embed_v0)]
-    impl ICalleeImpl of super::ICallee<ContractState> {
-        fn set_value(ref self: ContractState, value: u128) -> u128 {
+    impl ICalleeImpl of ICallee<ContractState> {
+        fn set_value(ref self: ContractState, value: u128) {
             self.value.write(value);
-            value
+        }
+        fn get_value(self: @ContractState) -> u128 {
+            self.value.read()
         }
     }
 }
 // [!endregion callee_contract]
 
+// Interface for the contract that will make the calls
 #[starknet::interface]
-pub trait ICaller<TContractState> {
+trait ICaller<TContractState> {
+    // Call another contract to set its value
     fn set_value_from_address(
-        ref self: TContractState, addr: starknet::ContractAddress, value: u128
+        ref self: TContractState, addr: starknet::ContractAddress, value: u128,
     );
 }
 
 // [!region caller_contract]
 #[starknet::contract]
-pub mod Caller {
-    // We need to import the dispatcher of the callee contract
-    // If you don't have a proper import, you can redefine the interface by yourself
+mod Caller {
+    // Import the generated dispatcher types for the Callee contract
     use super::{ICalleeDispatcher, ICalleeDispatcherTrait};
+    use super::ICaller;
     use starknet::ContractAddress;
 
     #[storage]
     struct Storage {}
 
     #[abi(embed_v0)]
-    impl ICallerImpl of super::ICaller<ContractState> {
+    impl ICallerImpl of ICaller<ContractState> {
         fn set_value_from_address(ref self: ContractState, addr: ContractAddress, value: u128) {
+            // Create a dispatcher instance and call the target contract
             ICalleeDispatcher { contract_address: addr }.set_value(value);
         }
     }
@@ -53,37 +60,30 @@ pub mod Caller {
 
 #[cfg(test)]
 mod tests {
-    use super::{Callee, ICalleeDispatcher, Caller, ICallerDispatcher, ICallerDispatcherTrait};
-    use starknet::{testing::set_contract_address, syscalls::deploy_syscall, SyscallResultTrait};
-    use starknet::storage::StoragePointerReadAccess;
+    use super::{
+        ICalleeDispatcher, ICalleeDispatcherTrait, ICallerDispatcher, ICallerDispatcherTrait,
+    };
+    use snforge_std::{ContractClassTrait, DeclareResultTrait, declare};
 
     fn deploy() -> (ICalleeDispatcher, ICallerDispatcher) {
-        let (address_callee, _) = deploy_syscall(
-            Callee::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
-        )
-            .unwrap_syscall();
-        let (address_caller, _) = deploy_syscall(
-            Caller::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false
-        )
-            .unwrap_syscall();
+        let contract = declare("Callee").unwrap().contract_class();
+        let (callee_contract_address, _) = contract.deploy(@array![]).unwrap();
+
+        let contract = declare("Caller").unwrap().contract_class();
+        let (caller_contract_address, _) = contract.deploy(@array![]).unwrap();
         (
-            ICalleeDispatcher { contract_address: address_callee },
-            ICallerDispatcher { contract_address: address_caller }
+            ICalleeDispatcher { contract_address: callee_contract_address },
+            ICallerDispatcher { contract_address: caller_contract_address },
         )
     }
 
     #[test]
     fn test_caller() {
-        let init_value: u128 = 42;
-
         let (callee, caller) = deploy();
-        caller.set_value_from_address(callee.contract_address, init_value);
+        let value: u128 = 42;
 
-        let state = @Callee::contract_state_for_testing();
-        set_contract_address(callee.contract_address);
+        caller.set_value_from_address(callee.contract_address, value);
 
-        let value_read: u128 = state.value.read();
-
-        assert_eq!(value_read, init_value);
+        assert_eq!(callee.get_value(), value);
     }
 }

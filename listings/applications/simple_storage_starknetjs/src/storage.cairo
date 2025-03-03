@@ -11,7 +11,7 @@ mod SimpleStorage {
 
     #[storage]
     struct Storage {
-        stored_data: u128
+        stored_data: u128,
     }
 
     #[abi(embed_v0)]

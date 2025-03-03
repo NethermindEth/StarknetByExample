@@ -131,3 +131,8 @@ section.vocs_Sidebar_level
     display: block;
   }
 }
+
+/* Remove spacing between headers */
+.vocs_H2.vocs_Heading {
+  margin-top: 0 !important;
+}
