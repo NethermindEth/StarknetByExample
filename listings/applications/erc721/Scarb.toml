@@ -5,7 +5,8 @@ edition.workspace = true
 
 [dependencies]
 starknet.workspace = true
-openzeppelin.workspace = true
+openzeppelin_account.workspace = true
+openzeppelin_introspection.workspace = true
 
 [dev-dependencies]
 assert_macros.workspace = true
