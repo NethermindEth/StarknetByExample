@@ -126,7 +126,6 @@ version = "0.1.0"
 name = "l1_l2_token_bridge"
 version = "0.1.0"
 dependencies = [
- "openzeppelin",
  "snforge_std",
 ]
 
