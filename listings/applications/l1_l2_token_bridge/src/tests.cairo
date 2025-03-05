@@ -122,7 +122,7 @@ fn handle_deposit() {
                 (
                     token_bridge_address,
                     TokenBridge::Event::DepositHandled(
-                        TokenBridge::DepositHandled { account: recipient_account, amount, },
+                        TokenBridge::DepositHandled { account: recipient_account, amount },
                     ),
                 ),
             ],
