@@ -198,7 +198,7 @@ pub mod ERC721 {
             if src5_dispatcher.supports_interface(IERC721_RECEIVER_ID) {
                 IERC721ReceiverDispatcher { contract_address: to }
                     .on_erc721_received(
-                        get_caller_address(), from, token_id, data
+                        get_caller_address(), from, token_id, data,
                     ) == IERC721_RECEIVER_ID
             } else {
                 src5_dispatcher.supports_interface(openzeppelin_account::interface::ISRC6_ID)
