@@ -245,6 +245,7 @@ name = "simple_vault"
 version = "0.1.0"
 dependencies = [
  "erc20",
+ "snforge_std",
 ]
 
 [[package]]
