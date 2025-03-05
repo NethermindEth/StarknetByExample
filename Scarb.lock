@@ -96,7 +96,8 @@ version = "0.1.0"
 name = "erc721"
 version = "0.1.0"
 dependencies = [
- "openzeppelin",
+ "openzeppelin_account",
+ "openzeppelin_introspection",
  "snforge_std",
 ]
 
