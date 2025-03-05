@@ -3,10 +3,10 @@ use starknet::storage::StoragePointerWriteAccess;
 use snforge_std::{
     declare, start_cheat_caller_address, stop_cheat_caller_address, spy_events, spy_messages_to_l1,
     test_address, MessageToL1SpyAssertionsTrait, MessageToL1, EventSpyAssertionsTrait,
-    DeclareResultTrait, ContractClassTrait
+    DeclareResultTrait, ContractClassTrait,
 };
 use l1_l2_token_bridge::contract::{
-    TokenBridge, ITokenBridgeDispatcher, ITokenBridgeDispatcherTrait
+    TokenBridge, ITokenBridgeDispatcher, ITokenBridgeDispatcherTrait,
 };
 use l1_l2_token_bridge::mintable_token_mock::MintableTokenMock;
 
@@ -53,8 +53,11 @@ fn bridge_to_l1() {
     spy_l1
         .assert_sent(
             @array![
-                (contract_address, MessageToL1 { to_address: l1_bridge, payload: expected_payload })
-            ]
+                (
+                    contract_address,
+                    MessageToL1 { to_address: l1_bridge, payload: expected_payload },
+                ),
+            ],
         );
 
     spy
@@ -63,10 +66,10 @@ fn bridge_to_l1() {
                 (
                     l2_token_address,
                     MintableTokenMock::Event::Burned(
-                        MintableTokenMock::Burned { account: CALLER(), amount }
-                    )
+                        MintableTokenMock::Burned { account: CALLER(), amount },
+                    ),
                 ),
-            ]
+            ],
         );
     spy
         .assert_emitted(
@@ -75,11 +78,11 @@ fn bridge_to_l1() {
                     contract_address,
                     TokenBridge::Event::WithdrawInitiated(
                         TokenBridge::WithdrawInitiated {
-                            l1_recipient, amount, caller_address: CALLER()
-                        }
-                    )
+                            l1_recipient, amount, caller_address: CALLER(),
+                        },
+                    ),
                 ),
-            ]
+            ],
         );
 }
 
@@ -108,10 +111,10 @@ fn handle_deposit() {
                 (
                     l2_token_address,
                     MintableTokenMock::Event::Minted(
-                        MintableTokenMock::Minted { account: recipient_account, amount }
-                    )
+                        MintableTokenMock::Minted { account: recipient_account, amount },
+                    ),
                 ),
-            ]
+            ],
         );
     spy
         .assert_emitted(
@@ -119,9 +122,9 @@ fn handle_deposit() {
                 (
                     token_bridge_address,
                     TokenBridge::Event::DepositHandled(
-                        TokenBridge::DepositHandled { account: recipient_account, amount, }
-                    )
+                        TokenBridge::DepositHandled { account: recipient_account, amount, },
+                    ),
                 ),
-            ]
+            ],
         );
 }
