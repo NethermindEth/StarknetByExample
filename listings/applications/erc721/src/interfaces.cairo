@@ -14,16 +14,16 @@ pub trait IERC721<TContractState> {
         from: ContractAddress,
         to: ContractAddress,
         token_id: u256,
-        data: Span<felt252>
+        data: Span<felt252>,
     );
     fn transfer_from(
-        ref self: TContractState, from: ContractAddress, to: ContractAddress, token_id: u256
+        ref self: TContractState, from: ContractAddress, to: ContractAddress, token_id: u256,
     );
     fn approve(ref self: TContractState, approved: ContractAddress, token_id: u256);
     fn set_approval_for_all(ref self: TContractState, operator: ContractAddress, approved: bool);
     fn get_approved(self: @TContractState, token_id: u256) -> ContractAddress;
     fn is_approved_for_all(
-        self: @TContractState, owner: ContractAddress, operator: ContractAddress
+        self: @TContractState, owner: ContractAddress, operator: ContractAddress,
     ) -> bool;
 }
 
@@ -47,7 +47,7 @@ pub trait IERC721Receiver<TContractState> {
         operator: ContractAddress,
         from: ContractAddress,
         token_id: u256,
-        data: Span<felt252>
+        data: Span<felt252>,
     ) -> felt252;
 }
 
@@ -71,4 +71,3 @@ pub trait IERC721Enumerable<TContractState> {
     fn token_of_owner_by_index(self: @TContractState, owner: ContractAddress, index: u256) -> u256;
 }
 // [!endregion interface]
-

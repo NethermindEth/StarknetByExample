@@ -16,14 +16,14 @@ pub mod ERC721ReceiverMock {
     #[storage]
     pub struct Storage {
         #[substorage(v0)]
-        pub src5: SRC5Component::Storage
+        pub src5: SRC5Component::Storage,
     }
 
     #[event]
     #[derive(Drop, starknet::Event)]
     enum Event {
         #[flat]
-        SRC5Event: SRC5Component::Event
+        SRC5Event: SRC5Component::Event,
     }
 
     #[constructor]
@@ -38,7 +38,7 @@ pub mod ERC721ReceiverMock {
             operator: ContractAddress,
             from: ContractAddress,
             token_id: u256,
-            data: Span<felt252>
+            data: Span<felt252>,
         ) -> felt252 {
             if *data.at(0) == super::SUCCESS {
                 IERC721_RECEIVER_ID

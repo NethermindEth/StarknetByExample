@@ -30,21 +30,21 @@ pub mod ERC721 {
     pub struct Transfer {
         pub from: ContractAddress,
         pub to: ContractAddress,
-        pub token_id: u256
+        pub token_id: u256,
     }
 
     #[derive(Drop, starknet::Event)]
     pub struct Approval {
         pub owner: ContractAddress,
         pub approved: ContractAddress,
-        pub token_id: u256
+        pub token_id: u256,
     }
 
     #[derive(Drop, starknet::Event)]
     pub struct ApprovalForAll {
         pub owner: ContractAddress,
         pub operator: ContractAddress,
-        pub approved: bool
+        pub approved: bool,
     }
 
     pub mod Errors {
@@ -70,7 +70,7 @@ pub mod ERC721 {
         }
 
         fn set_approval_for_all(
-            ref self: ContractState, operator: ContractAddress, approved: bool
+            ref self: ContractState, operator: ContractAddress, approved: bool,
         ) {
             assert(!operator.is_zero(), Errors::INVALID_OPERATOR);
             let owner = get_caller_address();
@@ -82,7 +82,7 @@ pub mod ERC721 {
             let owner = self._require_owned(token_id);
             let caller = get_caller_address();
             assert(
-                caller == owner || self.is_approved_for_all(owner, caller), Errors::UNAUTHORIZED
+                caller == owner || self.is_approved_for_all(owner, caller), Errors::UNAUTHORIZED,
             );
 
             self.approvals.write(token_id, approved);
@@ -95,14 +95,14 @@ pub mod ERC721 {
         }
 
         fn transfer_from(
-            ref self: ContractState, from: ContractAddress, to: ContractAddress, token_id: u256
+            ref self: ContractState, from: ContractAddress, to: ContractAddress, token_id: u256,
         ) {
             let previous_owner = self._require_owned(token_id);
             assert(from == previous_owner, Errors::INVALID_SENDER);
             assert(!to.is_zero(), Errors::INVALID_RECEIVER);
             assert(
                 self._is_approved_or_owner(from, get_caller_address(), token_id),
-                Errors::UNAUTHORIZED
+                Errors::UNAUTHORIZED,
             );
 
             self.balances.write(from, self.balances.read(from) - 1);
@@ -118,17 +118,17 @@ pub mod ERC721 {
             from: ContractAddress,
             to: ContractAddress,
             token_id: u256,
-            data: Span<felt252>
+            data: Span<felt252>,
         ) {
             Self::transfer_from(ref self, from, to, token_id);
             assert(
                 self._check_on_erc721_received(from, to, token_id, data),
-                Errors::SAFE_TRANSFER_FAILED
+                Errors::SAFE_TRANSFER_FAILED,
             );
         }
 
         fn is_approved_for_all(
-            self: @ContractState, owner: ContractAddress, operator: ContractAddress
+            self: @ContractState, owner: ContractAddress, operator: ContractAddress,
         ) -> bool {
             self.operator_approvals.read((owner, operator))
         }
@@ -178,7 +178,7 @@ pub mod ERC721 {
         }
 
         fn _is_approved_or_owner(
-            self: @ContractState, owner: ContractAddress, spender: ContractAddress, token_id: u256
+            self: @ContractState, owner: ContractAddress, spender: ContractAddress, token_id: u256,
         ) -> bool {
             !spender.is_zero()
                 && (owner == spender
@@ -191,7 +191,7 @@ pub mod ERC721 {
             from: ContractAddress,
             to: ContractAddress,
             token_id: u256,
-            data: Span<felt252>
+            data: Span<felt252>,
         ) -> bool {
             let src5_dispatcher = ISRC5Dispatcher { contract_address: to };
 

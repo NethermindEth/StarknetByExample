@@ -27,7 +27,7 @@ pub mod AccountMock {
         #[substorage(v0)]
         pub account: AccountComponent::Storage,
         #[substorage(v0)]
-        pub src5: SRC5Component::Storage
+        pub src5: SRC5Component::Storage,
     }
 
     #[event]
@@ -36,7 +36,7 @@ pub mod AccountMock {
         #[flat]
         AccountEvent: AccountComponent::Event,
         #[flat]
-        SRC5Event: SRC5Component::Event
+        SRC5Event: SRC5Component::Event,
     }
 
     #[constructor]
