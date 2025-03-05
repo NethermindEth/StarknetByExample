@@ -111,7 +111,7 @@ pub mod TokenBridge {
 
             // Send the message to L1 to mint tokens there.
             let mut payload: Array<felt252> = array![
-                l1_recipient.into(), amount.low.into(), amount.high.into()
+                l1_recipient.into(), amount.low.into(), amount.high.into(),
             ];
             syscalls::send_message_to_l1_syscall(self.l1_bridge.read(), payload.span())
                 .unwrap_syscall();
