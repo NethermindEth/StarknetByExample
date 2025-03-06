@@ -219,9 +219,15 @@ pub mod erc20 {
 #[cfg(test)]
 mod tests {
     use super::{IERC20Dispatcher, IERC20DispatcherTrait, erc20::{Event, Transfer, Approval}};
+    use super::{IERC20Dispatcher, IERC20DispatcherTrait, erc20::{Event, Transfer, Approval}};
 
     use starknet::{ContractAddress, contract_address_const};
+    use starknet::{ContractAddress, contract_address_const};
     use core::num::traits::Zero;
+    use snforge_std::{
+        spy_events, EventSpyAssertionsTrait, ContractClassTrait, DeclareResultTrait, declare,
+        start_cheat_caller_address_global,
+    };
     use snforge_std::{
         spy_events, EventSpyAssertionsTrait, ContractClassTrait, DeclareResultTrait, declare,
         start_cheat_caller_address_global,
@@ -233,12 +239,17 @@ mod tests {
     const symbols: felt252 = 'mtk';
 
     fn deploy() -> IERC20Dispatcher {
+    fn deploy() -> IERC20Dispatcher {
         let recipient: ContractAddress = contract_address_const::<'initialized_recipient'>();
 
         let token = declare("erc20").unwrap().contract_class();
         let (contract_address, _) = token
             .deploy(@array![recipient.into(), token_name, decimals.into(), initial_supply, symbols])
+        let token = declare("erc20").unwrap().contract_class();
+        let (contract_address, _) = token
+            .deploy(@array![recipient.into(), token_name, decimals.into(), initial_supply, symbols])
             .unwrap();
+        IERC20Dispatcher { contract_address }
         IERC20Dispatcher { contract_address }
     }
 
@@ -251,12 +262,30 @@ mod tests {
         let token = declare("erc20").unwrap().contract_class();
         let (_contract_address, _) = token
             .deploy(@array![recipient.into(), token_name, decimals.into(), initial_supply, symbols])
+        let token = declare("erc20").unwrap().contract_class();
+        let (_contract_address, _) = token
+            .deploy(@array![recipient.into(), token_name, decimals.into(), initial_supply, symbols])
             .unwrap();
     }
+
 
     #[test]
     fn test_deploy_success() {
         let recipient = contract_address_const::<'initialized_recipient'>();
+        let mut spy = spy_events();
+        let token = deploy();
+
+        spy
+            .assert_emitted(
+                @array![
+                    (
+                        token.contract_address,
+                        Event::Transfer(
+                            Transfer { from: Zero::zero(), to: recipient, value: initial_supply },
+                        ),
+                    ),
+                ],
+            );
         let mut spy = spy_events();
         let token = deploy();
 
@@ -277,10 +306,14 @@ mod tests {
     fn test_get_name() {
         let token = deploy();
         assert_eq!(token.get_name(), token_name);
+        let token = deploy();
+        assert_eq!(token.get_name(), token_name);
     }
 
     #[test]
     fn test_get_symbol() {
+        let token = deploy();
+        assert_eq!(token.get_symbol(), symbols);
         let token = deploy();
         assert_eq!(token.get_symbol(), symbols);
     }
@@ -289,10 +322,14 @@ mod tests {
     fn test_get_decimals() {
         let token = deploy();
         assert_eq!(token.get_decimals(), decimals);
+        let token = deploy();
+        assert_eq!(token.get_decimals(), decimals);
     }
 
     #[test]
     fn test_total_supply() {
+        let token = deploy();
+        assert_eq!(token.get_total_supply(), initial_supply);
         let token = deploy();
         assert_eq!(token.get_total_supply(), initial_supply);
     }
@@ -300,6 +337,8 @@ mod tests {
     #[test]
     fn test_balance_of_recipient_deployed() {
         let recipient = contract_address_const::<'initialized_recipient'>();
+        let token = deploy();
+        assert_eq!(token.balance_of(recipient), initial_supply);
         let token = deploy();
         assert_eq!(token.balance_of(recipient), initial_supply);
     }
@@ -312,6 +351,10 @@ mod tests {
         let token = deploy();
         start_cheat_caller_address_global(caller);
         assert_eq!(token.allowance(caller, spender), 0);
+
+        let token = deploy();
+        start_cheat_caller_address_global(caller);
+        assert_eq!(token.allowance(caller, spender), 0);
     }
 
     #[test]
@@ -319,7 +362,11 @@ mod tests {
         let caller = contract_address_const::<'caller'>();
         let spender = contract_address_const::<'spender'>();
         let token = deploy();
+        let token = deploy();
         let amount = 100;
+        start_cheat_caller_address_global(caller);
+        token.approve(spender, amount);
+        assert_eq!(token.allowance(caller, spender), amount);
         start_cheat_caller_address_global(caller);
         token.approve(spender, amount);
         assert_eq!(token.allowance(caller, spender), amount);
@@ -327,7 +374,10 @@ mod tests {
 
     #[test]
     #[should_panic(expected: 'ERC20: approve to 0')]
+    #[should_panic(expected: 'ERC20: approve to 0')]
     fn test_approval_spender_is_address_zero() {
+        let token = deploy();
+        token.approve(Zero::zero(), 100);
         let token = deploy();
         token.approve(Zero::zero(), 100);
     }
@@ -337,7 +387,21 @@ mod tests {
         let spender = contract_address_const::<'spender'>();
         let value = 100;
         let token = deploy();
+        let token = deploy();
         let caller = contract_address_const::<'caller'>();
+
+        let mut spy = spy_events();
+        start_cheat_caller_address_global(caller);
+        token.approve(spender, value);
+        spy
+            .assert_emitted(
+                @array![
+                    (
+                        token.contract_address,
+                        Event::Approval(Approval { owner: caller, spender, value }),
+                    ),
+                ],
+            );
 
         let mut spy = spy_events();
         start_cheat_caller_address_global(caller);
@@ -355,7 +419,10 @@ mod tests {
 
     #[test]
     #[should_panic(expected: 'ERC20: approve to 0')]
+    #[should_panic(expected: 'ERC20: approve to 0')]
     fn test_should_increase_allowance_with_spender_zero_address() {
+        let token = deploy();
+        token.increase_allowance(Zero::zero(), 100);
         let token = deploy();
         token.increase_allowance(Zero::zero(), 100);
     }
@@ -365,6 +432,15 @@ mod tests {
         let caller = contract_address_const::<'caller'>();
         let spender = contract_address_const::<'spender'>();
         let amount = 100;
+        let token = deploy();
+
+        let mut spy = spy_events();
+        start_cheat_caller_address_global(caller);
+        token.approve(spender, amount);
+        assert_eq!(token.allowance(caller, spender), amount);
+
+        token.increase_allowance(spender, 100);
+        assert_eq!(token.allowance(caller, spender), amount + 100);
         let token = deploy();
 
         let mut spy = spy_events();
@@ -389,11 +465,27 @@ mod tests {
                     ),
                 ],
             );
+        spy
+            .assert_emitted(
+                @array![
+                    (
+                        token.contract_address,
+                        Event::Approval(Approval { owner: caller, spender, value: amount + 100 }),
+                    ),
+                    (
+                        token.contract_address,
+                        Event::Approval(Approval { owner: caller, spender, value: amount }),
+                    ),
+                ],
+            );
     }
 
     #[test]
     #[should_panic(expected: 'ERC20: approve to 0')]
+    #[should_panic(expected: 'ERC20: approve to 0')]
     fn test_should_decrease_allowance_with_spender_zero_address() {
+        let token = deploy();
+        token.decrease_allowance(Zero::zero(), 100);
         let token = deploy();
         token.decrease_allowance(Zero::zero(), 100);
     }
@@ -409,7 +501,15 @@ mod tests {
         start_cheat_caller_address_global(caller);
         token.approve(spender, amount);
         assert_eq!(token.allowance(caller, spender), amount);
+        let token = deploy();
 
+        let mut spy = spy_events();
+        start_cheat_caller_address_global(caller);
+        token.approve(spender, amount);
+        assert_eq!(token.allowance(caller, spender), amount);
+
+        token.decrease_allowance(spender, 90);
+        assert_eq!(token.allowance(caller, spender), amount - 90);
         token.decrease_allowance(spender, 90);
         assert_eq!(token.allowance(caller, spender), amount - 90);
 
@@ -427,12 +527,29 @@ mod tests {
                     ),
                 ],
             );
+        spy
+            .assert_emitted(
+                @array![
+                    (
+                        token.contract_address,
+                        Event::Approval(Approval { owner: caller, spender, value: amount - 90 }),
+                    ),
+                    (
+                        token.contract_address,
+                        Event::Approval(Approval { owner: caller, spender, value: amount }),
+                    ),
+                ],
+            );
     }
 
     #[test]
     #[should_panic(expected: 'ERC20: transfer from 0')]
+    #[should_panic(expected: 'ERC20: transfer from 0')]
     fn test_transfer_when_sender_is_address_zero() {
         let receiver = contract_address_const::<'spender'>();
+        let token = deploy();
+        start_cheat_caller_address_global(Zero::zero());
+        token.transfer(receiver, 100);
         let token = deploy();
         start_cheat_caller_address_global(Zero::zero());
         token.transfer(receiver, 100);
@@ -440,7 +557,10 @@ mod tests {
 
     #[test]
     #[should_panic(expected: 'ERC20: transfer to 0')]
+    #[should_panic(expected: 'ERC20: transfer to 0')]
     fn test_transfer_when_recipient_is_address_zero() {
+        let token = deploy();
+        token.transfer(Zero::zero(), 100);
         let token = deploy();
         token.transfer(Zero::zero(), 100);
     }
@@ -450,6 +570,12 @@ mod tests {
         let caller = contract_address_const::<'initialized_recipient'>();
         let receiver = contract_address_const::<'receiver'>();
         let amount = 100;
+        let token = deploy();
+
+        let mut spy = spy_events();
+        start_cheat_caller_address_global(caller);
+        token.transfer(receiver, amount);
+        assert_eq!(token.balance_of(receiver), amount);
         let token = deploy();
 
         let mut spy = spy_events();
@@ -467,23 +593,38 @@ mod tests {
                     ),
                 ],
             );
+        spy
+            .assert_emitted(
+                @array![
+                    (
+                        token.contract_address,
+                        Event::Transfer(Transfer { from: caller, to: receiver, value: amount }),
+                    ),
+                ],
+            );
     }
 
 
     #[test]
     #[should_panic(expected: 'ERC20: transfer from 0')]
+    #[should_panic(expected: 'ERC20: transfer from 0')]
     fn test_transferFrom_when_sender_is_address_zero() {
         let receiver = contract_address_const::<'spender'>();
+        let token = deploy();
+        token.transfer_from(Zero::zero(), receiver, 100);
         let token = deploy();
         token.transfer_from(Zero::zero(), receiver, 100);
     }
 
     #[test]
     #[should_panic(expected: 'ERC20: transfer to 0')]
+    #[should_panic(expected: 'ERC20: transfer to 0')]
     fn test_transferFrom_when_recipient_is_address_zero() {
         let caller = contract_address_const::<'caller'>();
         let receiver = Zero::zero();
         let amount = 100;
+        let token = deploy();
+        token.transfer_from(caller, receiver, amount);
         let token = deploy();
         token.transfer_from(caller, receiver, amount);
     }
@@ -499,8 +640,23 @@ mod tests {
         start_cheat_caller_address_global(caller);
         token.transfer_from(caller, receiver, amount);
         assert_eq!(token.balance_of(receiver), amount);
+        let token = deploy();
+
+        let mut spy = spy_events();
+        start_cheat_caller_address_global(caller);
+        token.transfer_from(caller, receiver, amount);
+        assert_eq!(token.balance_of(receiver), amount);
 
         // emits two transfer events
+        spy
+            .assert_emitted(
+                @array![
+                    (
+                        token.contract_address,
+                        Event::Transfer(Transfer { from: caller, to: receiver, value: amount }),
+                    ),
+                ],
+            );
         spy
             .assert_emitted(
                 @array![
