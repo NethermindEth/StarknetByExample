@@ -94,6 +94,9 @@ version = "0.1.0"
 [[package]]
 name = "erc20"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "errors"
