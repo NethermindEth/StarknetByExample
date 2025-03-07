@@ -19,7 +19,7 @@ The token standard (i.e. ERC-20) is defined in the [SNIP-2](https://github.com/s
 
 - If one of the calls has the "approve" or "transfer" function selectors, the spending limit will decrease accordingly by the amount given in the function call. If there is no limit left, the transaction will revert.
 
-## Implementation
+<!-- ## Implementation
 
 The function `__execute__` will check if the function called is "approve" or "transfer", and if yes, the limit will decrease by the amount in the call. Here is the code for the `__execute__` function: 
 
@@ -31,4 +31,4 @@ Here is the full code of the account contract with spending limits:
 
 ```cairo
 // [!include ~/listings/advanced-concepts/account_spending_limits/src/account.cairo]
-```
+``` -->
