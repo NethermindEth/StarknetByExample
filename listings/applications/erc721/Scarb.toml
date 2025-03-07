@@ -1,0 +1,18 @@
+[package]
+name = "erc721"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+starknet.workspace = true
+openzeppelin_account.workspace = true
+openzeppelin_introspection.workspace = true
+
+[dev-dependencies]
+assert_macros.workspace = true
+snforge_std.workspace = true
+
+[scripts]
+test.workspace = true
+
+[[target.starknet-contract]]
