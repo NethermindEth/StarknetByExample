@@ -134,6 +134,10 @@ name = "hash_trait"
 version = "0.1.0"
 
 [[package]]
+name = "interfaces_traits"
+version = "0.1.0"
+
+[[package]]
 name = "l1_l2_token_bridge"
 version = "0.1.0"
 dependencies = [
