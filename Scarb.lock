@@ -99,6 +99,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "erc721"
+version = "0.1.0"
+dependencies = [
+ "openzeppelin_account",
+ "openzeppelin_introspection",
+ "snforge_std",
+]
+
+[[package]]
 name = "errors"
 version = "0.1.0"
 dependencies = [
