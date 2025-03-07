@@ -1,0 +1,16 @@
+[package]
+name = "l1_l2_token_bridge"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+starknet.workspace = true
+
+[dev-dependencies]
+assert_macros.workspace = true
+snforge_std.workspace = true
+
+[scripts]
+test.workspace = true
+
+[[target.starknet-contract]]
