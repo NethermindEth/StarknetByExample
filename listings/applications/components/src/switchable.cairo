@@ -86,39 +86,50 @@ pub mod SwitchContract {
 // [!region tests]
 #[cfg(test)]
 mod test {
-    use super::SwitchContract; // Used as a mock contract
-    use super::switchable_component::SwitchEvent;
     use super::{ISwitchableDispatcher, ISwitchableDispatcherTrait};
-    use starknet::{syscalls::deploy_syscall, ContractAddress};
+    use snforge_std::{
+        ContractClassTrait, DeclareResultTrait, declare, spy_events, EventSpyAssertionsTrait,
+    };
+    use super::SwitchContract; // Used as a mock contract
+    use super::switchable_component;
 
-    fn deploy() -> (ISwitchableDispatcher, ContractAddress) {
-        let (address, _) = deploy_syscall(
-            SwitchContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
-        )
-            .unwrap();
-        (ISwitchableDispatcher { contract_address: address }, address)
+    fn deploy() -> ISwitchableDispatcher {
+        let contract = declare("SwitchContract").unwrap().contract_class();
+        let (contract_address, _) = contract.deploy(@array![]).unwrap();
+        ISwitchableDispatcher { contract_address }
     }
 
     #[test]
     fn test_constructor() {
-        let (switchable, _) = deploy();
+        let switchable = deploy();
         assert_eq!(switchable.is_on(), false);
     }
 
     #[test]
     fn test_switch() {
-        let (switchable, contract_address) = deploy();
+        let switchable = deploy();
+        let mut spy = spy_events();
         switchable.switch();
         assert_eq!(switchable.is_on(), true);
-        assert_eq!(
-            starknet::testing::pop_log(contract_address),
-            Option::Some(SwitchContract::Event::SwitchableEvent(SwitchEvent {}.into())),
-        );
+
+        spy
+            .assert_emitted(
+                @array![
+                    (
+                        switchable.contract_address,
+                        SwitchContract::Event::SwitchableEvent(
+                            switchable_component::Event::SwitchEvent(
+                                switchable_component::SwitchEvent {},
+                            ),
+                        ),
+                    ),
+                ],
+            );
     }
 
     #[test]
     fn test_multiple_switches() {
-        let (switchable, _) = deploy();
+        let switchable = deploy();
         switchable.switch();
         assert_eq!(switchable.is_on(), true);
         switchable.switch();

@@ -8,7 +8,8 @@ starknet.workspace = true
 erc20 = { path = "../erc20" }
 
 [dev-dependencies]
-cairo_test.workspace = true
+assert_macros.workspace = true
+snforge_std.workspace = true
 
 [scripts]
 test.workspace = true

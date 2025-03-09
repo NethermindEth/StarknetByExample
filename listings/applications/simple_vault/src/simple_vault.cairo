@@ -127,45 +127,40 @@ pub mod SimpleVault {
 }
 // [!endregion contract]
 
-// TODO migrate to sn-foundry
 #[cfg(test)]
 mod tests {
-    use super::{SimpleVault, ISimpleVaultDispatcher, ISimpleVaultDispatcherTrait};
+    use super::{ISimpleVaultDispatcher, ISimpleVaultDispatcherTrait};
     use erc20::token::{
         IERC20DispatcherTrait as IERC20DispatcherTrait_token,
         IERC20Dispatcher as IERC20Dispatcher_token,
     };
-    use starknet::testing::{set_contract_address, set_account_contract_address};
-    use starknet::{ContractAddress, syscalls::deploy_syscall, contract_address_const};
+    use starknet::{ContractAddress, contract_address_const};
 
     const token_name: felt252 = 'myToken';
     const decimals: u8 = 18;
     const initial_supply: felt252 = 100000;
     const symbols: felt252 = 'mtk';
 
-    fn deploy() -> (ISimpleVaultDispatcher, ContractAddress, IERC20Dispatcher_token) {
+    use snforge_std::{
+        ContractClassTrait, DeclareResultTrait, declare, start_cheat_caller_address_global,
+    };
+
+    fn deploy() -> (ISimpleVaultDispatcher, IERC20Dispatcher_token) {
         let _token_address: ContractAddress = contract_address_const::<'token_address'>();
         let caller = contract_address_const::<'caller'>();
 
-        let (token_contract_address, _) = deploy_syscall(
-            erc20::token::erc20::TEST_CLASS_HASH.try_into().unwrap(),
-            caller.into(),
-            array![caller.into(), token_name, decimals.into(), initial_supply, symbols].span(),
-            false,
-        )
-            .expect('1');
+        let token_contract = declare("erc20").unwrap().contract_class();
+        let (token_contract_address, _) = token_contract
+            .deploy(@array![caller.into(), token_name, decimals.into(), initial_supply, symbols])
+            .unwrap();
 
-        let (contract_address, _) = deploy_syscall(
-            SimpleVault::TEST_CLASS_HASH.try_into().unwrap(),
-            0,
-            array![token_contract_address.into()].span(),
-            false,
-        )
-            .expect('2');
+        let vault_contract = declare("SimpleVault").unwrap().contract_class();
+        let (vault_contract_address, _) = vault_contract
+            .deploy(@array![token_contract_address.into()])
+            .unwrap();
 
         (
-            ISimpleVaultDispatcher { contract_address },
-            contract_address,
+            ISimpleVaultDispatcher { contract_address: vault_contract_address },
             IERC20Dispatcher_token { contract_address: token_contract_address },
         )
     }
@@ -173,21 +168,21 @@ mod tests {
     #[test]
     fn test_deposit() {
         let caller = contract_address_const::<'caller'>();
-        let (dispatcher, vault_address, token_dispatcher) = deploy();
+        let (vault, token) = deploy();
 
         // Approve the vault to transfer tokens on behalf of the caller
         let amount: felt252 = 10.into();
-        token_dispatcher.approve(vault_address.into(), amount);
-        set_contract_address(caller);
+        token.approve(vault.contract_address.into(), amount);
+        start_cheat_caller_address_global(caller);
 
         // Deposit tokens into the vault
         let amount: u256 = 10.into();
-        let _deposit = dispatcher.deposit(amount);
+        let _deposit = vault.deposit(amount);
         println!("deposit :{:?}", _deposit);
 
         // Check balances and total supply
-        let balance_of_caller = dispatcher.user_balance_of(caller);
-        let total_supply = dispatcher.contract_total_supply();
+        let balance_of_caller = vault.user_balance_of(caller);
+        let total_supply = vault.contract_total_supply();
 
         assert_eq!(balance_of_caller, amount);
         assert_eq!(total_supply, amount);
@@ -196,21 +191,21 @@ mod tests {
     #[test]
     fn test_deposit_withdraw() {
         let caller = contract_address_const::<'caller'>();
-        let (dispatcher, vault_address, token_dispatcher) = deploy();
+        let (vault, token) = deploy();
 
         // Approve the vault to transfer tokens on behalf of the caller
         let amount: felt252 = 10.into();
-        token_dispatcher.approve(vault_address.into(), amount);
-        set_contract_address(caller);
-        set_account_contract_address(vault_address);
+        token.approve(vault.contract_address.into(), amount);
+
+        start_cheat_caller_address_global(caller);
 
         // Deposit tokens into the vault
         let amount: u256 = 10.into();
-        dispatcher.deposit(amount);
-        dispatcher.withdraw(amount);
+        vault.deposit(amount);
+        vault.withdraw(amount);
 
         // Check balances of user in the vault after withdraw
-        let balance_of_caller = dispatcher.user_balance_of(caller);
+        let balance_of_caller = vault.user_balance_of(caller);
 
         assert_eq!(balance_of_caller, 0.into());
     }

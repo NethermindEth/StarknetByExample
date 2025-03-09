@@ -135,6 +135,10 @@ const config: Sidebar = [
         link: "/applications/erc20",
       },
       {
+        text: "ERC721 NFT",
+        link: "/applications/erc721",
+      },
+      {
         text: "NFT Dutch Auction",
         link: "/applications/nft_dutch_auction",
       },
@@ -169,6 +173,10 @@ const config: Sidebar = [
       {
         text: "Random Number Generator",
         link: "/applications/random_number_generator",
+      },
+      {
+        text: "L1 <> L2 Token Bridge",
+        link: "/applications/l1_l2_token_bridge",
       },
     ],
   },

@@ -38,6 +38,9 @@ version = "0.1.0"
 [[package]]
 name = "components"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "components_dependencies"
@@ -91,6 +94,18 @@ version = "0.1.0"
 [[package]]
 name = "erc20"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
+
+[[package]]
+name = "erc721"
+version = "0.1.0"
+dependencies = [
+ "openzeppelin_account",
+ "openzeppelin_introspection",
+ "snforge_std",
+]
 
 [[package]]
 name = "errors"
@@ -117,6 +132,13 @@ version = "0.1.0"
 [[package]]
 name = "hash_trait"
 version = "0.1.0"
+
+[[package]]
+name = "l1_l2_token_bridge"
+version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "library_calls"
@@ -242,6 +264,7 @@ name = "simple_vault"
 version = "0.1.0"
 dependencies = [
  "erc20",
+ "snforge_std",
 ]
 
 [[package]]
@@ -309,6 +332,9 @@ dependencies = [
 [[package]]
 name = "upgradeable_contract"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "variables"

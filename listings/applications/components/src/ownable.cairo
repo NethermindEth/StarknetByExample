@@ -129,102 +129,113 @@ pub mod OwnedContract {
 #[cfg(test)]
 mod test {
     use super::OwnedContract;
-    use super::ownable_component::{OwnershipRenouncedEvent, OwnershipTransferredEvent};
+    use super::ownable_component;
     use super::{IOwnableDispatcher, IOwnableDispatcherTrait};
-    use starknet::ContractAddress;
-    use starknet::{syscalls::deploy_syscall, contract_address_const};
-    use starknet::testing::{set_contract_address};
+    use starknet::contract_address_const;
     use core::num::traits::Zero;
+    use snforge_std::{
+        ContractClassTrait, DeclareResultTrait, declare, spy_events,
+        start_cheat_caller_address_global, EventSpyAssertionsTrait,
+    };
 
-    fn deploy() -> (IOwnableDispatcher, ContractAddress) {
-        let (contract_address, _) = deploy_syscall(
-            OwnedContract::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
-        )
-            .unwrap();
-
-        (IOwnableDispatcher { contract_address }, contract_address)
+    fn deploy() -> IOwnableDispatcher {
+        let contract = declare("OwnedContract").unwrap().contract_class();
+        let (contract_address, _) = contract.deploy(@array![]).unwrap();
+        IOwnableDispatcher { contract_address }
     }
 
     #[test]
     fn test_initial_state() {
         let owner = contract_address_const::<'owner'>();
-        set_contract_address(owner);
-        let (ownable, _) = deploy();
+        start_cheat_caller_address_global(owner);
 
+        let ownable = deploy();
         assert_eq!(ownable.owner(), owner);
     }
 
     #[test]
     fn test_transfer_ownership() {
-        let contract_address = contract_address_const::<'owner'>();
-        set_contract_address(contract_address);
-        let (ownable, address) = deploy();
-        let new_owner = contract_address_const::<'new_owner'>();
+        let owner = contract_address_const::<'owner'>();
+        start_cheat_caller_address_global(owner);
 
+        let ownable = deploy();
+
+        let mut spy = spy_events();
+        let new_owner = contract_address_const::<'new_owner'>();
         ownable.transfer_ownership(new_owner);
+
         assert_eq!(ownable.owner(), new_owner);
-        assert_eq!(
-            starknet::testing::pop_log(address),
-            Option::Some(
-                OwnedContract::Event::OwnableEvent(
-                    OwnershipTransferredEvent { previous: contract_address, new: new_owner }.into(),
-                ),
-            ),
-        );
+        spy
+            .assert_emitted(
+                @array![
+                    (
+                        ownable.contract_address,
+                        OwnedContract::Event::OwnableEvent(
+                            ownable_component::Event::OwnershipTransferredEvent(
+                                ownable_component::OwnershipTransferredEvent {
+                                    previous: owner, new: new_owner,
+                                },
+                            ),
+                        ),
+                    ),
+                ],
+            );
     }
 
     #[test]
     #[should_panic]
     fn test_transfer_ownership_not_owner() {
-        set_contract_address(contract_address_const::<'initial'>());
-        let (ownable, _) = deploy();
+        let ownable = deploy();
 
-        set_contract_address(contract_address_const::<'not_owner'>());
+        start_cheat_caller_address_global(contract_address_const::<'not_owner'>());
         ownable.transfer_ownership(contract_address_const::<'new_owner'>());
     }
 
     #[test]
     #[should_panic]
     fn test_transfer_ownership_zero_error() {
-        set_contract_address(contract_address_const::<'initial'>());
-        let (ownable, _) = deploy();
-
+        let ownable = deploy();
         ownable.transfer_ownership(Zero::zero());
     }
 
     #[test]
     fn test_renounce_ownership() {
-        let contract_address = contract_address_const::<'owner'>();
-        set_contract_address(contract_address);
-        let (ownable, address) = deploy();
+        let owner = contract_address_const::<'owner'>();
+        start_cheat_caller_address_global(owner);
+        let ownable = deploy();
 
+        let mut spy = spy_events();
         ownable.renounce_ownership();
+
         assert_eq!(ownable.owner(), Zero::zero());
-        assert_eq!(
-            starknet::testing::pop_log(address),
-            Option::Some(
-                OwnedContract::Event::OwnableEvent(
-                    OwnershipRenouncedEvent { previous: contract_address }.into(),
-                ),
-            ),
-        );
+        spy
+            .assert_emitted(
+                @array![
+                    (
+                        ownable.contract_address,
+                        OwnedContract::Event::OwnableEvent(
+                            ownable_component::Event::OwnershipRenouncedEvent(
+                                ownable_component::OwnershipRenouncedEvent { previous: owner },
+                            ),
+                        ),
+                    ),
+                ],
+            );
     }
 
     #[test]
     #[should_panic]
     fn test_renounce_ownership_not_owner() {
-        set_contract_address(contract_address_const::<'owner'>());
-        let (ownable, _) = deploy();
+        let ownable = deploy();
 
-        set_contract_address(contract_address_const::<'not_owner'>());
+        start_cheat_caller_address_global(contract_address_const::<'not_owner'>());
         ownable.renounce_ownership();
     }
 
     #[test]
     #[should_panic]
     fn test_renounce_ownership_previous_owner() {
-        set_contract_address(contract_address_const::<'owner'>());
-        let (ownable, _) = deploy();
+        let ownable = deploy();
 
         ownable.renounce_ownership();
         ownable.transfer_ownership(contract_address_const::<'new_owner'>());

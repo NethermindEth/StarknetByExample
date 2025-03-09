@@ -10,6 +10,12 @@ You should never open a pull request to merge your changes directly into `main`.
 
 The `dev` branch is deployed at <https://starknet-by-example-dev.voyager.online/>
 
+The release branch is `main`. The development branch is `dev` and is considered stable (but not released yet).
+When you want to contribute, please create a new branch from `dev` and open a pull request to merge your changes back into `dev`.
+You should never open a pull request to merge your changes directly into `main`.
+
+The `dev` branch is deployed at https://starknet-by-example-dev.voyager.online/
+
 Please note we have a code of conduct, please follow it in all your interactions with the project.
 
 ## Table of Contents
@@ -78,7 +84,7 @@ Be sure to check for typos with `typos`:
 
 ```bash
 cargo install typos-cli
-typos src/
+typos pages/
 ```
 
 ## Adding a new Cairo program
@@ -95,6 +101,7 @@ Here's the required `Scarb.toml` configuration for **Starknet Foundry**:
 [package]
 name = "pkg_name"
 version.workspace = true
+edition.workspace = true
 
 # Specify that this can be used as a dependency in another scarb project:
 [lib]
@@ -129,6 +136,7 @@ Here's the required `Scarb.toml` configuration for **cairo-test**:
 [package]
 name = "pkg_name"
 version.workspace = true
+edition.workspace = true
 
 # Specify that this can be used as a dependency in another scarb project:
 [lib]
