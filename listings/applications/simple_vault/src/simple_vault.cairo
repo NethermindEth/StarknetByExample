@@ -130,10 +130,12 @@ pub mod SimpleVault {
 #[cfg(test)]
 mod tests {
     use super::{ISimpleVaultDispatcher, ISimpleVaultDispatcherTrait};
+    use super::{ISimpleVaultDispatcher, ISimpleVaultDispatcherTrait};
     use erc20::token::{
         IERC20DispatcherTrait as IERC20DispatcherTrait_token,
         IERC20Dispatcher as IERC20Dispatcher_token,
     };
+    use starknet::{ContractAddress, contract_address_const};
     use starknet::{ContractAddress, contract_address_const};
 
     const token_name: felt252 = 'myToken';
@@ -146,9 +148,18 @@ mod tests {
     };
 
     fn deploy() -> (ISimpleVaultDispatcher, IERC20Dispatcher_token) {
+    use snforge_std::{
+        ContractClassTrait, DeclareResultTrait, declare, start_cheat_caller_address_global,
+    };
+
+    fn deploy() -> (ISimpleVaultDispatcher, IERC20Dispatcher_token) {
         let _token_address: ContractAddress = contract_address_const::<'token_address'>();
         let caller = contract_address_const::<'caller'>();
 
+        let token_contract = declare("erc20").unwrap().contract_class();
+        let (token_contract_address, _) = token_contract
+            .deploy(@array![caller.into(), token_name, decimals.into(), initial_supply, symbols])
+            .unwrap();
         let token_contract = declare("erc20").unwrap().contract_class();
         let (token_contract_address, _) = token_contract
             .deploy(@array![caller.into(), token_name, decimals.into(), initial_supply, symbols])
@@ -158,8 +169,13 @@ mod tests {
         let (vault_contract_address, _) = vault_contract
             .deploy(@array![token_contract_address.into()])
             .unwrap();
+        let vault_contract = declare("SimpleVault").unwrap().contract_class();
+        let (vault_contract_address, _) = vault_contract
+            .deploy(@array![token_contract_address.into()])
+            .unwrap();
 
         (
+            ISimpleVaultDispatcher { contract_address: vault_contract_address },
             ISimpleVaultDispatcher { contract_address: vault_contract_address },
             IERC20Dispatcher_token { contract_address: token_contract_address },
         )
@@ -169,18 +185,24 @@ mod tests {
     fn test_deposit() {
         let caller = contract_address_const::<'caller'>();
         let (vault, token) = deploy();
+        let (vault, token) = deploy();
 
         // Approve the vault to transfer tokens on behalf of the caller
         let amount: felt252 = 10.into();
+        token.approve(vault.contract_address.into(), amount);
+        start_cheat_caller_address_global(caller);
         token.approve(vault.contract_address.into(), amount);
         start_cheat_caller_address_global(caller);
 
         // Deposit tokens into the vault
         let amount: u256 = 10.into();
         let _deposit = vault.deposit(amount);
+        let _deposit = vault.deposit(amount);
         println!("deposit :{:?}", _deposit);
 
         // Check balances and total supply
+        let balance_of_caller = vault.user_balance_of(caller);
+        let total_supply = vault.contract_total_supply();
         let balance_of_caller = vault.user_balance_of(caller);
         let total_supply = vault.contract_total_supply();
 
@@ -192,9 +214,13 @@ mod tests {
     fn test_deposit_withdraw() {
         let caller = contract_address_const::<'caller'>();
         let (vault, token) = deploy();
+        let (vault, token) = deploy();
 
         // Approve the vault to transfer tokens on behalf of the caller
         let amount: felt252 = 10.into();
+        token.approve(vault.contract_address.into(), amount);
+
+        start_cheat_caller_address_global(caller);
         token.approve(vault.contract_address.into(), amount);
 
         start_cheat_caller_address_global(caller);
@@ -203,8 +229,11 @@ mod tests {
         let amount: u256 = 10.into();
         vault.deposit(amount);
         vault.withdraw(amount);
+        vault.deposit(amount);
+        vault.withdraw(amount);
 
         // Check balances of user in the vault after withdraw
+        let balance_of_caller = vault.user_balance_of(caller);
         let balance_of_caller = vault.user_balance_of(caller);
 
         assert_eq!(balance_of_caller, 0.into());
