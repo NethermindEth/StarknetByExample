@@ -60,7 +60,7 @@ export default defineConfig({
           {
             name: "Onlydust",
             link: "https://app.onlydust.com/p/starknet-by-example",
-            image: "/collaborators/Onlydust.svg",
+            image: "/collaborators/Colored_Onlydust_logo.svg",
           },
         ],
       ],
