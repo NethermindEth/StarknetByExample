@@ -356,3 +356,6 @@ dependencies = [
 [[package]]
 name = "write_to_any_slot"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
