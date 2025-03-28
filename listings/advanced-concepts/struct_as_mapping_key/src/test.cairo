@@ -1,30 +1,19 @@
-mod tests {
-    use struct_as_mapping_key::contract::{PetRegistry, Pet};
-    use starknet::syscalls::deploy_syscall;
+use snforge_std::{ContractClassTrait, DeclareResultTrait, declare};
+use struct_as_mapping_key::contract::{Pet, IPetRegistryDispatcher, IPetRegistryDispatcherTrait};
 
-    #[starknet::interface]
-    trait IPetRegistry<TContractState> {
-        fn register_pet(ref self: TContractState, key: Pet, timestamp: u64);
-        fn get_registration_date(self: @TContractState, key: Pet) -> u64;
-    }
+#[test]
+fn test_e2e() {
+    // Set up.
+    let contract = declare("PetRegistry").unwrap().contract_class();
+    let (contract_address, _) = contract.deploy(@array![]).unwrap();
+    let contract = IPetRegistryDispatcher { contract_address };
 
-    #[test]
-    fn test_e2e() {
-        // Set up.
-        let mut calldata: Array<felt252> = array![];
-        let (address0, _) = deploy_syscall(
-            PetRegistry::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false,
-        )
-            .unwrap();
-        let mut contract = IPetRegistryDispatcher { contract_address: address0 };
+    let pet = Pet { name: 'Cute Labrador', age: 5, owner: 'Louis' };
 
-        let pet = Pet { name: 'Cute Labrador', age: 5, owner: 'Louis' };
+    // Store a pet.
+    contract.register_pet(pet, 1234);
 
-        // Store a pet.
-        contract.register_pet(pet, 1234);
-
-        // Read the array.
-        let registration_date = contract.get_registration_date(pet);
-        assert_eq!(registration_date, 1234);
-    }
+    // Read the array.
+    let registration_date = contract.get_registration_date(pet);
+    assert_eq!(registration_date, 1234);
 }
