@@ -143,6 +143,9 @@ dependencies = [
 [[package]]
 name = "library_calls"
 version = "0.1.0"
+dependencies = [
+ "snforge_std",
+]
 
 [[package]]
 name = "mappings"
