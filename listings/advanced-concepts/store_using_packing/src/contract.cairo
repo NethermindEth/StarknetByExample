@@ -11,7 +11,7 @@ pub trait ITime<TContractState> {
 }
 
 #[starknet::contract]
-pub mod TimeContract {
+mod TimeContract {
     use starknet::storage::{StoragePointerWriteAccess, StoragePointerReadAccess};
     use super::Time;
     use starknet::storage_access::StorePacking;
