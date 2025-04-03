@@ -10,7 +10,7 @@ pub trait IHashTrait<T> {
 
 // [!region hash]
 #[starknet::contract]
-pub mod HashTraits {
+mod HashTraits {
     use starknet::storage::StoragePointerWriteAccess;
     use core::hash::{HashStateTrait, HashStateExTrait};
     use core::{pedersen::PedersenTrait, poseidon::PoseidonTrait};
@@ -64,22 +64,19 @@ pub mod HashTraits {
 
 #[cfg(test)]
 mod tests {
-    use super::{HashTraits, IHashTraitDispatcher, IHashTraitDispatcherTrait};
-    use starknet::syscalls::deploy_syscall;
+    use super::{IHashTraitDispatcher, IHashTraitDispatcherTrait};
+    use snforge_std::{ContractClassTrait, DeclareResultTrait, declare};
 
     fn deploy() -> IHashTraitDispatcher {
-        let mut calldata = array![];
-        let (address, _) = deploy_syscall(
-            HashTraits::TEST_CLASS_HASH.try_into().unwrap(), 0, calldata.span(), false,
-        )
-            .unwrap();
-        IHashTraitDispatcher { contract_address: address }
+        let contract = declare("HashTraits").unwrap().contract_class();
+        let (contract_address, _) = contract.deploy(@array![]).unwrap();
+        IHashTraitDispatcher { contract_address }
     }
 
 
     #[test]
     fn test_pedersen_hash() {
-        let mut contract = deploy();
+        let contract = deploy();
 
         let id = 0x1;
         let username = 'A.stark';
@@ -91,7 +88,7 @@ mod tests {
 
     #[test]
     fn test_poseidon_hash() {
-        let mut contract = deploy();
+        let contract = deploy();
 
         let id = 0x1;
         let username = 'A.stark';
