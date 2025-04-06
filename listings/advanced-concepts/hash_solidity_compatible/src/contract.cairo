@@ -4,7 +4,7 @@ pub trait ISolidityHashExample<TContractState> {
 }
 
 #[starknet::contract]
-pub mod SolidityHashExample {
+mod SolidityHashExample {
     use core::keccak::keccak_u256s_be_inputs;
     use core::integer;
 
