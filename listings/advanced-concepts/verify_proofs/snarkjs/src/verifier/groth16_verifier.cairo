@@ -55,7 +55,7 @@ mod Groth16VerifierBN254 {
                     // Add the points from VK and public inputs to the proof.
                     Serde::serialize(@ic.slice(1, N_PUBLIC_INPUTS), ref msm_calldata);
                     Serde::serialize(@groth16_proof.public_inputs, ref msm_calldata);
-                    // Complete with the curve indentifier (0 for BN254):
+                    // Complete with the curve identifier (0 for BN254):
                     msm_calldata.append(0);
 
                     // Call the multi scalar multiplication endpoint on the Garaga ECIP ops contract
