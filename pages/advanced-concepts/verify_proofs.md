@@ -1,4 +1,6 @@
-# zk-SNARKS Implementation Example
+# Verify ZK proofs
+
+This example shows how to verify SNARK proofs on Starknet.
 
 **zk-SNARKs** (Zero-Knowledge Succinct Non-Interactive Arguments of Knowledge) are cryptographic proofs that allow one party (the prover) to prove to another party (the verifier) that they know a specific piece of information (ex: a solution to a computational problem) without revealing the information itself.
 
@@ -47,7 +49,7 @@ In this section, the example workflow is explained. As this repository consists 
 - 1.1. Circuit
 
 ```circom
-// [!include ~/listings/advanced-concepts/verify_proofs/snarkjs/src/circuit/circuit.circom]
+// [!include ~/listings/advanced-concepts/verify_proofs/src/circuit/circuit.circom]
 ```
 
 This circuit takes 3 inputs:
@@ -60,7 +62,7 @@ The circuit computes the hash of the plain text password and compares the result
 - 1.2. Circuit inputs
 
 ```json
-// [!include ~/listings/advanced-concepts/verify_proofs/snarkjs/src/circuit/input.json]
+// [!include ~/listings/advanced-concepts/verify_proofs/src/circuit/input.json]
 ```
 > In my example, the secret password is 2468. You should input the same user address with which you will submit your proof to the ZkERC20Token to mint free tokens.
 
@@ -158,7 +160,7 @@ This above command will generate a cairo project with the verifier contract, wit
 Here is the generated starknet contract:
 
 ```cairo
-// [!include ~/listings/advanced-concepts/verify_proofs/snarkjs/src/verifier/groth16_verifier.cairo]
+// [!include ~/listings/advanced-concepts/verify_proofs/src/verifier/groth16_verifier.cairo]
 ```
 
 7. Generate calldata & call on-chain verifier contract
@@ -180,6 +182,6 @@ Here is the address of this contract (on Sepolia testnet) : 0x00375cf5081763e1f2
 Here is the code of this ZkERC20Token contract :
 
 ```cairo
-// [!include ~/listings/advanced-concepts/verify_proofs/snarkjs/src/contract.cairo]
+// [!include ~/listings/advanced-concepts/verify_proofs/src/contract.cairo]
 ```
 
