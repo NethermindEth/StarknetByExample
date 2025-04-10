@@ -1,5 +1,5 @@
 [default]
-extend-ignore-identifiers-re = ["requestor", "REQUESTOR", "Requestor"]
+extend-ignore-identifiers-re = ["requestor", "REQUESTOR", "Requestor", "groth", "Groth"]
 
 [type.po]
 extend-glob = ["*.po", "*.css", "*.js"]

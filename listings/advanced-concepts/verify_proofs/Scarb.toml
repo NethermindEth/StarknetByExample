@@ -1,0 +1,19 @@
+[package]
+name = "snarkjs"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+starknet.workspace = true
+snforge_std.workspace = true
+openzeppelin_token.workspace = true
+garaga.workspace = true
+
+[dev-dependencies]
+cairo_test.workspace = true
+
+[scripts]
+test.workspace = true
+
+[[target.starknet-contract]]
+sierra = true

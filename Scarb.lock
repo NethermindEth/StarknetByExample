@@ -129,6 +129,11 @@ name = "factory"
 version = "0.1.0"
 
 [[package]]
+name = "garaga"
+version = "0.15.5"
+source = "git+https://github.com/keep-starknet-strange/garaga.git?tag=v0.15.5#8cc51a86a84401b063b39520e2d67254baeaebe5"
+
+[[package]]
 name = "hash_solidity_compatible"
 version = "0.1.0"
 dependencies = [
@@ -279,6 +284,15 @@ name = "simple_vault"
 version = "0.1.0"
 dependencies = [
  "erc20",
+ "snforge_std",
+]
+
+[[package]]
+name = "snarkjs"
+version = "0.1.0"
+dependencies = [
+ "garaga",
+ "openzeppelin_token",
  "snforge_std",
 ]
 
