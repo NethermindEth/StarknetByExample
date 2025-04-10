@@ -165,8 +165,6 @@ Garaga also provides some command utilities to call the verifier contract direct
 
 This contract allows anyone to mint free tokens if they know a secret password (`2468`). You can submit your proof calldata to this contract, which will itself call the generated verifier contract. If the proof verification passes and the proof is indeed unique to you (ie, you generated it yourself), you can receive the free tokens. Otherwise, the endpoint execution will revert. You can mint free tokens only once per user.
 
-The final contract allows users to mint tokens by submitting a valid proof of knowledge of the secret password (`2468`). Each user can mint tokens only once.
-
 Contract Address (Sepolia testnet): `0x00375cf5081763e1f2a7ed5e28d4253c6135243385f432492dda00861ec5e58f{:md}`
 
 ```cairo
