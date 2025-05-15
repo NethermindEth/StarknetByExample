@@ -40,7 +40,7 @@ trait ISRC6 {
 }
 ```
 
-A transaction can be represented as a list of calls `Array<Call>` to other contracts, with atleast one call.
+A transaction can be represented as a list of calls `Array<Call>` to other contracts, with at least one call.
 
 - `__execute__`: Executes a transaction after the validation phase. Returns an array of the serialized return of value (`Span<felt252>`) of each call.
 
