@@ -175,7 +175,7 @@ You can also use `scarb fmt` to format all the Cairo programs.
 
 ### Tests
 
-Every listing needs to have atleast integration tests:
+Every listing needs to have at least integration tests:
 
 - Integration tests are tests that deploy the contract and interact with the provided interface(s). At minimal make one test to deploy the contract.
 
