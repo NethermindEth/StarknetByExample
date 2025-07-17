@@ -23,6 +23,7 @@ openzeppelin_token = "1.0.0"
 openzeppelin_utils = "1.0.0"
 components = { path = "listings/applications/components" }
 pragma_lib = { git = "https://github.com/astraly-labs/pragma-lib", tag = "2.9.1" }
+garaga = { git = "https://github.com/keep-starknet-strange/garaga.git", tag = "v0.15.5" }
 
 [workspace.package]
 description = "Collection of examples of how to use the Cairo programming language to create smart contracts on Starknet."

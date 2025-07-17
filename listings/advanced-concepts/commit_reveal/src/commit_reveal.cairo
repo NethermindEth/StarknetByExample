@@ -6,7 +6,7 @@ pub trait ICommitmentRevealTrait<T> {
 
 // [!region contract]
 #[starknet::contract]
-pub mod CommitmentRevealTraits {
+mod CommitmentRevealTraits {
     use starknet::storage::{StoragePointerWriteAccess, StoragePointerReadAccess};
     use core::hash::HashStateTrait;
     use core::pedersen::PedersenTrait;
@@ -32,26 +32,20 @@ pub mod CommitmentRevealTraits {
 
 #[cfg(test)]
 mod tests {
-    use super::{
-        CommitmentRevealTraits, ICommitmentRevealTraitDispatcher,
-        ICommitmentRevealTraitDispatcherTrait,
-    };
-
+    use super::{ICommitmentRevealTraitDispatcher, ICommitmentRevealTraitDispatcherTrait};
     use core::hash::HashStateTrait;
     use core::pedersen::PedersenTrait;
-    use starknet::syscalls::deploy_syscall;
+    use snforge_std::{ContractClassTrait, DeclareResultTrait, declare};
 
     fn deploy() -> ICommitmentRevealTraitDispatcher {
-        let (contract_address, _) = deploy_syscall(
-            CommitmentRevealTraits::TEST_CLASS_HASH.try_into().unwrap(), 0, array![].span(), false,
-        )
-            .unwrap();
+        let contract = declare("CommitmentRevealTraits").unwrap().contract_class();
+        let (contract_address, _) = contract.deploy(@array![]).unwrap();
         ICommitmentRevealTraitDispatcher { contract_address }
     }
 
     #[test]
     fn commit_and_reveal() {
-        let mut contract = deploy();
+        let contract = deploy();
 
         // [!region offchain]
         // Off-chain, compute the commitment hash for secret

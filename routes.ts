@@ -184,6 +184,10 @@ const config: Sidebar = [
     text: "Advanced concepts",
     items: [
       {
+        text: "Verify ZK proofs",
+        link: "/advanced-concepts/verify_proofs",
+      },
+      {
         text: "Writing to any storage slot",
         link: "/advanced-concepts/write_to_any_slot",
       },
@@ -238,7 +242,7 @@ const config: Sidebar = [
       {
         text: "Sierra IR",
         link: "/advanced-concepts/sierra_ir",
-      }
+      },
     ],
   },
   {

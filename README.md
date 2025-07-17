@@ -1,6 +1,7 @@
 # Starknet by Example
 
-Dev preview at: https://starknet-by-example-dev.voyager.online/
+> [!WARNING] 
+> Starknet By Example was moved to [Starkware's official Starknet documentation](https://github.com/starknet-io/starknet-docs/tree/main/modules/archive/pages/starknet-by-example). This repository is now archived and may not be up to date.
 
 ## Description
 

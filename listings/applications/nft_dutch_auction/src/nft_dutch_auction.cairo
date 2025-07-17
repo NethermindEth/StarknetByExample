@@ -348,8 +348,6 @@ mod tests {
 
         let nft_price_after_time_travel = nft_auction_dispatcher.get_price();
 
-        println!("price: {:?}", nft_price_after_time_travel);
-
         assert_gt!(nft_price_before_time_travel, nft_price_after_time_travel);
     }
 }
