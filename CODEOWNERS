@@ -1,67 +1,16 @@
-# CODEOWNERS File Template
-# 
-# This file defines code ownership for this repository.
-# Code owners are automatically requested for review when someone opens a pull request.
-#
-# 📖 Learn more: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
-
 # =============================================================================
 # GLOBAL OWNERS
 # =============================================================================
-# These owners will be requested for review on ALL pull requests
-# Uncomment and customize the line below:
-
-# * @NethermindEth/your-team-name
-
-# =============================================================================
-# PATH-BASED OWNERSHIP
-# =============================================================================
-# Define owners for specific files or directories
-# Examples:
-
-# Documentation
-# *.md @NethermindEth/docs-team
-# /docs/ @NethermindEth/docs-team
-
-# Configuration files
-# *.json @NethermindEth/devops-team
-# *.yml @NethermindEth/devops-team
-# *.yaml @NethermindEth/devops-team
-
-# Source code (customize based on your project structure)
-# /src/ @NethermindEth/development-team
-# /lib/ @NethermindEth/development-team
-
-# Tests
-# /tests/ @NethermindEth/qa-team
-# *.test.* @NethermindEth/qa-team
+* @NethermindEth/nubia-admins
+* @NethermindEth/nubia-general
+* @NethermindEth/nubia-starknet-by-example
+* @NethermindEth/nubia-starknet-by-example-admin
+* @NethermindEth/role_angkor_admin
+* @NethermindEth/role_legal_users
+* @NethermindEth/role_nubia_admin
+* @NethermindEth/security-admins
 
 # =============================================================================
-# INSTRUCTIONS FOR CUSTOMIZATION
+# INDIVIDUALS
 # =============================================================================
-# 1. Uncomment the lines you want to use
-# 2. Replace 'your-team-name' with actual team names from your organization
-# 3. Add specific paths that match your repository structure
-# 4. You can use individual usernames like @username instead of teams
-# 5. More specific rules override general ones
-#
-# Need help? Check the GitHub documentation link above! 🚀
-
-# =============================================================================
-# SUGGESTED TEAMS (based on current repository access)
-# =============================================================================
-# * @NethermindEth/nubia-admins  # admin access
-# * @NethermindEth/nubia-general  # pull access
-# * @NethermindEth/nubia-starknet-by-example  # maintain access
-# * @NethermindEth/nubia-starknet-by-example-admin  # admin access
-# * @NethermindEth/role_angkor_admin  # admin access
-# * @NethermindEth/role_legal_users  # pull access
-# * @NethermindEth/role_nubia_admin  # admin access
-# * @NethermindEth/security-admins  # pull access
-
-# =============================================================================
-# SUGGESTED INDIVIDUALS (based on commit history)
-# =============================================================================
-# * @julio4  # 150 commits
-# * @enitrat  # 25 commits
-# * @0xNeshi  # 9 commits
+* @julio4
